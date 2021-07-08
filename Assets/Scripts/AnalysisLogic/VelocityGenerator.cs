@@ -22,6 +22,8 @@ namespace CellexalVR.AnalysisLogic
         public Material arrowMaterial;
         public Material standardMaterial;
         public GameObject averageVelocityArrowPrefab;
+        [HideInInspector]
+        public List<Material> averageVelocityMaterials = new List<Material>();
 
         private float frequency = 1f;
         private float speed = 8f;
@@ -38,7 +40,10 @@ namespace CellexalVR.AnalysisLogic
         private void Start()
         {
             ActiveGraphs = new List<Graph>();
+            GenerateAverageVelocityMaterials();
+            CellexalEvents.ConfigLoaded.AddListener(GenerateAverageVelocityMaterials);
         }
+
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -437,6 +442,33 @@ namespace CellexalVR.AnalysisLogic
             {
                 g.velocityParticleEmitter.AverageVelocitesResolution = newResolution;
             }
+        }
+
+        /// <summary>
+        /// Generate the colors needed for the average velocity arrows, these colors are the same as the gene expression colors used in graphs.
+        /// </summary>
+        private void GenerateAverageVelocityMaterials()
+        {
+            averageVelocityMaterials.Clear();
+            int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+            int halfNbrOfExpressionColors = nbrOfExpressionColors / 2;
+
+            Color[] lowMidExpressionColors = Extensions.Extensions.InterpolateColors(CellexalConfig.Config.GraphLowExpressionColor, CellexalConfig.Config.GraphMidExpressionColor, halfNbrOfExpressionColors);
+            Color[] midHighExpressionColors = Extensions.Extensions.InterpolateColors(CellexalConfig.Config.GraphMidExpressionColor, CellexalConfig.Config.GraphHighExpressionColor, nbrOfExpressionColors - halfNbrOfExpressionColors + 1);
+
+            for (int i = 0; i < halfNbrOfExpressionColors; ++i)
+            {
+                var newMaterial = new Material(standardMaterial);
+                newMaterial.color = lowMidExpressionColors[i];
+                averageVelocityMaterials.Add(newMaterial);
+            }
+            for (int i = 1; i < nbrOfExpressionColors - halfNbrOfExpressionColors + 1; ++i)
+            {
+                var newMaterial = new Material(standardMaterial);
+                newMaterial.color = midHighExpressionColors[i];
+                averageVelocityMaterials.Add(newMaterial);
+            }
+
         }
 
         /*

@@ -90,9 +90,18 @@ namespace CellexalVR.AnalysisObjects
         }
 
         private List<GameObject> averageVelocityGameObjects = new List<GameObject>();
+
         private float itemsPerFrameConstant;
         private bool useGraphPointColors;
-        public bool UseGraphPointColors { get; set; }
+        public bool UseGraphPointColors
+        {
+            get { return useGraphPointColors; }
+            set
+            {
+                useGraphPointColors = value;
+                CalculateAverageVelocities();
+            }
+        }
 
         private float startSize = 1f;
         private bool useArrowParticle = true;
@@ -121,7 +130,7 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        public List<Tuple<Vector3, Vector3, float>> AverageVelocities = new List<Tuple<Vector3, Vector3, float>>();
+        public List<Tuple<Vector3, Vector3, float, Color>> AverageVelocities = new List<Tuple<Vector3, Vector3, float, Color>>();
 
         private int averageVelocitiesResolution = 20;
         public int AverageVelocitesResolution
@@ -140,130 +149,9 @@ namespace CellexalVR.AnalysisObjects
             get => emitAverageVelocities;
             set
             {
-
-                AverageVelocities.Clear();
-                foreach (GameObject arrow in averageVelocityGameObjects)
-                {
-                    Destroy(arrow);
-                }
-                averageVelocityGameObjects.Clear();
-
-                if (value)
-                {
-                    float[,,] averageVelocitiesX = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
-                    float[,,] averageVelocitiesY = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
-                    float[,,] averageVelocitiesZ = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
-                    int[,,] averageVelocitesNumberOfPoints = new int[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
-
-                    foreach (Tuple<Graph.GraphPoint, Vector3> v in emitOrder)
-                    {
-                        Vector3 pos = v.Item1.Position;
-                        int indexX = (int)((pos.x + 0.5f) * AverageVelocitesResolution); // multiply with resolution and dispose of decimals
-                        int indexY = (int)((pos.y + 0.5f) * AverageVelocitesResolution);
-                        int indexZ = (int)((pos.z + 0.5f) * AverageVelocitesResolution);
-
-                        averageVelocitiesX[indexX, indexY, indexZ] += v.Item2.x;
-                        averageVelocitiesY[indexX, indexY, indexZ] += v.Item2.y;
-                        averageVelocitiesZ[indexX, indexY, indexZ] += v.Item2.z;
-
-                        // add up the number of points in each section for later
-                        averageVelocitesNumberOfPoints[indexX, indexY, indexZ]++;
-                    }
-
-                    int maxNumPoints = 0;
-                    foreach (int i in averageVelocitesNumberOfPoints)
-                    {
-                        if (maxNumPoints < i)
-                        {
-                            maxNumPoints = i;
-                        }
-                    }
-
-                    // offset is the length if half a section (sections are always cubes)
-                    float offset = 1f / (AverageVelocitesResolution * 2f);
-                    // the graphs have (0,0,0) as their center position, not a corner
-                    offset -= 0.5f;
-
-                    for (int i = 0; i < AverageVelocitesResolution; ++i)
-                    {
-                        for (int j = 0; j < AverageVelocitesResolution; ++j)
-                        {
-                            for (int k = 0; k < AverageVelocitesResolution; ++k)
-                            {
-                                Vector3 pos = new Vector3(
-                                    (float)i / AverageVelocitesResolution + offset,
-                                    (float)j / AverageVelocitesResolution + offset,
-                                    (float)k / AverageVelocitesResolution + offset
-                                );
-                                // average out each section
-                                int numPoints = averageVelocitesNumberOfPoints[i, j, k];
-                                if (maxNumPoints < numPoints)
-                                {
-                                    maxNumPoints = numPoints;
-                                }
-
-                                if (numPoints > 0)
-                                {
-                                    Vector3 averageVelocity = new Vector3(
-                                        averageVelocitiesX[i, j, k] /= numPoints,
-                                        averageVelocitiesY[i, j, k] /= numPoints,
-                                        averageVelocitiesZ[i, j, k] /= numPoints
-                                    );
-
-                                    AverageVelocities.Add(new Tuple<Vector3, Vector3, float>(pos, averageVelocity, (float)numPoints / maxNumPoints));
-                                }
-                            }
-                        }
-                    }
-
-                    float longestAveragevelocity = 0f;
-
-                    foreach (Tuple<Vector3, Vector3, float> averageVelocity in AverageVelocities)
-                    {
-                        if (longestAveragevelocity < averageVelocity.Item2.magnitude)
-                        {
-                            longestAveragevelocity = averageVelocity.Item2.magnitude;
-                        }
-                    }
-
-
-                    foreach (Tuple<Vector3, Vector3, float> averageVelocity in AverageVelocities)
-                    {
-
-                        Vector3 pos = averageVelocity.Item1 + averageVelocity.Item2 / 2f;
-
-                        GameObject newArrow = Instantiate(averageVelocityArrowPrefab, transform);
-                        newArrow.transform.localPosition = pos;
-                        newArrow.transform.LookAt(graph.transform.TransformPoint(averageVelocity.Item1 + averageVelocity.Item2));
-
-                        // 0,0,0 is the middle of the shaft, local positions for the arrows subobjects must be halfed
-                        float halfMagnitude = averageVelocity.Item2.magnitude / 2f;
-
-                        float weight = averageVelocity.Item2.magnitude / longestAveragevelocity;
-                        float scaleXZ = Mathf.Clamp(weight * 10f, 0f, 1f);
-
-                        Transform shaft = newArrow.transform.Find("arrow_shaft");
-                        shaft.localScale = new Vector3(shaft.localScale.x * scaleXZ, halfMagnitude, shaft.localScale.z * scaleXZ);
-
-                        Transform head = newArrow.transform.Find("arrow_head");
-                        head.localPosition = new Vector3(0, 0, halfMagnitude);
-                        head.localScale = Vector3.Scale(head.localScale, new Vector3(scaleXZ, scaleXZ, scaleXZ));
-
-                        Color color = shaft.GetComponent<MeshRenderer>().material.color;
-                        //color.a = averageVelocity.Item3 * 10f;
-                        color.r = weight;
-                        color.b = 1f - weight;
-                        // leak materials like a madman
-                        shaft.GetComponent<MeshRenderer>().material.color = color;
-                        head.GetComponent<MeshRenderer>().material.color = color;
-
-                        averageVelocityGameObjects.Add(newArrow);
-                    }
-                }
-
                 emitAverageVelocities = value;
+                CalculateAverageVelocities();
             }
-
         }
 
 
@@ -285,6 +173,15 @@ namespace CellexalVR.AnalysisObjects
             SetColors();
             Play();
             oldArrowEmitRate = ArrowEmitRate;
+
+            CellexalEvents.GraphsColoredByGene.AddListener(OnGraphColorChange);
+            CellexalEvents.GraphsReset.AddListener(OnGraphColorChange);
+            CellexalEvents.GraphsColoredByIndex.AddListener(OnGraphColorChange);
+        }
+
+        private void OnGraphColorChange()
+        {
+            CalculateAverageVelocities();
         }
 
         void DoEmit()
@@ -485,6 +382,164 @@ namespace CellexalVR.AnalysisObjects
             colorBySpeedModule.color = new ParticleSystem.MinMaxGradient(gradient);
         }
 
-    }
+        /// <summary>
+        /// Calculates the average velocities based on the currently loaded velocity information.
+        /// </summary>
+        public void CalculateAverageVelocities()
+        {
+            AverageVelocities.Clear();
+            foreach (GameObject arrow in averageVelocityGameObjects)
+            {
+                Destroy(arrow);
+            }
+            averageVelocityGameObjects.Clear();
 
+            if (!emitAverageVelocities)
+            {
+                return;
+            }
+
+            float[,,] averageVelocitiesX = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+            float[,,] averageVelocitiesY = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+            float[,,] averageVelocitiesZ = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+            int[,,] averageVelocitesNumberOfPoints = new int[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+            float[,,] averageVelocitiesColorR = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+            float[,,] averageVelocitiesColorG = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+            float[,,] averageVelocitiesColorB = new float[averageVelocitiesResolution, averageVelocitiesResolution, averageVelocitiesResolution];
+
+            foreach (Tuple<Graph.GraphPoint, Vector3> v in emitOrder)
+            {
+                Vector3 pos = v.Item1.Position;
+                int indexX = (int)((pos.x + 0.5f) * AverageVelocitesResolution); // multiply with resolution and dispose of decimals
+                int indexY = (int)((pos.y + 0.5f) * AverageVelocitesResolution);
+                int indexZ = (int)((pos.z + 0.5f) * AverageVelocitesResolution);
+
+                averageVelocitiesX[indexX, indexY, indexZ] += v.Item2.x;
+                averageVelocitiesY[indexX, indexY, indexZ] += v.Item2.y;
+                averageVelocitiesZ[indexX, indexY, indexZ] += v.Item2.z;
+
+                // add up the number of points in each section for later
+                averageVelocitesNumberOfPoints[indexX, indexY, indexZ]++;
+
+                // add up color values if needed for the average gene colors
+                Color col = v.Item1.GetColor();
+                averageVelocitiesColorR[indexX, indexY, indexZ] += col.r;
+                averageVelocitiesColorG[indexX, indexY, indexZ] += col.g;
+                averageVelocitiesColorB[indexX, indexY, indexZ] += col.b;
+
+            }
+
+            int maxNumPoints = 0;
+            foreach (int i in averageVelocitesNumberOfPoints)
+            {
+                if (maxNumPoints < i)
+                {
+                    maxNumPoints = i;
+                }
+            }
+
+            // offset is the length if half a section (sections are always cubes)
+            float offset = 1f / (AverageVelocitesResolution * 2f);
+            // the graphs have (0,0,0) as their center position, not a corner
+            offset -= 0.5f;
+
+            for (int i = 0; i < AverageVelocitesResolution; ++i)
+            {
+                for (int j = 0; j < AverageVelocitesResolution; ++j)
+                {
+                    for (int k = 0; k < AverageVelocitesResolution; ++k)
+                    {
+                        Vector3 pos = new Vector3(
+                            (float)i / AverageVelocitesResolution + offset,
+                            (float)j / AverageVelocitesResolution + offset,
+                            (float)k / AverageVelocitesResolution + offset
+                        );
+                        // average out each section
+                        int numPoints = averageVelocitesNumberOfPoints[i, j, k];
+                        if (maxNumPoints < numPoints)
+                        {
+                            maxNumPoints = numPoints;
+                        }
+
+                        if (numPoints > 0)
+                        {
+                            Vector3 averageVelocity = new Vector3(
+                                averageVelocitiesX[i, j, k] /= numPoints,
+                                averageVelocitiesY[i, j, k] /= numPoints,
+                                averageVelocitiesZ[i, j, k] /= numPoints
+                            );
+
+                            Color color = new Color(
+                                averageVelocitiesColorR[i, j, k] / numPoints,
+                                averageVelocitiesColorG[i, j, k] / numPoints,
+                                averageVelocitiesColorB[i, j, k] / numPoints
+                                );
+
+                            AverageVelocities.Add(new Tuple<Vector3, Vector3, float, Color>(pos, averageVelocity, (float)numPoints / maxNumPoints, color));
+                        }
+                    }
+                }
+            }
+
+            float longestAveragevelocity = 0f;
+
+            foreach (Tuple<Vector3, Vector3, float, Color> averageVelocity in AverageVelocities)
+            {
+                if (longestAveragevelocity < averageVelocity.Item2.magnitude)
+                {
+                    longestAveragevelocity = averageVelocity.Item2.magnitude;
+                }
+            }
+
+            foreach (Tuple<Vector3, Vector3, float, Color> averageVelocity in AverageVelocities)
+            {
+
+                Vector3 pos = averageVelocity.Item1 + averageVelocity.Item2 / 2f;
+
+                GameObject newArrow = Instantiate(averageVelocityArrowPrefab, transform);
+                newArrow.transform.localPosition = pos;
+                newArrow.transform.LookAt(graph.transform.TransformPoint(averageVelocity.Item1 + averageVelocity.Item2));
+
+                // 0,0,0 is the middle of the shaft, local positions for the arrows subobjects must be halfed
+                float halfMagnitude = averageVelocity.Item2.magnitude / 2f;
+
+                float weight = averageVelocity.Item2.magnitude / longestAveragevelocity;
+                float scaleXZ = Mathf.Clamp(weight * 10f, 0f, 1f);
+
+                Transform shaft = newArrow.transform.Find("arrow_shaft");
+                shaft.localScale = new Vector3(shaft.localScale.x * scaleXZ, halfMagnitude, shaft.localScale.z * scaleXZ);
+
+                Transform head = newArrow.transform.Find("arrow_head");
+                head.localPosition = new Vector3(0, 0, halfMagnitude);
+                head.localScale = Vector3.Scale(head.localScale, new Vector3(scaleXZ, scaleXZ, scaleXZ));
+
+                Color color;
+                Material material;
+                List<Material> averageVelocityMaterials = referenceManager.velocityGenerator.averageVelocityMaterials;
+                if (!useGraphPointColors)
+                {
+                    if (weight == 1f)
+                    {
+                        material = averageVelocityMaterials[averageVelocityMaterials.Count - 1];
+                    }
+                    else
+                    {
+                        material = averageVelocityMaterials[(int)(weight * averageVelocityMaterials.Count)];
+                    }
+                    shaft.GetComponent<MeshRenderer>().sharedMaterial = material;
+                    head.GetComponent<MeshRenderer>().sharedMaterial = material;
+                }
+                else
+                {
+                    color = averageVelocity.Item4;
+                    // leak materials like a madman
+                    shaft.GetComponent<MeshRenderer>().material.color = color;
+                    head.GetComponent<MeshRenderer>().material.color = color;
+                }
+
+
+                averageVelocityGameObjects.Add(newArrow);
+            }
+        }
+    }
 }

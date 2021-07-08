@@ -34,9 +34,9 @@ namespace CellexalVR.Menu.SubMenus
         }
 
         /// <summary>
-        /// Create buttons for files with velocity information.
+        /// Create buttons for files with filter information.
         /// </summary>
-        /// <param name="files">An array of strings of file paths to .mds files with velocity information.</param>
+        /// <param name="files">An array of strings of file paths to .mds files with filter information.</param>
         public void CreateButtons(string[] files)
         {
             filterPaths = files;
