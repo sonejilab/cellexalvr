@@ -456,15 +456,17 @@ namespace CellexalVR.AnalysisLogic
             Color[] lowMidExpressionColors = Extensions.Extensions.InterpolateColors(CellexalConfig.Config.GraphLowExpressionColor, CellexalConfig.Config.GraphMidExpressionColor, halfNbrOfExpressionColors);
             Color[] midHighExpressionColors = Extensions.Extensions.InterpolateColors(CellexalConfig.Config.GraphMidExpressionColor, CellexalConfig.Config.GraphHighExpressionColor, nbrOfExpressionColors - halfNbrOfExpressionColors + 1);
 
+            var prefabMaterial = averageVelocityArrowPrefab.transform.Find("arrow_shaft").GetComponent<MeshRenderer>().sharedMaterial;
+
             for (int i = 0; i < halfNbrOfExpressionColors; ++i)
             {
-                var newMaterial = new Material(standardMaterial);
+                var newMaterial = new Material(prefabMaterial);
                 newMaterial.color = lowMidExpressionColors[i];
                 averageVelocityMaterials.Add(newMaterial);
             }
             for (int i = 1; i < nbrOfExpressionColors - halfNbrOfExpressionColors + 1; ++i)
             {
-                var newMaterial = new Material(standardMaterial);
+                var newMaterial = new Material(prefabMaterial);
                 newMaterial.color = midHighExpressionColors[i];
                 averageVelocityMaterials.Add(newMaterial);
             }
