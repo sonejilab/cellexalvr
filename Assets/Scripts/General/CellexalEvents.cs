@@ -9,6 +9,8 @@ namespace CellexalVR.General
         public static UnityEvent GraphsLoaded = new UnityEvent();
         public static UnityEvent GraphsUnloaded = new UnityEvent();
         public static UnityEvent ScarfObjectLoaded = new UnityEvent();
+        public static UnityEvent ScarfUMAPFinished = new UnityEvent();
+        public static UnityEvent OutputRecieved = new UnityEvent();
         
         public static UnityEvent PDFArticleRead = new UnityEvent();
 

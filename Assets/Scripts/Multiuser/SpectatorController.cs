@@ -28,7 +28,7 @@ namespace CellexalVR.Multiuser
 
         private void Start()
         {
-            ToggleSpectator(false);
+            //ToggleSpectator(false);
             //foreach (Canvas c in settingsMenu.GetComponentsInChildren<Canvas>())
             //{
             //    c.renderMode = RenderMode.ScreenSpaceCamera;
@@ -48,6 +48,7 @@ namespace CellexalVR.Multiuser
 
         private void Update()
         {
+            if (!active) return;
             if (Input.anyKey || Input.GetKeyUp(KeyCode.Tab))
             {
                 HandleInput();
@@ -116,12 +117,13 @@ namespace CellexalVR.Multiuser
             spectatorCamera.enabled = false;
         }
 
-        private void ToggleSpectator(bool toggle)
+        public void ToggleSpectator(bool toggle)
         {
             avatar.SetActive(toggle);
             CtrlsCanvas.SetActive(!toggle);
             TextCanvas.SetActive(toggle);
             spectatorCamera.enabled = toggle;
+            spectatorCamera.GetComponent<SpectatorCameraLook>().enabled = toggle;
             active = toggle;
         }
     }

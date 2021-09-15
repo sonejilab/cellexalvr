@@ -1,0 +1,39 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="mainStyleSheet.uss" />
+    <ui:VisualElement name="screen" style="flex-grow: 1; align-items: center; -unity-font-definition: resource(&apos;FontAssets/DynamicOSFontAssets/GlobalFallback/OSX/Helvetica SDF&apos;); -unity-font: resource(&apos;UI Builder/TanksMainMenu/Teko-Regular&apos;); color: rgb(255, 255, 255); justify-content: center;">
+        <ui:VisualElement name="container" style="border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-left-color: rgba(89, 89, 89, 0.12); border-right-color: rgba(89, 89, 89, 0.12); border-top-color: rgba(89, 89, 89, 0.12); border-bottom-color: rgba(89, 89, 89, 0.12); background-color: rgba(89, 89, 89, 0); align-items: stretch; justify-content: center; padding-left: 14px; padding-right: 14px; padding-top: 14px; padding-bottom: 14px; font-size: 20px; letter-spacing: 6px; -unity-font-style: normal; -unity-text-align: upper-left; -unity-font: url(&apos;/Assets/Samples/UI Builder/1.0.0-preview.17/TanksMainMenu/Editor/Resources/UI Builder/TanksMainMenu/Teko-Regular.ttf&apos;);">
+            <ui:VisualElement name="header" style="flex-direction: row; align-items: center; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px;">
+                <ui:Label text="JOIN OR CREATE ROOM" display-tooltip-when-elided="true" name="header" class="main-header subheader" style="-unity-text-align: middle-left;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="align-items: stretch; flex-direction: row; justify-content: space-between; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px;">
+                <ui:VisualElement name="inputfields" style="flex-direction: column; align-items: auto; justify-content: space-between;">
+                    <ui:TextField picking-mode="Ignore" value="default_user" text="default_user" name="user-name" class="input-argument" style="-unity-background-image-tint-color: rgb(255, 255, 255); flex-direction: row-reverse;">
+                        <ui:Label text="DEFAULT USER:" display-tooltip-when-elided="true" style="-unity-text-align: middle-left;" />
+                    </ui:TextField>
+                    <ui:TextField picking-mode="Ignore" text="default_room" name="room-name" value="default_room" class="input-text-field input-argument">
+                        <ui:Label text="ROOM NAME:" display-tooltip-when-elided="true" />
+                    </ui:TextField>
+                    <ui:TextField picking-mode="Ignore" name="password" mask-character="*" password="true" class="input-text-field input-argument">
+                        <ui:Label text="PASSWORD:" display-tooltip-when-elided="true" />
+                    </ui:TextField>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="modebuttons" style="flex-direction: row-reverse; flex-grow: 0; justify-content: space-between; align-items: center; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
+                <ui:Toggle name="desktop-toggle" class="mode-toggle" style="justify-content: space-around; align-items: center; flex-direction: row-reverse; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
+                <ui:Label text="DESKTOP MODE:" display-tooltip-when-elided="true" />
+                <ui:Toggle name="ghost-toggle" class="mode-toggle" style="align-items: center; justify-content: center;" />
+                <ui:Label text="GHOST MODE:" display-tooltip-when-elided="true" />
+                <ui:Toggle value="true" name="vr-toggle" class="mode-toggle" />
+                <ui:Label text="VR VIEW:" display-tooltip-when-elided="true" />
+            </ui:VisualElement>
+            <ui:VisualElement name="button-row" style="flex-direction: row; justify-content: space-between; align-items: center; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px;">
+                <ui:Button text="BACK" display-tooltip-when-elided="true" name="back-button" class="button back-button" />
+                <ui:VisualElement name="join-create-buttons" style="flex-direction: row; align-items: stretch;">
+                    <ui:Button text="CREATE ROOM" display-tooltip-when-elided="true" name="create-button" class="button" />
+                    <ui:Button text="JOIN ROOM" display-tooltip-when-elided="true" name="join-button" class="button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label display-tooltip-when-elided="true" enable-rich-text="true" name="error-message" class="message-label" style="display: flex; font-size: 16px; letter-spacing: 6px; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px;" />
+    </ui:VisualElement>
+</ui:UXML>

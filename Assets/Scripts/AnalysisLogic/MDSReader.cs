@@ -274,6 +274,11 @@ namespace CellexalVR.AnalysisLogic
 
         private void CreateFromCoordinates(List<string> names, List<float> x, List<float> y, List<float> z)
         {
+            if (!referenceManager.loaderController.loaderMovedDown)
+            {
+                referenceManager.loaderController.loaderMovedDown = true;
+                referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+            }
             int gpCount = x.Count;
             for (int i = 0; i < gpCount; i++)
             {
@@ -295,7 +300,12 @@ namespace CellexalVR.AnalysisLogic
 
         public void CreateFromCoordinates(List<float> x, List<float> y, List<float> z)
         {
-             int gpCount = x.Count;
+            if (!referenceManager.loaderController.loaderMovedDown)
+            {
+                referenceManager.loaderController.loaderMovedDown = true;
+                referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+            }
+            int gpCount = x.Count;
              for (int i = 0; i < gpCount; i++)
              {
                  string cellName = i.ToString();
@@ -303,6 +313,7 @@ namespace CellexalVR.AnalysisLogic
                  referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], z[i]);
              }           
         }
+
         /// <summary>
         /// For spatial data we want to have each slice as a separate graph to be able to interact with them individually.
         /// First the list of points is ordered by the z coordinate then for each z coordinate a graph is created. 
