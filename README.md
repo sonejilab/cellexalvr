@@ -1,4 +1,6 @@
 # CellexalVR
+[![DOI](https://zenodo.org/badge/109413079.svg)](https://zenodo.org/badge/latestdoi/109413079)
+
 CellexalVR is a virtual reality platform for the visualisation and analysis of single-cell gene expression data.
 
 Analysing data in virtual reality provides a fully immersive environment where the user can visualise and interact with the data without restriction, with a focus on data visibility, collaboration and cell selection.
