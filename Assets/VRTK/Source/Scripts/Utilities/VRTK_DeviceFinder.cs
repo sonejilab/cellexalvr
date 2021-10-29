@@ -427,7 +427,7 @@ namespace VRTK
         public static Headsets GetHeadsetType(bool summary = false)
         {
             Headsets returnValue = Headsets.Unknown;
-            cachedHeadsetType = (cachedHeadsetType == "" ? XRDevice.model.Replace(" ", "").Replace(".", "").ToLowerInvariant() : cachedHeadsetType);
+            //cachedHeadsetType = (cachedHeadsetType == "" ? XRDevice.deviceLoade.Replace(" ", "").Replace(".", "").ToLowerInvariant() : cachedHeadsetType);
             switch (cachedHeadsetType)
             {
                 case "oculusriftcv1":

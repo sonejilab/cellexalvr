@@ -11,7 +11,7 @@ namespace CellexalVR.Menu.SubMenus
     public class Tab : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        public TabButton TabButton;
+        public CellexalVR.Menu.Buttons.TabButton TabButton;
         public bool Active { get; private set; }
         public TextMeshPro TabName;
 

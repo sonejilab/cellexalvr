@@ -29,4 +29,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/IntroTutorialScene.unity
     guid: 109c1c936823b7f438573a39b04f738a
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: ed668db856c43304d83aa0837a0da342,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: c1d873fd04c86e640abfc148df76e4b5,
+      type: 2}

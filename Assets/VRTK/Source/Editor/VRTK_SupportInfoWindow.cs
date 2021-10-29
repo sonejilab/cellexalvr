@@ -125,7 +125,7 @@ namespace VRTK
 
                         string[] vrEnabledDevices;
 #if UNITY_5_5_OR_NEWER
-                        vrEnabledDevices = VREditor.GetVREnabledDevicesOnTargetGroup(targetGroup);
+                        vrEnabledDevices = null;// VREditor.GetVREnabledDevicesOnTargetGroup(targetGroup);
 #else
                         vrEnabledDevices = VREditor.GetVREnabledDevices(targetGroup);
 #endif

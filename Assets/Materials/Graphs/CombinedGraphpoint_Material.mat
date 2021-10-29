@@ -64,6 +64,7 @@ Material:
     - _AlphaTest: 1
     - _BumpScale: 1
     - _Clipping: 2
+    - _Culling: 1
     - _Cutoff: 0.504
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -90,6 +91,7 @@ Material:
     - _TestRadius2: 0.31
     - _ThickerOutline: 4
     - _Thickness: 0.001
+    - _Transparancy: 0.1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:

@@ -122,9 +122,10 @@ public class SteamVR_Settings : EditorWindow
 #if (UNITY_5_4 || UNITY_5_3 || UNITY_5_2 || UNITY_5_1 || UNITY_5_0)
 			var devices = UnityEditorInternal.VR.VREditor.GetVREnabledDevices(BuildTargetGroup.Standalone);
 #else
-			var devices = UnityEditorInternal.VR.VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Standalone);
+			var devices = new string[1];
+			devices[0] = "openvr"; // UnityEditorInternal.VR.VREditor.GetVREnabledDevicesOnTargetGroup(BuildTargetGroup.Standalone);
 #endif
-			var hasOpenVR = false;
+            var hasOpenVR = false;
 			foreach (var device in devices)
 				if (device.ToLower() == "openvr")
 					hasOpenVR = true;
