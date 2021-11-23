@@ -31,6 +31,7 @@ namespace CellexalVR.Interaction
         private ControllerModelSwitcher controllerModelSwitcher;
 
         public ReferenceManager referenceManager;
+        public XRRayInteractor laser;
         public Transform origin;
         public bool Override { get; set; }
         public bool alwaysActive;
@@ -47,7 +48,7 @@ namespace CellexalVR.Interaction
         void Start()
         {
             frame = 0;
-            GetComponent<XRRayInteractor>().enabled = false;
+            GetComponentInChildren<XRRayInteractor>().enabled = false;
             environmentButtonLayer = LayerMask.NameToLayer("EnvironmentButtonLayer");
             keyboardLayer = LayerMask.NameToLayer("KeyboardLayer");
             menuLayer = LayerMask.NameToLayer("MenuLayer");
@@ -177,6 +178,9 @@ namespace CellexalVR.Interaction
         // Toggle Laser from laser button. Laser should then be active until toggled off.
         public void ToggleLaser(bool active)
         {
+            if (active == referenceManager.rightLaser.enabled)
+                return;
+            print($"toggle {active}");
             alwaysActive = active;
             // OpenXR
             referenceManager.rightLaser.enabled = active;

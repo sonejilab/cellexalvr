@@ -193,9 +193,9 @@ namespace CellexalVR.General
             //headset = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Camera (head)/Camera (eye)");
             headset = GameObject.Find("CellexalOpenXRRig/Camera Offset/Main Camera");
             controllerMenuCollider = leftController.GetComponent<BoxCollider>();
-            rightLaser = rightController.GetComponent<XRRayInteractor>();
             leftLaser = leftController.GetComponent<XRRayInteractor>();
             laserPointerController = rightController.GetComponent<LaserPointerController>();
+            rightLaser = laserPointerController.laser;
 
             selectionToolCollider = rightController.GetComponentInChildren<SelectionToolCollider>(true);
             deleteTool = rightController.transform.Find("Delete Tool").gameObject;

@@ -224,7 +224,7 @@ namespace CellexalVR.Interaction
                     lastHit.SetHighlighted(false);
                     lastHit = null;
                     controllerModelSwitcher.SwitchToDesiredModel();
-                    //referenceManager.laserPointerController.ToggleLaser(false);
+                    referenceManager.laserPointerController.ToggleLaser(false);
 
                     referenceManager.laserPointerController.Override = false;
                 }
