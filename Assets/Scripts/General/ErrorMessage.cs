@@ -107,7 +107,7 @@ namespace CellexalVR.General
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.gameObject.CompareTag("GameController"))
             {
                 controllerInside = true;
             }
@@ -115,7 +115,7 @@ namespace CellexalVR.General
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.gameObject.CompareTag("GameController"))
             {
                 controllerInside = false;
             }

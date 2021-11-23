@@ -232,7 +232,7 @@ namespace CellexalVR.Interaction
                 HelpToolShouldStayActivated = false;
             }
             // Deactivate all tools that should not be active.
-            if (DesiredModel != Model.SelectionTool  && selectionToolCollider != null)
+            if (DesiredModel != Model.SelectionTool && selectionToolCollider != null)
             {
                 selectionToolCollider.SetSelectionToolEnabled(false);
             }
@@ -356,7 +356,7 @@ namespace CellexalVR.Interaction
 
             if (ActualModel == Model.SelectionTool)
             {
-                rightControllerBodyRenderer.sharedMaterial.color = new Color(desiredColor.r, desiredColor.g, desiredColor.b, 0.5f);
+                //rightControllerBodyRenderer.sharedMaterial.color = new Color(desiredColor.r, desiredColor.g, desiredColor.b, 0.5f);
             }
         }
 

@@ -10,6 +10,8 @@ namespace Assets.Scripts.Interaction
         [SerializeField] private InputActionAsset actionAsset;
         [SerializeField] private XRRayInteractor rayInteractor;
         [SerializeField] private TeleportationProvider provider;
+        [SerializeField] private GameObject endPoint;
+
 
         private InputAction _thumbstick;
 
@@ -17,7 +19,7 @@ namespace Assets.Scripts.Interaction
         {
             rayInteractor.enabled = false;
 
-            var activate = actionAsset.FindActionMap("XRI RightHand").FindAction("Teleport Mode Activate");
+            var activate = actionAsset.FindActionMap("XRI LeftHand").FindAction("Teleport Mode Activate");
             activate.Enable();
             activate.performed += OnTeleportActivate;
 
@@ -37,11 +39,14 @@ namespace Assets.Scripts.Interaction
         private void OnTeleportActivate(InputAction.CallbackContext context)
         {
             rayInteractor.enabled = true;
+            endPoint.SetActive(true);
+            
         }
 
         private void OnTeleportDeactivate(InputAction.CallbackContext context)
         {
             Teleport();
+            endPoint.SetActive(false);
             rayInteractor.enabled = false;
         }
 
@@ -51,6 +56,7 @@ namespace Assets.Scripts.Interaction
             if (!hit.collider)
             {
                 rayInteractor.enabled = false;
+                endPoint.SetActive(false);
                 return;
             }
 

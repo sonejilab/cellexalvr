@@ -50,6 +50,7 @@ namespace CellexalVR.Interaction
             }
         }
 
+        [SerializeField] private UnityEngine.InputSystem.InputActionAsset actionAsset;
 
         private SelectionFromPreviousMenu previousSelectionMenu;
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -84,6 +85,26 @@ namespace CellexalVR.Interaction
                 UpdateColors();
             }
             CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            CellexalEvents.RightTriggerPressed.AddListener(OnTriggerDown);
+            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
+
+            var thumbpadRight = actionAsset.FindActionMap("XRI RightHand").FindAction("RotateRight");
+            thumbpadRight.Enable();
+            thumbpadRight.performed += OnThumbpadRight;
+
+            var thumbpadLeft = actionAsset.FindActionMap("XRI RightHand").FindAction("RotateLeft");
+            thumbpadLeft.Enable();
+            thumbpadLeft.performed += OnThumbpadLeft;
+
+            var thumbpadUp = actionAsset.FindActionMap("XRI RightHand").FindAction("Up");
+            thumbpadUp.Enable();
+            thumbpadUp.performed += OnThumbpadUp;
+
+            var thumbpadDown = actionAsset.FindActionMap("XRI RightHand").FindAction("Down");
+            thumbpadDown.Enable();
+            thumbpadDown.performed += OnThumbpadDown;
+
         }
 
         private void Start()
@@ -94,49 +115,94 @@ namespace CellexalVR.Interaction
             selectionManager = referenceManager.selectionManager;
             // OpenXR
             //if (!CrossSceneInformation.Ghost)
-                //radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
+            //radialMenu = referenceManager.rightControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
             UpdateShapeIcons();
 
         }
 
 
+        private void OnThumbpadRight(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            ChangeColor(true);
+        }
+
+        private void OnThumbpadLeft(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            ChangeColor(false);
+        }
+
+        private void OnThumbpadUp(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
+            {
+                referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(true);
+            }
+        }
+
+        private void OnThumbpadDown(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
+            {
+                referenceManager.controllerModelSwitcher.SwitchSelectionToolMesh(false);
+            }
+        }
+
+        private void OnTriggerClick()
+        {
+            particles.gameObject.SetActive(true);
+            selActive = true;
+        }
+
+        private void OnTriggerDown()
+        {
+            hapticFeedbackThisFrame = true;
+            var activeCollider = selectionToolColliders[CurrentMeshIndex];
+            Vector3 boundsCenter = activeCollider.bounds.center;
+            Vector3 boundsExtents = activeCollider.bounds.extents;
+            foreach (var graph in graphManager.Graphs)
+            {
+                //print(graph.GraphName + graph.GraphActive);
+                var closestPoints = graph.MinkowskiDetection(activeCollider.transform.position, boundsCenter, boundsExtents, currentColorIndex);
+                foreach (var point in closestPoints)
+                {
+                    selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
+                }
+            }
+        }
+
+        private void OnTriggerUp()
+        {
+            selActive = false;
+            particles.gameObject.SetActive(false);
+        }
+
         private void Update()
         {
             // OpenXR
             //device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
-            {
-                //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                bool triggerPressed;
-                if (device.TryGetFeatureValue(CommonUsages.triggerButton, out triggerPressed) && triggerPressed)
-                {
-                    if (!TriggerPressed)
-                    {
-                        TriggerPressed = true;
-                        particles.gameObject.SetActive(true);
-                        selActive = true;
-                    }
+            //if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            //{
+            //    //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            //    bool triggerPressed;
+            //    if (device.TryGetFeatureValue(CommonUsages.triggerButton, out triggerPressed) && triggerPressed)
+            //    {
 
-                    hapticFeedbackThisFrame = true;
-                    var activeCollider = selectionToolColliders[CurrentMeshIndex];
-                    Vector3 boundsCenter = activeCollider.bounds.center;
-                    Vector3 boundsExtents = activeCollider.bounds.extents;
-                    foreach (var graph in graphManager.Graphs)
-                    {
-                        //print(graph.GraphName + graph.GraphActive);
-                        var closestPoints = graph.MinkowskiDetection(activeCollider.transform.position, boundsCenter, boundsExtents, currentColorIndex);
-                        foreach (var point in closestPoints)
-                        {
-                            selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
-                        }
-                    }
-                }
+            //    }
 
-                else if (TriggerPressed)
-                {
-                    selActive = false;
-                    particles.gameObject.SetActive(false);
-                }
+            //    else if (TriggerPressed)
+            //    {
+            //    }            //if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            //{
+            //    //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            //    bool triggerPressed;
+            //    if (device.TryGetFeatureValue(CommonUsages.triggerButton, out triggerPressed) && triggerPressed)
+            //    {
+
+            //    }
+
+            //    else if (TriggerPressed)
+            //    {
+            //    }
 
                 //if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
                 //{
@@ -160,7 +226,7 @@ namespace CellexalVR.Interaction
                 //    selActive = false;
                 //    particles.gameObject.SetActive(false);
                 //}
-            }
+            //}
             // Sometimes a bug occurs where particles stays active even when selection tool is off. This ensures particles is off 
             // if selection tool is inactive.
             //if (particles && !IsSelectionToolEnabled() && particles.gameObject.activeSelf)
@@ -259,6 +325,7 @@ namespace CellexalVR.Interaction
             //radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[buttonIndexRight];
             //radialMenu.buttons[3].color = Colors[buttonIndexRight];
             selectedColor = Colors[currentColorIndex];
+            selectionToolColliders[currentMeshIndex].GetComponent<Renderer>().material.color = Colors[currentColorIndex];
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
 
             var main = particles.main;
@@ -273,7 +340,9 @@ namespace CellexalVR.Interaction
         {
             if (enabled)
             {
+                selectionToolColliders[currentMeshIndex].GetComponent<Renderer>().material.color = Colors[currentColorIndex];
                 controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
+
             }
             //particles.gameObject.SetActive(enabled && particles != null);
 

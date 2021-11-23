@@ -80,7 +80,7 @@ namespace CellexalVR.Tools
 
         private void OnTriggerClick()
         {
-            if (!gameObject.activeSelf) return;
+            if (!gameObject.activeSelf || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu) return;
             // Open XR
             //device = SteamVR_Controller.Input((int)rightController.index);
             //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))

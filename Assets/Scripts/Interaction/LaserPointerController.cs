@@ -180,7 +180,6 @@ namespace CellexalVR.Interaction
         {
             if (active == referenceManager.rightLaser.enabled)
                 return;
-            print($"toggle {active}");
             alwaysActive = active;
             // OpenXR
             referenceManager.rightLaser.enabled = active;

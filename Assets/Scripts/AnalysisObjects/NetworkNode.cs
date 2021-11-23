@@ -51,7 +51,6 @@ namespace CellexalVR.AnalysisObjects
 		private UnityEngine.XR.InputDevice device;
         private bool edgesAdded;
         private float lineWidth;
-        private string controllerCollider = "ControllerCollider(Clone)";
         private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
 
         private void OnValidate()
@@ -105,7 +104,7 @@ namespace CellexalVR.AnalysisObjects
         private void OnTriggerEnter(Collider other)
         {
             bool active = Center.Enlarged;
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
+            bool touched = other.gameObject.name.Equals(laserCollider) || (other.gameObject.CompareTag("GameController"));
             if (active && touched && !Center.controllerInsideSomeNode)
             {
                 Center.ToggleNodeColliders(false, gameObject.name);
@@ -139,7 +138,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerExit(Collider other)
         {
-            bool touched = other.gameObject.name.Equals(laserCollider) || other.gameObject.name.Equals(controllerCollider);
+            bool touched = other.gameObject.name.Equals(laserCollider) || (other.gameObject.CompareTag("GameController"));
             if (touched)
             {
                 Center.ToggleNodeColliders(true, gameObject.name);

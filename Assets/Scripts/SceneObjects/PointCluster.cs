@@ -26,8 +26,6 @@ namespace CellexalVR.SceneObjects
 
         private Vector3 fromPos, toPos, midPos, firstAnchor, secondAnchor;
         private BoxCollider bcFrom, bcMid, bcTo;
-        private string controllerCollider = "ControllerCollider(Clone)";
-        private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         private bool controllerInside;
         // Open XR 
 		//private SteamVR_Controller.Device device;
@@ -65,8 +63,7 @@ namespace CellexalVR.SceneObjects
 
         private void OnTriggerEnter(Collider other)
         {
-            bool touched = other.gameObject.name.Equals(laserCollider) ||
-                           other.gameObject.name.Equals(controllerCollider);
+            bool touched = other.gameObject.CompareTag("GameController");
             if (!touched) return;
             Highlight(true);
             referenceManager.multiuserMessageSender.SendMessageHighlightCluster(true, gbg.gameObject.name, ClusterId);
@@ -76,8 +73,7 @@ namespace CellexalVR.SceneObjects
 
         private void OnTriggerExit(Collider other)
         {
-            bool touched = other.gameObject.name.Equals(laserCollider) ||
-                           other.gameObject.name.Equals(controllerCollider);
+            bool touched = other.gameObject.CompareTag("GameController");
             if (!touched) return;
             Highlight(false);
             referenceManager.multiuserMessageSender.SendMessageHighlightCluster(false, gbg.gameObject.name, ClusterId);

@@ -426,7 +426,7 @@ SphereCollider:
   m_GameObject: {fileID: 1299708079048448}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.4
   m_Center: {x: 0, y: 0, z: 0}
@@ -1029,7 +1029,7 @@ GameObject:
   - component: {fileID: 4927675275487168}
   - component: {fileID: 54785186352858302}
   - component: {fileID: 114868182672732462}
-  - component: {fileID: 2023782625360499305}
+  - component: {fileID: 6100684725515642750}
   m_Layer: 2
   m_Name: Cells
   m_TagString: Cells
@@ -1091,7 +1091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 0}
---- !u!114 &2023782625360499305
+--- !u!114 &6100684725515642750
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1100,7 +1100,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1557781378695286}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad34abafad169848a38072baa96cdb2, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e07da6b57efc3e4cb4eb7e6a653dd7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}

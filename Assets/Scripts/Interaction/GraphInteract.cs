@@ -9,7 +9,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Handles what happens when a graph is interacted with.
     /// </summary>
-    class GraphInteract : XRGrabInteractable
+    class GraphInteract : OffsetGrab
     {
         public ReferenceManager referenceManager;
 

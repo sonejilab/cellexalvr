@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 114073428060975046}
   - component: {fileID: 54762506670964714}
   - component: {fileID: 114490444003295042}
-  - component: {fileID: 2933822840782198160}
   m_Layer: 8
   m_Name: Graph_Prefab
   m_TagString: Graph
@@ -208,19 +207,6 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   referenceManager: {fileID: 0}
---- !u!65 &2933822840782198160
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1128814461414928}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1141931572521968
 GameObject:
   m_ObjectHideFlags: 0

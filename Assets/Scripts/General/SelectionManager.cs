@@ -259,7 +259,7 @@ namespace CellexalVR.General
             if (hapticFeedback && selectionToolCollider.hapticFeedbackThisFrame)
             {
                 selectionToolCollider.hapticFeedbackThisFrame = false;
-                rightController.SendHapticImpulse(0.8f, 0.3f);
+                rightController.SendHapticImpulse(0.2f, 0.05f);
             }
             //}
         }

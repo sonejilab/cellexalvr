@@ -47,7 +47,6 @@ namespace CellexalVR.SceneObjects
         private GameObject fromSphere;
         private GameObject midSphere;
         private GameObject toSphere;
-        private string controllerCollider = "ControllerCollider(Clone)";
         // private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         private bool controllerInside;
 
