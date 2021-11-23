@@ -65,7 +65,7 @@ namespace CellexalVR.Menu.SubMenus
             foreach (Transform child in transform)
             {
                 // We don't want to change the state of the tab buttons, they should always be turned on.
-                if (ReferenceEquals(child.GetComponent<TabButton>(), null))
+                if (ReferenceEquals(child.GetComponent<CellexalVR.Menu.Buttons.TabButton>(), null))
                 {
                     //if (menuToggler.MenuActive)
                     //{

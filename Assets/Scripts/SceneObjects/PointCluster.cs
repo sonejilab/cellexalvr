@@ -3,6 +3,7 @@ using System.Collections;
 using CellexalVR.AnalysisObjects;
 using System.Collections.Generic;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 
 namespace CellexalVR.SceneObjects
 {
@@ -13,7 +14,9 @@ namespace CellexalVR.SceneObjects
         public IEnumerable<Graph.GraphPoint> fromPointCluster, midPointCluster, toPointCluster;
         public Color LineColor { get; set; }
         public ReferenceManager referenceManager;
-        public SteamVR_TrackedObject rightController;
+        // OpenXR
+        //public SteamVR_TrackedObject rightController;
+        public UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         public LineRenderer lineRenderer;
         public GameObject velocityFromGraph;
         public GameObject velocityMidGraph;
@@ -26,7 +29,9 @@ namespace CellexalVR.SceneObjects
         private string controllerCollider = "ControllerCollider(Clone)";
         private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         private bool controllerInside;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private Vector3[] linePosistions;
         private List<LineBetweenTwoPoints> lines = new List<LineBetweenTwoPoints>();
         private bool linesBundled;
@@ -55,6 +60,7 @@ namespace CellexalVR.SceneObjects
 
             linesBundled = true;
             gbg = t3.GetComponent<GraphBetweenGraphs>();
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -141,16 +147,6 @@ namespace CellexalVR.SceneObjects
         // Update is called once per frame
         private void Update()
         {
-            device = SteamVR_Controller.Input((int) rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                Highlight(false);
-                referenceManager.multiuserMessageSender.SendMessageHighlightCluster(false, gbg.gameObject.name,
-                    ClusterId);
-                RemakeLines(fromPointCluster);
-                referenceManager.multiuserMessageSender.SendMessageToggleBundle(gbg.gameObject.name, ClusterId);
-                controllerInside = false;
-            }
 
             if (t1.hasChanged || t2.hasChanged)
             {
@@ -161,6 +157,22 @@ namespace CellexalVR.SceneObjects
                 bcFrom.center = fromPos;
                 bcMid.center = midPos;
                 bcTo.center = toPos;
+            }
+        }
+
+        private void OnTriggerClick()
+        {
+            // Open XR
+            //device = SteamVR_Controller.Input((int) rightController.index);
+            //if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside)
+            {
+                Highlight(false);
+                referenceManager.multiuserMessageSender.SendMessageHighlightCluster(false, gbg.gameObject.name,
+                    ClusterId);
+                RemakeLines(fromPointCluster);
+                referenceManager.multiuserMessageSender.SendMessageToggleBundle(gbg.gameObject.name, ClusterId);
+                controllerInside = false;
             }
         }
 

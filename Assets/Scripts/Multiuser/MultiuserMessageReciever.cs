@@ -15,6 +15,7 @@ using CellexalVR.DesktopUI;
 using CellexalVR.SceneObjects;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Multiuser
 {
@@ -145,8 +146,8 @@ namespace CellexalVR.Multiuser
                 lr = mlm.AddLaser(ownerId, ownerName);
                 if (lr == null) return;
             }
-            lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
-            lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
+            lr.startColor = lr.endColor = referenceManager.rightLaser.gameObject.GetComponent<XRInteractorLineVisual>().validColorGradient.colorKeys[0].color;
+            lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.gameObject.GetComponent<XRInteractorLineVisual>().validColorGradient.colorKeys[0].color;
             lr.gameObject.SetActive(active);
         }
 
@@ -163,7 +164,7 @@ namespace CellexalVR.Multiuser
             {
                 lr = mlm.AddLaser(ownerId, ownerName);
                 if (lr == null) return;
-                lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
+                lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.gameObject.GetComponent<XRInteractorLineVisual>().validColorGradient.colorKeys[0].color;
             }
             lr.SetPosition(0, mlm.laserTransforms[ownerId].position);
             lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));

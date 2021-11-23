@@ -66,6 +66,16 @@ namespace CellexalVR.General
         public static UnityEvent UsernameChanged = new UnityEvent();
         public static UnityEvent LogInitialized = new UnityEvent();
 
+        // Open XR input events
+        public static UnityEvent RightTriggerClick = new UnityEvent();
+        public static UnityEvent RightTriggerPressed = new UnityEvent();
+        public static UnityEvent RightTriggerUp = new UnityEvent();
+        public static UnityEvent LeftTriggerClick = new UnityEvent();
+        public static UnityEvent LeftTriggerPressed = new UnityEvent();
+        public static UnityEvent LeftTriggerUp = new UnityEvent();
+
+
+
         public class CommandFinishedEvent : UnityEvent<bool> { }
         public static CommandFinishedEvent CommandFinished = new CommandFinishedEvent();
 

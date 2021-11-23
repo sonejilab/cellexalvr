@@ -1,5 +1,6 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.SceneObjects;
 using System;
 using System.Collections;
@@ -15,11 +16,15 @@ namespace CellexalVR.Tools
     /// </summary>
     public class CaptureScreenshot : MonoBehaviour
     {
-        public SteamVR_TrackedObject rightController;
+        // Open XR 
+        //public SteamVR_TrackedObject rightController;;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         public ScreenCanvas screenCanvas;
         public GameObject panel;
 
-        private SteamVR_Controller.Device device;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private float fadeTime = 0.7f;
         private float elapsedTime = 0.0f;
         private float colorAlpha;
@@ -35,22 +40,23 @@ namespace CellexalVR.Tools
             }
         }
 
-        void Start()
+        private void Start()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-
+            //device = SteamVR_Controller.Input((int)rightController.index);
             screenCanvas = referenceManager.screenCanvas;
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
-        void Update()
+
+        private void OnTriggerClick()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            //Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (gameObject.activeSelf)
             {
+                // Open XR
+                //Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
+                //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
                 StartCoroutine(Capture());
             }
-
         }
 
         /// <summary>

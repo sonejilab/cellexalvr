@@ -1,6 +1,7 @@
 ﻿using System;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.SceneObjects;
 using UnityEngine;
 
@@ -19,14 +20,19 @@ namespace CellexalVR.Filters
         public GameObject wire;
 
         private bool controllerInside = false;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
         private MeshRenderer meshRenderer;
 
         private void Start()
         {
             rightController = referenceManager.rightController;
             meshRenderer = GetComponent<MeshRenderer>();
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void OnValidate()
@@ -57,10 +63,11 @@ namespace CellexalVR.Filters
             }
         }
 
-        private void Update()
+        private void OnTriggerClick()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)
             {
                 filterManager.PortClicked(this);
             }

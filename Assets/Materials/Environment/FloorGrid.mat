@@ -111,3 +111,4 @@ Material:
     - _Tint: {r: 0, g: 0.86100054, b: 1, a: 0.3137255}
     - _WaveColor: {r: 1, g: 0.5537269, b: 0, a: 1}
     - _WaveCoords: {r: 0.5, g: 0.5, b: 0, a: 0}
+  m_BuildTextureStacks: []

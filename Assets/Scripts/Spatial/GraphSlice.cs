@@ -2,9 +2,7 @@
 using CellexalVR.General;
 using System.Collections;
 using UnityEngine;
-using VRTK;
-using VRTK.GrabAttachMechanics;
-using VRTK.SecondaryControllerGrabActions;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Spatial
 {
@@ -29,7 +27,9 @@ namespace CellexalVR.Spatial
         private Vector3 originalSc;
         private Quaternion originalRot;
         private SpatialGraph spatGraph;
-        private VRTK.VRTK_InteractableObject interactableObject;
+        // OpenXR
+        //private VRTK.VRTK_InteractableObject interactableObject;
+        private XRGrabInteractable interactableObject;
         private GameObject wirePrefab;
         private GameObject replacementPrefab;
         private Color replacementCol;
@@ -41,9 +41,9 @@ namespace CellexalVR.Spatial
         {
             graph = gameObject.GetComponent<Graph>();
             spatGraph = transform.parent.gameObject.GetComponent<SpatialGraph>();
-            interactableObject = gameObject.GetComponent<VRTK.VRTK_InteractableObject>();
-            interactableObject.InteractableObjectGrabbed += OnGrabbed;
-            interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
+            interactableObject = gameObject.GetComponent<XRGrabInteractable>();
+            interactableObject.selectEntered.AddListener(OnGrabbed);
+            interactableObject.selectExited.AddListener(OnUnGrabbed);
             originalPos = transform.localPosition;
             originalRot = transform.localRotation;
             originalSc = transform.localScale;
@@ -51,7 +51,7 @@ namespace CellexalVR.Spatial
             //GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
         }
 
-        private void OnGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        private void OnGrabbed(SelectEnterEventArgs args)
         {
             if (grabbing)
                 return;
@@ -61,10 +61,26 @@ namespace CellexalVR.Spatial
             }
         }
 
-        private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        private void OnUnGrabbed(SelectExitEventArgs args)
         {
             grabbing = false;
         }
+
+        // OpenXR
+        //private void OnGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        //{
+        //    if (grabbing)
+        //        return;
+        //    if (!sliceMode)
+        //    {
+        //        grabbing = true;
+        //    }
+        //}
+
+        //private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        //{
+        //    grabbing = false;
+        //}
 
         /// <summary>
         /// Animation to move the slice back to its original position within the parent object.
@@ -145,7 +161,7 @@ namespace CellexalVR.Spatial
                 rigidbody.isKinematic = false;
                 rigidbody.drag = 10;
                 rigidbody.angularDrag = 15;
-                GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+                GetComponent<XRGrabInteractable>().enabled = true;
                 sliceMode = true;
                 Vector3 startPos = this.transform.localPosition;
                 Vector3 targetPos = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y, zCoord);
@@ -161,7 +177,7 @@ namespace CellexalVR.Spatial
             }
             else
             {
-                GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+                GetComponent<XRGrabInteractable>().enabled = false;
                 Destroy(GetComponent<Rigidbody>());
                 sliceMode = false;
                 //graph.transform.localPosition = Vector3.zero;

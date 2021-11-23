@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 using UnityEngine;
 
 namespace CellexalVR.Filters
@@ -11,8 +12,12 @@ namespace CellexalVR.Filters
         public GameObject rightBorder;
         public GameObject bottomBorder;
 
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private bool controllerInside;
         private Color originalColor;
 
@@ -28,6 +33,7 @@ namespace CellexalVR.Filters
         {
             originalColor = leftBorder.GetComponent<Renderer>().material.color;
             rightController = referenceManager.rightController;
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -52,15 +58,15 @@ namespace CellexalVR.Filters
             }
         }
 
-        private void Update()
+        private void OnTriggerClick()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)
             {
                 referenceManager.filterManager.SaveFilter();
                 // Save filter
             }
         }
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿using CellexalVR.General;
 using UnityEngine;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
 {
@@ -24,8 +24,10 @@ namespace CellexalVR.Interaction
         public Material correlatedGenesPressedMaterial;
 
 
-        private SteamVR_TrackedObject rightController;
+        private ActionBasedController rightController;
+        private UnityEngine.XR.InputDevice device;
         private ClickablePanel lastHit = null;
+        private ClickablePanel hitPanel;
         private bool grabbingObject = false;
 
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -157,9 +159,16 @@ namespace CellexalVR.Interaction
 
             CellexalEvents.ObjectGrabbed.AddListener(() => grabbingObject = true);
             CellexalEvents.ObjectUngrabbed.AddListener(() => grabbingObject = false);
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void Update()
+        {
+            Raycast();   
+        }
+
+        private void Raycast(bool click = false)
         {
             if (!CrossSceneInformation.Tutorial && !(CrossSceneInformation.Normal && controllerModelSwitcher.Ready() &&
                 !grabbingObject && !referenceManager.selectionToolCollider.IsSelectionToolEnabled() &&
@@ -167,16 +176,15 @@ namespace CellexalVR.Interaction
                 return;
 
             var raycastingSource = referenceManager.rightLaser.transform;
-            var device = SteamVR_Controller.Input((int) rightController.index);
+            // Open XR
             var ray = new Ray(raycastingSource.position, raycastingSource.forward);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 // if we hit something this frame.
-                var hitPanel = hit.collider.transform.gameObject.GetComponent<ClickablePanel>();
+                hitPanel = hit.collider.transform.gameObject.GetComponent<ClickablePanel>();
                 if (hitPanel != null)
                 {
-                    referenceManager.rightLaser.tracerVisibility =
-                        VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+                    referenceManager.laserPointerController.ToggleLaser(true);
                     if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
                     {
                         controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
@@ -195,7 +203,8 @@ namespace CellexalVR.Interaction
                     hitPanel.SetHighlighted(true);
                     keyboardHandler.UpdateLaserCoords(uv2);
 
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    // Open XR
+                    if (click)
                     {
                         hitPanel.Click();
                         keyboardHandler.Pulse(uv2);
@@ -235,6 +244,11 @@ namespace CellexalVR.Interaction
 
                 lastHit = null;
             }
+        }
+
+        private void OnTriggerClick()
+        {
+            Raycast(true);
         }
     }
 }

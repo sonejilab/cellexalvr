@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 using UnityEngine;
 
 namespace CellexalVR.SceneObjects
@@ -9,8 +10,12 @@ namespace CellexalVR.SceneObjects
         public ReferenceManager referenceManager;
 
         private bool controllerInside = false;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private bool animateDown = false;
         private bool animateUp = false;
         private Renderer rend;
@@ -29,33 +34,35 @@ namespace CellexalVR.SceneObjects
             rend = GetComponent<Renderer>();
         }
 
-        private void Update()
-        {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                animateDown = true;
-            }
+        //private void Update()
+        //{           
+        //    // Open XR
+        //    //device = SteamVR_Controller.Input((int)rightController.index);
+        //    device = DeviceManager.instance.GetDevice(UnityEngine.XR.XRNode.RightHand);
+        //    if (controllerInside && DeviceManager.instance.GetTrigger(device) == 1)
+        //    {
+        //        animateDown = true;
+        //    }
 
-            if (animateDown)
-            {
-                transform.parent.Rotate(0, 0, 30f * Time.deltaTime);
-                if (transform.parent.localRotation.eulerAngles.z >= 40)
-                {
-                    animateDown = false;
-                    animateUp = true;
-                    // multiple_exp PullLever();
-                }
-            }
-            if (animateUp)
-            {
-                transform.parent.Rotate(0, 0, -30f * Time.deltaTime);
-                if (transform.parent.localRotation.eulerAngles.z <= 5)
-                {
-                    animateUp = false;
-                }
-            }
-        }
+        //    if (animateDown)
+        //    {
+        //        transform.parent.Rotate(0, 0, 30f * Time.deltaTime);
+        //        if (transform.parent.localRotation.eulerAngles.z >= 40)
+        //        {
+        //            animateDown = false;
+        //            animateUp = true;
+        //            // multiple_exp PullLever();
+        //        }
+        //    }
+        //    if (animateUp)
+        //    {
+        //        transform.parent.Rotate(0, 0, -30f * Time.deltaTime);
+        //        if (transform.parent.localRotation.eulerAngles.z <= 5)
+        //        {
+        //            animateUp = false;
+        //        }
+        //    }
+        //}
 
         private void OnTriggerEnter(Collider other)
         {

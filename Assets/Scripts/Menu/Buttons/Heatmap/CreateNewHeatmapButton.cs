@@ -25,7 +25,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         public override void Click()
         {
             heatmapRaycast.CreateNewHeatmapFromSelection();
-            device.TriggerHapticPulse(2000);
+            rightController.SendHapticImpulse(0.8f, 0.3f);
         }
     }
 }

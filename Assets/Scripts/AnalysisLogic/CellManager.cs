@@ -11,6 +11,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.AnalysisLogic.H5reader;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -41,7 +42,7 @@ namespace CellexalVR.AnalysisLogic
 
 
         private SQLite database;
-        private SteamVR_TrackedObject rightController;
+        private ActionBasedController rightController;
         private PreviousSearchesList previousSearchesList;
         private Dictionary<string, Cell> cells;
         private SelectionToolCollider selectionToolCollider;
@@ -322,7 +323,9 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             audioSource.Play();
-            SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
+            // Open XR
+            //SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
+            rightController.SendHapticImpulse(0.8f, 0.3f);
             ArrayList expressions = h5Reader._expressionResult;
 
 
@@ -389,7 +392,9 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             GetComponent<AudioSource>().Play();
-            SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
+            // Open XR
+            //SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
+            rightController.SendHapticImpulse(0.7f, 1f);
             ArrayList expressions = database._result;
 
             // stop the coroutine if the gene was not in the database

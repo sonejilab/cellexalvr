@@ -4,6 +4,8 @@ using UnityEngine;
 using CellexalVR.General;
 using System.IO;
 using UnityEngine.UI;
+using CellexalVR.Interaction;
+
 namespace CellexalVR.AnalysisLogic.H5reader
 {
     public class ButtonPresser : MonoBehaviour
@@ -12,8 +14,12 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public BoxCollider collider;
         public ReferenceManager referenceManager;
         [SerializeField] private GameObject note;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private bool controllerInside;
         [SerializeField] private Color color;
         private Button button;
@@ -28,6 +34,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             rightController = referenceManager.rightController;
             collider.size = new Vector3(70, 30, 1);
             collider.center = new Vector3(0, -15, 0);
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerPressed);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -48,11 +56,15 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        }
+
+        private void OnTriggerPressed()
+        {
+            // Open XR
+            if (controllerInside)
             {
                 button.onClick.Invoke();
-                
+
             }
         }
     }

@@ -18,13 +18,18 @@ namespace CellexalVR.Filters
         public TMPro.TextMeshPro textmeshpro;
 
         private FilterManager filterManager;
-        private SteamVR_TrackedObject rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         private bool controllerInside;
 
         private void Start()
         {
             rightController = referenceManager.rightController;
             filterManager = referenceManager.filterManager;
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+
         }
 
         private void OnValidate()
@@ -64,10 +69,11 @@ namespace CellexalVR.Filters
         }
 
 
-        private void Update()
+        private void OnTriggerClick()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)
             {
                 KeyboardHandler keyboard = null;
                 if (type == FieldType.NAME)
@@ -100,6 +106,7 @@ namespace CellexalVR.Filters
                     keyboard.transform.Translate(new Vector3(-0.05f, -0.1f, 0f), Space.Self);
                 }
             }
+
         }
     }
 }

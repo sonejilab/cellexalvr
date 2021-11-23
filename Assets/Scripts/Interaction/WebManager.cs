@@ -1,6 +1,7 @@
 ﻿using CellexalVR.General;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
 {
@@ -16,6 +17,7 @@ namespace CellexalVR.Interaction
         public ReferenceManager referenceManager;
 
         private bool firstActivated;
+        private XRGrabInteractable interactable;
 
         private void OnValidate()
         {
@@ -30,11 +32,13 @@ namespace CellexalVR.Interaction
         void Start()
         {
             SetVisible(false);
+            interactable = GetComponent<XRGrabInteractable>();
         }
 
         private void Update()
         {
-            if (GetComponent<VRTK.VRTK_InteractableObject>().IsGrabbed())
+            // Open XR
+            if (interactable.isSelected)
             {
                 referenceManager.multiuserMessageSender.SendMessageMoveBrowser(transform.localPosition, transform.localRotation, transform.localScale);
             }

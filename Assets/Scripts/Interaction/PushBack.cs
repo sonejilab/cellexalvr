@@ -1,6 +1,5 @@
 ﻿using CellexalVR.AnalysisLogic;
 using UnityEngine;
-using VRTK;
 using CellexalVR.General;
 using CellexalVR.AnalysisObjects;
 
@@ -11,7 +10,9 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class PushBack : MonoBehaviour
     {
-        //public SteamVR_TrackedObject rightController;
+        //// Open XR 
+		//public SteamVR_TrackedObject rightController;;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         public float distanceMultiplier = 0.1f;
         public float scaleMultiplier = 0.4f;
         public float maxScale;
@@ -19,6 +20,7 @@ namespace CellexalVR.Interaction
         public ReferenceManager referenceManager;
 
         //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private Ray ray;
         private RaycastHit hit;
         private Transform raycastingSource;

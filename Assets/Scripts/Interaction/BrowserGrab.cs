@@ -1,13 +1,13 @@
 ﻿using CellexalVR.General;
 using UnityEngine;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
 {
     /// <summary>
     /// Interaction with Web browser. Keyboard is set inactive when grabbing for more reliable moving of the key-panels.
     /// </summary>
-    public class BrowserGrab : VRTK_InteractableObject
+    public class BrowserGrab : XRGrabInteractable
     {
         public ReferenceManager referenceManager;
         public GameObject keyboard;
@@ -20,7 +20,7 @@ namespace CellexalVR.Interaction
             }
         }
 
-        public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
+        protected override void OnSelectEntering(SelectEnterEventArgs args)
         {
             keyboard.SetActive(false);
             if (referenceManager == null)
@@ -28,18 +28,36 @@ namespace CellexalVR.Interaction
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
-            //GetComponent<MeshCollider>().convex = true;
-            base.OnInteractableObjectGrabbed(e);
+            base.OnSelectEntering(args);
         }
 
-        public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
+        //public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
+        //{
+        //    keyboard.SetActive(false);
+        //    if (referenceManager == null)
+        //    {
+        //        referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+        //    }
+        //    referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
+        //    //GetComponent<MeshCollider>().convex = true;
+        //    base.OnInteractableObjectGrabbed(e);
+        //}
+
+        protected override void OnSelectExiting(SelectExitEventArgs args)
         {
             keyboard.SetActive(true);
             referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
-            //if (grabbingObjects.Count == 0)
-            //    GetComponent<MeshCollider>().convex = false;
-            base.OnInteractableObjectUngrabbed(e);
+            base.OnSelectExiting(args);
         }
+
+        //public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
+        //{
+        //    keyboard.SetActive(true);
+        //    referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
+        //    //if (grabbingObjects.Count == 0)
+        //    //    GetComponent<MeshCollider>().convex = false;
+        //    base.OnInteractableObjectUngrabbed(e);
+        //}
 
         //private void OnTriggerEnter(Collider other)
         //{

@@ -22,7 +22,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         public override void Click()
         {
             GetComponentInParent<CellexalVR.AnalysisObjects.Heatmap>().SaveImage();
-            device.TriggerHapticPulse(2000);
+            rightController.SendHapticImpulse(0.8f, 0.3f);
         }
 
         public void FinishedButton()

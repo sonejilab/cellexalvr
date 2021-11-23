@@ -1,6 +1,7 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Networks;
 using System.Collections.Generic;
@@ -48,7 +49,9 @@ namespace CellexalVR.Tutorial
         //private GameObject controllerHints;
 
         private int currentStep = 0;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private GameObject rgripRight;
         private GameObject lgripRight;
         private GameObject rgripLeft;
@@ -88,6 +91,7 @@ namespace CellexalVR.Tutorial
             {
                 SetReferences();
             }
+            CellexalEvents.LeftTriggerClick.AddListener(OnTriggerClick);
             //screenCanvas = referenceManager.
         }
 
@@ -110,21 +114,26 @@ namespace CellexalVR.Tutorial
                 LoadTutorialStep(1);
             }
 
-            device = SteamVR_Controller.Input((int)referenceManager.leftController.index);
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        }
+
+        private void OnTriggerClick()
+        {
+            if (!gameObject.activeSelf) return;
+            // Open XR
+            //device = SteamVR_Controller.Input((int)leftController.index);
+            //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+
+            if (referenceManager.mainMenu.GetComponent<MeshRenderer>().enabled)
             {
-                if (referenceManager.mainMenu.GetComponent<MeshRenderer>().enabled)
-                {
-                    ResetMaterials(new GameObject[] { trackpadLeft, triggerRight });
-                    HighlightMaterials(new GameObject[] { triggerLeft });
-                    //triggerParticlesLeft.SetActive(true);
-                }
-                else
-                {
-                    ResetMaterials(new GameObject[] { triggerLeft });
-                    HighlightMaterials(new GameObject[] { trackpadLeft, triggerRight });
-                    //triggerParticlesLeft.SetActive(false);
-                }
+                ResetMaterials(new GameObject[] { trackpadLeft, triggerRight });
+                HighlightMaterials(new GameObject[] { triggerLeft });
+                //triggerParticlesLeft.SetActive(true);
+            }
+            else
+            {
+                ResetMaterials(new GameObject[] { triggerLeft });
+                HighlightMaterials(new GameObject[] { trackpadLeft, triggerRight });
+                //triggerParticlesLeft.SetActive(false);
             }
         }
 

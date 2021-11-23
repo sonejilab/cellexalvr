@@ -2,6 +2,7 @@
 using System.Collections;
 using CellexalVR.General;
 using CellexalVR.Spatial;
+using CellexalVR.Interaction;
 
 namespace CellexalVR.Spatial
 {
@@ -13,8 +14,12 @@ namespace CellexalVR.Spatial
         public ReferenceManager referenceManager;
 
         private bool attached;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private bool controllerInside;
 
         private void OnValidate()
@@ -33,6 +38,7 @@ namespace CellexalVR.Spatial
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             rightController = referenceManager.rightController;
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -53,14 +59,16 @@ namespace CellexalVR.Spatial
             }
         }
 
-        private void Update()
+        private void OnTriggerClick()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)
             {
                 AttachToGraph();
             }
         }
+
         private void AttachToGraph()
         {
             if (!attached)

@@ -1,6 +1,9 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.Menu.SubMenus;
 using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -13,9 +16,12 @@ namespace CellexalVR.Menu.Buttons
         public Tab tab;
         public MenuWithTabs Menu;
 
-        protected SteamVR_TrackedObject rightController;
+        // Open XR
+        //protected SteamVR_TrackedObject rightController;
+        //protected SteamVR_Controller.Device device;
+        private ActionBasedController rightController;
+        private InputDevice device;
         protected bool controllerInside = false;
-        protected SteamVR_Controller.Device device;
         private MeshRenderer meshRenderer;
         private Color standardColor = Color.grey;
         private Color highlightColor = Color.blue;
@@ -43,20 +49,14 @@ namespace CellexalVR.Menu.Buttons
             }
             this.tag = "Menu Controller Collider";
 
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         protected virtual void Update()
         {
             if (!CrossSceneInformation.Normal) return;
 
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                Menu.TurnOffAllTabs();
-                tab.SetTabActive(true);
-                highlight = true;
-                SetHighlighted(highlight);
-            }
+            //if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             if (!tab.Active && highlight && !controllerInside)
             {
                 highlight = false;
@@ -67,6 +67,17 @@ namespace CellexalVR.Menu.Buttons
                 SetHighlighted(highlight);
             }
             CheckForHit();
+        }
+
+        private void OnTriggerClick()
+        {
+            if (controllerInside)
+            {
+                Menu.TurnOffAllTabs();
+                tab.SetTabActive(true);
+                highlight = true;
+                SetHighlighted(highlight);
+            }
         }
 
         /// <summary>
@@ -83,7 +94,9 @@ namespace CellexalVR.Menu.Buttons
                 RaycastHit hit;
                 raycastingSource = referenceManager.laserPointerController.origin;
                 Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10);
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.IsTracerVisible())
+                // Open XR
+                //if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.IsTracerVisible())
+                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.enabled)
                 {
                     laserInside = true;
                     frameCount = 0;

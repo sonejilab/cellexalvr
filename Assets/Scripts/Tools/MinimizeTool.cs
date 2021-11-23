@@ -14,8 +14,13 @@ namespace CellexalVR.Tools
     {
         public ReferenceManager referenceManager;
 
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_TrackedObject leftController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController leftController;
+        private UnityEngine.XR.InputDevice device;
         private MinimizedObjectHandler jail;
         private ControllerModelSwitcher controllerModelSwitcher;
         private bool controllerInside = false;
@@ -36,13 +41,14 @@ namespace CellexalVR.Tools
             leftController = referenceManager.leftController;
             jail = referenceManager.minimizedObjectHandler;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
-        void Update()
+        private void OnTriggerClick()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)
             {
                 controllerInside = false;
                 if (collidingWith.CompareTag("Graph") || collidingWith.CompareTag("SubGraph")
@@ -88,7 +94,6 @@ namespace CellexalVR.Tools
                     }
                 }
             }
-
         }
 
         private void OnTriggerEnter(Collider other)

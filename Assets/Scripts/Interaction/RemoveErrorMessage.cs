@@ -9,8 +9,12 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
         public GameObject errorMessage;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private bool controllerInside;
 
         private void OnValidate()
@@ -32,6 +36,7 @@ namespace CellexalVR.Interaction
                 errorMessage = GetComponentInParent<ErrorMessage>().gameObject;
             }
             rightController = referenceManager.rightController;
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -54,8 +59,13 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        }
+
+        private void OnTriggerClick()
+        {
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)
             {
                 Destroy(errorMessage);
             }

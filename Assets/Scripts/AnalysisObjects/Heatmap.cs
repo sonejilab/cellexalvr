@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 using System.Collections;
 using System.Drawing.Imaging;
 using System.Threading;
@@ -196,7 +196,7 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            if (GetComponent<XRGrabInteractable>().isSelected)
             {
                 multiuserMessageSender.SendMessageMoveHeatmap(name, transform.position, transform.rotation, transform.localScale);
             }

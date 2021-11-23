@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Menu.Buttons.General
 {
@@ -26,7 +26,8 @@ namespace CellexalVR.Menu.Buttons.General
         // Use this for initialization
         void Start()
         {
-            playArea = VRTK_DeviceFinder.PlayAreaTransform();
+            // OpenXR find play area reference.
+            //playArea = VRTK_DeviceFinder.PlayAreaTransform();
         }
 
     }

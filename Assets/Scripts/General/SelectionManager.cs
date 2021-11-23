@@ -41,8 +41,12 @@ namespace CellexalVR.General
         private SelectionFromPreviousMenu previousSelectionMenu;
         private ControllerModelSwitcher controllerModelSwitcher;
         private GraphManager graphManager;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private List<Graph.GraphPoint> selectedCells = new List<Graph.GraphPoint>();
         private List<Graph.GraphPoint> lastSelectedCells = new List<Graph.GraphPoint>();
         private List<Tuple<string, string>> annotatedPoints = new List<Tuple<string, string>>();
@@ -255,7 +259,7 @@ namespace CellexalVR.General
             if (hapticFeedback && selectionToolCollider.hapticFeedbackThisFrame)
             {
                 selectionToolCollider.hapticFeedbackThisFrame = false;
-                SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(hapticIntensity);
+                rightController.SendHapticImpulse(0.8f, 0.3f);
             }
             //}
         }

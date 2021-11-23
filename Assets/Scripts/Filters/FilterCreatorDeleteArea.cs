@@ -14,7 +14,8 @@ namespace CellexalVR.Filters
 
             if (filterCreatorBlock && !(filterCreatorBlock is FilterCreatorResultBlock))
             {
-                filterCreatorBlock.GetComponent<VRTK.VRTK_InteractableObject>().ForceStopInteracting();
+                // Open XR
+                //filterCreatorBlock.GetComponent<VRTK.VRTK_InteractableObject>().ForceStopInteracting();
                 filterCreatorBlock.DisconnectAllPorts();
 
                 Destroy(filterCreatorBlock.gameObject);

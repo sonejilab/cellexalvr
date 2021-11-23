@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CellexalVR.General;
+using CellexalVR.Interaction;
+
 namespace CellexalVR.AnalysisLogic.H5reader
 {
     public class AnchorScript : MonoBehaviour
@@ -10,8 +12,12 @@ namespace CellexalVR.AnalysisLogic.H5reader
         BoxCollider boxCollider;
 
         public ReferenceManager referenceManager;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private bool controllerInside;
 
         public bool isAnchorA;
@@ -36,8 +42,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
         // Update is called once per frame
         void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // OpenXR
+            if (controllerInside)
             {
 
                 if (!rightController.GetComponentInChildren<AnchorScript>() && !isAnchorA && !isAttachedToHand) //Press to move anchor B

@@ -40,7 +40,7 @@ namespace CellexalVR.AnalysisLogic
         private void Start()
         {
             ActiveGraphs = new List<Graph>();
-            GenerateAverageVelocityMaterials();
+            //GenerateAverageVelocityMaterials();
             CellexalEvents.ConfigLoaded.AddListener(GenerateAverageVelocityMaterials);
         }
 

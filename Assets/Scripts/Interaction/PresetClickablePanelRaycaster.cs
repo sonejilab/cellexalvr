@@ -9,7 +9,10 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
-        private SteamVR_TrackedObject rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        private UnityEngine.XR.InputDevice device;
         private ClickablePanel lastHit = null;
         private bool hitDemoPanelLastFrame = false;
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -28,12 +31,19 @@ namespace CellexalVR.Interaction
             rightController = referenceManager.rightController;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             panelLayerMask = 1 << LayerMask.NameToLayer("SelectableLayer");
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void Update()
         {
+            Raycast();
+        }
+
+        private void Raycast(bool triggerClick = false)
+        {
             var raycastingSource = referenceManager.rightLaser.transform;
-            var device = SteamVR_Controller.Input((int)rightController.index);
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
             var ray = new Ray(raycastingSource.position, referenceManager.rightController.transform.forward);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit, 10f, panelLayerMask))
@@ -52,7 +62,8 @@ namespace CellexalVR.Interaction
                         lastHit.SetHighlighted(false);
                     }
                     hitPanel.SetHighlighted(true);
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    if (triggerClick)
                     {
                         hitPanel.Click();
                     }
@@ -77,7 +88,14 @@ namespace CellexalVR.Interaction
                 hitDemoPanelLastFrame = false;
                 SetLaserActivated(false);
             }
+
         }
+        private void OnTriggerClick()
+        {
+            Raycast(true);
+        }
+
+
 
         private void SetLaserActivated(bool active)
         {

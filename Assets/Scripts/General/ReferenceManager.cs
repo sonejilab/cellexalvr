@@ -12,7 +12,7 @@ using CellexalVR.Tutorial;
 using SQLiter;
 using UnityEditor;
 using UnityEngine;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 using CellexalVR.AnalysisLogic.H5reader;
 using UnityEngine.Serialization;
 
@@ -25,8 +25,11 @@ namespace CellexalVR.General
     {
         #region Controller things
         [Header("Controller things")]
-        public SteamVR_TrackedObject rightController;
-        public SteamVR_TrackedObject leftController;
+        // OpenXR
+        public ActionBasedController rightController;
+        public ActionBasedController leftController;
+        //public SteamVR_TrackedObject rightController;
+        //public SteamVR_TrackedObject leftController;
         public GameObject rightControllerScriptAlias;
         public GameObject leftControllerScriptAlias;
         public ControllerModelSwitcher controllerModelSwitcher;
@@ -42,8 +45,8 @@ namespace CellexalVR.General
         //public TextMeshProUGUI FarGroupInfo;
         public GameObject headset;
         public BoxCollider controllerMenuCollider;
-        public VRTK_StraightPointerRenderer rightLaser;
-        public VRTK_StraightPointerRenderer leftLaser;
+        public XRRayInteractor rightLaser;
+        public XRRayInteractor leftLaser;
         public LaserPointerController laserPointerController;
 
         #endregion
@@ -175,30 +178,33 @@ namespace CellexalVR.General
             Undo.RecordObject(this, "ReferenceManager Auto-populate");
 
             h5ReaderAnnotatorScriptManager = GameObject.Find("H5ReaderTestObjectManager").GetComponent<H5ReaderAnnotatorScriptManager>();
-            rightController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
-            leftController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)").GetComponent<SteamVR_TrackedObject>();
-            rightControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias");
-            leftControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/LeftControllerScriptAlias");
+            //rightController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
+            //leftController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)").GetComponent<SteamVR_TrackedObject>();
+            rightController = GameObject.Find("CellexalOpenXRRig/Camera Offset/RightHand Controller").GetComponent<ActionBasedController>();
+            leftController = GameObject.Find("CellexalOpenXRRig/Camera Offset/LeftHand Controller").GetComponent<ActionBasedController>();
+            //rightControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias");
+            //leftControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/LeftControllerScriptAlias");
             controllerModelSwitcher = leftController.GetComponent<ControllerModelSwitcher>();
             //TextMeshProUGUI HUDFlashInfo;
             //TextMeshProUGUI HUDGroupInfo;
             //TextMeshProUGUI FarFlashInfo;
             //TextMeshProUGUI FarGroupInfo;
 
-            headset = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Camera (head)/Camera (eye)");
+            //headset = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Camera (head)/Camera (eye)");
+            headset = GameObject.Find("CellexalOpenXRRig/Camera Offset/Main Camera");
             controllerMenuCollider = leftController.GetComponent<BoxCollider>();
-            rightLaser = rightControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>();
-            leftLaser = leftControllerScriptAlias.GetComponent<VRTK_StraightPointerRenderer>();
-            laserPointerController = rightControllerScriptAlias.GetComponent<LaserPointerController>();
+            rightLaser = rightController.GetComponent<XRRayInteractor>();
+            leftLaser = leftController.GetComponent<XRRayInteractor>();
+            laserPointerController = rightController.GetComponent<LaserPointerController>();
 
             selectionToolCollider = rightController.GetComponentInChildren<SelectionToolCollider>(true);
             deleteTool = rightController.transform.Find("Delete Tool").gameObject;
             minimizeTool = rightController.GetComponentInChildren<MinimizeTool>(true);
             //GameObject helpMenu;
-            drawTool = rightController.GetComponentInChildren<DrawTool>();
+            drawTool = rightController.GetComponentInChildren<DrawTool>(true);
             webBrowser = GameObject.Find("WebBrowser");
             screenshotCamera = headset.GetComponentInChildren<CaptureScreenshot>(true);
-            teleportLaser = leftControllerScriptAlias.GetComponentInChildren<VRTK_BezierPointerRenderer>(true).gameObject;
+            teleportLaser = leftController.gameObject;
 
             mainMenu = GameObject.Find("MenuHolder/Main Menu");
             arcsSubMenu = mainMenu.GetComponentInChildren<ToggleArcsSubMenu>(true);
@@ -280,7 +286,7 @@ namespace CellexalVR.General
             colorPicker = settingsMenu.transform.Find("Color Picker/Content").GetComponent<ColorPicker>();
 
             spectatorRig = GameObject.Find("SpectatorRig");
-            VRRig = GameObject.Find("[VRTK]3.3");
+            VRRig = GameObject.Find("CellexalOpenXRRig");
 
             UnityEditor.PrefabUtility.ApplyPrefabInstance(gameObject, UnityEditor.InteractionMode.AutomatedAction);
             UnityEditor.PrefabUtility.SaveAsPrefabAssetAndConnect(gameObject, "Assets/Prefabs/Environment/InputReader.prefab", UnityEditor.InteractionMode.AutomatedAction);

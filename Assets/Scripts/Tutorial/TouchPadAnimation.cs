@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using VRTK.Examples;
 
 namespace CellexalVR.Tutorial
 {

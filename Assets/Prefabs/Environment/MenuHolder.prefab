@@ -6651,6 +6651,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuMaterial: {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
+  actionAsset: {fileID: 0}
 --- !u!64 &64655448851783820
 MeshCollider:
   m_ObjectHideFlags: 0

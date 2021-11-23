@@ -1,7 +1,7 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
 using UnityEngine;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
 {
@@ -14,7 +14,7 @@ namespace CellexalVR.Interaction
         public int Index { get; set; }
         public bool checkpoint;
 
-        public VRTK.VRTK_InteractableObject vrtkInteractableObject;
+        private XRGrabInteractable interactableObject;
         private ReferenceManager referenceManager;
         private FlybyMenu flybyMenu;
 
@@ -22,13 +22,13 @@ namespace CellexalVR.Interaction
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             flybyMenu = referenceManager.flybyMenu;
-            vrtkInteractableObject.InteractableObjectGrabbed += SphereGrabbed;
-            vrtkInteractableObject.InteractableObjectUngrabbed += SphereUngrabbed;
+            interactableObject.selectEntered.AddListener(SphereGrabbed);
+            interactableObject.selectExited.AddListener(SphereUnGrabbed);
         }
 
         private void Update()
         {
-            if (vrtkInteractableObject.IsGrabbed())
+            if (interactableObject.isSelected)
             {
                 UpdatePosition();
             }
@@ -42,21 +42,35 @@ namespace CellexalVR.Interaction
             flybyMenu.UpdatePosition(Index, transform.position, transform.rotation, checkpoint);
         }
 
-        /// <summary>
-        /// Called through the <see cref="VRTK.VRTK_InteractableObject.InteractableObjectGrabbed"/> event.
-        /// </summary>
-        private void SphereGrabbed(object sender, InteractableObjectEventArgs e)
+
+        private void SphereGrabbed(SelectEnterEventArgs args)
         {
             flybyMenu.SetSphereGrabbed(true, gameObject, Index, checkpoint);
         }
 
-        /// <summary>
-        /// Called through the <see cref="VRTK.VRTK_InteractableObject.InteractableObjectUngrabbed"/> event.
-        /// </summary>
-        private void SphereUngrabbed(object sender, InteractableObjectEventArgs e)
+        private void SphereUnGrabbed(SelectExitEventArgs args)
         {
             UpdatePosition();
             flybyMenu.SetSphereGrabbed(false, gameObject, Index, checkpoint);
         }
+
+        // OpenXR
+
+        /// <summary>
+        /// Called through the <see cref="VRTK.VRTK_InteractableObject.InteractableObjectGrabbed"/> event.
+        /// </summary>
+        //private void SphereGrabbed(object sender, InteractableObjectEventArgs e)
+        //{
+        //    flybyMenu.SetSphereGrabbed(true, gameObject, Index, checkpoint);
+        //}
+
+        /// <summary>
+        /// Called through the <see cref="VRTK.VRTK_InteractableObject.InteractableObjectUngrabbed"/> event.
+        /// </summary>
+        //private void SphereUngrabbed(object sender, InteractableObjectEventArgs e)
+        //{
+        //    UpdatePosition();
+        //    flybyMenu.SetSphereGrabbed(false, gameObject, Index, checkpoint);
+        //}
     }
 }

@@ -1,6 +1,9 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 using UnityEngine;
+using UnityEngine.XR;
+
 namespace CellexalVR.Tools
 {
     /// <summary>
@@ -18,8 +21,12 @@ namespace CellexalVR.Tools
         private GameObject objectToDelete;
         private bool runningScript;
 
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
 
         private void OnValidate()
         {
@@ -32,17 +39,14 @@ namespace CellexalVR.Tools
         private void Start()
         {
             rightController = referenceManager.rightController;
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
-        private void Update()
-        {
-            if (device == null)
-            {
-                rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
-                device = SteamVR_Controller.Input((int)rightController.index);
-            }
 
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        private void OnTriggerClick()
+        {
+            // Open XR
+            if (controllerInside)
             {
                 if (objectToDelete == null) return;
                 InitiateDelete(objectToDelete);

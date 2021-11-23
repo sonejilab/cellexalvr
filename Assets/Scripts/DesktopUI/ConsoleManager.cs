@@ -201,7 +201,7 @@ namespace CellexalVR.DesktopUI
             }
 
             outputField.text = outputBufferString;
-            outputField.MoveTextEnd(false);
+            //outputField.MoveTextEnd(false);
             outputField.textComponent.ForceMeshUpdate();
             //Canvas.ForceUpdateCanvases();
 

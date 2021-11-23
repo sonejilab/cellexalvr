@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,10 @@ namespace CellexalVR.Tools
         public ReferenceManager referenceManager;
         public Color LineColor = Color.white;
 
-        private SteamVR_TrackedObject rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         private BoxCollider controllerMenuCollider;
         private List<LineRenderer> temporaryLines = new List<LineRenderer>();
         private List<LineRenderer> lines = new List<LineRenderer>();
@@ -39,11 +43,12 @@ namespace CellexalVR.Tools
             lastPosition = transform.position;
             controllerMenuCollider = referenceManager.controllerMenuCollider;
             gameObject.SetActive(false);
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
         }
 
         private void Update()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
 
             if (drawing)
             {
@@ -70,38 +75,49 @@ namespace CellexalVR.Tools
                 }
             }
 
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                //// this happens only once when the trigger is pressed
-                if (skipNextDraw)
-                {
-                    skipNextDraw = false;
-                }
-                else
-                {
-                    // if the trigger was pressed we need to make sure that the controller is not inside a button.
-                    drawing = true;
-
-                }
-                for (int i = 0; i < trailLines.Length; i++)
-                {
-                    if (trailLines[i] != null)
-                    {
-                        Destroy(trailLines[i].gameObject);
-                        trailLines[i] = null;
-                    }
-                }
-            }
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                // this happens only once when the controller trigger is released
-                if (drawing)
-                {
-                    drawing = false;
-                    MergeLinesIntoOne();
-                }
-            }
             lastPosition = transform.position;
+        }
+
+        private void OnTriggerClick()
+        {
+            if (!gameObject.activeSelf) return;
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+
+            //// this happens only once when the trigger is pressed
+            if (skipNextDraw)
+            {
+                skipNextDraw = false;
+            }
+            else
+            {
+                // if the trigger was pressed we need to make sure that the controller is not inside a button.
+                drawing = true;
+
+            }
+            for (int i = 0; i < trailLines.Length; i++)
+            {
+                if (trailLines[i] != null)
+                {
+                    Destroy(trailLines[i].gameObject);
+                    trailLines[i] = null;
+                }
+            }
+        }
+
+        private void OnTriggerUp()
+        {
+            if (!gameObject.activeSelf) return;
+            // Open XR
+            //if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            // this happens only once when the controller trigger is released
+            if (drawing)
+            {
+                drawing = false;
+                MergeLinesIntoOne();
+            }
+
         }
 
         /// <summary>

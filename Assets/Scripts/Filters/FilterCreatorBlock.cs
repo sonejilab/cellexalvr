@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Filters
 {
@@ -30,24 +31,28 @@ namespace CellexalVR.Filters
                 ports.Add(port);
             }
             filterBlockBoard = referenceManager.filterBlockBoard;
-            VRTK.VRTK_InteractableObject interactableObject = gameObject.GetComponent<VRTK.VRTK_InteractableObject>();
-            interactableObject.InteractableObjectGrabbed += OnGrabbed;
-            interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
+            // Open XR
+            //VRTK.VRTK_InteractableObject interactableObject = gameObject.GetComponent<VRTK.VRTK_InteractableObject>();
+            //interactableObject.InteractableObjectGrabbed += OnGrabbed;
+            //interactableObject.InteractableObjectUngrabbed += OnUngrabbed;   
+            XRGrabInteractable interactableObject = gameObject.GetComponent<XRGrabInteractable>();
+            interactableObject.selectEntered.AddListener(OnGrabbed);
+            interactableObject.selectExited.AddListener(OnUngrabbed);
         }
 
-        private void OnGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        private void OnGrabbed(SelectEnterEventArgs args)
         {
             if (isPrefab)
             {
                 // create a new prefab to replace us
                 GameObject newPrefab = Instantiate(gameObject, transform.position, transform.rotation, transform.parent);
                 newPrefab.GetComponent<FilterCreatorBlock>().isPrefab = true;
-                newPrefab.GetComponent<VRTK.VRTK_InteractableObject>().isGrabbable = true;
+                newPrefab.GetComponent<XRGrabInteractable>().enabled = true;
                 transform.localScale = Vector3.one;
             }
         }
 
-        private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        private void OnUngrabbed(SelectExitEventArgs args)
         {
             if (isPrefab)
             {

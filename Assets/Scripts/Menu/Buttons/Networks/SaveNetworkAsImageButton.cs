@@ -28,7 +28,7 @@ namespace CellexalVR.Menu.Buttons.Networks
         public override void Click()
         {
             parent.SaveNetworkAsImage();
-            device.TriggerHapticPulse(2000);
+            rightController.SendHapticImpulse(0.8f, 0.3f);
         }
 
         public void FinishedButton()

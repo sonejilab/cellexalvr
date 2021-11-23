@@ -17,14 +17,18 @@ namespace CellexalVR.Menu
         public GameObject menuCube;
         public GameObject menuHolder;
 
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private GameObject menu;
         private MenuRotator menuRotator;
         // These dictionaries holds the things that were turned off when the menu was deactivated
         private Dictionary<Renderer, bool> renderers = new Dictionary<Renderer, bool>();
         private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
         private Collider boxCollider;
-        private SteamVR_TrackedObject leftController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController leftController;
         private ControllerModelSwitcher controllerModelSwitcher;
         private bool animate;
         private float currentTime;
@@ -55,48 +59,52 @@ namespace CellexalVR.Menu
             teleportLaser = referenceManager.teleportLaser;
             // The menu should be turned off when the program starts
             MenuActive = false;
+            CellexalEvents.LeftTriggerClick.AddListener(OnTriggerClick);
         }
 
         void Update()
         {
-            device = SteamVR_Controller.Input((int)leftController.index);
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && !teleportLaser.activeSelf)
+            if (animate)
+            {
+                currentTime += 0.8f * Time.deltaTime;
+                float step = (currentTime * animateSpeed) / arrivalTime;
+                menu.transform.localScale = Vector3.Lerp(startScale, finalScale, step);
+                menu.transform.position = Vector3.Lerp(startPosition, finalPosition, step);
+                if (Mathf.Abs(menu.transform.localScale.x - finalScale.x) <= 0.001f)
+                {
+                    animate = false;
+                    ToggleMenu();
+                }
+            }
+        }
+
+        private void OnTriggerClick()
+        {
+            // Open XR
+            //device = SteamVR_Controller.Input((int)leftController.index);
+            if (true)
             {
                 animate = true;
                 currentTime = 0f;
                 startScale = menu.transform.localScale;
                 if (MenuActive)
                 {
-                    startPosition = menu.transform.localPosition;
-                    finalScale = menuCube.transform.localScale;
-                    finalPosition = menuCube.transform.localScale;
+                    startPosition = menu.transform.position;
+                    finalScale = Vector3.zero;
+                    finalPosition = menuCube.transform.position;
                 }
                 else
                 {
-                    startPosition = menuCube.transform.localPosition;
+                    startPosition = menuCube.transform.position;
                     finalScale = originalScale;
-                    finalPosition = new Vector3(0f, 0f, 0.17f);
                     menu.transform.parent = leftController.transform;
-                    menu.transform.localPosition = menuCube.transform.localPosition;
+                    menu.transform.position = menuCube.transform.position;
+                    menu.transform.rotation = menuCube.transform.rotation;
+                    finalPosition = menuCube.transform.position + menuCube.transform.forward * 0.2f;
                 }
                 menuRotator.AllowRotation = !MenuActive;
                 menuRotator.StopRotating();
             }
-
-            if (animate)
-            {
-                currentTime += Time.deltaTime;
-                float step = (currentTime * animateSpeed) / arrivalTime;
-                menu.transform.localScale = Vector3.Lerp(startScale, finalScale, step);
-                menu.transform.localPosition = Vector3.Lerp(startPosition, finalPosition, step);
-                if (Mathf.Abs(menu.transform.localScale.x - finalScale.x) <= 0.001f)
-                {
-                    animate = false;
-                    ToggleMenu();
-                }
-
-            }
-
         }
 
         public void ToggleMenu()
@@ -106,12 +114,12 @@ namespace CellexalVR.Menu
             if (!MenuActive)
             {
                 menu.transform.parent = menuHolder.transform;
-                menu.transform.localPosition = new Vector3(0f, -10f, 0f);
+                menu.transform.position = new Vector3(0f, -10f, 0f);
             }
             else
             {
                 menu.transform.parent = leftController.transform;
-                menu.transform.localPosition = new Vector3(0f, 0f, 0.17f);
+                menu.transform.position = menuCube.transform.position + menuCube.transform.forward * 0.2f;
             }
             boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();

@@ -7,9 +7,7 @@ using UnityEngine;
 using Color = UnityEngine.Color;
 using System.Drawing;
 using System.Drawing.Imaging;
-using VRTK;
-using VRTK.GrabAttachMechanics;
-using VRTK.SecondaryControllerGrabActions;
+using UnityEngine.XR.Interaction.Toolkit;
 using System.IO;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.General;
@@ -59,7 +57,9 @@ namespace CellexalVR.AnalysisObjects
         public bool controllerInsideSomeNode;
 
         private ControllerModelSwitcher controllerModelSwitcher;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private bool controllerInside = false;
         private Vector3 oldLocalPosition;
         private Vector3 oldScale;
@@ -72,7 +72,9 @@ namespace CellexalVR.AnalysisObjects
         public NetworkCenter replacing;
         private List<Arc> arcs = new List<Arc>();
         private List<CombinedArc> combinedArcs = new List<CombinedArc>();
-        private SteamVR_TrackedObject rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         private NetworkGenerator networkGenerator;
         private MultiuserMessageSender multiuserMessageSender;
         private Layout currentLayout;
@@ -104,6 +106,8 @@ namespace CellexalVR.AnalysisObjects
             networkGenerator = referenceManager.networkGenerator;
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             networkHandler = GetComponentInParent<NetworkHandler>();
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         void FixedUpdate()
@@ -153,10 +157,10 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            var interactableObject = GetComponent<VRTK_InteractableObject>();
+            var interactableObject = GetComponent<XRGrabInteractable>();
             if (interactableObject)
             {
-                if (interactableObject.IsGrabbed())
+                if (interactableObject.isSelected)
                 {
                     multiuserMessageSender.SendMessageMoveNetworkCenter(Handler.name, name, transform.position, transform.rotation, transform.localScale);
                 }
@@ -189,28 +193,28 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        private void OnTriggerStay(Collider other)
+
+        private void OnTriggerClick()
         {
-            if (other.gameObject.name == "ControllerCollider(Clone)"/*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/)
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)
             {
-                device = SteamVR_Controller.Input((int)rightController.index);
-                if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) && controllerInside)
-                {
-                    numColliders = 0;
-                    controllerInside = false;
-                    enlarge = true;
-                    //if (!isReplacement && !Enlarged)
-                    //{
-                    //    multiuserMessageSender.SendMessageEnlargeNetwork(Handler.name, name);
-                    //    EnlargeNetwork();
-                    //}
-                    //if (isReplacement)
-                    //{
-                    //    multiuserMessageSender.SendMessageBringBackNetwork(Handler.name, replacing.name);
-                    //    BringBackOriginal();
-                    //}
-                }
+                numColliders = 0;
+                controllerInside = false;
+                enlarge = true;
+                //if (!isReplacement && !Enlarged)
+                //{
+                //    multiuserMessageSender.SendMessageEnlargeNetwork(Handler.name, name);
+                //    EnlargeNetwork();
+                //}
+                //if (isReplacement)
+                //{
+                //    multiuserMessageSender.SendMessageBringBackNetwork(Handler.name, replacing.name);
+                //    BringBackOriginal();
+                //}
             }
+
         }
 
         /// <summary>
@@ -662,18 +666,20 @@ namespace CellexalVR.AnalysisObjects
             rigidbody.isKinematic = false;
             rigidbody.drag = 10;
             rigidbody.angularDrag = 15;
+            // Open XR
             var interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
             interactableObject.referenceManager = referenceManager;
-            interactableObject.isGrabbable = true;
-            interactableObject.isUsable = false;
-            var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();
-            var scalescript = gameObject.AddComponent<VRTK_AxisScaleGrabAction>();
-            scalescript.uniformScaling = true;
-            interactableObject.grabAttachMechanicScript = grabAttach;
-            interactableObject.secondaryGrabActionScript = scalescript;
+            interactableObject.enabled = true;
+            //interactableObject.isGrabbable = true;
+            //interactableObject.isUsable = false;
+            //var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();
+            //var scalescript = gameObject.AddComponent<VRTK_AxisScaleGrabAction>();
+            //scalescript.uniformScaling = true;
+            //interactableObject.grabAttachMechanicScript = grabAttach;
+            //interactableObject.secondaryGrabActionScript = scalescript;
 
-            grabAttach.precisionGrab = true;
-            grabAttach.breakForce = float.PositiveInfinity;
+            //grabAttach.precisionGrab = true;
+            //grabAttach.breakForce = float.PositiveInfinity;
 
             // save the old variables
             oldParent = transform.parent;
@@ -765,10 +771,12 @@ namespace CellexalVR.AnalysisObjects
             name = oldName;
             // the ForceStopInteracting waits until the end of the frame before it stops interacting
             // so we also have to wait one frame until proceeding
-            if (gameObject.GetComponent<VRTK_InteractableObject>() != null)
-            {
-                gameObject.GetComponent<VRTK_InteractableObject>().ForceStopInteracting();
-            }
+
+            // Open XR
+            //if (gameObject.GetComponent<VRTK_InteractableObject>() != null)
+            //{
+            //    gameObject.GetComponent<VRTK_InteractableObject>().ForceStopInteracting();
+            //}
             yield return null;
             // now we can do things
             GetComponent<Renderer>().enabled = true;
@@ -779,8 +787,9 @@ namespace CellexalVR.AnalysisObjects
             transform.localScale = oldScale;
             // this network will now be part of the convex hull which already has a rigidbody and these scripts
             Destroy(gameObject.GetComponent<NetworkCenterInteract>());
-            Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
-            Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
+            // Open XR
+            //Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
+            //Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
             Destroy(gameObject.GetComponent<Rigidbody>());
 
             // we must wait one more frame here or VRTK_InteractTouch gets a bunch of null exceptions.

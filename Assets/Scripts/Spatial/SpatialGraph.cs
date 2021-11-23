@@ -7,7 +7,9 @@ using CellexalVR.MarchingCubes;
 using CellexalVR.General;
 using System;
 using CellexalVR.AnalysisObjects;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR;
+using CellexalVR.Interaction;
 
 namespace CellexalVR.Spatial
 {
@@ -16,8 +18,12 @@ namespace CellexalVR.Spatial
     /// </summary>
     public class SpatialGraph : MonoBehaviour
     {
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device rdevice;
+        // OpenXR
+        //private SteamVR_TrackedObject rightController;
+        //private SteamVR_Controller.Device rdevice;
+        private ActionBasedController rightController;
+        private InputDevice rdevice;
+
         private GameObject contour;
         private bool slicesActive;
         private Vector3 startPosition;
@@ -42,19 +48,19 @@ namespace CellexalVR.Spatial
 
         void Update()
         {
-            if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            if (GetComponent<XRGrabInteractable>().isSelected)
             {
                 referenceManager.multiuserMessageSender.SendMessageMoveGraph(gameObject.name, transform.position, transform.rotation, transform.localScale);
             }
-            rdevice = SteamVR_Controller.Input((int)rightController.index);
-            if (rdevice.GetPress(SteamVR_Controller.ButtonMask.Touchpad) && rdevice.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y < 0.5f)
-            {
-                if (rdevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                {
-                    ActivateSlices();
-                    referenceManager.multiuserMessageSender.SendMessageActivateSlices();
-                }
-            }
+            // Open XR (how to get touchpad / joystick ? )
+            //if (rdevice.GetPress(SteamVR_Controller.ButtonMask.Touchpad && rdevice.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y < 0.5f)
+            //{
+            //    if (rdevice.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            //    {
+            //        ActivateSlices();
+            //        referenceManager.multiuserMessageSender.SendMessageActivateSlices();
+            //    }
+            //}
         }
 
         public IEnumerator AddSlices()

@@ -10,7 +10,11 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class MinimizedObjectContainer : MonoBehaviour
     {
-        private SteamVR_TrackedObject rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
+        // Open XR 
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         private MinimizeTool minimizeTool;
         private Color orgColor;
         public GameObject MinimizedObject { get; set; }
@@ -41,7 +45,7 @@ namespace CellexalVR.Interaction
         {
             if (!CrossSceneInformation.Spectator)
             {
-                rightController = GameObject.Find("Controller (right)").GetComponent<SteamVR_TrackedObject>();
+                rightController = Handler.referenceManager.rightController;
                 minimizeTool = Handler.referenceManager.minimizeTool;
             }
 
@@ -49,17 +53,46 @@ namespace CellexalVR.Interaction
             orgColor = GetComponent<Renderer>().material.color;
             frameCount = 0;
             layerMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void Update()
+        {
+            frameCount++;
+            // When laser is deactivated on trigger exit is not called so we check if the box is colliding with the laser.
+            // To deactivate button again check every 10th frame if laser pointer collider is colliding.
+            if (frameCount % 10 != 0) return;
+            // frameCount = 0;
+            // Transform transform1 = transform;
+            // Collider[] collidesWith = Physics.OverlapBox(transform1.position, transform1.localScale / 2f,
+            //     transform1.rotation, layerMask);
+            //
+            // if (collidesWith.Length == 0)
+            // {
+            //     controllerInside = false;
+            //     return;
+            // }
+            //
+            // foreach (Collider col in collidesWith)
+            // {
+            //     if (col.gameObject.name == laserColliderName)
+            //     {
+            //         controllerInside = true;
+            //         return;
+            //     }
+            // }
+            // controllerInside = false;
+            // GetComponent<Renderer>().material.color = orgColor;
+        }
+
+        // Open XR
+        private void OnTriggerClick()
         {
             if (CrossSceneInformation.Spectator)
             {
                 return;
             }
-
-            var device = SteamVR_Controller.Input((int) rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside)
             {
                 if (MinimizedObject.CompareTag("Graph"))
                 {
@@ -104,31 +137,6 @@ namespace CellexalVR.Interaction
                 Destroy(gameObject);
             }
 
-            frameCount++;
-            // When laser is deactivated on trigger exit is not called so we check if the box is colliding with the laser.
-            // To deactivate button again check every 10th frame if laser pointer collider is colliding.
-            if (frameCount % 10 != 0) return;
-            // frameCount = 0;
-            // Transform transform1 = transform;
-            // Collider[] collidesWith = Physics.OverlapBox(transform1.position, transform1.localScale / 2f,
-            //     transform1.rotation, layerMask);
-            //
-            // if (collidesWith.Length == 0)
-            // {
-            //     controllerInside = false;
-            //     return;
-            // }
-            //
-            // foreach (Collider col in collidesWith)
-            // {
-            //     if (col.gameObject.name == laserColliderName)
-            //     {
-            //         controllerInside = true;
-            //         return;
-            //     }
-            // }
-            // controllerInside = false;
-            // GetComponent<Renderer>().material.color = orgColor;
         }
 
         private void OnDrawGizmos()

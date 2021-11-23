@@ -5,13 +5,19 @@ using TMPro;
 using CellexalVR.General;
 using UnityEngine.UI;
 using System.IO;
+using CellexalVR.Interaction;
+
 namespace CellexalVR.AnalysisLogic.H5reader
 {
     public class H5ReaderAnnotatorTextBoxScript : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private bool controllerInside;
         public Dictionary<string, H5ReaderAnnotatorTextBoxScript> subkeys = new Dictionary<string, H5ReaderAnnotatorTextBoxScript>();
         public H5ReaderAnnotatorTextBoxScript parentScript;
@@ -45,6 +51,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             rightController = referenceManager.rightController;
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerPressed);
         }
 
         public void Insert(string name, H5readerAnnotater annotaterScript)
@@ -184,8 +192,14 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+
+        }
+
+        private void OnTriggerPressed()
+        {
+            if (controllerInside)
             {
 
             }

@@ -3,7 +3,7 @@ using CellexalVR.Extensions;
 using CellexalVR.General;
 using System.Collections;
 using UnityEngine;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -32,7 +32,9 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 minPos = new Vector3(-0.58539f, -0.28538f, 0f);
         private Vector3 maxPos = new Vector3(-0.0146f, 0.2852f, 0f);
         private bool legendInsideCube;
-        private VRTK.VRTK_InteractableObject interactableObject;
+        // Open XR
+        //private VRTK.VRTK_InteractableObject interactableObject;
+        private XRGrabInteractable interactableObject;
         private Transform cullingCubeTransform;
         private GameObject attachArea;
         private Transform originalParent;
@@ -47,8 +49,8 @@ namespace CellexalVR.AnalysisObjects
             //CellexalEvents.GraphsReset.AddListener(DeactivateLegend);
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             geneExpressionHistogram.referenceManager = referenceManager;
-            interactableObject = GetComponent<VRTK.VRTK_InteractableObject>();
-            interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
+            interactableObject = GetComponent<XRGrabInteractable>();
+            interactableObject.selectExited.AddListener(OnUngrabbed);
             originalParent = legendTransform.parent;
             originalbackgroundScale = backgroundPlane.transform.localScale;
             CellexalEvents.GraphsReset.AddListener(ClearLegends);
@@ -57,7 +59,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void Update()
         {
-            if (!interactableObject.IsGrabbed()) return;
+            if (interactableObject == null || !interactableObject.isSelected) return;
             referenceManager.multiuserMessageSender.SendMessageMoveLegend(legendTransform.position,
                 legendTransform.rotation,
                 legendTransform.localScale);
@@ -80,7 +82,7 @@ namespace CellexalVR.AnalysisObjects
             attachArea.SetActive(false);
         }
 
-        private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        private void OnUngrabbed(SelectExitEventArgs e)
         {
             Rigidbody rigidBody = this.GetComponent<Rigidbody>();
             referenceManager.multiuserMessageSender.SendMessageLegendUngrabbed(transform.position, transform.rotation, rigidBody.velocity, rigidBody.angularVelocity);
@@ -118,7 +120,7 @@ namespace CellexalVR.AnalysisObjects
                 yield return null;
             }
 
-            GetComponent<VRTK_InteractableObject>().isGrabbable = false;
+            interactableObject.enabled = false;
             Destroy(GetComponent<Rigidbody>());
             detachArea.SetActive(true);
             Vector3 pos = backgroundPlane.transform.localPosition;
@@ -148,7 +150,7 @@ namespace CellexalVR.AnalysisObjects
                 rigidbody.isKinematic = false;
                 rigidbody.drag = 10;
                 rigidbody.angularDrag = 15;
-                GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+                interactableObject.enabled = true;
             }
 
             detachArea.SetActive(false);

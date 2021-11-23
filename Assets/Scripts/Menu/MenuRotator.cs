@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.Menu
 {
@@ -15,13 +16,24 @@ namespace CellexalVR.Menu
         private bool isRotating = false;
         private Vector3 fromAngle;
         private float rotatedTotal;
+
+        [SerializeField] private InputActionAsset actionAsset;
+
         public enum Rotation { Front, Right, Back, Left }
 
         void Start()
         {
             // Reset rotation in case it is changed in the editor.
-            transform.localRotation = Quaternion.Euler(-15f, 0f, 0f);
+            transform.localRotation = Quaternion.Euler(-45f, 0f, 0f);
             SideFacingPlayer = Rotation.Front;
+
+            var rotateRight = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateRight");
+            rotateRight.Enable();
+            rotateRight.performed += OnThumbpadRight;
+
+            var rotateLeft = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateLeft");
+            rotateLeft.Enable();
+            rotateLeft.performed += OnThumbpadLeft;
         }
 
         public bool AllowRotation { get; set; } = false;
@@ -42,6 +54,16 @@ namespace CellexalVR.Menu
                     }
                 }
             }
+        }
+
+        private void OnThumbpadRight(InputAction.CallbackContext context)
+        {
+            RotateRight(1);
+        }
+
+        private void OnThumbpadLeft(InputAction.CallbackContext context)
+        {
+            RotateLeft(1);
         }
 
         /// <summary>
@@ -125,7 +147,7 @@ namespace CellexalVR.Menu
                     zAngles = -90f;
                     break;
             }
-            transform.localRotation = Quaternion.Euler(-15f, 0f, zAngles);
+            transform.localRotation = Quaternion.Euler(-45f, 0f, zAngles);
         }
         /// <summary>
         /// Rotates the menu.

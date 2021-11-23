@@ -174,33 +174,33 @@ namespace CellexalVR.General
 
         #region Events
 
-        private void OnEnable()
-        {
-            SteamVR_Events.RenderModelLoaded.Listen(OnRenderModelLoaded);
-            SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
-            InvokeRepeating("LogBacklog", 10f, 10f);
-        }
+        //private void OnEnable()
+        //{
+        //    SteamVR_Events.RenderModelLoaded.Listen(OnRenderModelLoaded);
+        //    SteamVR_Events.DeviceConnected.Listen(OnDeviceConnected);
+        //    InvokeRepeating("LogBacklog", 10f, 10f);
+        //}
 
-        private void LogBacklog()
-        {
-            CellexalLog.LogBacklog();
-        }
+        //private void LogBacklog()
+        //{
+        //    CellexalLog.LogBacklog();
+        //}
 
-        private void OnDisable()
-        {
-            SteamVR_Events.RenderModelLoaded.Remove(OnRenderModelLoaded);
-            SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);
-            CellexalLog.LogBacklog();
-            CancelInvoke();
-        }
+        //private void OnDisable()
+        //{
+        //    SteamVR_Events.RenderModelLoaded.Remove(OnRenderModelLoaded);
+        //    SteamVR_Events.DeviceConnected.Remove(OnDeviceConnected);
+        //    CellexalLog.LogBacklog();
+        //    CancelInvoke();
+        //}
 
-        private void OnRenderModelLoaded(SteamVR_RenderModel model, bool success)
-        {
-            if (success)
-                CellexalLog.Log("Render model successfully loaded");
-            else
-                CellexalLog.Log("ERROR: Render model not successfully loaded");
-        }
+        //private void OnRenderModelLoaded(SteamVR_RenderModel model, bool success)
+        //{
+        //    if (success)
+        //        CellexalLog.Log("Render model successfully loaded");
+        //    else
+        //        CellexalLog.Log("ERROR: Render model not successfully loaded");
+        //}
 
         private void OnDeviceConnected(int index, bool connected)
         {

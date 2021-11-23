@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
+using CellexalVR.Interaction;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -41,9 +42,13 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 normalScale;
         private Vector3 largerScale;
         private bool controllerInside;
-        private SteamVR_TrackedObject rightController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         private CellManager cellManager;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private bool edgesAdded;
         private float lineWidth;
         private string controllerCollider = "ControllerCollider(Clone)";
@@ -65,6 +70,8 @@ namespace CellexalVR.AnalysisObjects
             largerScale = normalScale * 2f;
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             this.name = geneName.text;
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         void Update()
@@ -113,10 +120,15 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        private void OnTriggerStay(Collider other)
+        //private void OnTriggerStay(Collider other)
+        //{
+        //}
+
+        private void OnTriggerClick()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)
             {
                 cellManager.ColorGraphsByGene(Label.ToLower(), referenceManager.graphManager.GeneExpressionColoringMethod);
                 referenceManager.multiuserMessageSender.SendMessageColorGraphsByGene(Label.ToLower());

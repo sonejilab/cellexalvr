@@ -4,8 +4,9 @@ using CellexalVR.General;
 using CellexalVR.Multiuser;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
 {
@@ -19,8 +20,8 @@ namespace CellexalVR.Interaction
         private CellManager cellManager;
         private HeatmapGenerator heatmapGenerator;
         private Heatmap heatmap;
-        private SteamVR_Controller.Device device;
-        private SteamVR_TrackedObject rightController;
+        private InputDevice device;
+        private ActionBasedController rightController;
         private Transform raycastingSource;
         private MultiuserMessageSender multiuserMessageSender;
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -59,15 +60,14 @@ namespace CellexalVR.Interaction
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             heatmapGenerator = referenceManager.heatmapGenerator;
             heatmap = GetComponent<Heatmap>();
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            CellexalEvents.RightTriggerPressed.AddListener(OnTriggerDown);
+            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
         }
 
         private void Update()
         {
-            if (device == null && CrossSceneInformation.Normal)
-            {
-                device = SteamVR_Controller.Input((int) rightController.index);
-            }
-
             if ((!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial)
                 || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu)
             {
@@ -81,7 +81,7 @@ namespace CellexalVR.Interaction
             }
         }
 
-        private void Raycast()
+        private void Raycast(bool click = false, bool triggerDown = false, bool triggerUp = false)
         {
             raycastingSource = referenceManager.rightLaser.transform;
             //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
@@ -99,7 +99,9 @@ namespace CellexalVR.Interaction
                     multiuserMessageSender.SendMessageHandleHitGenesList(name, hity);
                     int geneHit = HandleHitGeneList(hity);
 
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    // Open XR
+                    //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    if (click)
                     {
                         multiuserMessageSender.SendMessageColorGraphsByGene(heatmap.genes[geneHit]);
                         referenceManager.cellManager.ColorGraphsByGene(heatmap.genes[geneHit],
@@ -128,33 +130,37 @@ namespace CellexalVR.Interaction
                     heatmap.enlargedGeneText.gameObject.SetActive(false);
                     multiuserMessageSender.SendMessageResetInfoTexts(name);
                     // if we hit the actual heatmap
-                    if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                    if (click)
                     {
                         multiuserMessageSender.SendMessageHandlePressDown(name, hitx, hity);
                         HandlePressDown(hitx, hity);
                     }
 
-                    if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    //if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    if (triggerDown && selecting)
                     {
                         // called when choosing a box selection
                         multiuserMessageSender.SendMessageHandleBoxSelection(name, hitx, hity, selectionStartX,
                             selectionStartY);
                         HandleBoxSelection(hitx, hity, selectionStartX, selectionStartY);
                     }
-                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    //else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && selecting)
+                    else if (triggerUp && selecting)
                     {
                         // called when letting go of the trigger to finalize a box selection
                         multiuserMessageSender.SendMessageConfirmSelection(name, hitx, hity, selectionStartX,
                             selectionStartY);
                         ConfirmSelection(hitx, hity, selectionStartX, selectionStartY);
                     }
-                    else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                    //else if (device.GetPress(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                    else if (triggerDown && movingSelection)
                     {
                         // called when moving a selection
                         multiuserMessageSender.SendMessageHandleMovingSelection(name, hitx, hity);
                         HandleMovingSelection(hitx, hity);
                     }
-                    else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger) && movingSelection)
+                    else if (triggerUp && movingSelection)
                     {
                         // called when letting go of the trigger to move the selection
                         multiuserMessageSender.SendMessageMoveSelection(name, hitx, hity, selectedGroupLeft,
@@ -186,12 +192,27 @@ namespace CellexalVR.Interaction
                 ResetHeatmapHighlight();
             }
 
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            if (triggerUp)
             {
                 // if the raycast leaves the heatmap and the user lets go of the trigger
                 multiuserMessageSender.SendMessageResetSelecting(name);
                 ResetSelecting();
             }
+        }
+
+        private void OnTriggerClick()
+        {
+            Raycast(true);
+        }
+
+        private void OnTriggerDown()
+        {
+            Raycast(triggerDown: true);
+        }
+
+        private void OnTriggerUp()
+        {
+            Raycast(triggerUp: true);
         }
 
         /// <summary>

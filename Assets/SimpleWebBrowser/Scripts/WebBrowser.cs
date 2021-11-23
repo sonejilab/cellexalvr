@@ -80,13 +80,17 @@ namespace SimpleWebBrowser
         private bool _setUrl = false;
         private string _setUrlString = "";
 
-        private SteamVR_TrackedObject rightController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         private WebManager webManager;
 
 
         public ReferenceManager referenceManager;
         public GameObject browserPrefab;
-        public SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private int layerMaskMenu;
         #region JS Query events
 
@@ -196,7 +200,8 @@ namespace SimpleWebBrowser
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             rightController = referenceManager.rightController;
-            device = SteamVR_Controller.Input((int)rightController.index);
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
             if (MainCamera == null)
             {
@@ -228,6 +233,9 @@ namespace SimpleWebBrowser
 
             DialogCanvas.worldCamera = MainCamera;
             DialogCanvas.gameObject.SetActive(false);
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
 
         }
 
@@ -374,7 +382,7 @@ namespace SimpleWebBrowser
             }
         }
 
-        void OnTriggerPressed()
+        void OnTriggerClick()
         {
             if (_mainEngine.Initialized)
             {
@@ -494,7 +502,8 @@ namespace SimpleWebBrowser
 
         private void ProcessScrollInput(int px, int py)
         {
-            Vector2 touchpad = (device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
+            // Open XR (how to get touchpad / joystick ?)
+            Vector2 touchpad = Vector2.zero; //(device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0));
             //float scroll = Input.GetAxis("Mouse ScrollWheel");
             float scroll = touchpad.y * 0.01f;
             scroll = scroll * _mainEngine.BrowserTexture.height;
@@ -529,17 +538,20 @@ namespace SimpleWebBrowser
         // Update is called once per frame
         void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
             //print("update in web browser " + device.Get());
-            if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                OnTriggerPressed();
-            }
+            //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            //if (DeviceManager.instance.GetTrigger(device) == 3)
+            //{
+            //    OnTriggerPressed();
+            //}
 
-            if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-            {
-                OnTriggerUp();
-            }
+            ////if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+            //if (DeviceManager.instance.GetTrigger(device) == 3)
+            //{
+            //    OnTriggerUp();
+            //}
             // If sockets get disconnected or similar error we need to recreate object.
             if (webManager.isVisible)
             {

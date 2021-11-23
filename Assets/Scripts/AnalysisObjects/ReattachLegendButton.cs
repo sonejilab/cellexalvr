@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisObjects
@@ -9,8 +10,12 @@ namespace CellexalVR.AnalysisObjects
         public ReferenceManager referenceManager;
 
         private bool controllerInside = false;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private MeshRenderer meshRenderer;
 
         private void Start()
@@ -18,6 +23,7 @@ namespace CellexalVR.AnalysisObjects
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             rightController = referenceManager.rightController;
             meshRenderer = GetComponent<MeshRenderer>();
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void OnValidate()
@@ -44,10 +50,11 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        private void Update()
+        private void OnTriggerClick()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)
             {
                 LegendManager parentLegendManager = gameObject.GetComponentInParent<LegendManager>();
                 //parentLegendManager.transform.parent = parentLegendManager.attachPoint.transform;
@@ -56,6 +63,7 @@ namespace CellexalVR.AnalysisObjects
                 Destroy(parentLegendManager.GetComponent<Rigidbody>());
                 SetHighlighted(false);
             }
+
         }
 
         public void SetHighlighted(bool highlight)

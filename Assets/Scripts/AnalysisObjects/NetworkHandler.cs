@@ -5,7 +5,7 @@ using CellexalVR.Multiuser;
 using CellexalVR.Tools;
 using System.Collections.Generic;
 using UnityEngine;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -84,7 +84,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void Update()
         {
-            if (GetComponent<VRTK_InteractableObject>().IsGrabbed())
+            if (GetComponent<XRGrabInteractable>().isSelected)
             {
                 multiuserMessageSender.SendMessageMoveNetwork(name, transform.position, transform.rotation, transform.localScale);
             }

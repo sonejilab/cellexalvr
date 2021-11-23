@@ -1,5 +1,9 @@
-﻿using TMPro;
+﻿using CellexalVR.Interaction;
+using TMPro;
 using UnityEngine;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
+
 namespace CellexalVR.General
 {
     /// <summary>
@@ -72,8 +76,8 @@ namespace CellexalVR.General
         public TextMeshPro errorTitle;
         public TextMeshPro errorMessage;
 
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        private ActionBasedController rightController;
+        private UnityEngine.XR.InputDevice device;
         private bool controllerInside;
         private bool errorMessageShown = false;
         private bool backgroundQuadInitialised = false;
@@ -97,6 +101,8 @@ namespace CellexalVR.General
             transform.LookAt(referenceManager.headset.transform.position);
             transform.Rotate(0, 90, 90);
             errorMessageAnimator = errorMessageGameObject.GetComponent<Animator>();
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerPressed);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -115,10 +121,10 @@ namespace CellexalVR.General
             }
         }
 
-        private void Update()
+        // Open XR
+        private void OnTriggerPressed()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            if (controllerInside)
             {
                 if (errorMessageShown)
                 {

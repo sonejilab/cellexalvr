@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using CellexalVR.General;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 using CellexalVR.Menu;
 
 namespace CellexalVR.Interaction

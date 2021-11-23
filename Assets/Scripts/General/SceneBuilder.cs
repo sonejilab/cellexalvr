@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Valve.VR.InteractionSystem;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.General
 {
@@ -109,7 +108,8 @@ namespace CellexalVR.General
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Instantiating objects", 0.1f);
             InstantiateSceneAsset(ref _CameraRig, CameraRig);
-            _CameraRig.GetComponentInChildren<Player>().hands = new Hand[0];
+            // OpenXR
+            //_CameraRig.GetComponentInChildren<Player>().hands = new Hand[0];
             InstantiateSceneAsset(ref _VRTK, VRTK);
             InstantiateSceneAsset(ref _Managers, Managers);
             InstantiateSceneAsset(ref _Generators, Generators);
@@ -150,8 +150,6 @@ namespace CellexalVR.General
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Setting references", 0.7f);
             // set up missing references
-            VRTK_SDKManager sdkmanager = _CameraRig.GetComponent<VRTK_SDKManager>();
-            _CameraRig.GetComponentInChildren<Player>().hands = _CameraRig.GetComponentsInChildren<Hand>();
 
             // set up radial menu buttons
             //VRTK_RadialMenu leftRadialMenu = referenceManager.leftControllerScriptAlias.GetComponentInChildren<VRTK_RadialMenu>();
@@ -174,14 +172,17 @@ namespace CellexalVR.General
             //rightRadialMenu.buttons[3].OnClick = new UnityEngine.Events.UnityEvent();
             //rightRadialMenu.buttons[3].OnClick.AddListener(delegate { selectionToolCollider.ChangeColor(true); });
 
-            Undo.RecordObject(sdkmanager, "Set controller script alias");
-            ReferenceManager referenceManager = _InputReader.GetComponent<ReferenceManager>();
-            referenceManager.AttemptSetReferences();
-            sdkmanager.scriptAliasLeftController = referenceManager.leftControllerScriptAlias;
-            sdkmanager.scriptAliasRightController = referenceManager.rightControllerScriptAlias;
+            // OpenXR
+            //VRTK_SDKManager sdkmanager = _CameraRig.GetComponent<VRTK_SDKManager>();
+            //_CameraRig.GetComponentInChildren<Player>().hands = _CameraRig.GetComponentsInChildren<Hand>();
+            //Undo.RecordObject(sdkmanager, "Set controller script alias");
+            //sdkmanager.scriptAliasLeftController = referenceManager.leftControllerScriptAlias;
+            //sdkmanager.scriptAliasRightController = referenceManager.rightControllerScriptAlias;
 
             //referenceManager.leftControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildLeftRadialMenu();
             //referenceManager.rightControllerScriptAlias.GetComponentInChildren<EventSetter>().BuildRightRadialMenu();
+            ReferenceManager referenceManager = _InputReader.GetComponent<ReferenceManager>();
+            referenceManager.AttemptSetReferences();
 
             _Keyboard.GetComponent<GeneKeyboardHandler>().BuildKeyboard();
             _FilterCreator.GetComponentInChildren<FilterNameKeyboardHandler>(true).BuildKeyboard();

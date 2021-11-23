@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using CellexalVR.General;
-using VRTK;
 using TMPro;
+using UnityEngine.XR;
+using CellexalVR.Interaction;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Tutorial
 {
@@ -15,10 +17,16 @@ namespace CellexalVR.Tutorial
         public GameObject canvas;
 
         private string username;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_TrackedObject leftController;
-        private SteamVR_Controller.Device deviceR;
-        private SteamVR_Controller.Device deviceL;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private ActionBasedController rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private ActionBasedController leftController;
+        //private SteamVR_Controller.Device deviceR;
+        //private SteamVR_Controller.Device deviceL; 
+        private InputDevice deviceR;
+        private InputDevice deviceL;
         private GameObject canv;
         private bool final;
         private bool keyboard;
@@ -32,36 +40,32 @@ namespace CellexalVR.Tutorial
             CrossSceneInformation.Tutorial = true;
 
             CellexalEvents.ControllersInitiated.AddListener(Initiate);
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            CellexalEvents.LeftTriggerClick.AddListener(OnTriggerClick);
+
         }
 
-        // Update is called once per frame
-        void Update()
+        private void OnTriggerClick()
         {
-            deviceR = SteamVR_Controller.Input((int)rightController.index);
-            deviceL = SteamVR_Controller.Input((int)leftController.index);
-            if (deviceR.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) || deviceL.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+            // Open XR
+            if (referenceManager.keyboardSwitch.isActiveAndEnabled && !keyboard)
             {
-                if (referenceManager.keyboardSwitch.isActiveAndEnabled && !keyboard)
-                {
-                    Destroy(canv);
-                    referenceManager.keyboardSwitch.SetKeyboardVisible(true);
-                    canv = Instantiate(canvas);
-                    canv.GetComponentInChildren<TextMeshProUGUI>().text = "Point the Controller towards keyboard. \n" +
-                        "Use the TRIGGER to type.";
-                    keyboard = true;
-                }
-                if (final)
-                {
-                    SceneManager.LoadScene("CellexalVR_Main_Scene");
-                }
-                
+                Destroy(canv);
+                referenceManager.keyboardSwitch.SetKeyboardVisible(true);
+                canv = Instantiate(canvas);
+                canv.GetComponentInChildren<TextMeshProUGUI>().text = "Point the Controller towards keyboard. \n" +
+                    "Use the TRIGGER to type.";
+                keyboard = true;
             }
-
+            if (final)
+            {
+                SceneManager.LoadScene("CellexalVR_Main_Scene");
+            }
         }
 
         public void SetUsername(string name)
         {
-            referenceManager.rightLaser.GetComponent<VRTK_StraightPointerRenderer>().enabled = false;
+            referenceManager.rightLaser.GetComponent<XRRayInteractor>().enabled = false;
             referenceManager.controllerModelSwitcher.SwitchToModel(Interaction.ControllerModelSwitcher.Model.Normal);
             referenceManager.filterNameKeyboard.gameObject.SetActive(false);
             username = name;
@@ -100,7 +104,7 @@ namespace CellexalVR.Tutorial
                                                                     "We are now going to use the TOUCHPAD. \n" +
                                                                     "Press the TOUCHPAD buttons in this order: \n" +
                                                                     "Red             Blue          Green         Red           Yellow";
-            
+
         }
 
         public void Final()

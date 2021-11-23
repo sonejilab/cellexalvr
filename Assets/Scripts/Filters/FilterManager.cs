@@ -4,6 +4,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Filters;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.SceneObjects;
 using System;
 using System.Collections;
@@ -24,7 +25,10 @@ namespace CellexalVR.Filters
         public TextMeshPro filterPreviewText;
         public Filter currentFilter;
 
-        private SteamVR_TrackedObject rightController;
+        // Open XR 
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         private List<Tuple<Graph.GraphPoint, int>> queuedCells = new List<Tuple<Graph.GraphPoint, int>>(256);
         private List<Tuple<Graph.GraphPoint, int>> cellsToEvaluate = new List<Tuple<Graph.GraphPoint, int>>(256);
         private bool loadingFilter = false;
@@ -47,6 +51,7 @@ namespace CellexalVR.Filters
             previewWire.SetActive(false);
             rightController = referenceManager.rightController;
             CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void OnValidate()
@@ -220,8 +225,13 @@ namespace CellexalVR.Filters
 
         private void LateUpdate()
         {
-            var device = SteamVR_Controller.Input((int)rightController.index);
-            if (!portClickedThisFrame && previouslyClickedPort != null && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        }
+
+        private void OnTriggerClick()
+        {
+            // Open XR
+            //device = SteamVR_Controller.Input((int)rightController.index);
+            if (!portClickedThisFrame && previouslyClickedPort != null)
             {
                 previewWire.SetActive(false);
                 previouslyClickedPort = null;

@@ -2,14 +2,14 @@
 using CellexalVR.General;
 using System.Collections;
 using UnityEngine;
-using VRTK;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
 {
     /// <summary>
     /// Handles what happens when a network handler is interacted with.
     /// </summary>
-    class NetworkHandlerInteract : VRTK_InteractableObject
+    class NetworkHandlerInteract : XRGrabInteractable
     {
         public ReferenceManager referenceManager;
 
@@ -25,37 +25,52 @@ namespace CellexalVR.Interaction
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
-
-        public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
+        protected override void OnSelectEntering(SelectEnterEventArgs args)
         {
             referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
-            // moving many triggers really pushes what unity is capable of
-            //foreach (Collider c in GetComponentsInChildren<Collider>())
-            //{
-            //    if (c.gameObject.name == "Ring")
-            //    {
-            //        ((MeshCollider)c).convex = true;
-            //    }
-            //}
             GetComponent<NetworkHandler>().ToggleNetworkColliders(false);
-            base.OnInteractableObjectGrabbed(e);
+            base.OnSelectEntering(args);
         }
 
-        public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
+        protected override void OnSelectExiting(SelectExitEventArgs args)
         {
             referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
             referenceManager.multiuserMessageSender.SendMessageNetworkUngrabbed(gameObject.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
-            //foreach (Collider c in GetComponentsInChildren<Collider>())
-            //{
-            //    if (c.gameObject.name == "Ring")
-            //    {
-            //        ((MeshCollider)c).convex = false;
-            //    }
-            //}
             GetComponent<NetworkHandler>().ToggleNetworkColliders(true);
-            base.OnInteractableObjectUngrabbed(e);
+            base.OnSelectExiting(args);
         }
+
+        //public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
+        //{
+        //    referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
+        //    // moving many triggers really pushes what unity is capable of
+        //    //foreach (Collider c in GetComponentsInChildren<Collider>())
+        //    //{
+        //    //    if (c.gameObject.name == "Ring")
+        //    //    {
+        //    //        ((MeshCollider)c).convex = true;
+        //    //    }
+        //    //}
+        //    GetComponent<NetworkHandler>().ToggleNetworkColliders(false);
+        //    base.OnInteractableObjectGrabbed(e);
+        //}
+
+        //public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
+        //{
+        //    referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
+        //    Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
+        //    referenceManager.multiuserMessageSender.SendMessageNetworkUngrabbed(gameObject.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
+        //    //foreach (Collider c in GetComponentsInChildren<Collider>())
+        //    //{
+        //    //    if (c.gameObject.name == "Ring")
+        //    //    {
+        //    //        ((MeshCollider)c).convex = false;
+        //    //    }
+        //    //}
+        //    GetComponent<NetworkHandler>().ToggleNetworkColliders(true);
+        //    base.OnInteractableObjectUngrabbed(e);
+        //}
 
         //private void OnTriggerEnter(Collider other)
         //{

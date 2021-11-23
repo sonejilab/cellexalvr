@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CellexalVR.General;
+using CellexalVR.Interaction;
+
 namespace CellexalVR.AnalysisLogic.H5reader
 {
     public class ExpandButtonScript : MonoBehaviour
     {
         private ReferenceManager referenceManager;
         public H5ReaderAnnotatorTextBoxScript parentScript;
-        private SteamVR_TrackedObject rightController;
-        private SteamVR_Controller.Device device;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // Open XR 
+		//private SteamVR_Controller.Device device;
+		private UnityEngine.XR.InputDevice device;
         private bool controllerInside;
         public Image image;
 
@@ -23,6 +29,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             }
             rightController = referenceManager.rightController;
             parentScript = GetComponentInParent<H5ReaderAnnotatorTextBoxScript>();
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerPressed);
         }
 
         private void OnTriggerEnter(Collider other)
@@ -45,8 +53,12 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         private void Update()
         {
-            device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+        }
+
+        private void OnTriggerPressed()
+        {
+            // Open XR
+            if (controllerInside)
             {
                 if (!parentScript.isBottom)
                 {
@@ -63,6 +75,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     parent.GetComponentInParent<H5readerAnnotater>().display.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, contentSize);
                 }
             }
+
         }
     }
 }
