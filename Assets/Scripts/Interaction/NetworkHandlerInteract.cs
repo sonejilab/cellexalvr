@@ -24,6 +24,15 @@ namespace CellexalVR.Interaction
         private void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+            CellexalEvents.NetworkCreated.AddListener(RegisterColliders);
+        }
+
+        private void RegisterColliders()
+        {
+            print("register colliders1");
+            enabled = false;
+            colliders.AddRange(gameObject.GetComponents<BoxCollider>());
+            enabled = true;
         }
         protected override void OnSelectEntering(SelectEnterEventArgs args)
         {

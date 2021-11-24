@@ -731,6 +731,7 @@ namespace CellexalVR.AnalysisObjects
             foreach (CellexalButton button in GetComponentsInChildren<CellexalButton>())
             {
                 button.SetButtonActivated(true);
+                button.GetComponent<BoxCollider>().enabled = true;
             }
             GetComponent<SphereCollider>().enabled = true;
             //handler.runningScript = false;
@@ -808,6 +809,7 @@ namespace CellexalVR.AnalysisObjects
             foreach (CellexalButton button in GetComponentsInChildren<CellexalButton>())
             {
                 button.SetButtonActivated(false);
+                button.GetComponent<BoxCollider>().enabled = false;
             }
             CellexalEvents.NetworkUnEnlarged.Invoke();
             //CellexalEvents.ScriptFinished.Invoke();

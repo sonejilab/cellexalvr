@@ -222,7 +222,6 @@ namespace CellexalVR.AnalysisLogic
             stopwatch.Stop();
             CellexalLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
             GeneratingNetworks = false;
-            CellexalEvents.NetworkCreated.Invoke();
             CellexalEvents.ScriptFinished.Invoke();
             //if (!(referenceManager.heatmapGenerator.GeneratingHeatmaps && File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
             //{

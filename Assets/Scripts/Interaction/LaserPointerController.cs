@@ -31,7 +31,8 @@ namespace CellexalVR.Interaction
         private ControllerModelSwitcher controllerModelSwitcher;
 
         public ReferenceManager referenceManager;
-        public XRRayInteractor laser;
+        public XRRayInteractor rightLaser;
+        public XRRayInteractor leftLaser;
         public Transform origin;
         public bool Override { get; set; }
         public bool alwaysActive;
@@ -57,16 +58,43 @@ namespace CellexalVR.Interaction
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             //CellexalEvents.ObjectGrabbed.AddListener(() => TouchingObject(true));
             //CellexalEvents.ObjectUngrabbed.AddListener(() => TouchingObject(false));
+            var rightInteractor = referenceManager.rightController.gameObject.GetComponent<XRDirectInteractor>();
+            var leftInteractor = referenceManager.leftController.gameObject.GetComponent<XRDirectInteractor>();
+            rightInteractor.selectEntered.AddListener(ToggleRightLaserInteractorOff);
+            rightInteractor.selectExited.AddListener(ToggleRightLaserInteractorOn);
+            leftInteractor.selectEntered.AddListener(ToggleLeftLaserInteractorOff);
+            leftInteractor.selectExited.AddListener(ToggleLeftLaserInteractorOn);
+
         }
 
         private void OnDisable()
         {
-            rayEndPoint.SetActive(false);   
+            rayEndPoint.SetActive(false);
         }
 
         private void OnEnable()
         {
             rayEndPoint.SetActive(true);
+        }
+
+        private void ToggleRightLaserInteractorOn(SelectExitEventArgs args)
+        {
+            leftLaser.interactionLayerMask = LayerMask.NameToLayer("Everything");
+        }
+
+        private void ToggleRightLaserInteractorOff(SelectEnterEventArgs args)
+        {
+            rightLaser.interactionLayerMask = LayerMask.NameToLayer("Nothing");
+        }
+
+        private void ToggleLeftLaserInteractorOn(SelectExitEventArgs args)
+        {
+            leftLaser.interactionLayerMask = LayerMask.NameToLayer("Everything");
+        }
+
+        private void ToggleLeftLaserInteractorOff(SelectEnterEventArgs args)
+        {
+            leftLaser.interactionLayerMask = LayerMask.NameToLayer("Nothing");
         }
 
         private void Update()
@@ -95,20 +123,20 @@ namespace CellexalVR.Interaction
             }
             //origin.localRotation = Quaternion.Euler(0f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskEnv);
-            if (hit.collider && 
+            if (hit.collider &&
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Normal ||
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
-            
+
             {
                 // if we hit a button in the environment (keyboard or env button)
-                // if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
-                // {
-                //     controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
-                // }
-                //if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
-                //{
-                //    controllerModelSwitcher.ActivateDesiredTool();
-                //}
+                if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
+                {
+                    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+                }
+                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
+                {
+                    controllerModelSwitcher.ActivateDesiredTool();
+                }
                 //referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
                 MultiUserToggle(true);
                 ToggleLaser(true);
@@ -144,7 +172,7 @@ namespace CellexalVR.Interaction
                 }
             }
             else if (referenceManager.rightLaser.enabled &&
-                     controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard) 
+                     controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
             {
                 //referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
                 ToggleLaser(false);
@@ -190,7 +218,7 @@ namespace CellexalVR.Interaction
             //referenceManager.rightLaser.enabled = active;
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
                 referenceManager.leftLaser.enabled = true;
-                //referenceManager.leftLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
+            //referenceManager.leftLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
             //origin.localRotation = Quaternion.identity;
             MultiUserToggle(active);
             rayEndPoint.SetActive(active);

@@ -121,7 +121,7 @@ namespace CellexalVR.Menu
                 menu.transform.parent = leftController.transform;
                 menu.transform.position = menuCube.transform.position + menuCube.transform.forward * 0.2f;
             }
-            boxCollider.enabled = MenuActive;
+            //boxCollider.enabled = MenuActive;
             controllerModelSwitcher.SwitchToDesiredModel();
             controllerModelSwitcher.ActivateDesiredTool();
         }

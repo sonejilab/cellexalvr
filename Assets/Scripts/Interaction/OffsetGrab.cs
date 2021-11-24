@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
@@ -9,7 +10,6 @@ namespace CellexalVR.Interaction
         private Vector3 interactorPosition = Vector3.zero;
         private Quaternion interactorRotation = Quaternion.identity;
         private Vector3 interactorScale = Vector3.one;
-
 
         protected override void OnSelectEntered(SelectEnterEventArgs args)
         {

@@ -183,8 +183,8 @@ namespace CellexalVR.SceneObjects
                         // new_keyboard referenceManager.keyboardStatusFolder.ClearKey();
                     }
 
-                    Destroy(cellParent.GetComponent<FixedJoint>());
-                    Destroy(cellParent.GetComponent<Rigidbody>());
+                    //Destroy(cellParent.GetComponent<FixedJoint>());
+                    //Destroy(cellParent.GetComponent<Rigidbody>());
                     foreach (Transform child in cellParent)
                     {
                         child.gameObject.AddComponent<Rigidbody>();

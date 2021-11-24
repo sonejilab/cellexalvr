@@ -52,7 +52,7 @@ namespace CellexalVR.Interaction
             this.name = "Jail_" + MinimizedObject.name;
             orgColor = GetComponent<Renderer>().material.color;
             frameCount = 0;
-            layerMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
+            layerMask = 1 << LayerMask.NameToLayer("MenuLayer");
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
@@ -92,52 +92,57 @@ namespace CellexalVR.Interaction
             {
                 return;
             }
-            if (controllerInside)
+            RaycastHit hit;
+            Transform raycastingSource = Handler.referenceManager.laserPointerController.origin;
+            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
+            if (!hit.collider)
             {
-                if (MinimizedObject.CompareTag("Graph"))
-                {
-                    MinimizedObject.GetComponent<Graph>().ShowGraph();
-                    Handler.referenceManager.multiuserMessageSender.SendMessageShowGraph(MinimizedObject.name,
-                        this.name);
-                }
-
-                if (MinimizedObject.CompareTag("SubGraph"))
-                {
-                    MinimizedObject.GetComponent<Graph>().ShowGraph();
-                    //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
-                    Handler.referenceManager.multiuserMessageSender.SendMessageShowGraph(MinimizedObject.name,
-                        this.name);
-                }
-
-                if (MinimizedObject.CompareTag("FacsGraph"))
-                {
-                    MinimizedObject.GetComponent<Graph>().ShowGraph();
-                    //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
-                    Handler.referenceManager.multiuserMessageSender.SendMessageShowGraph(MinimizedObject.name,
-                        this.name);
-                }
-
-                if (MinimizedObject.CompareTag("Network"))
-                {
-                    MinimizedObject.GetComponent<NetworkHandler>().ShowNetworks();
-                    //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
-                    Handler.referenceManager.multiuserMessageSender.SendMessageShowNetwork(MinimizedObject.name,
-                        this.name);
-                }
-
-                if (MinimizedObject.CompareTag("HeatBoard"))
-                {
-                    MinimizedObject.GetComponent<Heatmap>().ShowHeatmap();
-                    //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
-                    Handler.referenceManager.multiuserMessageSender.SendMessageShowHeatmap(MinimizedObject.name,
-                        this.name);
-                }
-
-                Handler.ContainerRemoved(this);
-                Destroy(gameObject);
+                return;
+            }
+            if (MinimizedObject.CompareTag("Graph"))
+            {
+                MinimizedObject.GetComponent<Graph>().ShowGraph();
+                Handler.referenceManager.multiuserMessageSender.SendMessageShowGraph(MinimizedObject.name,
+                    this.name);
             }
 
+            if (MinimizedObject.CompareTag("SubGraph"))
+            {
+                MinimizedObject.GetComponent<Graph>().ShowGraph();
+                //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
+                Handler.referenceManager.multiuserMessageSender.SendMessageShowGraph(MinimizedObject.name,
+                    this.name);
+            }
+
+            if (MinimizedObject.CompareTag("FacsGraph"))
+            {
+                MinimizedObject.GetComponent<Graph>().ShowGraph();
+                //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
+                Handler.referenceManager.multiuserMessageSender.SendMessageShowGraph(MinimizedObject.name,
+                    this.name);
+            }
+
+            if (MinimizedObject.CompareTag("Network"))
+            {
+                MinimizedObject.GetComponent<NetworkHandler>().ShowNetworks();
+                //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
+                Handler.referenceManager.multiuserMessageSender.SendMessageShowNetwork(MinimizedObject.name,
+                    this.name);
+            }
+
+            if (MinimizedObject.CompareTag("HeatBoard"))
+            {
+                MinimizedObject.GetComponent<Heatmap>().ShowHeatmap();
+                //minimizeTool.MaximizeObject(MinimizedObject, this, "Network");
+                Handler.referenceManager.multiuserMessageSender.SendMessageShowHeatmap(MinimizedObject.name,
+                    this.name);
+            }
+
+            Handler.ContainerRemoved(this);
+            Destroy(gameObject);
         }
+
+
 
         private void OnDrawGizmos()
         {

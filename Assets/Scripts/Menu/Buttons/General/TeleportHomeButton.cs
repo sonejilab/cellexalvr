@@ -8,7 +8,6 @@ namespace CellexalVR.Menu.Buttons.General
     /// </summary>
     public class TeleportHomeButton : CellexalButton
     {
-        protected Transform playArea;
 
         protected override string Description
         {
@@ -20,14 +19,8 @@ namespace CellexalVR.Menu.Buttons.General
 
         public override void Click()
         {
-            playArea.position = Vector3.zero;
-        }
+            referenceManager.VRRig.transform.position = Vector3.zero;
 
-        // Use this for initialization
-        void Start()
-        {
-            // OpenXR find play area reference.
-            //playArea = VRTK_DeviceFinder.PlayAreaTransform();
         }
 
     }

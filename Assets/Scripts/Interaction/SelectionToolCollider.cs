@@ -149,12 +149,20 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerClick()
         {
+            if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.SelectionTool)
+            {
+                return;
+            }
             particles.gameObject.SetActive(true);
             selActive = true;
         }
 
         private void OnTriggerDown()
         {
+            if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.SelectionTool)
+            {
+                return;
+            }
             hapticFeedbackThisFrame = true;
             var activeCollider = selectionToolColliders[CurrentMeshIndex];
             Vector3 boundsCenter = activeCollider.bounds.center;
@@ -264,7 +272,7 @@ namespace CellexalVR.Interaction
             Colors = CellexalConfig.Config.SelectionToolColors;
             for (int i = 0; i < Colors.Length; i++)
             {
-                Colors[i].a = 1;
+                Colors[i].a = 0.5f;
             }
             //if (!CrossSceneInformation.Ghost)
             //{

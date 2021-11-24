@@ -43,8 +43,6 @@ namespace CellexalVR.Tools
             lastPosition = transform.position;
             controllerMenuCollider = referenceManager.controllerMenuCollider;
             gameObject.SetActive(false);
-            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
-            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
         }
 
         private void Update()
@@ -80,22 +78,25 @@ namespace CellexalVR.Tools
 
         private void OnTriggerClick()
         {
+            print($"{referenceManager.controllerModelSwitcher.ActualModel}, {gameObject.activeSelf}, {referenceManager.controllerModelSwitcher}");
+
+
             if (!gameObject.activeSelf || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu) return;
             // Open XR
             //device = SteamVR_Controller.Input((int)rightController.index);
             //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
 
             //// this happens only once when the trigger is pressed
-            if (skipNextDraw)
-            {
-                skipNextDraw = false;
-            }
-            else
-            {
-                // if the trigger was pressed we need to make sure that the controller is not inside a button.
-                drawing = true;
+            //if (skipNextDraw)
+            //{
+            //    skipNextDraw = false;
+            //}
+            drawing = true;
+            //else
+            //{
+            //    // if the trigger was pressed we need to make sure that the controller is not inside a button.
 
-            }
+            //}
             for (int i = 0; i < trailLines.Length; i++)
             {
                 if (trailLines[i] != null)
@@ -254,13 +255,16 @@ namespace CellexalVR.Tools
 
         private void OnEnable()
         {
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
             rightController = referenceManager.rightController;
             lastPosition = transform.position;
         }
 
         private void OnDisable()
         {
-            skipNextDraw = false;
+            CellexalEvents.RightTriggerClick.RemoveListener(OnTriggerClick);
+            CellexalEvents.RightTriggerUp.RemoveListener(OnTriggerUp); skipNextDraw = false;
             for (int i = 0; i < trailLines.Length; i++)
             {
                 if (trailLines[i])

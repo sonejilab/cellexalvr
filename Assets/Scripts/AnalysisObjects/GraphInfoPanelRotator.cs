@@ -12,7 +12,7 @@ namespace CellexalVR.AnalysisObjects
 
         void Start()
         {
-            CameraToLookAt = GameObject.Find("Camera (eye)").transform;
+            CameraToLookAt = GameObject.Find("CellexalOpenXRRig").transform;
         }
 
         void Update()

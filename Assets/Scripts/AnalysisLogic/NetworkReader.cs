@@ -317,6 +317,7 @@ namespace CellexalVR.AnalysisLogic
             nwkFileStream.Close();
             CellexalLog.Log("Successfully created " + networks.Count + " networks with a total of " +
                             nodes.Values.Count + " nodes");
+            CellexalEvents.NetworkCreated.Invoke();
             CellexalEvents.CommandFinished.Invoke(true);
             CellexalEvents.ScriptFinished.Invoke();
             networkHandler.CreateNetworkAnimation(graph.transform);
