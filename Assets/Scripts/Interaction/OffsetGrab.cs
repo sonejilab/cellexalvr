@@ -37,7 +37,6 @@ namespace CellexalVR.Interaction
             ClearInteractor(args.interactor);
             ResetAttachmentPoints(args.interactor);
             base.OnSelectExited(args);
-
         }
 
         private void ClearInteractor(XRBaseInteractor interactor)

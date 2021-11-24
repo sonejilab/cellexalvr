@@ -7,7 +7,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Controls the grabbing of the heatmap.
     /// </summary>
-    public class HeatmapGrab : XRGrabInteractable
+    public class HeatmapGrab : OffsetGrab
     {
         public ReferenceManager referenceManager;
 

@@ -7,7 +7,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Interaction with Web browser. Keyboard is set inactive when grabbing for more reliable moving of the key-panels.
     /// </summary>
-    public class BrowserGrab : XRGrabInteractable
+    public class BrowserGrab : OffsetGrab
     {
         public ReferenceManager referenceManager;
         public GameObject keyboard;

@@ -9,7 +9,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Handles what happens when a network handler is interacted with.
     /// </summary>
-    class NetworkHandlerInteract : XRGrabInteractable
+    class NetworkHandlerInteract : OffsetGrab
     {
         public ReferenceManager referenceManager;
 
