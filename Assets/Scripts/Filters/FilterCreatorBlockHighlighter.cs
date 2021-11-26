@@ -44,7 +44,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Controller"))
+            if (other.CompareTag("GameController"))
             {
                 if (parent.HighlightedSection != null)
                 {
@@ -58,7 +58,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Controller"))
+            if (other.CompareTag("GameController"))
             {
                 controllerInside = false;
                 if (parent.HighlightedSection == this)

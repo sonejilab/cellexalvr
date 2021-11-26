@@ -13,8 +13,8 @@ namespace CellexalVR.Interaction
     {
         public int Index { get; set; }
         public bool checkpoint;
+        public XRGrabInteractable interactableObject;
 
-        private XRGrabInteractable interactableObject;
         private ReferenceManager referenceManager;
         private FlybyMenu flybyMenu;
 

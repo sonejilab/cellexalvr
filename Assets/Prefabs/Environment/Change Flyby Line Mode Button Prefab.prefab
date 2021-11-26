@@ -115,7 +115,7 @@ MonoBehaviour:
   storedState: 0
   controllerInside: 0
   lineRenderer: {fileID: 5099857748606627129}
-  interactableObject: {fileID: 0}
+  interactableObject: {fileID: 6365041527092017045}
   mode: 0
 --- !u!54 &411892525012018154
 Rigidbody:
@@ -146,6 +146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpoint: 0
+  interactableObject: {fileID: 6365041527092017045}
 --- !u!65 &480615697
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -172,7 +173,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
-  m_Colliders: []
+  m_Colliders:
+  - {fileID: 480615697}
   m_InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295

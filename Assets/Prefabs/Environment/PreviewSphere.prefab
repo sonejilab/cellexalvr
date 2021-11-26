@@ -112,6 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   checkpoint: 1
+  interactableObject: {fileID: 2491401695929192016}
 --- !u!54 &3436013521724547742
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -141,7 +142,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InteractionManager: {fileID: 0}
-  m_Colliders: []
+  m_Colliders:
+  - {fileID: 4563613817833775582}
   m_InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295

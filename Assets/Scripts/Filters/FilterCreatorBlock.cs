@@ -45,7 +45,7 @@ namespace CellexalVR.Filters
             if (isPrefab)
             {
                 // create a new prefab to replace us
-                GameObject newPrefab = Instantiate(gameObject, transform.position, transform.rotation, transform.parent);
+                GameObject newPrefab = Instantiate(gameObject, transform.position, transform.rotation, filterBlockBoard.transform.Find("Prefabs"));
                 newPrefab.GetComponent<FilterCreatorBlock>().isPrefab = true;
                 newPrefab.GetComponent<XRGrabInteractable>().enabled = true;
                 transform.localScale = Vector3.one;

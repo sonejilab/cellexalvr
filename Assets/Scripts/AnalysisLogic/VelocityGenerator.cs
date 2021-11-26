@@ -169,7 +169,7 @@ namespace CellexalVR.AnalysisLogic
                 emitter.UseGraphPointColors = useGraphPointColors;
                 emitter.UseArrowParticle = useArrowParticle;
                 emitter.averageVelocityArrowPrefab = averageVelocityArrowPrefab;
-                emitter.AverageVelocitesResolution = averageVelocityResolution;
+                //emitter.AverageVelocitesResolution = averageVelocityResolution;
                 graph.velocityParticleEmitter = emitter;
                 if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
                 {

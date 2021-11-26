@@ -12,7 +12,8 @@ namespace CellexalVR.General
 
         void Start()
         {
-            CameraToLookAt = GameObject.Find("Camera (eye)").transform;
+            //CameraToLookAt = GameObject.Find("Camera (eye)").transform;
+            CameraToLookAt = GameObject.Find("Main Camera").transform;
         }
 
         void Update()
