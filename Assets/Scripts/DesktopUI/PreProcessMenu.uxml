@@ -144,7 +144,7 @@
                                         <ui:Label text="Please enter a label (e.g. my_data)&#x9;" display-tooltip-when-elided="true" name="dir-message-label" class="message-label" />
                                     </ui:VisualElement>
                                     <ui:VisualElement name="fileheader" class="input-card-header-container">
-                                        <ui:Label text="CHOOSE ZARR DIRECTORY" display-tooltip-when-elided="true" name="choose-file-header" enable-rich-text="true" class="input-argument input-card-header" />
+                                        <ui:Label text="CHOOSE EXISTING ZARR DIRECTORY" display-tooltip-when-elided="true" name="choose-dir-header" enable-rich-text="true" class="input-argument input-card-header" />
                                     </ui:VisualElement>
                                 </ui:VisualElement>
                             </ui:VisualElement>

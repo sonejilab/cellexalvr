@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using SFB;
 using CellexalVR.Extensions;
-using CellexalVR;
 using System.IO;
-using System;
 using System.Globalization;
 using CellexalVR.General;
 using System.Linq;
@@ -230,7 +226,6 @@ namespace CellexalVR.DesktopUI
 
         private void OnConvertButtonPressed()
         {
-            progressBarContainer.RemoveFromClassList("inactive");
             if (!File.Exists($"{rawDataTextField.value.FixFilePath()}"))
             {
                 fileMessageLabel.text = "Could not find file...";
@@ -281,6 +276,10 @@ namespace CellexalVR.DesktopUI
                 progressBarContainer.AddToClassList("inactive");
                 progressBar.style.width = 0;
             }
+            else
+            {
+                progressBarContainer.RemoveFromClassList("inactive");
+            }
 
         }
 
@@ -291,7 +290,6 @@ namespace CellexalVR.DesktopUI
                 hvgsMessageLabel.style.display = DisplayStyle.Flex;
                 return;
             }
-            progressBarContainer.RemoveFromClassList("inactive");
             hvgsMessageLabel.style.display = DisplayStyle.None;
 
             hvgsButton.AddToClassList("inactive");
@@ -307,7 +305,6 @@ namespace CellexalVR.DesktopUI
                 return;
             }
             graphMessageLabel.style.display = DisplayStyle.None;
-            progressBarContainer.RemoveFromClassList("inactive");
             makeGraphButton.AddToClassList("inactive");
             AnimateUIRotation(graphOuterPivot);
             StartCoroutine(ScarfManager.instance.MakeGraphCoroutine(featKeyTextField.value, graphRunning, graphDone));
@@ -326,7 +323,6 @@ namespace CellexalVR.DesktopUI
                 return;
             }
             clusteringMessageLabel.style.display = DisplayStyle.None;
-            progressBarContainer.RemoveFromClassList("inactive");
             clusteringButton.AddToClassList("inactive");
             AnimateUIRotation(clusteringOuterPivot);
             StartCoroutine(ScarfManager.instance.RunClusteringCoroutine(resTextField.value, clusteringRunning, clusteringDone));
@@ -340,7 +336,6 @@ namespace CellexalVR.DesktopUI
                 return;
             }
             umapMessageLabel.style.display = DisplayStyle.None;
-            progressBarContainer.RemoveFromClassList("inactive");
             umapButton.AddToClassList("inactive");
             AnimateUIRotation(umapOuterPivot);
             StartCoroutine(ScarfManager.instance.RunUMAPCoroutine(nEpochsTextField.value, umapRunning, umapDone));
