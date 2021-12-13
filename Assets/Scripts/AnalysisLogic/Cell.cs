@@ -16,6 +16,7 @@ namespace CellexalVR.AnalysisLogic
 
         public Dictionary<string, int> Attributes { get; private set; }
         public Dictionary<string, float> Facs { get; private set; }
+        public Dictionary<string, float> NumericalAttributes { get; private set; }
         public Dictionary<string, string> FacsValue { get; private set; }
         public int ExpressionLevel { get; internal set; }
         public float ExpressionValue { get; set; }
@@ -40,6 +41,7 @@ namespace CellexalVR.AnalysisLogic
             Attributes = new Dictionary<string, int>();
             Facs = new Dictionary<string, float>();
             FacsValue = new Dictionary<string, string>();
+            NumericalAttributes = new Dictionary<string, float>();
             tempMat = null;
         }
 
@@ -62,6 +64,8 @@ namespace CellexalVR.AnalysisLogic
         {
             Attributes[attributeType.ToLower()] = color;
         }
+
+
 
         /// <summary>
         /// Colors all graphpoints that represents this cell if this cell is of an attribute.
@@ -159,6 +163,14 @@ namespace CellexalVR.AnalysisLogic
         internal void AddFacsValue(string facsName, string value)
         {
             FacsValue[facsName.ToLower()] = value;
+        }
+
+        /// <summary>
+        /// Other numerical attribute that is not facs value or gene expression.
+        /// </summary>
+        public void AddNumericalAttribute(string attributeType, float value)
+        {
+            NumericalAttributes[attributeType.ToLower()] = value;
         }
 
         /// <summary>

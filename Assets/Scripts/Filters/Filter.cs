@@ -56,5 +56,16 @@ namespace CellexalVR.Filters
             return result;
         }
 
+        /// <summary>
+        /// Gets all the numerical attributes in this filter.
+        /// </summary>
+        /// <param name="onlyPercent">True if only attributes that have not been converted from percent expressions should be returned.</param>
+        public List<string> GetNumericalAttributes()
+        {
+            List<string> result = new List<string>();
+            Expression.GetAttributes(ref result);
+            return result;
+        }
+
     }
 }

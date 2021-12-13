@@ -172,7 +172,8 @@ namespace CellexalVR.AnalysisLogic
                 ReadFileH5(path, h5config);
                 return;
             }
-            database.InitDatabase(fullPath + "\\database.sqlite");
+            if (File.Exists(fullPath + "\\database.sqlite"))
+                database.InitDatabase(fullPath + "\\database.sqlite");
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
 
@@ -327,7 +328,7 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-            string[] header = headerLine.Split(new string[] {"\t", " "}, StringSplitOptions.RemoveEmptyEntries);
+            string[] header = headerLine.Split(new string[] {"\t", " ", ","}, StringSplitOptions.RemoveEmptyEntries);
             float[] min = new float[header.Length];
             float[] max = new float[header.Length];
             string[] values = new string[header.Length + 1];
@@ -375,6 +376,51 @@ namespace CellexalVR.AnalysisLogic
             cellManager.Facs = header;
             CellexalLog.Log("Successfully read " + CellexalLog.FixFilePath(fullPath));
             stopwatch.Stop();
+        }
+
+        /// <summary>
+        /// Read numerical attribute data e.g. age in geomx data (not facs or gene expression those are read seperately)
+        /// </summary>
+        /// <param name="path"></param>
+        public void ReadNumericalData(string path)
+        {
+            string fullPath = path + "\\numerical.csv";
+            if (!File.Exists(fullPath))
+                return;
+            using (StreamReader sr = new StreamReader(fullPath))
+            {
+                string[] header = sr.ReadLine().Split(',');
+                float[] min = new float[header.Length - 1];
+                float[] max = new float[header.Length - 1];
+                string attributeType = header[1];
+                for (int i = 0; i < header.Length - 1; i++)
+                {
+                    min[i] = float.MaxValue;
+                    max[i] = float.MinValue;
+                }
+                while (!sr.EndOfStream)
+                {
+                    string[] values = sr.ReadLine().Split(',');
+                    for (int j = 0; j < values.Length - 1; j++)
+                    {
+                        float val = float.Parse(values[j + 1]);
+                        if (val < min[j])
+                            min[j] = val;
+                        else if (val > max[j])
+                            max[j] = val;
+                    }
+                    for (int j = 0; j < values.Length - 1; ++j)
+                    {
+                        cellManager.AddNumericalAttribute(values[0], attributeType, float.Parse(values[j + 1]));
+                    }
+                }
+
+                for (int i = 1; i < header.Length; ++i)
+                {
+                    cellManager.NumericalAttributeRanges[header[i].ToLower()] = new Tuple<float, float>(min[i - 1], max[i - 1]);
+                }
+                cellManager.NumericalAttributes = header;
+            }
         }
 
         private void SplitValues(string line, ref string[] values, char[] separators)

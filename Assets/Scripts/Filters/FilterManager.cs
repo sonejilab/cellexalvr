@@ -424,6 +424,19 @@ namespace CellexalVR.Filters
                     yield break;
                 }
             }
+
+            // check numerical attributes
+            List<string> numericalAttributes = filter.GetNumericalAttributes();
+            foreach (string attribute in numericalAttributes)
+            {
+                if (!cellManager.NumericalAttributes.Contains(attribute, StringComparer.OrdinalIgnoreCase))
+                {
+                    resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
+                    filterPreviewText.text = "FILTER ERROR: Attribute " + attribute + " not found";
+                    currentFilter = null;
+                    yield break;
+                }
+            }
             currentFilter = filter;
             CellexalEvents.FilterActivated.Invoke();
         }

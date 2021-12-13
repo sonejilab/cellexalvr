@@ -239,10 +239,12 @@ namespace CellexalVR.Menu.SubMenus
             }
             if (currentPage == pageCounter)
             {
+                prevPageButton.SetActive(true);
                 nextPageButton.SetActive(false);
             }
             else if (currentPage == 0)
             {
+                print(currentPage == 0);
                 prevPageButton.SetActive(false);
             }
             else

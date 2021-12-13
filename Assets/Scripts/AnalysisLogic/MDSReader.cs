@@ -18,7 +18,7 @@ namespace CellexalVR.AnalysisLogic
     {
         public ReferenceManager referenceManager;
         
-        private readonly char[] separators = new char[] {' ', '\t'};
+        private readonly char[] separators = new char[] {' ', '\t', ','};
         
         /// <summary>
         /// Coroutine to create graphs.
@@ -233,6 +233,7 @@ namespace CellexalVR.AnalysisLogic
                 while (!referenceManager.inputReader.attributeFileRead)
                     yield return null;
                 referenceManager.inputReader.ReadFacsFiles(path, totalNbrOfCells);
+                referenceManager.inputReader.ReadNumericalData(path);
                 referenceManager.inputReader.ReadFilterFiles(CellexalUser.UserSpecificFolder);
             }
             //status.UpdateStatus(statusId, "Reading index.facs file");

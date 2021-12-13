@@ -24,6 +24,7 @@ namespace CellexalVR.AnalysisLogic
         public string[] Attributes { get; set; }
         public string[] Facs { get; set; }
         public string[] Facs_values { get; set; }
+        public string[] NumericalAttributes { get; set; }
 
         #endregion
 
@@ -36,6 +37,7 @@ namespace CellexalVR.AnalysisLogic
         /// Lowest and highest range of facs measurements. <see cref="Tuple{T1, T2}.Item1"/> is the lowest value and <see cref="Tuple{T1, T2}.Item2"/> is the highest.
         /// </summary>
         public Dictionary<string, Tuple<float, float>> FacsRanges { get; private set; }
+        public Dictionary<string, Tuple<float, float>> NumericalAttributeRanges { get; private set; }
 
         public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
 
@@ -87,6 +89,7 @@ namespace CellexalVR.AnalysisLogic
             recolored = new Dictionary<Cell, int>();
             selectionList = new Dictionary<Graph.GraphPoint, int>();
             FacsRanges = new Dictionary<string, Tuple<float, float>>();
+            NumericalAttributeRanges = new Dictionary<string, Tuple<float, float>>();
         }
 
         /// <summary>
@@ -663,6 +666,11 @@ namespace CellexalVR.AnalysisLogic
             cells[cellName].AddFacsValue(facs, value);
         }
 
+        internal void AddNumericalAttribute(string cellName, string attribute, float value)
+        {
+            cells[cellName].AddNumericalAttribute(attribute, value);
+        }
+
 
         /// <summary>
         /// Color all graphpoints according to a column in the index.facs file.
@@ -697,6 +705,31 @@ namespace CellexalVR.AnalysisLogic
                 else
                 {
                     group = (int) ((cell.Facs[name] - range.Item1) / (range.Item2 - range.Item1) * nColors);
+                }
+
+                cell.ColorByGeneExpression(group);
+            }
+
+            CellexalEvents.GraphsColoredByIndex.Invoke();
+            CellexalEvents.CommandFinished.Invoke(true);
+        }
+
+        public void ColorByNumericalAttribute(string name)
+        {
+            name = name.ToLower();
+            int nColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+            foreach (Cell cell in cells.Values)
+            {
+                Tuple<float, float> range = NumericalAttributeRanges[name];
+                float expr = cell.NumericalAttributes[name];
+                int group = 0;
+                if (expr == range.Item2)
+                {
+                    group = nColors - 1;
+                }
+                else
+                {
+                    group = (int)((cell.NumericalAttributes[name] - range.Item1) / (range.Item2 - range.Item1) * nColors);
                 }
 
                 cell.ColorByGeneExpression(group);

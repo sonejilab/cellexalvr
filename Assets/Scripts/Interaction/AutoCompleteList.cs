@@ -100,7 +100,12 @@ namespace CellexalVR.Interaction
             {
                 foreach (string attribute in attributes)
                 {
+                    //string[] a = attribute.Split('@');
+                    //if (a.Length > 1)
+                    //    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(a[1], Definitions.Measurement.ATTRIBUTE));
+                    //else
                     namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
+
                     if (attribute.Length > longestNameLength)
                     {
                         longestNameLength = attribute.Length;
@@ -128,6 +133,23 @@ namespace CellexalVR.Interaction
             {
                 CellexalLog.Log("Could not read facs. Caught error - " + e.StackTrace);
             }
+            string[] numericalAttributes = referenceManager.cellManager.NumericalAttributes;
+            try
+            {
+                foreach (string n in numericalAttributes)
+                {
+                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(n, Definitions.Measurement.FACS));
+                    if (n.Length > longestNameLength)
+                    {
+                        longestNameLength = n.Length;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Could not read numerical attributes. Caught error - " + e.StackTrace);
+            }
+
             scoreMatrix = new int[longestNameLength + 1, longestNameLength + 1];
             // two sides of the score matrix are always the same
             for (int i = 0; i <= longestNameLength; ++i)
