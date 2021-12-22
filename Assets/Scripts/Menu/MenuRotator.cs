@@ -18,6 +18,8 @@ namespace CellexalVR.Menu
         private float rotatedTotal;
 
         [SerializeField] private InputActionAsset actionAsset;
+        [SerializeField] private InputActionReference touchPadClick;
+        [SerializeField] private InputActionReference touchPadPos;
 
         public enum Rotation { Front, Right, Back, Left }
 
@@ -27,13 +29,14 @@ namespace CellexalVR.Menu
             transform.localRotation = Quaternion.Euler(-45f, 0f, 0f);
             SideFacingPlayer = Rotation.Front;
 
-            var rotateRight = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateRight");
-            rotateRight.Enable();
-            rotateRight.performed += OnThumbpadRight;
+            touchPadClick.action.performed += OnTouchPadClick;
+            //var rotateRight = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateRight");
+            //rotateRight.Enable();
+            //rotateRight.performed += OnThumbpadRight;
 
-            var rotateLeft = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateLeft");
-            rotateLeft.Enable();
-            rotateLeft.performed += OnThumbpadLeft;
+            //var rotateLeft = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateLeft");
+            //rotateLeft.Enable();
+            //rotateLeft.performed += OnThumbpadLeft;
         }
 
         public bool AllowRotation { get; set; } = false;
@@ -56,15 +59,28 @@ namespace CellexalVR.Menu
             }
         }
 
-        private void OnThumbpadRight(InputAction.CallbackContext context)
+        private void OnTouchPadClick(InputAction.CallbackContext context)
         {
-            RotateRight(1);
+            Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
+            if (pos.x > 0.5f)
+            {
+                RotateRight(1);
+            }
+            else
+            {
+                RotateLeft(1);
+            }
         }
 
-        private void OnThumbpadLeft(InputAction.CallbackContext context)
-        {
-            RotateLeft(1);
-        }
+        //private void OnThumbpadRight(InputAction.CallbackContext context)
+        //{
+        //    RotateRight(1);
+        //}
+
+        //private void OnThumbpadLeft(InputAction.CallbackContext context)
+        //{
+        //    RotateLeft(1);
+        //}
 
         /// <summary>
         /// Rotates the menu 90 degrees to the right.

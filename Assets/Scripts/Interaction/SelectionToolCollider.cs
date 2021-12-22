@@ -7,6 +7,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -18,10 +19,9 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class SelectionToolCollider : MonoBehaviour
     {
-        public SteamVR_Action_Boolean activateAction = SteamVR_Input.GetBooleanAction("TriggerClick");
-        public SteamVR_Action_Boolean touchpadPressAction = SteamVR_Input.GetBooleanAction("TouchpadPress");
-        public Vector2 touchpadPosition;
-        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand;
+        [SerializeField] private InputActionAsset inputActionAsset;
+        [SerializeField] private InputActionReference touchPadClick;
+        [SerializeField] private InputActionReference touchPadPos;
 
         public ReferenceManager referenceManager;
         public SelectionManager selectionManager;
@@ -33,6 +33,7 @@ namespace CellexalVR.Interaction
 
         private int currentMeshIndex;
         private int tempColorIndex;
+        private Color selectedColor;
 
         /// <summary>
         /// 0: paddle, 1: bludgeon, 2: smaller bludgeon, 4: stick, 5-8: same shapes but removes selected points instead (white color).
@@ -152,6 +153,89 @@ namespace CellexalVR.Interaction
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             selectionManager = referenceManager.selectionManager;
             UpdateShapeIcons();
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            CellexalEvents.RightTriggerPressed.AddListener(OnTriggerDown);
+            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
+
+            touchPadClick.action.performed += OnTouchPadClick;
+        }
+
+        private void OnTriggerClick()
+        {
+            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            {
+                particles.gameObject.SetActive(true);
+                selectionToolMaterial.SetFloat("_SelectionActive", 1);
+                selActive = true;
+            }
+        }
+
+        private void OnTriggerDown()
+        {
+            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            {
+                hapticFeedbackThisFrame = true;
+                var activeCollider = selectionToolColliders[CurrentMeshIndex];
+                Vector3 boundsCenter = activeCollider.bounds.center;
+                Vector3 boundsExtents = activeCollider.bounds.extents;
+                foreach (var graph in graphManager.Graphs)
+                {
+                    var closestPoints = graph.MinkowskiDetection(activeCollider.transform.position, boundsCenter,
+                        boundsExtents, currentColorIndex);
+                    foreach (var point in closestPoints)
+                    {
+                        if (CurrentMeshIndex > 3)
+                        {
+                            selectionManager.RemoveGraphpointFromSelection(point);
+                        }
+
+                        else
+                        {
+                            selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        private void OnTriggerUp()
+        {
+            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            {
+                selActive = false;
+                particles.gameObject.SetActive(false);
+                selectionToolMaterial.SetFloat("_SelectionActive", 0);
+            }
+        }
+
+        private void OnTouchPadClick(InputAction.CallbackContext context)
+        {
+            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            {
+                Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
+                print($"{pos.x}, {pos.y}");
+                if (pos.x > 0.5f)
+                {
+                    ChangeColor(true);
+                }
+
+                else if (pos.x < 0.5f)
+                {
+                    ChangeColor(false);
+                }
+
+                if (pos.y > 0.5f)
+                {
+                    controllerModelSwitcher.SwitchSelectionToolMesh(true);
+                }
+
+                else if (pos.y < 0.5f)
+                {
+                    controllerModelSwitcher.SwitchSelectionToolMesh(false);
+                }
+            }
         }
 
 
@@ -159,69 +243,8 @@ namespace CellexalVR.Interaction
         {
             if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
-                if (touchpadPressAction.GetStateDown(inputSource))
-                {
-                    touchpadPosition = SteamVR_Input.GetVector2("TouchpadPosition", inputSource);
-                    
-                if (touchpadPosition.x > 0.5f)
-                {
-                    ChangeColor(true);
-                }
 
-                else if (touchpadPosition.x < -0.5f)
-                {
-                    ChangeColor(false);
-                }
 
-                else if (touchpadPosition.y > 0.5f)
-                {
-                    controllerModelSwitcher.SwitchSelectionToolMesh(true);
-                }
-
-                else if (touchpadPosition.y < -0.5f)
-                {
-                    controllerModelSwitcher.SwitchSelectionToolMesh(false);
-                }
-                }
-
-                else if (activateAction.GetStateDown(inputSource))
-                {
-                    particles.gameObject.SetActive(true);
-                    selectionToolMaterial.SetFloat("_SelectionActive", 1);
-                    selActive = true;
-                }
-
-                if (activateAction.GetState(inputSource))
-                {
-                    hapticFeedbackThisFrame = true;
-                    var activeCollider = selectionToolColliders[CurrentMeshIndex];
-                    Vector3 boundsCenter = activeCollider.bounds.center;
-                    Vector3 boundsExtents = activeCollider.bounds.extents;
-                    foreach (var graph in graphManager.Graphs)
-                    {
-                        var closestPoints = graph.MinkowskiDetection(activeCollider.transform.position, boundsCenter,
-                            boundsExtents, currentColorIndex);
-                        foreach (var point in closestPoints)
-                        {
-                            if (CurrentMeshIndex > 3)
-                            {
-                                selectionManager.RemoveGraphpointFromSelection(point);
-                            }
-
-                            else
-                            {
-                                selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
-                            }
-                        }
-                    }
-                }
-
-                else if (activateAction.GetStateUp(inputSource))
-                {
-                    selActive = false;
-                    particles.gameObject.SetActive(false);
-                    selectionToolMaterial.SetFloat("_SelectionActive", 0);
-                }
             }
 
             // Sometimes a bug occurs where particles stays active even when selection tool is off. This ensures particles is off 

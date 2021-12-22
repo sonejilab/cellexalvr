@@ -7,9 +7,7 @@ using CellexalVR.General;
 using CellexalVR.Menu.Buttons.Networks;
 using CellexalVR.SceneObjects;
 using UnityEngine;
-using UnityEngine.UI;
-using Valve.VR;
-using Valve.VR.InteractionSystem;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.Menu.SubMenus
 {
@@ -22,7 +20,7 @@ namespace CellexalVR.Menu.SubMenus
         public GameObject wirePrefab;
         public GameObject attachPoint;
         public RemoveNetworkArcsButton removeNetworkArcsButton;
-        
+
         // hard coded positions :)
         private Vector3 buttonPos = new Vector3(-0.38f, 2.40f, 0.22f);
         private Vector3 buttonPosInc = new Vector3(0.25f, 0, 0);
@@ -32,7 +30,6 @@ namespace CellexalVR.Menu.SubMenus
         private GameObject previewWire;
         private bool buttonClickedThisFrame;
         [SerializeField] private ToggleArcsButton previouslyClickedButton;
-        private SteamVR_Behaviour_Pose rightController;
         // private SteamVR_Controller.Device device;
         public List<ToggleArcsButton> toggleArcButtonList = new List<ToggleArcsButton>();
 
@@ -50,6 +47,7 @@ namespace CellexalVR.Menu.SubMenus
         protected override void Start()
         {
             StartCoroutine(SetControllers());
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
             // attachPoint = Player.instance.rightHand.transform.Find("AttachPoint").gameObject;
             base.Start();
         }
@@ -60,13 +58,11 @@ namespace CellexalVR.Menu.SubMenus
             yield return new WaitForSeconds(2);
         }
 
-        private void Update()
+
+        private void OnTriggerClick()
         {
-            if (Player.instance.rightHand == null) return;
-            if (Player.instance.rightHand.grabPinchAction.GetStateDown(Player.instance.rightHand.handType))
-            {
-                if (!IsInsideButton()) UndoSelectedNetwork();
-            }
+            if (!IsInsideButton())
+                UndoSelectedNetwork();
         }
 
         private bool IsInsideButton()

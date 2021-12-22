@@ -21,6 +21,9 @@ namespace CellexalVR.AnalysisLogic
         public GameObject particleSystemPrefab;
         public Material arrowMaterial;
         public Material standardMaterial;
+        public GameObject averageVelocityArrowPrefab;
+        [HideInInspector]
+        public List<Material> averageVelocityMaterials = new List<Material>();
 
         private float frequency = 1f;
         private float speed = 8f;
@@ -31,6 +34,8 @@ namespace CellexalVR.AnalysisLogic
         private bool graphPointsToggled = false;
         private bool useGraphPointColors = false;
         private bool useArrowParticle = true;
+        private bool emitAverageVelocity = false;
+        private int averageVelocityResolution = 20;
 
         private string particleSystemGameObjectName = "Velocity Particle System";
 

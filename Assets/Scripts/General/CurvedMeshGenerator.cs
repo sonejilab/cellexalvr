@@ -4,6 +4,7 @@ using UnityEngine;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.PDFViewer;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR
 {
@@ -21,7 +22,7 @@ namespace CellexalVR
         private MeshFilter filter;
 
         // private Mesh mesh;
-        private InteractableObjectBasic interactableObject;
+        private XRGrabInteractable interactableObject;
 
         private Vector3[] vertices;
         private Color32[] desktopUV;
@@ -113,7 +114,7 @@ namespace CellexalVR
                 ySize = 10;
                 GenerateCurvedNodes(r, curvature);
                 GenerateMeshes();
-                GetComponent<InteractableObjectBasic>().isGrabbable = false;
+                GetComponent<XRGrabInteractable>().enabled = false;
             }
 
             else

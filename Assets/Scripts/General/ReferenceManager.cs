@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using CellexalVR.AnalysisLogic.H5reader;
 using UnityEngine.Serialization;
+using CellexalVR.PDFViewer;
 
 namespace CellexalVR.General
 {
@@ -24,6 +25,8 @@ namespace CellexalVR.General
     /// </summary>
     public class ReferenceManager : MonoBehaviour
     {
+        public static ReferenceManager instance;
+
         #region Controller things
         [Header("Controller things")]
         // OpenXR

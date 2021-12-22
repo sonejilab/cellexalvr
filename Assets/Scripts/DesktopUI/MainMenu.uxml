@@ -16,7 +16,7 @@
                     <ui:VisualElement name="image-container1" class="image-container" style="background-image: none; background-color: rgba(0, 0, 0, 0);">
                         <ui:IMGUIContainer class="card-image" style="background-image: url(&apos;/Assets/Images/ctctracking_small.png&apos;); flex-grow: 1; justify-content: flex-end; align-items: stretch; -unity-background-scale-mode: scale-and-crop;" />
                     </ui:VisualElement>
-                    <ui:Label text="SINGLE USER" display-tooltip-when-elided="true" class="option-card-label" style="padding-left: 9px; padding-right: 9px; padding-top: 9px; padding-bottom: 9px;" />
+                    <ui:Label text="SINGLE USER" display-tooltip-when-elided="true" class="option-card-label" />
                 </ui:Button>
                 <ui:Button display-tooltip-when-elided="true" name="multi-user-button" class="option-card option-button">
                     <ui:VisualElement name="image-container1" class="image-container" style="flex-shrink: 0; flex-grow: 0; flex-direction: row;">
@@ -26,9 +26,9 @@
                 </ui:Button>
                 <ui:Button display-tooltip-when-elided="true" name="pre-process-button" class="option-card option-button">
                     <ui:VisualElement name="image-container1" class="image-container">
-                        <ui:IMGUIContainer class="card-image" />
+                        <ui:IMGUIContainer class="card-image" style="background-image: url(&apos;/Assets/Images/Logo/scarflogo.png&apos;);" />
                     </ui:VisualElement>
-                    <ui:Label text="PRE PROCESS DATA" display-tooltip-when-elided="true" class="option-card-label" />
+                    <ui:Label text="PRE PROCESS" display-tooltip-when-elided="true" class="option-card-label" />
                 </ui:Button>
                 <ui:Button display-tooltip-when-elided="true" name="tutorial-button" class="option-card option-button">
                     <ui:VisualElement name="image-container1" class="image-container" style="background-image: none; background-color: rgba(0, 0, 0, 0);">

@@ -265,6 +265,7 @@ namespace CellexalVR.AnalysisLogic
                 while (!referenceManager.inputReader.attributeFileRead)
                     yield return null;
                 referenceManager.inputReader.ReadFacsFiles(path, totalNbrOfCells);
+                referenceManager.inputReader.ReadNumericalData(path);
                 referenceManager.inputReader.ReadFilterFiles(CellexalUser.UserSpecificFolder);
             }
 

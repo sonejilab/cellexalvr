@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.Interaction
 {
@@ -134,6 +135,24 @@ namespace CellexalVR.Interaction
             {
                 CellexalLog.Log("Could not read facs. Caught error - " + e.StackTrace);
             }
+
+            string[] numericalAttributes = referenceManager.cellManager.NumericalAttributes;
+            try
+            {
+                foreach (string n in numericalAttributes)
+                {
+                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(n, Definitions.Measurement.FACS));
+                    if (n.Length > longestNameLength)
+                    {
+                        longestNameLength = n.Length;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Could not read numerical attributes. Caught error - " + e.StackTrace);
+            }
+
             scoreMatrix = new int[longestNameLength + 1, longestNameLength + 1];
             // two sides of the score matrix are always the same
             for (int i = 0; i <= longestNameLength; ++i)

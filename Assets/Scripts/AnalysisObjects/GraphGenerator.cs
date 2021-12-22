@@ -14,7 +14,6 @@ using CellexalVR.Extensions;
 using CellexalVR.Spatial;
 using TMPro;
 using UnityEngine.Rendering;
-using Valve.Newtonsoft.Json.Utilities;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -751,35 +750,58 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Creates the meshes from the clusters given by <see cref="SplitCluster(HashSet{CombinedGraphPoint})"/>.
         /// </summary>
-        private void MakeMeshes(List<HashSet<Graph.GraphPoint>> clusters)
+        private void MakeMeshes(List<HashSet<Graph.GraphPoint>> clusters, int lodGroup = 0,
+            Dictionary<string, Graph.GraphPoint> points = null, GraphSlice slice = null)
         {
-            StartCoroutine(MakeMeshesCoroutine(clusters));
+            if (points == null)
+            {
+                StartCoroutine(MakeMeshesCoroutine(clusters, lodGroup: lodGroup, points: newGraph.points));
+            }
+
+            else
+            {
+                StartCoroutine(MakeMeshesCoroutine(clusters, points: points, lodGroup: lodGroup, slice: slice));
+            }
         }
+
+
 
         /// <summary>
         /// Coroutine that makes some meshes every frame. Uses the new job system to do things parallel.
         /// </summary>
-        private IEnumerator MakeMeshesCoroutine(List<HashSet<Graph.GraphPoint>> clusters, BooleanExpression.Expr expr = null)
+        private IEnumerator MakeMeshesCoroutine(List<HashSet<Graph.GraphPoint>> clusters,
+            Dictionary<string, Graph.GraphPoint> points,
+            BooleanExpression.Expr expr = null, int lodGroup = 0, GraphSlice slice = null)
         {
+            newGraph.lodGroupClusters[lodGroup] = new List<GameObject>(nbrOfClusters);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            newGraph.graphPointClusters = new List<GameObject>(nbrOfClusters);
             int graphPointMeshVertexCount = meshToUse.vertexCount;
             int graphPointMeshTriangleCount = meshToUse.triangles.Length;
             Material graphPointMaterial = Instantiate(graphPointMaterialPrefab);
 
             // arrays used by the combine meshes job
-            NativeArray<Vector3> graphPointMeshVertices = new NativeArray<Vector3>(meshToUse.vertices, Allocator.TempJob);
+            NativeArray<Vector3> graphPointMeshVertices =
+                new NativeArray<Vector3>(meshToUse.vertices, Allocator.TempJob);
             NativeArray<int> graphPointMeshTriangles = new NativeArray<int>(meshToUse.triangles, Allocator.TempJob);
             NativeArray<int> clusterOffsets = new NativeArray<int>(nbrOfClusters, Allocator.TempJob);
-            NativeArray<Vector3> positions = new NativeArray<Vector3>(newGraph.points.Count, Allocator.TempJob);
-            NativeArray<Vector3> resultVertices = new NativeArray<Vector3>(newGraph.points.Count * graphPointMeshVertexCount, Allocator.TempJob);
-            NativeArray<int> resultTriangles = new NativeArray<int>(newGraph.points.Count * graphPointMeshTriangleCount, Allocator.TempJob);
-            NativeArray<Vector2> resultUVs = new NativeArray<Vector2>(newGraph.points.Count * graphPointMeshVertexCount, Allocator.TempJob);
+            NativeArray<Vector3> positions = new NativeArray<Vector3>(points.Count, Allocator.TempJob);
+            NativeArray<Vector3> resultVertices =
+                new NativeArray<Vector3>(points.Count * graphPointMeshVertexCount, Allocator.TempJob);
+            NativeArray<int> resultTriangles =
+                new NativeArray<int>(points.Count * graphPointMeshTriangleCount, Allocator.TempJob);
+            NativeArray<Vector2> resultUVs =
+                new NativeArray<Vector2>(points.Count * graphPointMeshVertexCount, Allocator.TempJob);
 
             // set up cluster offsets
             clusterOffsets[0] = 0;
+            // if (nbrOfClusters > clusterOffsets.Length)
+            // {
+            //     print("mismatch make new");
+            //     clusterOffsets = new NativeArray<int>(nbrOfClusters, Allocator.TempJob);
+            // }
+
             for (int i = 0; i < nbrOfClusters; ++i)
             {
                 var cluster = clusters[i];

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CellexalVR.Interaction;
 using CellexalVR.General;
+using DG.Tweening;
 
 namespace CellexalVR.Menu
 {
@@ -18,8 +19,8 @@ namespace CellexalVR.Menu
         public GameObject menuHolder;
 
         // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.InputDevice device;
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private GameObject menu;
         private MenuRotator menuRotator;
         // These dictionaries holds the things that were turned off when the menu was deactivated
@@ -27,8 +28,8 @@ namespace CellexalVR.Menu
         private Dictionary<Collider, bool> colliders = new Dictionary<Collider, bool>();
         private Collider boxCollider;
         // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController leftController;
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController leftController;
         private ControllerModelSwitcher controllerModelSwitcher;
         private bool animate;
         private float currentTime;
@@ -37,7 +38,7 @@ namespace CellexalVR.Menu
         private Vector3 finalScale;
         private Vector3 startPosition;
         private Vector3 finalPosition;
-        private Vector3 originalScale = new Vector3(0.25f, 0.25f, 0.25f);
+        private Vector3 originalScale = new Vector3(0.3f, 0.3f, 0.35f);
         private readonly int animateSpeed = 8;
 
         private void OnValidate()
@@ -62,49 +63,24 @@ namespace CellexalVR.Menu
             CellexalEvents.LeftTriggerClick.AddListener(OnTriggerClick);
         }
 
-        void Update()
-        {
-            if (animate)
-            {
-                currentTime += 0.8f * Time.deltaTime;
-                float step = (currentTime * animateSpeed) / arrivalTime;
-                menu.transform.localScale = Vector3.Lerp(startScale, finalScale, step);
-                menu.transform.position = Vector3.Lerp(startPosition, finalPosition, step);
-                if (Mathf.Abs(menu.transform.localScale.x - finalScale.x) <= 0.001f)
-                {
-                    animate = false;
-                    ToggleMenu();
-                }
-            }
-        }
 
         private void OnTriggerClick()
         {
             // Open XR
             //device = SteamVR_Controller.Input((int)leftController.index);
-            if (true)
+            if (!MenuActive)
             {
-                animate = true;
-                currentTime = 0f;
-                startScale = menu.transform.localScale;
-                if (MenuActive)
-                {
-                    startPosition = menu.transform.position;
-                    finalScale = Vector3.zero;
-                    finalPosition = menuCube.transform.position;
-                }
-                else
-                {
-                    startPosition = menuCube.transform.position;
-                    finalScale = originalScale;
-                    menu.transform.parent = leftController.transform;
-                    menu.transform.position = menuCube.transform.position;
-                    menu.transform.rotation = menuCube.transform.rotation;
-                    finalPosition = menuCube.transform.position + menuCube.transform.forward * 0.2f;
-                }
-                menuRotator.AllowRotation = !MenuActive;
-                menuRotator.StopRotating();
+                menu.transform.parent = leftController.transform;
+                menu.transform.position = menuCube.transform.position;
+                menu.transform.rotation = menuCube.transform.rotation;
             }
+            menu.transform.DOKill();
+            Vector3 targetScale = MenuActive ? Vector3.zero : originalScale;
+            Vector3 targetPos = MenuActive ? menuCube.transform.position : menuCube.transform.position + menuCube.transform.forward * 0.2f;
+            menu.transform.DOScale(targetScale, 0.3f).SetEase(Ease.InOutSine);
+            menu.transform.DOMove(targetPos, 0.3f).SetEase(Ease.InOutSine).OnComplete(ToggleMenu);
+            menuRotator.AllowRotation = !MenuActive;
+            menuRotator.StopRotating();
         }
 
         public void ToggleMenu()

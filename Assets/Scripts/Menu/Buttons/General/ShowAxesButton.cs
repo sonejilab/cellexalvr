@@ -31,7 +31,7 @@ namespace CellexalVR.Menu.Buttons.General
         public override void Click()
         {
             activated = !activated;
-            graphManager.SetAxesVisible(activated);
+            graphManager.ToggleAxes();
         }
 
         void TurnOn()

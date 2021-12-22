@@ -53,6 +53,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void Pull()
         {
+            print("pull");
             raycastingSource = transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist + 5, layerMask);
             if (!hit.collider) return;
@@ -103,6 +104,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void Push()
         {
+            print("push");
             raycastingSource = transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist, layerMask);
             if (!hit.collider) return;

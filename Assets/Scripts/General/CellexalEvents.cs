@@ -83,6 +83,11 @@ namespace CellexalVR.General
         public static UnityEvent LeftTriggerUp = new UnityEvent();
 
 
+        // GeoMX Loading Events
+        public static UnityEvent LoadingImages = new UnityEvent();
+        public static UnityEvent ImagesLoaded = new UnityEvent();
+
+
 
         public class CommandFinishedEvent : UnityEvent<bool> { }
         public static CommandFinishedEvent CommandFinished = new CommandFinishedEvent();

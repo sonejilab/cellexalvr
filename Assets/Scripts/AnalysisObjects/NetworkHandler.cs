@@ -9,6 +9,7 @@ using CellexalVR.Extensions;
 using CellexalVR.Menu.Buttons.Networks;
 using CellexalVR.SceneObjects;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -100,7 +101,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void Update()
         {
-            if (GetComponent<InteractableObjectBasic>().isGrabbed)
+            if (GetComponent<XRGrabInteractable>().isSelected)
             {
                 multiuserMessageSender.SendMessageMoveNetwork(name, transform.position, transform.rotation,
                     transform.localScale);

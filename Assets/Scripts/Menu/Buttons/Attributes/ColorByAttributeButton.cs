@@ -4,7 +4,6 @@ using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
 using UnityEngine;
-using Valve.Newtonsoft.Json.Utilities;
 
 namespace CellexalVR.Menu.Buttons.Attributes
 {

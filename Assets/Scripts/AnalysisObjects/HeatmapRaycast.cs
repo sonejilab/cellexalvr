@@ -42,6 +42,7 @@ namespace CellexalVR.Interaction
         private float selectedBoxWidth;
         private float selectedBoxHeight;
         private Cell[] cellsToHighlight = new Cell[0];
+        private int currentHighlightedGroup;
 
         private void Start()
         {
@@ -89,10 +90,10 @@ namespace CellexalVR.Interaction
                 Mathf.Infinity, layerMask);
             if (hit.collider && hit.transform == transform)
             {
-                int hitx = (int) (hit.textureCoord.x * heatmap.bitmapWidth);
-                int hity = (int) (hit.textureCoord.y * heatmap.bitmapHeight);
-                if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.geneListX, heatmap.heatmapY,
-                    heatmap.geneListWidth, heatmap.heatmapHeight))
+                int hitx = (int) (hit.textureCoord.x * heatmap.layout.bitmapWidth);
+                int hity = (int) (hit.textureCoord.y * heatmap.layout.bitmapHeight);
+                if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, heatmap.layout.geneListX, heatmap.layout.heatmapY,
+                    heatmap.layout.geneListWidth, heatmap.layout.heatmapHeight))
                 {
                     // if we hit the list of genes
                     multiuserMessageSender.SendMessageHandleHitGenesList(name, hity);
@@ -107,23 +108,23 @@ namespace CellexalVR.Interaction
                             graphManager.GeneExpressionColoringMethod);
                     }
                 }
-                else if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.heatmapX, heatmap.groupBarY,
-                    heatmap.heatmapWidth, heatmap.groupBarHeight))
+                else if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, heatmap.layout.heatmapX, heatmap.layout.groupBarY,
+                    heatmap.layout.heatmapWidth, heatmap.layout.groupBarHeight))
                 {
                     // if we hit the grouping bar
                     multiuserMessageSender.SendMessageHandleHitGroupingBar(name, hitx);
                     HandleHitGroupingBar(hitx);
                 }
 
-                else if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.heatmapX,
-                    heatmap.attributeBarY, heatmap.heatmapWidth, heatmap.attributeBarHeight))
+                else if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, heatmap.layout.heatmapX,
+                    heatmap.layout.attributeBarY, heatmap.layout.heatmapWidth, heatmap.layout.attributeBarHeight))
                 {
                     multiuserMessageSender.SendMessageHandleHitAttributeBar(name, hitx);
                     HandleHitAttributeBar(hitx);
                 }
 
-                else if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, heatmap.heatmapX, heatmap.heatmapY,
-                    heatmap.heatmapWidth, heatmap.heatmapHeight))
+                else if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, heatmap.layout.heatmapX, heatmap.layout.heatmapY,
+                    heatmap.layout.heatmapWidth, heatmap.layout.heatmapHeight))
                 {
                     heatmap.barInfoText.text = "";
                     heatmap.enlargedGeneText.gameObject.SetActive(false);
@@ -236,7 +237,7 @@ namespace CellexalVR.Interaction
         /// <param name="hity">The y coordinate of the hit. Measured in pixels of the texture.</param>
         public void HandlePressDown(int hitx, int hity)
         {
-            if (CoordinatesInsideRect(hitx, heatmap.bitmapHeight - hity, (int) selectedBoxX, (int) selectedBoxY,
+            if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, (int) selectedBoxX, (int) selectedBoxY,
                 (int) selectedBoxWidth, (int) selectedBoxHeight))
             {
                 // if we hit a confirmed selection

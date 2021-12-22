@@ -41,6 +41,7 @@ namespace CellexalVR.Menu.SubMenus
         protected string[] categories;
         protected string[] orderedNames;
         protected Dictionary<string, List<string>> categoriesAndNamesDict;
+        protected Dictionary<string, List<string>> orderedNamesCategoriesAndNamesDict;
 
         private int currentPage = 0;
         private int pageCounter = 0;
@@ -108,7 +109,7 @@ namespace CellexalVR.Menu.SubMenus
                     categoriesAndNamesDict["Unnamed"].Add(names[i]);
                 }
             }
-
+            orderedNamesCategoriesAndNamesDict = new Dictionary<string, List<string>>();
             Tab newTab = null;
             int buttonIndex = 0;
             string prevCat = "";
@@ -143,6 +144,7 @@ namespace CellexalVR.Menu.SubMenus
                     cellexalButtons.Add(newButton);
                     newTab.AddButton(newButton);
                     prevCat = cat;
+                    orderedNamesCategoriesAndNamesDict[cat] = orderedNames.ToList();
                 }
             }
 
@@ -302,6 +304,7 @@ namespace CellexalVR.Menu.SubMenus
 
             if (currentPage == pageCounter)
             {
+                prevPageButton.SetActive(true);
                 nextPageButton.SetActive(false);
             }
             else if (currentPage == 0)

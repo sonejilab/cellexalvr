@@ -31,6 +31,7 @@ namespace CellexalVR.AnalysisObjects
 
         private CellManager cellManager;
         private List<NetworkHandler> networks = new List<NetworkHandler>();
+        private bool axesVisible;
 
         /// <summary>
         /// The different methods for coloring graphs by gene expression. The different options are:
@@ -473,11 +474,12 @@ namespace CellexalVR.AnalysisObjects
         /// Set all graphs' axes to visible or not visible.
         /// </summary>
         /// <param name="visible"> TRue for visible, false for invisible </param>
-        public void SetAxesVisible(bool visible)
+        public void ToggleAxes()
         {
+            axesVisible = !axesVisible;
             foreach (Graph g in Graphs)
             {
-                g.SetAxesVisible(visible);
+                g.SetAxesVisible(axesVisible);
             }
         }
 

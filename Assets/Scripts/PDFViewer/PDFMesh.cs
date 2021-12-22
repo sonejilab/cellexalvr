@@ -10,7 +10,6 @@ using PDFiumSharp;
 using PDFiumSharp.Types;
 using UnityEngine;
 using TMPro;
-using Valve.VR.InteractionSystem;
 
 
 namespace CellexalVR.PDFViewer
@@ -313,9 +312,9 @@ namespace CellexalVR.PDFViewer
                 pageParent.transform.localPosition = new Vector3(0, 0.5f, 0);
                 settingsHandlerPocket.transform.parent = transform;
 
-                Transform cameraTransform = Player.instance.hmdTransform;
+                Transform cameraTransform = ReferenceManager.instance.headset.transform;
                 settingsHandlerCurved.transform.position = cameraTransform.position + cameraTransform.forward * 0.7f;
-                settingsHandlerCurved.transform.LookAt(Player.instance.hmdTransform.position);
+                settingsHandlerCurved.transform.LookAt(cameraTransform.position);
                 settingsHandlerCurved.transform.Rotate(0, 180, 0);
             }
         }

@@ -9,6 +9,7 @@ using System;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Interaction;
 using Valve.VR;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Spatial
 {
@@ -17,7 +18,6 @@ namespace CellexalVR.Spatial
     /// </summary>
     public class SpatialGraph : MonoBehaviour
     {
-        private SteamVR_Behaviour_Pose rightController;
         // private SteamVR_Controller.Device rdevice;
         private GameObject contour;
         private Vector3 startPosition;
@@ -40,7 +40,6 @@ namespace CellexalVR.Spatial
 
         private void Start()
         {
-            rightController = referenceManager.rightController;
             startPosition = transform.position;
             GameObject brain = GameObject.Instantiate(brainModel);
             brain.GetComponent<ReferenceMouseBrain>().spatialGraph = this;
@@ -59,7 +58,7 @@ namespace CellexalVR.Spatial
 
         private void Update()
         {
-            if (GetComponent<InteractableObjectBasic>().isGrabbed)
+            if (GetComponent<XRGrabInteractable>().isSelected)
             {
                 referenceManager.multiuserMessageSender.SendMessageMoveGraph(gameObject.name, transform.position,
                     transform.rotation, transform.localScale);

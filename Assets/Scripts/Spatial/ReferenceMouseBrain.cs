@@ -14,7 +14,6 @@ namespace CellexalVR.Spatial
         public ReferenceManager referenceManager;
 
         private bool attached;
-        private SteamVR_Behaviour_Pose rightController;
         // private SteamVR_Controller.Device device;
         private bool controllerInside;
 
@@ -33,12 +32,11 @@ namespace CellexalVR.Spatial
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
-            rightController = referenceManager.rightController;
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.gameObject.CompareTag("GameController"))
             {
                 controllerInside = true;
                 GetComponent<Renderer>().material.color = Color.red;
@@ -47,7 +45,7 @@ namespace CellexalVR.Spatial
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
+            if (other.gameObject.CompareTag("GameController"))
             {
                 controllerInside = false;
                 GetComponent<Renderer>().material.color = Color.white;

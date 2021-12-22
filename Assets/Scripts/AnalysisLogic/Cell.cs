@@ -17,6 +17,7 @@ namespace CellexalVR.AnalysisLogic
         public Dictionary<string, int> Attributes { get; private set; }
         public Dictionary<string, float> Facs { get; private set; }
         public Dictionary<string, string> FacsValue { get; private set; }
+        public Dictionary<string, float> NumericalAttributes { get; private set; }
         public int ExpressionLevel { get; internal set; }
         public float ExpressionValue { get; set; }
         public string Label { get; set; }
@@ -40,6 +41,7 @@ namespace CellexalVR.AnalysisLogic
             Attributes = new Dictionary<string, int>();
             Facs = new Dictionary<string, float>();
             FacsValue = new Dictionary<string, string>();
+            NumericalAttributes = new Dictionary<string, float>();
             tempMat = null;
         }
 
@@ -63,6 +65,7 @@ namespace CellexalVR.AnalysisLogic
             Attributes[attributeType.ToLower()] = color;
         }
 
+
         /// <summary>
         /// Colors all graphpoints that represents this cell if this cell is of an attribute.
         /// </summary>
@@ -76,6 +79,23 @@ namespace CellexalVR.AnalysisLogic
                 if (color)
                 {
                     g.ColorSelectionColor(Attributes[attributeType.ToLower()], false);
+                }
+
+                else
+                {
+                    g.ResetColor();
+                }
+            }
+        }
+
+        public void ColorByAttribute(string attributeType, int group, bool color)
+        {
+            if (!Attributes.ContainsKey(attributeType.ToLower())) return;
+            foreach (Graph.GraphPoint g in GraphPoints)
+            {
+                if (color)
+                {
+                    g.ColorSelectionColor(group, false);
                 }
 
                 else
@@ -150,6 +170,13 @@ namespace CellexalVR.AnalysisLogic
             Facs[facsName.ToLower()] = value;
         }
 
+        /// <summary>
+        /// Other numerical attribute that is not facs value or gene expression.
+        /// </summary>
+        public void AddNumericalAttribute(string attributeType, float value)
+        {
+            NumericalAttributes[attributeType.ToLower()] = value;
+        }
 
         /// <summary>
         /// Adds a .facs original value to this cell.

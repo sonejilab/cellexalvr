@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using CellexalVR.General;
+﻿using CellexalVR.General;
 using Unity.Mathematics;
 using UnityEngine;
-using Valve.VR;
-using Valve.VR.InteractionSystem;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.PDFViewer
 {
@@ -15,11 +12,10 @@ namespace CellexalVR.PDFViewer
         public GameObject screenQuad;
         public GameObject cubePrefab;
 
-        // private SteamVR_Controller.Device device;
-        public SteamVR_Action_Boolean controllerAction = SteamVR_Input.GetBooleanAction("TouchpadPress");
-        public Vector2 touchpadPosition;
+        [SerializeField] private InputActionAsset inputActionAsset;
+        [SerializeField] private InputActionReference click;
+        [SerializeField] private InputActionReference touchPadPos;
 
-        private Hand hand;
         private GameObject cube;
         private LayerMask layerMask;
 
@@ -34,47 +30,25 @@ namespace CellexalVR.PDFViewer
         private void Start()
         {
             layerMask = 1 << LayerMask.NameToLayer("PDFLayer");
-            hand = Player.instance.rightHand;
+            click.action.performed += OnClick;
+            click.action.canceled += OnRelease;
         }
 
-        private void Update()
+        private void OnClick(InputAction.CallbackContext context)
         {
-            // int index = (int) referenceManager.rightController.index;
-            // device = SteamVR_Controller.Input(index);
-            if (controllerAction.GetState(Player.instance.rightHand.handType))
+            if (math.abs(touchPadPos.action.ReadValue<Vector2>().y) > 0.5f)
             {
-                touchpadPosition = SteamVR_Input.GetVector2("TouchpadPosition", hand.handType);
-                if (math.abs(touchpadPosition.y) > 0.5f)
-                {
-                    Ray ray = new Ray(Player.instance.rightHand.transform.position, Player.instance.rightHand.transform.forward);
-                    Magnify(ray);
-                }
+                Ray ray = new Ray(ReferenceManager.instance.rightController.transform.position, ReferenceManager.instance.rightController.transform.position);
+                Magnify(ray);
             }
-            
-            if (controllerAction.GetStateUp(Player.instance.rightHand.handType))
-            {
-                magnifyingCamera.gameObject.SetActive(false);
-                screenQuad.SetActive(false);
-            }
-
-            // Transform rightControllerTransform = referenceManager.rightController.transform;
-
-            // if (device.GetPress(SteamVR_Controller.ButtonMask.Touchpad))
-            // {
-            //     Vector2 touchPad = (device.GetAxis());
-            //     if (touchPad.y < 0.3)
-            //     {
-            //         Ray ray = new Ray(rightControllerTransform.position, rightControllerTransform.forward);
-            //         Magnify(ray);
-            //     }
-            // }
-            //
-            // if (device.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
-            // {
-            //     magnifyingCamera.gameObject.SetActive(false);
-            //     screenQuad.SetActive(false);
-            // }
         }
+
+        private void OnRelease(InputAction.CallbackContext context)
+        {
+            magnifyingCamera.gameObject.SetActive(false);
+            screenQuad.SetActive(false);
+        }
+
 
 
         private void Magnify(Ray ray)

@@ -31,6 +31,7 @@ namespace CellexalVR.Interaction
         private bool grabbingObject = false;
 
         private ControllerModelSwitcher controllerModelSwitcher;
+        private XRRayInteractor laserPointer;
 
         private void OnValidate()
         {

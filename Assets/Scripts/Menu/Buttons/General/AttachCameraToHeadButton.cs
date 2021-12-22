@@ -1,5 +1,5 @@
-﻿using CellexalVR.Menu.Buttons;
-using Valve.VR.InteractionSystem;
+﻿using CellexalVR.General;
+using CellexalVR.Menu.Buttons;
 
 namespace Menu.Buttons.General
 {
@@ -9,7 +9,7 @@ namespace Menu.Buttons.General
 
         public override void Click()
         {
-            referenceManager.screenshotCamera.snapShotCamera.transform.parent = Player.instance.hmdTransform;
+            referenceManager.screenshotCamera.snapShotCamera.transform.parent = ReferenceManager.instance.headset.transform;
         }
     }
 }

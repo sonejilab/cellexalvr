@@ -125,6 +125,12 @@ namespace CellexalVR.Multiuser
             spectatorCamera.enabled = toggle;
             spectatorCamera.GetComponent<SpectatorCameraLook>().enabled = toggle;
             active = toggle;
+
+            if (toggle)
+            {
+                transform.position = new Vector3(0, 1.15f, -2.5f);
+                transform.rotation = Quaternion.identity;
+            }
         }
     }
 }

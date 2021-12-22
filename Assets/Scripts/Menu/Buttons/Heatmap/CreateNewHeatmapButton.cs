@@ -17,7 +17,6 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         private void Start()
         {
             heatmapRaycast = GetComponentInParent<HeatmapRaycast>();
-            heatmap = GetComponentInParent<AnalysisObjects.Heatmap>();
 
         }
 

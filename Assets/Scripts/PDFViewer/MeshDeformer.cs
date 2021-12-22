@@ -22,7 +22,6 @@ namespace CellexalVR.PDFViewer
         
         private Mesh deformingMesh;
         private Vector3[] vertexVelocities;
-        private SteamVR_Behaviour_Pose rightController;
         // private SteamVR_Controller.Device device;
 
         private float uniformScale = 1f;

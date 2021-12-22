@@ -18,8 +18,10 @@ namespace CellexalVR.General
         private GameObject _InputReader;
         public GameObject CameraRig;
         private GameObject _CameraRig;
-        public GameObject VRTK;
-        private GameObject _VRTK;
+        //public GameObject VRTK;
+        //private GameObject _VRTK;
+        public GameObject XRInteractionManager;
+        private GameObject _XRInteractionManager;
         public GameObject Managers;
         private GameObject _Managers;
         public GameObject Generators;
@@ -64,6 +66,8 @@ namespace CellexalVR.General
         private GameObject _PDFViewer;
         public GameObject SnapShotCamera;
         private GameObject _SnapShotCamera;
+        public GameObject ScarfManager;
+        private GameObject _ScarfManager;
 
         private List<GameObject> instances;
         private IEnumerator buildSceneEnumerator;
@@ -112,7 +116,8 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _CameraRig, CameraRig);
             // OpenXR
             //_CameraRig.GetComponentInChildren<Player>().hands = new Hand[0];
-            InstantiateSceneAsset(ref _VRTK, VRTK);
+            //InstantiateSceneAsset(ref _VRTK, VRTK);
+            InstantiateSceneAsset(ref _XRInteractionManager, XRInteractionManager);
             InstantiateSceneAsset(ref _Managers, Managers);
             InstantiateSceneAsset(ref _Generators, Generators);
             InstantiateSceneAsset(ref _SQLiter, SQLiter);
@@ -132,7 +137,7 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _H5Reader, H5Reader);
             InstantiateSceneAsset(ref _PDFViewer, PDFViewer);
             InstantiateSceneAsset(ref _SnapShotCamera, SnapShotCamera);
-            InstantiateSceneAsset(ref _Teleporting, Teleporting);
+            //InstantiateSceneAsset(ref _Teleporting, Teleporting);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
 
@@ -245,8 +250,9 @@ namespace CellexalVR.General
         public void AutoPopulateGameObjects()
         {
             InputReader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/InputReader.prefab");
-            CameraRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK]3.3.prefab");
-            VRTK = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK_Scripts].prefab");
+            CameraRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/CellexalOpenXRRig.prefab");
+            //VRTK = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK_Scripts].prefab");
+            XRInteractionManager = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/XR Interaction Manager.prefab");
             Managers = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Managers.prefab");
             Generators = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Generators.prefab");
             SQLiter = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SQLiter.prefab");
@@ -265,8 +271,9 @@ namespace CellexalVR.General
             SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SpectatorRig.prefab");
             H5Reader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/H5Reader/H5ReaderTestObjectManager.prefab");
             PDFViewer = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PDFViewer/PDFViewer.prefab");
-            Teleporting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Teleport.prefab");
+            //Teleporting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Teleport.prefab");
             SnapShotCamera = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SnapShotCam.prefab");
+            ScarfManager = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/ScarfManager.prefab");
         }
 
         [Obsolete]

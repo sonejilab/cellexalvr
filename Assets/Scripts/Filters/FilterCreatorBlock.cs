@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using CellexalVR.Interaction;
 using UnityEngine;
-using Valve.VR.InteractionSystem;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Filters
 {

@@ -11,7 +11,7 @@ namespace Assets.Scripts.Interaction
         [SerializeField] private XRRayInteractor rayInteractor;
         [SerializeField] private TeleportationProvider provider;
         [SerializeField] private GameObject endPoint;
-
+        [SerializeField] private InputActionReference touchPadPos;
 
         private InputAction _thumbstick;
 
@@ -19,12 +19,13 @@ namespace Assets.Scripts.Interaction
         {
             rayInteractor.enabled = false;
 
-            var activate = actionAsset.FindActionMap("XRI LeftHand").FindAction("Teleport Mode Activate");
+            var activate = actionAsset.FindActionMap("XRI LeftHand").FindAction("TouchPadClick");
             activate.Enable();
             activate.performed += OnTeleportActivate;
 
             activate.canceled += OnTeleportDeactivate;
 
+            //var touchPadPos = actionAsset.FindActionMap("XRI LeftHand").FindAction("TouchPadPos");
             //var deactivate = actionAsset.FindActionMap("XRI LeftHand").FindAction("Teleport Mode Activate");
             //activate.Enable();
             //activate.performed += OnTeleportActivate;
@@ -38,6 +39,9 @@ namespace Assets.Scripts.Interaction
 
         private void OnTeleportActivate(InputAction.CallbackContext context)
         {
+            Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
+            if (touchPadPos.action.ReadValue<Vector2>().y < 0.5f)
+                return;
             rayInteractor.enabled = true;
             endPoint.SetActive(true);
             

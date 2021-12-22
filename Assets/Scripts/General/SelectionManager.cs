@@ -58,7 +58,7 @@ namespace CellexalVR.General
 
         [HideInInspector]
         public string DataDir { get; set; }
-        private List<HistoryListInfo> selectionHistory = new List<HistoryListInfo>();
+        public List<HistoryListInfo> selectionHistory = new List<HistoryListInfo>();
         // the number of steps we have taken back in the history.
         private int historyIndexOffset;
         private MultiuserMessageSender multiuserMessageSender;
@@ -815,7 +815,7 @@ namespace CellexalVR.General
                     referenceManager.sessionHistoryList.AddEntry(filePath, Definitions.HistoryEvent.SELECTION);
                 }
                 
-                referenceManager.selectionFromPreviousMenu.ReadSelectionFiles();
+                //referenceManager.selectionFromPreviousMenu.ReadSelectionFiles();
 
                 StartCoroutine(UpdateRObjectGrouping());
             }

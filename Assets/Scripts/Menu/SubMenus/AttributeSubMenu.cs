@@ -42,6 +42,7 @@ namespace CellexalVR.Menu.SubMenus
             foreach (KeyValuePair<string, List<string>> kvp in categoriesAndNamesDict)
             {
                 string cat = kvp.Key;
+                var orderedAttrNames = orderedNamesCategoriesAndNamesDict[cat];
                 for (int i = 0; i < kvp.Value.Count; i++, buttonIndex++)
                 {
                     var b = cellexalButtons[buttonIndex];
@@ -53,9 +54,9 @@ namespace CellexalVR.Menu.SubMenus
                     // {
                     //     displayedName = words[1];
                     // }
-                    b.GetComponent<ColorByAttributeButton>().SetAttribute(cat + "@" + orderedNames[i], orderedNames[i], colorIndex);
+                    b.GetComponent<ColorByAttributeButton>().SetAttribute(cat + "@" + orderedAttrNames[i], orderedAttrNames[i], colorIndex);
                     b.GetComponent<ColorByAttributeButton>().parentMenu = this;
-                    b.gameObject.name = orderedNames[i];
+                    b.gameObject.name = orderedAttrNames[i];
                     GetComponentInChildren<ChangeColorModeButton>().firstTab = tabs[0];
                 }
             }

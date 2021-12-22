@@ -129,14 +129,14 @@ namespace CellexalVR.Interaction
 
             {
                 // if we hit a button in the environment (keyboard or env button)
-                if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
-                {
-                    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
-                }
-                if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
-                {
-                    controllerModelSwitcher.ActivateDesiredTool();
-                }
+                //if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
+                //{
+                //    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
+                //}
+                //if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
+                //{
+                //    controllerModelSwitcher.ActivateDesiredTool();
+                //}
                 //referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
                 MultiUserToggle(true);
                 ToggleLaser(true);

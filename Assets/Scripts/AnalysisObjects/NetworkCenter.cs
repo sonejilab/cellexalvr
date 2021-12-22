@@ -37,8 +37,6 @@ namespace CellexalVR.AnalysisObjects
         public int selectionNr;
         public SaveNetworkAsImageButton saveImageButton;
         public GameObject movingOutlineCircle;
-        public SteamVR_Input_Sources inputSource = SteamVR_Input_Sources.RightHand; //which controller
-        // public SteamVR_Action_Boolean grabPinch = SteamVR_Input.GetBooleanAction("TriggerClick");
 
         private int group;
 

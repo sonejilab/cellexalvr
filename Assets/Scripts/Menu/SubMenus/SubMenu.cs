@@ -8,7 +8,7 @@ namespace CellexalVR.Menu.SubMenus
     public class SubMenu : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        public InteractableMenu interactableMenu;
+        //public InteractableMenu interactableMenu;
         public bool Active { get; set; }
         public bool Attached { get; set; }
 
@@ -62,14 +62,14 @@ namespace CellexalVR.Menu.SubMenus
                 canvas.enabled = active;
             }
 
-            if (interactableMenu && !Attached)
-            {
-                interactableMenu.ReattachMenu();
-            }
-            else
-            {
-                SetUnderlyingContentActive(!active);
-            }
+            //if (interactableMenu && !Attached)
+            //{
+            //    interactableMenu.ReattachMenu();
+            //}
+            //else
+            //{
+            //    SetUnderlyingContentActive(!active);
+            //}
         }
 
         /// <summary>

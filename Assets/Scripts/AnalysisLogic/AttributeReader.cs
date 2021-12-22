@@ -115,7 +115,7 @@ namespace CellexalVR.AnalysisLogic
                 string header = metaCellStreamReader.ReadLine();
                 if (header != null)
                 {
-                    string[] attributeTypes = header.Split(null);
+                    string[] attributeTypes = header.Split('\t');
                     string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
                     for (int i = 1; i < attributeTypes.Length; ++i)
                     {
@@ -136,7 +136,7 @@ namespace CellexalVR.AnalysisLogic
 
                         if (line != null)
                         {
-                            string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+                            string[] words = line.Split(new char[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
 
                             string cellName = words[0];
                             for (int j = 1; j < words.Length; ++j)

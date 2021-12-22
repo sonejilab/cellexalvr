@@ -9,17 +9,16 @@ namespace CellexalVR.Multiuser
     /// </summary>
     public class SpectatorCameraLook : MonoBehaviour
     {
-        Vector2 mouseLook;
-        Vector2 smoothingV;
 
         public float smoothing;
         public float sensitivity;
-
-        GameObject controller;
+        private Vector2 mouseLook;
+        private Vector2 smoothingV;
+        private Transform controller;
 
         void Start()
         {
-            controller = transform.parent.gameObject;
+            controller = GetComponentInParent<SpectatorController>().transform;
         }
 
         private void Update()
@@ -33,7 +32,7 @@ namespace CellexalVR.Multiuser
 
 
                 transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
-                controller.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, controller.transform.up);
+                controller.localRotation = Quaternion.AngleAxis(mouseLook.x, controller.transform.up);
             }
         }
     }

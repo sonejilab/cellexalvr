@@ -7,7 +7,6 @@ using System.IO;
 using System.Threading;
 using Menu.Buttons.General;
 using UnityEngine;
-using Valve.VR.InteractionSystem;
 
 namespace CellexalVR.Tools
 {
@@ -143,8 +142,8 @@ namespace CellexalVR.Tools
             if (toggle)
             {
                 // Transform cameraPosition = Player.instance.headCollider.transform;
-                transform.localPosition = Player.instance.hmdTransform.position + Player.instance.hmdTransform.forward * 0.7f;
-                transform.LookAt(Player.instance.hmdTransform.position);
+                transform.localPosition = ReferenceManager.instance.headset.transform.position + ReferenceManager.instance.headset.transform.forward * 0.7f;
+                transform.LookAt(ReferenceManager.instance.headset.transform.position);
                 transform.Rotate(0, 180, 0);
             }
         }

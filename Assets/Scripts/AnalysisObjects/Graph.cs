@@ -167,9 +167,13 @@ namespace CellexalVR.AnalysisObjects
 
         private void Update()
         {
-            if (textureChanged && texture != null)
+            if (textureChanged && textures != null)
             {
-                texture.Apply();
+                foreach (Texture2D texture in textures)
+                {
+                    texture.Apply();
+                }
+
                 textureChanged = false;
             }
 

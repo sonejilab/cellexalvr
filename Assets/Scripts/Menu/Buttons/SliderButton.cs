@@ -33,8 +33,8 @@ namespace CellexalVR.Menu.Buttons
         {
             if (gameObject.scene.IsValid())
             {
-                slider.transform.localPosition = startState ? rightSide.localPosition : leftSide.localPosition;
-                slider.transform.localPosition += new Vector3(0, 0, -0.9f);
+                //slider.transform.localPosition = startState ? rightSide.localPosition : leftSide.localPosition;
+                //slider.transform.localPosition += new Vector3(0, 0, -0.9f);
                 // UpdateColors(startState);
             }
         }
