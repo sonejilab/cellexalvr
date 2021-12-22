@@ -198,7 +198,6 @@ namespace CellexalVR.Menu.Buttons
 
         public virtual void SetButtonActivated(bool activate)
         {
-            //print(name + " setbuttonactivated " + activate);
             if (!activate)
             {
                 descriptionText.text = "";
@@ -211,6 +210,7 @@ namespace CellexalVR.Menu.Buttons
                     meshRenderer.material.color = meshDeactivatedColor;
                 }
             }
+
             if (activate)
             {
                 if (spriteRenderer != null)
@@ -222,6 +222,7 @@ namespace CellexalVR.Menu.Buttons
                     meshRenderer.material.color = meshStandardColor;
                 }
             }
+
             buttonActivated = activate;
             controllerInside = false;
         }
@@ -237,7 +238,7 @@ namespace CellexalVR.Menu.Buttons
         public void ToggleOutline(bool toggle, bool legend = false)
         {
             var tab = transform.parent.GetComponent<Tab>();
-            var menuNoTab = transform.parent.GetComponent<MenuWithoutTabs>();
+            var menuNoTab = transform.parent.GetComponent<SubMenu>();
             if (tab != null && tab.Active)
             {
                 activeOutline.SetActive(toggle);
@@ -246,15 +247,13 @@ namespace CellexalVR.Menu.Buttons
             {
                 activeOutline.SetActive(toggle);
             }
+
             storedState = toggle;
         }
-
-
 
         protected void OnTriggerEnter(Collider other)
         {
             if (!buttonActivated) return;
-            //print(name + " ontriggerenter");
             if (other.gameObject.name == laserColliderName)
             {
                 descriptionText.text = Description;
@@ -271,6 +270,7 @@ namespace CellexalVR.Menu.Buttons
             {
                 descriptionText.text = "";
             }
+
             controllerInside = false;
             if (buttonActivated)
             {
@@ -317,11 +317,13 @@ namespace CellexalVR.Menu.Buttons
                 {
                     meshRenderer.material.color = meshHighlightColor;
                 }
+
                 if (descriptionText.text == "")
                 {
                     descriptionText.text = Description;
                 }
             }
+
             if (!highlight)
             {
                 if (spriteRenderer != null)
@@ -333,10 +335,12 @@ namespace CellexalVR.Menu.Buttons
                     meshRenderer.material.color = meshStandardColor;
                 }
             }
+
             if (infoMenu)
             {
                 infoMenu.SetActive(highlight);
             }
+
             controllerInside = highlight;
         }
     }

@@ -1,10 +1,9 @@
-﻿using CellexalVR.AnalysisLogic;
-using CellexalVR.DesktopUI;
+﻿using System;
+using CellexalVR.AnalysisLogic;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Attributes;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,6 @@ using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
 {
-
     /// <summary>
     /// Represents the sub menu that pops up when the <see cref="AttributeMenuButton"/> is pressed.
     /// </summary>
@@ -22,6 +20,7 @@ namespace CellexalVR.Menu.SubMenus
         {
             get { return CellexalConfig.Config.SelectionToolColors; }
         }
+
         public ColorByBooleanExpressionButton booleanExpressionButtonPrefab;
         public Tab booleanExpressionTabPrefab;
         public List<string> attributes;
@@ -33,27 +32,59 @@ namespace CellexalVR.Menu.SubMenus
         {
             CreateButtons(categoriesAndNames);
         }
+
         public override void CreateButtons(string[] categoriesAndNames)
         {
             base.CreateButtons(categoriesAndNames);
-            //string[] orderedNames = new string[names.Length];
-            //Array.Copy(names, orderedNames, names.Length);
-            //Array.Sort(orderedNames, StringComparer.InvariantCulture);
-            for (int i = 0; i < buttons.Count; ++i)
+
+            ReferenceManager.instance.cellManager.Attributes = new List<string>();
+            int buttonIndex = 0;
+            foreach (KeyValuePair<string, List<string>> kvp in categoriesAndNamesDict)
             {
-                var b = buttons[i];
-                b.referenceManager = referenceManager;
-                int colorIndex = i % Colors.Length;
-                b.GetComponent<ColorByAttributeButton>().SetAttribute(categoriesAndNames[i], names[i], Colors[colorIndex]);
-                b.GetComponent<ColorByAttributeButton>().parentMenu = this;
-                b.gameObject.name = categoriesAndNames[i];
-                GetComponentInChildren<ChangeColorModeButton>().firstTab = tabs[0];
+                string cat = kvp.Key;
+                for (int i = 0; i < kvp.Value.Count; i++, buttonIndex++)
+                {
+                    var b = cellexalButtons[buttonIndex];
+                    b.referenceManager = referenceManager;
+                    int colorIndex = i % Colors.Length;
+                    // string[] words = orderedNames[i].Split('@');
+                    // string displayedName = words[0];
+                    // if (name.Length > 0)
+                    // {
+                    //     displayedName = words[1];
+                    // }
+                    b.GetComponent<ColorByAttributeButton>().SetAttribute(cat + "@" + orderedNames[i], orderedNames[i], colorIndex);
+                    b.GetComponent<ColorByAttributeButton>().parentMenu = this;
+                    b.gameObject.name = orderedNames[i];
+                    GetComponentInChildren<ChangeColorModeButton>().firstTab = tabs[0];
+                }
             }
+
+
+            // for (int i = 0; i < categories.Length; i++)
+            // {
+            //     for (int j = 0; j < cellexalButtons.Count; ++j)
+            //     {
+            //         var b = cellexalButtons[j];
+            //         b.referenceManager = referenceManager;
+            //         int colorIndex = j % Colors.Length;
+            //         // string[] words = orderedNames[i].Split('@');
+            //         // string displayedName = words[0];
+            //         // if (name.Length > 0)
+            //         // {
+            //         //     displayedName = words[1];
+            //         // }
+            //         b.GetComponent<ColorByAttributeButton>().SetAttribute(orderedNames[j], orderedNames[j], Colors[colorIndex]);
+            //         b.GetComponent<ColorByAttributeButton>().parentMenu = this;
+            //         b.gameObject.name = orderedNames[j];
+            //         GetComponentInChildren<ChangeColorModeButton>().firstTab = tabs[0];
+            //     }
+            // }
         }
 
         public override CellexalButton FindButton(string name)
         {
-            var button = buttons.Find(x => x.GetComponent<ColorByAttributeButton>().Attribute == name);
+            var button = cellexalButtons.Find(x => x.GetComponent<ColorByAttributeButton>().Attribute == name);
             return button;
         }
 
@@ -63,8 +94,8 @@ namespace CellexalVR.Menu.SubMenus
         public override void DestroyTabs()
         {
             base.DestroyTabs();
-            if (buttons != null)
-                buttons.Clear();
+            if (cellexalButtons != null)
+                cellexalButtons.Clear();
         }
 
         /// <summary>
@@ -72,12 +103,13 @@ namespace CellexalVR.Menu.SubMenus
         /// </summary>
         public void SwitchButtonStates()
         {
-            foreach (var b in buttons)
+            foreach (var b in cellexalButtons)
             {
                 ColorByAttributeButton button = b.GetComponent<ColorByAttributeButton>();
                 button.SwitchMode();
             }
         }
+
         /// <summary>
         /// Builds a tree of and expressions and not expressions that corresponds to the current state of the attribute buttons.
         /// </summary>
@@ -86,7 +118,7 @@ namespace CellexalVR.Menu.SubMenus
         {
             BooleanExpression.Expr root = null;
             // go over each button and check its state.
-            foreach (var b in buttons)
+            foreach (var b in cellexalButtons)
             {
                 ColorByAttributeButton button = b.GetComponent<ColorByAttributeButton>();
                 if (button.CurrentBooleanExpressionState != AttributeLogic.INVALID && button.CurrentBooleanExpressionState != AttributeLogic.NOT_INCLUDED)
@@ -110,6 +142,7 @@ namespace CellexalVR.Menu.SubMenus
                     }
                 }
             }
+
             return root;
         }
 
@@ -137,14 +170,19 @@ namespace CellexalVR.Menu.SubMenus
                     {
                         category = b.Attribute.Split('@')[0];
                     }
+                    else
+                    {
+                        category = "UnnamedAttr";
+                    }
+
                     if (!b.colored && category == currentCategory)
                     {
-                        b.ColourAttribute(true);
+                        b.ColorAttribute(true);
                     }
+
                     yield return null;
                 }
             }
         }
-
     }
 }

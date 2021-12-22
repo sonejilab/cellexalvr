@@ -144,6 +144,7 @@ namespace CellexalVR.Tools
                 ycoords[i] = newLinePositions[i - 1].y;
                 zcoords[i] = newLinePositions[i - 1].z;
             }
+
             referenceManager.multiuserMessageSender.SendMessageDrawLine(LineColor.r, LineColor.g, LineColor.b, xcoords, ycoords, zcoords);
 
             LineRenderer newLine = SpawnNewLine(LineColor, newLinePositions);
@@ -156,10 +157,12 @@ namespace CellexalVR.Tools
             {
                 newLine.transform.parent = collidesWith[0].transform;
             }
+
             foreach (LineRenderer line in temporaryLines)
             {
                 Destroy(line.gameObject);
             }
+
             temporaryLines.Clear();
         }
 

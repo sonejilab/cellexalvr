@@ -1,4 +1,5 @@
-﻿using CellexalVR.AnalysisLogic;
+﻿using System;
+using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Filters;
@@ -68,9 +69,14 @@ namespace CellexalVR.General
         #region Menu
         [Header("Menu")]
         public GameObject mainMenu;
+        public GameObject frontButtons;
+        public GameObject rightButtons;
+        public GameObject backButtons;
+        public GameObject leftButtons;
         public ToggleArcsSubMenu arcsSubMenu;
         public AttributeSubMenu attributeSubMenu;
         public ColorByIndexMenu indexMenu;
+        public ColorByCellStatMenu cellStatMenu;
         public GraphFromMarkersMenu createFromMarkerMenu;
         public SelectionFromPreviousMenu selectionFromPreviousMenu;
         public ColorByGeneMenu colorByGeneMenu;
@@ -79,10 +85,6 @@ namespace CellexalVR.General
         public GameObject selectionMenu;
         public FlybyMenu flybyMenu;
         //public TextMesh currentFlashedGeneText;
-        public GameObject frontButtons;
-        public GameObject rightButtons;
-        public GameObject backButtons;
-        public GameObject leftButtons;
         //public TextMesh frontDescription;
         //public TextMesh rightDescription;
         //public TextMesh backDescription;
@@ -90,6 +92,7 @@ namespace CellexalVR.General
         public MenuRotator menuRotator;
         public MinimizedObjectHandler minimizedObjectHandler;
         public MenuToggler menuToggler;
+        public MenuUnfolder menuUnfolder;
         #endregion
 
         #region Managers, generators and things
@@ -98,6 +101,7 @@ namespace CellexalVR.General
         public CellManager cellManager;
         public LineBundler lineBundler;
         public SelectionManager selectionManager;
+        public AnnotationManager annotationManager;
         public HeatmapGenerator heatmapGenerator;
         public NetworkGenerator networkGenerator;
         public GraphGenerator graphGenerator;
@@ -107,6 +111,7 @@ namespace CellexalVR.General
         public ConfigManager configManager;
         //public GameObject helperCylinder;
         public InputReader inputReader;
+        // public ReportReader reportReader;
         public SQLite database;
         public LogManager logManager;
         public MultiuserMessageSender multiuserMessageSender;
@@ -126,6 +131,7 @@ namespace CellexalVR.General
         public FilterManager filterManager;
         public ReportManager reportManager;
         public Floor floor;
+        public PDFViewer.PDFMesh pdfMesh;
 
         //h5reader annotator
         public H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
@@ -142,6 +148,7 @@ namespace CellexalVR.General
         public ColoringOptionsList coloringOptionsList;
         public KeyboardHandler folderKeyboard;
         public KeyboardHandler webBrowserKeyboard;
+        public SessionHistoryList sessionHistoryList;
 
         #endregion
 
@@ -168,6 +175,10 @@ namespace CellexalVR.General
 
         #endregion
 
+        private void Awake()
+        {
+            instance = this;
+        }
 #if UNITY_EDITOR
         /// <summary>
         /// Attempts to set all references using <see cref="GameObject.Find(string)"/> and <see cref="GameObject.GetComponent(string)"/>.
@@ -228,6 +239,7 @@ namespace CellexalVR.General
             menuRotator = mainMenu.GetComponent<MenuRotator>();
             minimizedObjectHandler = GameObject.Find("MenuHolder/Main Menu/Jail").GetComponent<MinimizedObjectHandler>();
             menuToggler = leftController.GetComponent<MenuToggler>();
+            menuUnfolder = mainMenu.GetComponent<MenuUnfolder>();
 
             GameObject managersParent = GameObject.Find("Managers");
             GameObject generatorsParent = GameObject.Find("Generators");
@@ -235,6 +247,7 @@ namespace CellexalVR.General
             cellManager = managersParent.GetComponentInChildren<CellManager>();
             lineBundler = managersParent.GetComponentInChildren<LineBundler>();
             selectionManager = managersParent.GetComponentInChildren<SelectionManager>();
+            annotationManager = managersParent.GetComponentInChildren<AnnotationManager>();
             heatmapGenerator = generatorsParent.GetComponentInChildren<HeatmapGenerator>();
             networkGenerator = generatorsParent.GetComponentInChildren<NetworkGenerator>();
             graphGenerator = generatorsParent.GetComponentInChildren<GraphGenerator>();
@@ -257,13 +270,15 @@ namespace CellexalVR.General
             newGraphFromMarkers = createFromMarkerMenu.GetComponent<NewGraphFromMarkers>();
             notificationManager = managersParent.GetComponentInChildren<NotificationManager>();
             tutorialManager = managersParent.GetComponentInChildren<TutorialManager>();
-            screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
+            // screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
             velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
             convexHullGenerator = generatorsParent.GetComponentInChildren<ConvexHullGenerator>(true);
             filterManager = managersParent.GetComponentInChildren<FilterManager>(true);
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
+            // reportReader = reportManager.GetComponent<ReportReader>();
             floor = GameObject.Find("Floor").GetComponent<Floor>();
+            pdfMesh = GameObject.Find("PDFViewer").GetComponentInChildren<PDFMesh>();
 
             geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();
@@ -273,6 +288,7 @@ namespace CellexalVR.General
             coloringOptionsList = GameObject.Find("Keyboard Setup/Coloring Options List").GetComponent<ColoringOptionsList>();
             folderKeyboard = GameObject.Find("Tron_Loader/Folder Keyboard").GetComponent<KeyboardHandler>();
             webBrowserKeyboard = GameObject.Find("WebBrowser/Web Keyboard").GetComponent<KeyboardHandler>();
+            sessionHistoryList = geneKeyboard.GetComponentInChildren<SessionHistoryList>();
 
             GameObject filterCreator = GameObject.Find("Filter Creator");
             filterBlockBoard = filterCreator.transform.Find("Filter Block Board").gameObject;

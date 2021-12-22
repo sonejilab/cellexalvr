@@ -94,11 +94,11 @@ namespace CellexalVR.Tools
                     }
                 }
             }
+
         }
 
         private void OnTriggerEnter(Collider other)
         {
-
             numberColliders++;
             if (other.CompareTag("Graph") || other.CompareTag("SubGraph") || other.CompareTag("FacsGraph")
                 || other.CompareTag("HeatBoard") || other.CompareTag("Network"))

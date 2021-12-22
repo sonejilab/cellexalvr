@@ -150,6 +150,7 @@ namespace CellexalVR.Menu.Buttons
             {
                 meshRenderer = GetComponent<MeshRenderer>();
             }
+
             meshRenderer.material.color = h ? highlightColor : standardColor;
         }
     }

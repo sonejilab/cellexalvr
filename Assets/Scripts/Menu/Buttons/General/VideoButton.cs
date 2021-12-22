@@ -33,11 +33,6 @@ namespace CellexalVR.Menu.Buttons.General
             {
                 base.SetHighlighted(highlight);
             }
-            else
-            {
-                // do nothing
-            }
-                
         }
 
         public void StartVideo()

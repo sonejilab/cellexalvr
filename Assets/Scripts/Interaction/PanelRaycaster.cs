@@ -42,6 +42,9 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
+            laserPointer = referenceManager.laserPointerController.rightLaser;
+            // laserPointer.PointerClick += PanelClick;
+
             if (referenceManager == null)
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();

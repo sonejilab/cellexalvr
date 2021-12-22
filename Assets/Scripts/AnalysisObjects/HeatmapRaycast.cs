@@ -35,7 +35,6 @@ namespace CellexalVR.Interaction
         private int selectedGeneTop;
 
         private int selectedGeneBottom;
-        private int currentGroup = -1;
 
         // these are the actual coordinates and size of the box
         private float selectedBoxX;
@@ -264,12 +263,12 @@ namespace CellexalVR.Interaction
             int group;
             FindGroupInfo(hitx, out groupX, out groupWidth, out group);
 
-            int geneHit = (int) ((float) ((heatmap.bitmapHeight - hity) - heatmap.heatmapY) / heatmap.heatmapHeight *
+            int geneHit = (int)((float)((heatmap.layout.bitmapHeight - hity) - heatmap.layout.heatmapY) / heatmap.layout.heatmapHeight *
                                  heatmap.genes.Length);
-            float highlightMarkerWidth = groupWidth / heatmap.bitmapWidth;
-            float highlightMarkerHeight = ((float) heatmap.heatmapHeight / heatmap.bitmapHeight) / heatmap.genes.Length;
-            float highlightMarkerX = groupX / heatmap.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
-            float highlightMarkerY = -(float) heatmap.heatmapY / heatmap.bitmapHeight -
+            float highlightMarkerWidth = groupWidth / heatmap.layout.bitmapWidth;
+            float highlightMarkerHeight = ((float)heatmap.layout.heatmapHeight / heatmap.layout.bitmapHeight) / heatmap.genes.Length;
+            float highlightMarkerX = groupX / heatmap.layout.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+            float highlightMarkerY = -(float)heatmap.layout.heatmapY / heatmap.layout.bitmapHeight -
                 geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
 
             heatmap.highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
@@ -280,14 +279,7 @@ namespace CellexalVR.Interaction
             // the smaller the highlight quad becomes, the larger the text has to become
             heatmap.highlightInfoText.transform.localScale = new Vector3(0.003f / highlightMarkerWidth,
                 0.003f / highlightMarkerHeight, 0.003f);
-
-            if (currentGroup == group) return;
-            currentGroup = group;
             ResetHeatmapHighlight(false);
-
-            cellsToHighlight = cellManager.GetCells(group, heatmap.cells);
-            if (cellsToHighlight.Length <= 0) return;
-            cellManager.HighlightCells(cellsToHighlight, true, group);
         }
 
         /// <summary>
@@ -299,7 +291,7 @@ namespace CellexalVR.Interaction
         /// <param name="group">The number (color) of the group.</param>
         private void FindGroupInfo(int hitx, out float groupX, out float groupWidth, out int group)
         {
-            groupX = heatmap.heatmapX;
+            groupX = heatmap.layout.heatmapX;
             groupWidth = 0;
             group = 0;
             for (int i = 0; i < heatmap.groupWidths.Count; ++i)
@@ -320,11 +312,11 @@ namespace CellexalVR.Interaction
         /// </summary>
         /// <param name="hitx">The x coordinate that the raycast hit.</param>
         /// <param name="attributeX">The leftmost x coordinate of the attribute that was hit.</param>
-        /// <param name="attributeWidth">The width of the attribute, measured in pixels.</param>
+        /// <param name="layout.attributeWidth">The width of the attribute, measured in pixels.</param>
         /// <param name="attribute">The number (color) of the attribute.</param>
         private void FindAttributeInfo(int hitx, out float attributeX, out float attributeWidth, out int attribute)
         {
-            attributeX = heatmap.heatmapX;
+            attributeX = heatmap.layout.heatmapX;
             attributeWidth = 0;
             attribute = 0;
             for (int i = 0; i < heatmap.attributeWidths.Count; ++i)
@@ -348,15 +340,15 @@ namespace CellexalVR.Interaction
         public void HandleHitGroupingBar(int hitx)
         {
             // get this groups width and xcoordinate
-            FindGroupInfo(hitx, out float groupX, out float groupWidth, out int @group);
-            if (currentGroup == group) return;
-            currentGroup = group;
+            float groupX, groupWidth;
+            int group;
+            FindGroupInfo(hitx, out groupX, out groupWidth, out group);
 
-            float highlightMarkerWidth = groupWidth / heatmap.bitmapWidth;
-            float highlightMarkerHeight = ((float) heatmap.groupBarHeight / heatmap.bitmapHeight);
-            float highlightMarkerX = groupX / heatmap.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+            float highlightMarkerWidth = groupWidth / heatmap.layout.bitmapWidth;
+            float highlightMarkerHeight = ((float)heatmap.layout.groupBarHeight / heatmap.layout.bitmapHeight);
+            float highlightMarkerX = groupX / heatmap.layout.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
             float highlightMarkerY =
-                -(float) heatmap.groupBarY / heatmap.bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
+                -(float)heatmap.layout.groupBarY / heatmap.layout.bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
 
             heatmap.highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
             heatmap.highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
@@ -364,10 +356,12 @@ namespace CellexalVR.Interaction
             heatmap.barInfoText.text = "Group nr: " + group;
             heatmap.highlightInfoText.text = "";
             heatmap.enlargedGeneText.gameObject.SetActive(false);
+            if (currentHighlightedGroup == group) return;
             ResetHeatmapHighlight(false);
             cellsToHighlight = cellManager.GetCells(group, heatmap.cells);
             if (cellsToHighlight.Length <= 0) return;
             cellManager.HighlightCells(cellsToHighlight, true, group);
+            currentHighlightedGroup = group;
         }
 
         /// <summary>
@@ -380,22 +374,19 @@ namespace CellexalVR.Interaction
             // get this groups width and xcoordinate
             FindAttributeInfo(hitx, out float attributeX, out float attributeWidth, out int attribute);
 
-            if (currentGroup == attribute) return;
-            currentGroup = attribute;
-            float highlightMarkerWidth = attributeWidth / heatmap.bitmapWidth;
-            float highlightMarkerHeight = ((float) heatmap.attributeBarHeight / heatmap.bitmapHeight);
-            float highlightMarkerX = attributeX / heatmap.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
-            float highlightMarkerY = -(float) heatmap.attributeBarY / heatmap.bitmapHeight - highlightMarkerHeight / 2 +
+            float highlightMarkerWidth = attributeWidth / heatmap.layout.bitmapWidth;
+            float highlightMarkerHeight = ((float)heatmap.layout.attributeBarHeight / heatmap.layout.bitmapHeight);
+            float highlightMarkerX = attributeX / heatmap.layout.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+            float highlightMarkerY = -(float)heatmap.layout.attributeBarY / heatmap.layout.bitmapHeight - highlightMarkerHeight / 2 +
                                      0.5f;
 
             heatmap.highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
             heatmap.highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
             heatmap.highlightQuad.SetActive(true);
-            if (attribute >= cellManager.Attributes.Length || attribute < 0)
-                return;
+            if (attribute >= cellManager.Attributes.Count || attribute < 0) return;
+            if (heatmap.barInfoText.text == cellManager.Attributes[attribute]) return;
             ResetHeatmapHighlight(false);
             cellsToHighlight = cellManager.GetCells(cellManager.Attributes[attribute]);
-            if (heatmap.barInfoText.text == cellManager.Attributes[attribute] && cellsToHighlight.Length == 0) return;
             cellManager.HighlightCells(cellsToHighlight, true, attribute);
             heatmap.barInfoText.text = attribute >= 0 ? cellManager.Attributes[attribute] : "No attribute";
             heatmap.enlargedGeneText.gameObject.SetActive(false);
@@ -410,13 +401,13 @@ namespace CellexalVR.Interaction
         /// <returns>An index of the gene that was hit.</returns>
         public int HandleHitGeneList(int hity)
         {
-            int geneHit = (int) ((float) ((heatmap.bitmapHeight - hity) - heatmap.heatmapY) / heatmap.heatmapHeight *
+            int geneHit = (int)((float)((heatmap.layout.bitmapHeight - hity) - heatmap.layout.heatmapY) / heatmap.layout.heatmapHeight *
                                  heatmap.genes.Length);
 
-            float highlightMarkerWidth = (float) heatmap.geneListWidth / heatmap.bitmapWidth;
-            float highlightMarkerHeight = ((float) heatmap.heatmapHeight / heatmap.bitmapHeight) / heatmap.genes.Length;
-            float highlightMarkerX = (float) heatmap.geneListX / heatmap.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
-            float highlightMarkerY = -(float) heatmap.heatmapY / heatmap.bitmapHeight -
+            float highlightMarkerWidth = (float)heatmap.layout.geneListWidth / heatmap.layout.bitmapWidth;
+            float highlightMarkerHeight = ((float)heatmap.layout.heatmapHeight / heatmap.layout.bitmapHeight) / heatmap.genes.Length;
+            float highlightMarkerX = (float)heatmap.layout.geneListX / heatmap.layout.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+            float highlightMarkerY = -(float)heatmap.layout.heatmapY / heatmap.layout.bitmapHeight -
                 geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
 
             heatmap.highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
@@ -446,7 +437,7 @@ namespace CellexalVR.Interaction
         public void HandleBoxSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
         {
             // since the groupings have irregular widths we need to iterate over the list of widths
-            float boxX = heatmap.heatmapX;
+            float boxX = heatmap.layout.heatmapX;
             float boxWidth = 0;
             for (int i = 0; i < heatmap.groupWidths.Count; ++i)
             {
@@ -464,20 +455,20 @@ namespace CellexalVR.Interaction
                 boxX += heatmap.groupWidths[i].Item2;
             }
 
-            float highlightMarkerWidth = boxWidth / heatmap.bitmapWidth;
-            float highlightMarkerX = boxX / heatmap.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+            float highlightMarkerWidth = boxWidth / heatmap.layout.bitmapWidth;
+            float highlightMarkerX = boxX / heatmap.layout.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
 
             // the genes all have the same height so no need for loops here
-            int geneHit1 = (int) ((float) ((heatmap.bitmapHeight - hity) - heatmap.heatmapY) / heatmap.heatmapHeight *
+            int geneHit1 = (int)((float)((heatmap.layout.bitmapHeight - hity) - heatmap.layout.heatmapY) / heatmap.layout.heatmapHeight *
                                   heatmap.genes.Length);
-            int geneHit2 = (int) ((float) ((heatmap.bitmapHeight - selectionStartY) - heatmap.heatmapY) /
-                heatmap.heatmapHeight * heatmap.genes.Length);
+            int geneHit2 = (int)((float)((heatmap.layout.bitmapHeight - selectionStartY) - heatmap.layout.heatmapY) /
+                heatmap.layout.heatmapHeight * heatmap.genes.Length);
             int smallerGeneHit = geneHit1 < geneHit2 ? geneHit1 : geneHit2;
-            float highlightMarkerHeight = ((float) heatmap.heatmapHeight / heatmap.bitmapHeight) /
+            float highlightMarkerHeight = ((float)heatmap.layout.heatmapHeight / heatmap.layout.bitmapHeight) /
                 heatmap.genes.Length * (Math.Abs(geneHit1 - geneHit2) + 1);
             float highlightMarkerY =
-                -((float) heatmap.heatmapY + smallerGeneHit * ((float) heatmap.heatmapHeight / heatmap.genes.Length)) /
-                heatmap.bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
+                -((float)heatmap.layout.heatmapY + smallerGeneHit * ((float)heatmap.layout.heatmapHeight / heatmap.genes.Length)) /
+                heatmap.layout.bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
 
             heatmap.highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
             heatmap.highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
@@ -497,7 +488,7 @@ namespace CellexalVR.Interaction
         {
             selecting = false;
             // since the groupings have irregular widths we need to iterate over the list of widths
-            selectedBoxX = heatmap.heatmapX;
+            selectedBoxX = heatmap.layout.heatmapX;
             selectedBoxWidth = 0;
 
             selectedGroupLeft = 0;
@@ -527,14 +518,14 @@ namespace CellexalVR.Interaction
                 selectedGroupRight++;
             }
 
-            float highlightMarkerWidth = selectedBoxWidth / heatmap.bitmapWidth;
-            float highlightMarkerX = selectedBoxX / heatmap.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+            float highlightMarkerWidth = selectedBoxWidth / heatmap.layout.bitmapWidth;
+            float highlightMarkerX = selectedBoxX / heatmap.layout.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
 
             // the genes all have the same height so no need for loops here
-            int geneHit1 = (int) ((float) ((heatmap.bitmapHeight - hity) - heatmap.heatmapY) / heatmap.heatmapHeight *
+            int geneHit1 = (int)((float)((heatmap.layout.bitmapHeight - hity) - heatmap.layout.heatmapY) / heatmap.layout.heatmapHeight *
                                   heatmap.genes.Length);
-            int geneHit2 = (int) ((float) ((heatmap.bitmapHeight - selectionStartY) - heatmap.heatmapY) /
-                heatmap.heatmapHeight * heatmap.genes.Length);
+            int geneHit2 = (int)((float)((heatmap.layout.bitmapHeight - selectionStartY) - heatmap.layout.heatmapY) /
+                heatmap.layout.heatmapHeight * heatmap.genes.Length);
             if (geneHit1 < geneHit2)
             {
                 selectedGeneTop = geneHit1;
@@ -547,12 +538,12 @@ namespace CellexalVR.Interaction
             }
 
             // have to add 1 at the end here so it includes the bottom row as well
-            selectedBoxHeight = ((float) heatmap.heatmapHeight) / heatmap.genes.Length *
+            selectedBoxHeight = ((float)heatmap.layout.heatmapHeight) / heatmap.genes.Length *
                                 (Math.Abs(geneHit1 - geneHit2) + 1);
-            float highlightMarkerHeight = selectedBoxHeight / heatmap.bitmapHeight;
-            selectedBoxY = (float) heatmap.heatmapY +
-                           selectedGeneTop * ((float) heatmap.heatmapHeight / heatmap.genes.Length);
-            float highlightMarkerY = -(selectedBoxY) / heatmap.bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
+            float highlightMarkerHeight = selectedBoxHeight / heatmap.layout.bitmapHeight;
+            selectedBoxY = (float)heatmap.layout.heatmapY +
+                           selectedGeneTop * ((float)heatmap.layout.heatmapHeight / heatmap.genes.Length);
+            float highlightMarkerY = -(selectedBoxY) / heatmap.layout.bitmapHeight - highlightMarkerHeight / 2 + 0.5f;
 
             heatmap.confirmQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
             heatmap.confirmQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
@@ -576,8 +567,8 @@ namespace CellexalVR.Interaction
                     groupX += groupWidth;
                 }
 
-                float highlightMarkerX = groupX / heatmap.bitmapWidth +
-                    heatmap.heatmapWidth / (2 * heatmap.bitmapWidth) - 0.5f;
+                float highlightMarkerX = groupX / heatmap.layout.bitmapWidth +
+                    heatmap.layout.heatmapWidth / (2 * heatmap.layout.bitmapWidth) - 0.5f;
                 heatmap.movingQuadY.transform.localPosition = new Vector3(highlightMarkerX, 0f, -0.001f);
                 heatmap.movingQuadY.SetActive(true);
             }
@@ -586,15 +577,15 @@ namespace CellexalVR.Interaction
                 heatmap.movingQuadY.SetActive(false);
             }
 
-            if (heatmap.bitmapHeight - hity < selectedBoxY ||
-                heatmap.bitmapHeight - hity > selectedBoxY + selectedBoxHeight)
+            if (heatmap.layout.bitmapHeight - hity < selectedBoxY ||
+                heatmap.layout.bitmapHeight - hity > selectedBoxY + selectedBoxHeight)
             {
                 int geneHit =
-                    (int) (((heatmap.bitmapHeight - hity + ((float) heatmap.heatmapHeight / heatmap.genes.Length) / 2) -
-                            heatmap.heatmapY) / heatmap.heatmapHeight * heatmap.genes.Length);
+                    (int)(((heatmap.layout.bitmapHeight - hity + ((float)heatmap.layout.heatmapHeight / heatmap.genes.Length) / 2) -
+                            heatmap.layout.heatmapY) / heatmap.layout.heatmapHeight * heatmap.genes.Length);
                 float highlightMarkerY =
-                    -((float) heatmap.heatmapY + geneHit * ((float) heatmap.heatmapHeight / heatmap.genes.Length)) /
-                    heatmap.bitmapHeight + 0.5f;
+                    -((float)heatmap.layout.heatmapY + geneHit * ((float)heatmap.layout.heatmapHeight / heatmap.genes.Length)) /
+                    heatmap.layout.bitmapHeight + 0.5f;
                 heatmap.movingQuadX.transform.localPosition = new Vector3(0f, highlightMarkerY, -0.001f);
                 heatmap.movingQuadX.SetActive(true);
             }
@@ -632,12 +623,12 @@ namespace CellexalVR.Interaction
 
         private void ResetHeatmapHighlight(bool resetText = true)
         {
+            currentHighlightedGroup = -1;
             if (cellsToHighlight != null && cellsToHighlight.Length > 0)
             {
                 cellManager.HighlightCells(cellsToHighlight, false, -1);
                 cellsToHighlight = new Cell[0];
             }
-            currentGroup = -1;
             if (resetText) heatmap.ResetHeatmapHighlight();
         }
 
@@ -659,7 +650,7 @@ namespace CellexalVR.Interaction
             {
                 int nbrOfGroups = selectedGroupRight - selectedGroupLeft + 1;
                 int groupIndexToMoveTo = 0;
-                float groupX = heatmap.heatmapX;
+                float groupX = heatmap.layout.heatmapX;
                 while (groupX + heatmap.groupWidths[groupIndexToMoveTo].Item2 < hitx)
                 {
                     groupX += heatmap.groupWidths[groupIndexToMoveTo].Item2;
@@ -729,13 +720,13 @@ namespace CellexalVR.Interaction
                 recalculate = true;
             }
 
-            if (heatmap.bitmapHeight - hity < selectedBoxY ||
-                heatmap.bitmapHeight - hity > selectedBoxY + selectedBoxHeight)
+            if (heatmap.layout.bitmapHeight - hity < selectedBoxY ||
+                heatmap.layout.bitmapHeight - hity > selectedBoxY + selectedBoxHeight)
             {
                 int nbrOfGenes = selectedGeneBottom - selectedGeneTop + 1;
                 int geneIndex =
-                    (int) (((heatmap.bitmapHeight - hity + ((float) heatmap.heatmapHeight / heatmap.genes.Length) / 2) -
-                            heatmap.heatmapY) / heatmap.heatmapHeight * heatmap.genes.Length);
+                    (int)(((heatmap.layout.bitmapHeight - hity + ((float)heatmap.layout.heatmapHeight / heatmap.genes.Length) / 2) -
+                            heatmap.layout.heatmapY) / heatmap.layout.heatmapHeight * heatmap.genes.Length);
                 // Take the list of genes orignal genes
                 List<string> original = new List<string>(heatmap.genes);
                 // make a temporary list with enough space for what should be moved
@@ -773,10 +764,15 @@ namespace CellexalVR.Interaction
 
         public void CreateNewHeatmapFromSelection()
         {
-            multiuserMessageSender.SendMessageCreateNewHeatmapFromSelection(heatmap.name, selectedGroupLeft,
-                selectedGroupRight, selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
-            heatmap.CreateNewHeatmapFromSelection(selectedGroupLeft, selectedGroupRight, selectedGeneTop,
-                selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
+            multiuserMessageSender.SendMessageCreateNewHeatmapFromSelection(heatmap.name, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
+            heatmap.CreateNewHeatmapFromSelection(selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
+        }
+
+        public void CumulativeRecolourFromSelection()
+        {
+            //multiuserMessageSender.SendMessageCreateNewHeatmapFromSelection(heatmap.name, selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
+            heatmap.CumulativeRecolorFromSelection(selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
+
         }
     }
 }

@@ -3,8 +3,10 @@ using CellexalVR.Menu;
 using System.Collections;
 using System.Collections.Generic;
 using CellexalVR.AnalysisLogic;
+using CellexalVR.Interaction;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Runtime.Remoting.Messaging;
 
 namespace CellexalVR.Multiuser
 {
@@ -81,8 +83,8 @@ namespace CellexalVR.Multiuser
                         Destroy(spectatorRig);
                         player = PhotonNetwork.Instantiate(ghostPrefab.name, new Vector3(0f, 5f, 0f),
                             Quaternion.identity, 0);
-                        Destroy(referenceManager.leftControllerScriptAlias);
-                        Destroy(referenceManager.rightControllerScriptAlias);
+                        // Destroy(referenceManager.leftControllerScriptAlias);
+                        // Destroy(referenceManager.rightControllerScriptAlias);
                         referenceManager.leftController.GetComponent<MenuToggler>().menuCube.SetActive(false);
                         Destroy(referenceManager.leftController.GetComponent<MenuToggler>());
                     }
@@ -196,6 +198,19 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageMoveLaser", PhotonTargets.Others,
                 originPosition.x, originPosition.y, originPosition.z,
                 hit.x, hit.y, hit.z, coordinator.photonView.ownerId, players[0].gameObject.name);
+        }
+
+        public void SendMessageUpdateSliderValue(VRSlider.SliderType sliderType, float value)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageUpdateSliderValue", PhotonTargets.Others, sliderType.ToString(),
+                value);
+        }
+
+        public void SendMessageShowPDFPages()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageShowPDFPages", PhotonTargets.Others);
         }
 
         #endregion
@@ -433,6 +448,19 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
         }
 
+        public void SendMessageHandleHistoryPanelClick(string panelName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageHandleHistoryPanelClick", PhotonTargets.Others, panelName);
+            ClickableHistoryPanel panel = referenceManager.sessionHistoryList.GetPanel(panelName);
+            if (!panel)
+            {
+                CellexalLog.Log($"Could not find history panel with name: {panelName}");
+                return;
+            }
+            panel.HandleClick();
+        }
+
         #endregion
 
         #region Selection
@@ -501,6 +529,12 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageRemoveCells", PhotonTargets.Others);
         }
 
+        public void SendMessageToggleAnnotationFile(string path, bool toggle)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageToggleAnnotationFile", PhotonTargets.Others, path, toggle);
+        }
+
         #endregion
 
         #region Draw tool
@@ -546,7 +580,8 @@ namespace CellexalVR.Multiuser
                 pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
-        public void SendMessageGraphUngrabbed(string moveGraphName, Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
+        public void SendMessageGraphUngrabbed(string moveGraphName, Vector3 pos, Quaternion rot, Vector3 vel,
+            Vector3 angVel)
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageGraphUngrabbed", PhotonTargets.Others, moveGraphName,
@@ -666,7 +701,6 @@ namespace CellexalVR.Multiuser
                 pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
-
         public void SendMessageCreateHeatmap(string hmName)
         {
             if (!multiplayer) return;
@@ -769,6 +803,12 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageResetInfoTexts", PhotonTargets.Others, heatmapName);
         }
 
+        public void SendMessageCumulativeRecolorFromSelection(string heatmapName, int groupLeft, int groupRight, int selectedTop, int selectedBottom)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageCumulativeRecolorFromSelection", PhotonTargets.Others, heatmapName, groupLeft, groupRight, selectedTop, selectedBottom);
+        }
+
         #endregion
 
         #region Networks
@@ -787,7 +827,8 @@ namespace CellexalVR.Multiuser
                 pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
-        public void SendMessageNetworkUngrabbed(string networkName, Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
+        public void SendMessageNetworkUngrabbed(string networkName, Vector3 pos, Quaternion rot, Vector3 vel,
+            Vector3 angVel)
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageNetworkUngrabbed", PhotonTargets.Others, networkName,
@@ -858,18 +899,30 @@ namespace CellexalVR.Multiuser
                 centerName, geneName);
         }
 
-        public void SendMessageSetArcsVisible(bool toggleToState, string networkName)
-        {
-            if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSetArcsVisible", PhotonTargets.Others, toggleToState,
-                networkName);
-        }
+        // public void SendMessageSetArcsVisible(bool toggleToState, string networkName)
+        // {
+        //     if (!multiplayer) return;
+        //     coordinator.photonView.RPC("RecieveMessageSetArcsVisible", PhotonTargets.Others, toggleToState,
+        //         networkName);
+        // }
 
         public void SendMessageSetCombinedArcsVisible(bool toggleToState, string networkName)
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageSetCombinedArcsVisible", PhotonTargets.Others, toggleToState,
                 networkName);
+        }
+
+        public void SendMessageToggleAllArcs(bool toggleToState)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageToggleAllArcs", PhotonTargets.Others, toggleToState);
+        }
+
+        public void SendMessageNetworkArcButtonClicked(string buttonName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageNetworkArcButtonClicked", PhotonTargets.Others, buttonName);
         }
 
         #endregion
@@ -1107,6 +1160,7 @@ namespace CellexalVR.Multiuser
                 otherPlayer = GameObject.Find(playerPrefab.gameObject.name + "(Clone)");
                 yield return null;
             }
+
             otherPlayer.gameObject.name = otherPlayer.GetPhotonView().owner.NickName +
                                           otherPlayer.GetPhotonView().ownerId;
         }

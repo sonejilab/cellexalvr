@@ -48,6 +48,7 @@ namespace CellexalVR.AnalysisObjects
         private List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> toGraphClusters = new List<Tuple<HashSet<Graph.GraphPoint>, Vector3>>();
 
         private int clusterNr;
+
         //private bool isLargeSet;
         // Use this for initialization
         void Start()
@@ -66,16 +67,19 @@ namespace CellexalVR.AnalysisObjects
                 RemoveGraph();
                 return;
             }
+
             if (t2 == null)
             {
                 graph2.ctcGraphs.Remove(gameObject);
                 RemoveGraph();
                 return;
             }
+
             if (!(t1.gameObject.activeSelf && t2.gameObject.activeSelf))
             {
                 gameObject.SetActive(false);
             }
+
             if (t1.hasChanged || t2.hasChanged)
             {
                 transform.position = (t1.position + t2.position) / 2f;
@@ -97,29 +101,32 @@ namespace CellexalVR.AnalysisObjects
             newGraph.GraphName = "CTC_" + fromGraph.GraphName + "_" + toGraph.GraphName;
             newGraph.tag = "Untagged";
             newGraph.transform.position = fromGraph.transform.position + (toGraph.transform.position - fromGraph.transform.position) / 2f;
-            newGraph.transform.localScale /= 2;
-            newGraph.SetInfoTextVisible(false);
+            //newGraph.transform.localScale /= 2;
+            newGraph.ToggleInfoText();
             foreach (Graph.GraphPoint g in points)
             {
-                var sourceCell = fromGraph.points[g.Label];
-                var targetCell = toGraph.FindGraphPoint(g.Label);
+                Graph.GraphPoint sourceCell = fromGraph.points[g.Label];
+                Graph.GraphPoint targetCell = toGraph.FindGraphPoint(g.Label);
                 if (targetCell == null)
                 {
                     continue;
                 }
-                var fromGpPos = sourceCell.WorldPosition;
-                var toGpPos = targetCell.WorldPosition;
-                var midPosition = fromGpPos + (toGpPos - fromGpPos) / 2f;
-                var gp = referenceManager.graphGenerator.AddGraphPoint(referenceManager.cellManager.GetCell(g.Label),
-                                                                        toGpPos.x, toGpPos.y, toGpPos.z);
+
+                // Vector3 fromGpPos = sourceCell.WorldPosition;
+                Vector3 toGpPos = targetCell.WorldPosition;
+                // Vector3 midPosition = fromGpPos + (toGpPos - fromGpPos) / 2f;
+                referenceManager.graphGenerator.AddGraphPoint(referenceManager.cellManager.GetCell(g.Label),
+                    toGpPos.x, toGpPos.y, toGpPos.z);
             }
+
             if (newGraph.points.Count == 0)
             {
                 Destroy(newGraph.gameObject);
                 referenceManager.graphGenerator.isCreating = false;
                 return;
             }
-            referenceManager.graphGenerator.SliceClustering();
+
+            StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(referenceManager.graphGenerator.nrOfLODGroups));
             referenceManager.graphManager.Graphs.Add(newGraph);
             fromGraph.ctcGraphs.Add(newGraph.gameObject);
             toGraph.ctcGraphs.Add(newGraph.gameObject);
@@ -128,6 +135,7 @@ namespace CellexalVR.AnalysisObjects
                 gameObject.SetActive(false);
             }
         }
+
         /// <summary>
         /// Main function for clustering the lines. If many lines are present it is convenient to cluster them together for better visibility and less lag.
         /// Start by clustering the two graphs using mean shift clustering. Assign points to the clusters and then check if many points in a cluster in one graph goes to the same cluster in the other.
@@ -139,12 +147,12 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="clusterSize">To be considered a cluster and for the points to be bundled there has to be this many points.</param>
         /// <param name="neighbourDistance">The distance to other points to be considered in the same cluster. </param>
         public IEnumerator ClusterLines(int clusterSize = 10,
-                                    float neighbourDistance = 0.10f, float kernelBandwidth = 2.0f, bool bundle = false)
+            float neighbourDistance = 0.10f, float kernelBandwidth = 2.0f, bool bundle = false)
         {
             List<Graph.GraphPoint> toGraphPoints = new List<Graph.GraphPoint>();
             foreach (Graph.GraphPoint point in graphPoints)
             {
-                var gp = graph2.FindGraphPoint(point.Label);
+                Graph.GraphPoint gp = graph2.FindGraphPoint(point.Label);
                 if (gp != null)
                 {
                     //Graph.GraphPoint newGp = gp;
@@ -157,40 +165,42 @@ namespace CellexalVR.AnalysisObjects
                     continue;
                 }
             }
+
             Thread t = new Thread(
-                () =>
-                {
-                    DoClustering(graphPoints, toGraphPoints, neighbourDistance, kernelBandwidth);
-                });
+                () => { DoClustering(graphPoints, toGraphPoints, neighbourDistance, kernelBandwidth); });
             t.Start();
             while (t.IsAlive)
             {
                 yield return null;
             }
+
             HashSet<Graph.GraphPoint> prevjoinedclusters = new HashSet<Graph.GraphPoint>();
             if (bundle)
             {
                 for (int i = 0; i < clusters.Count; i++)
                 {
-                    var fromCluster = clusters[i];
+                    Tuple<HashSet<Graph.GraphPoint>, Vector3> fromCluster = clusters[i];
                     for (int j = 0; j < toGraphClusters.Count; j++)
                     {
-                        var toCluster = toGraphClusters[j];
+                        Tuple<HashSet<Graph.GraphPoint>, Vector3> toCluster = toGraphClusters[j];
                         if (!(fromCluster.Item1.Count > clusterSize && toCluster.Item1.Count > clusterSize))
                         {
                             continue;
                         }
+
                         var joinedCluster = from gpfrom in fromCluster.Item1
-                                            join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
-                                            select gpfrom;
+                            join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
+                            select gpfrom;
                         if (joinedCluster.ToList().Count > clusterSize)
                         {
                             prevjoinedclusters.UnionWith(joinedCluster);
                             AddCluster(graph1, graph2, joinedCluster);
                         }
                     }
+
                     yield return null;
                 }
+
                 // if (clusters.Count > 0)
                 // {
                 //     AddParticles(graph1, graph2);
@@ -198,13 +208,13 @@ namespace CellexalVR.AnalysisObjects
             }
 
             yield return null;
-            var pointsOutsideClusters = graphPoints.Except(prevjoinedclusters);
+            IEnumerable<Graph.GraphPoint> pointsOutsideClusters = graphPoints.Except(prevjoinedclusters);
             foreach (Graph.GraphPoint point in pointsOutsideClusters)
             {
                 AddLine(graph1, graph2, point);
             }
-
         }
+
         /// <summary>
         /// Function to run the heavier calculations in a separate thread. 
         /// </summary>
@@ -246,6 +256,7 @@ namespace CellexalVR.AnalysisObjects
                     }
                 }
             }
+
             List<List<Vector3>> oldPoints = new List<List<Vector3>>();
             Vector3 meanShift;
             for (int n = 0; n < iterations; n++)
@@ -254,7 +265,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     Vector3 centroid = centroids[i];
                     // Step 1: Calculate neighbouring points N(x) for each point x
-                    var neighbours = GetNeighbours(points, centroid, neighbourDistance);
+                    List<Tuple<Graph.GraphPoint, int>> neighbours = GetNeighbours(points, centroid, neighbourDistance);
                     // We dont want all the centroids to converge.
                     // It is better to keep more clusters to be able to bundle more lines together.
                     //if (neighbours.Count > 50)
@@ -266,6 +277,7 @@ namespace CellexalVR.AnalysisObjects
                         centroids.RemoveAt(i);
                         continue;
                     }
+
                     // Step 2: For each point calculate the mean shift m(x)
                     Vector3 nom = Vector3.zero;
                     float denom = 0.0f;
@@ -276,12 +288,15 @@ namespace CellexalVR.AnalysisObjects
                         nom += weight * neighbour.Item1.Position;
                         denom += weight;
                     }
+
                     meanShift = nom / denom;
                     // Step 3: Update each meanshift for the points x <- m(x)
                     centroids[i] = meanShift;
                 }
+
                 oldPoints.Add(centroids);
             }
+
             return centroids;
         }
 
@@ -297,10 +312,11 @@ namespace CellexalVR.AnalysisObjects
                     neighbours.Add(tuple);
                 }
             }
+
             return neighbours;
         }
 
-        private float GaussianKernel(float distance, float bandwidth)
+        private static float GaussianKernel(float distance, float bandwidth)
         {
             return (1 / bandwidth * Mathf.Sqrt(2 * Mathf.PI)) * Mathf.Exp(-0.5f * (Mathf.Pow(distance / bandwidth, 2)));
         }
@@ -314,7 +330,7 @@ namespace CellexalVR.AnalysisObjects
             List<Vector3> previousClusters = new List<Vector3>();
             foreach (Vector3 centroid in centroids)
             {
-                var neighbours = GetNeighbours(gps.ToList(), centroid, distance);
+                List<Tuple<Graph.GraphPoint, int>> neighbours = GetNeighbours(gps.ToList(), centroid, distance);
                 List<Tuple<Graph.GraphPoint, int>> ps = new List<Tuple<Graph.GraphPoint, int>>(neighbours);
                 //HashSet<Graph.GraphPoint> ps = new HashSet<Graph.GraphPoint>(neighbours);
                 Vector3 center = CalculateCentroid(ps); //calculate center of points to get better looking lines.
@@ -322,12 +338,14 @@ namespace CellexalVR.AnalysisObjects
                 {
                     continue;
                 }
-                var centerNeighbours = GetNeighbours(gps.ToList(), center, distance);
+
+                List<Tuple<Graph.GraphPoint, int>> centerNeighbours = GetNeighbours(gps.ToList(), center, distance);
                 //var centerNeighbours = neighbours;
                 if (neighbours.Count == 0)
                 {
                     continue;
                 }
+
                 HashSet<Graph.GraphPoint> cluster = new HashSet<Graph.GraphPoint>();
                 int currentGroup = centerNeighbours[0].Item1.Group;
                 //foreach (Graph.GraphPoint gp in centerNeighbours)
@@ -337,22 +355,23 @@ namespace CellexalVR.AnalysisObjects
                     {
                         break;
                     }
+
                     cluster.Add(centerNeighbours[i].Item1);
                     //gps[centerNeighbours[i].Item2];
                     //print("neighbour count : " + centerNeighbours.Count + ", gps count : " + gps.Count + ", " + i + " - " + centerNeighbours[i].Item2);
                     //gps.RemoveAt(centerNeighbours[i].Item2);
                 }
-                var newGps = gps.Except(cluster);
+
+                IEnumerable<Graph.GraphPoint> newGps = gps.Except(cluster);
                 gps = new HashSet<Graph.GraphPoint>(newGps);
                 clusters.Add(new Tuple<HashSet<Graph.GraphPoint>, Vector3>(cluster, center));
                 previousClusters.Add(center);
                 //Draw centroid boxes
                 //GameObject obj = Instantiate(clusterDebugBox, points[0].parent.transform);
                 //obj.transform.localPosition = center;
-
             }
-            return clusters;
 
+            return clusters;
         }
 
         /// <summary>
@@ -375,12 +394,12 @@ namespace CellexalVR.AnalysisObjects
                 midCluster.Add(graph.FindGraphPoint(gp.Label));
                 toCluster.Add(to.FindGraphPoint(gp.Label));
             }
+
             PointCluster pointCluster = Instantiate(pointClusterPrefab).GetComponent<PointCluster>();
             pointCluster.referenceManager = referenceManager;
             pointCluster.ClusterId = clusterNr;
             pointCluster.gameObject.name = "PointCluster" + clusterCount++;
             pointClusters.Add(pointCluster);
-            pointCluster.rightController = referenceManager.rightController;
             Vector3 fromCentroid = CalculateCentroid(fromCluster);
             Vector3 midCentroid = CalculateCentroid(midCluster);
             Vector3 toCentroid = CalculateCentroid(toCluster);
@@ -395,6 +414,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 prevAddedHulls.Add(midClusterHull);
             }
+
             //if (!prevAddedHulls.Contains(toClusterHull))
             //{
             //    prevAddedHulls.Add(toClusterHull);
@@ -440,6 +460,7 @@ namespace CellexalVR.AnalysisObjects
                     velocitiesToGraph[gp] = dir / 5f;
                 }
             }
+
             foreach (Graph.GraphPoint gp in midCluster)
             {
                 dir = midCentroid - gp.Position;
@@ -448,6 +469,7 @@ namespace CellexalVR.AnalysisObjects
                     velocitiesMidGraph[gp] = dir / 5f;
                 }
             }
+
             clusterNr++;
         }
 
@@ -502,11 +524,13 @@ namespace CellexalVR.AnalysisObjects
                 centroid += gp.Position;
                 //parent = gp.parent.transform;
             }
+
             centroid /= cluster.Count;
             //GameObject obj = Instantiate(clusterDebugBox, parent);
             //obj.transform.localPosition = centroid;
             return centroid;
         }
+
         private Vector3 CalculateCentroid(List<Tuple<Graph.GraphPoint, int>> cluster)
         {
             Vector3 centroid = new Vector3();
@@ -516,6 +540,7 @@ namespace CellexalVR.AnalysisObjects
                 centroid += gp.Item1.Position;
                 //parent = gp.parent.transform;
             }
+
             centroid /= cluster.Count;
             //GameObject obj = Instantiate(clusterDebugBox, parent);
             //obj.transform.localPosition = centroid;
@@ -534,6 +559,7 @@ namespace CellexalVR.AnalysisObjects
                     maxDistance = distance;
                 }
             }
+
             return new Vector3(maxDistance, maxDistance, maxDistance);
         }
 
@@ -552,27 +578,25 @@ namespace CellexalVR.AnalysisObjects
             {
                 return null;
             }
-            else
-            {
-                var sourceCell = from.points[point.Label];
-                LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab, graph.lineParent.transform).GetComponent<LineBetweenTwoPoints>();
-                line.t1 = sourceCell.parent.transform;
-                line.t2 = targetCell.parent.transform;
-                line.graphPoint1 = sourceCell;
-                line.graphPoint2 = targetCell;
-                //var midPosition = (line.t1.TransformPoint(sourceCell.Position) + line.t2.TransformPoint(targetCell.Position)) / 2f;
-                var gp = graph.FindGraphPoint(point.Label);
-                line.graphPoint3 = gp;
-                line.t3 = gp.parent.transform;
-                line.selectionManager = referenceManager.selectionManager;
-                LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
-                //float alpha = isLargeSet ? 0.05f : 0.1f;
-                lineRenderer.startColor = lineRenderer.endColor = new Color(color.r, color.g, color.b, 0.08f);
-                lines.Add(line);
-                //line.transform.parent = graph.lineParent.transform;
-                line.gameObject.SetActive(true);
-                return line;
-            }
+
+            Graph.GraphPoint sourceCell = from.points[point.Label];
+            LineBetweenTwoPoints line = Instantiate(lineBetweenTwoGraphPointsPrefab, graph.lineParent.transform).GetComponent<LineBetweenTwoPoints>();
+            line.t1 = sourceCell.parent.transform;
+            line.t2 = targetCell.parent.transform;
+            line.graphPoint1 = sourceCell;
+            line.graphPoint2 = targetCell;
+            //var midPosition = (line.t1.TransformPoint(sourceCell.Position) + line.t2.TransformPoint(targetCell.Position)) / 2f;
+            Graph.GraphPoint gp = graph.FindGraphPoint(point.Label);
+            line.graphPoint3 = gp;
+            line.t3 = gp.parent.transform;
+            line.selectionManager = referenceManager.selectionManager;
+            LineRenderer lineRenderer = line.GetComponent<LineRenderer>();
+            //float alpha = isLargeSet ? 0.05f : 0.1f;
+            lineRenderer.startColor = lineRenderer.endColor = new Color(color.r, color.g, color.b, 0.08f);
+            lines.Add(line);
+            //line.transform.parent = graph.lineParent.transform;
+            line.gameObject.SetActive(true);
+            return line;
         }
 
         public void TogglePointClusterColliders(bool b, string exception)
@@ -589,6 +613,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 Destroy(line.gameObject);
             }
+
             lines.Clear();
         }
 
@@ -598,10 +623,12 @@ namespace CellexalVR.AnalysisObjects
             {
                 Destroy(pc.gameObject);
             }
+
             foreach (GameObject obj in particleSystems)
             {
                 Destroy(obj);
             }
+
             particleSystems.Clear();
             pointClusters.Clear();
         }
@@ -611,6 +638,7 @@ namespace CellexalVR.AnalysisObjects
             graph1.ctcGraphs.Remove(gameObject);
             graph2.ctcGraphs.Remove(gameObject);
             referenceManager.graphManager.Graphs.Remove(GetComponent<Graph>());
+
             // bundle lines Destroy(velocityParticleSystemFromGraph.gameObject);
             // bundle lines Destroy(velocityParticleSystemMidGraph.gameObject);
             // bundle lines Destroy(velocityParticleSystemToGraph.gameObject);
@@ -627,6 +655,7 @@ namespace CellexalVR.AnalysisObjects
         private void InitParticleSystem(GameObject obj, Graph parent, Dictionary<Graph.GraphPoint, Vector3> velocities)
         {
             VelocityParticleEmitter emitter = obj.GetComponent<VelocityParticleEmitter>();
+
             //var particleSystem = obj.GetComponent<ParticleSystem>();
             //emitter.particleSystem = particleSystem;
             emitter.referenceManager = referenceManager;
@@ -638,6 +667,7 @@ namespace CellexalVR.AnalysisObjects
             emitter.Threshold = 0f;
             emitter.Speed = 2.0f;
             emitter.UseGraphPointColors = true;
+
             //emitter.UseArrowParticle = false;
             emitter.ConstantEmitOverTime = false;
             particleSystems.Add(obj);
@@ -660,6 +690,7 @@ namespace CellexalVR.AnalysisObjects
                     return cluster;
                 }
             }
+
             return null;
         }
     }

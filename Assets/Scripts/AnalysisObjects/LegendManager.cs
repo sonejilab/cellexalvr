@@ -244,7 +244,6 @@ namespace CellexalVR.AnalysisObjects
         public Vector3 WorldToRelativeHistogramPos(Vector3 worldPos)
         {
             Vector3 localPos = transform.InverseTransformPoint(worldPos);
-            //print("world and local " + worldPos + " " + localPos + " " + (localPos - geneExpressionHistogram.HistogramMinPos).InverseScale(geneExpressionHistogram.HistogramMaxPos - geneExpressionHistogram.HistogramMinPos));
             localPos.z = 0f;
             return (localPos - geneExpressionHistogram.HistogramMinPos).InverseScale(
                 geneExpressionHistogram.HistogramMaxPos - geneExpressionHistogram.HistogramMinPos);

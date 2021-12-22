@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CellexalVR.General;
 using System.IO;
+using TMPro;
 
 namespace CellexalVR.DesktopUI
 {
@@ -83,7 +84,6 @@ namespace CellexalVR.DesktopUI
 
             history.AddFirst("");
             currentHistoryNode = history.First;
-
             //float fontMultiplier = Screen.dpi / 100f;
             //outputField.pointSize *= fontMultiplier;
             //inputField.pointSize *= fontMultiplier;
@@ -147,6 +147,7 @@ namespace CellexalVR.DesktopUI
             inputField.MoveTextEnd(false);
         }
 
+
         /// <summary>
         /// Goes one step forward or backward in the history of all written commands.
         /// </summary>
@@ -201,7 +202,8 @@ namespace CellexalVR.DesktopUI
             }
 
             outputField.text = outputBufferString;
-            //outputField.MoveTextEnd(false);
+            if (outputField.textComponent.textInfo == null) return;
+            outputField.MoveTextEnd(false);
             outputField.textComponent.ForceMeshUpdate();
             //Canvas.ForceUpdateCanvases();
 

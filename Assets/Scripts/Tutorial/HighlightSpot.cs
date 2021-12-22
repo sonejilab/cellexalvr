@@ -1,6 +1,4 @@
-﻿using CellexalVR.General;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace CellexalVR.Tutorial

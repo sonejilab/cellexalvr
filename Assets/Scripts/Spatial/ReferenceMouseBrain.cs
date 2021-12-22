@@ -2,7 +2,7 @@
 using System.Collections;
 using CellexalVR.General;
 using CellexalVR.Spatial;
-using CellexalVR.Interaction;
+using Valve.VR;
 
 namespace CellexalVR.Spatial
 {
@@ -14,12 +14,8 @@ namespace CellexalVR.Spatial
         public ReferenceManager referenceManager;
 
         private bool attached;
-        // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
-        // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.InputDevice device;
+        private SteamVR_Behaviour_Pose rightController;
+        // private SteamVR_Controller.Device device;
         private bool controllerInside;
 
         private void OnValidate()
@@ -38,12 +34,11 @@ namespace CellexalVR.Spatial
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             rightController = referenceManager.rightController;
-            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("GameController"))
+            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
             {
                 controllerInside = true;
                 GetComponent<Renderer>().material.color = Color.red;
@@ -52,23 +47,21 @@ namespace CellexalVR.Spatial
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("GameController"))
+            if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
             {
                 controllerInside = false;
                 GetComponent<Renderer>().material.color = Color.white;
             }
         }
 
-        private void OnTriggerClick()
+        private void Update()
         {
-            // Open XR
-            //device = SteamVR_Controller.Input((int)rightController.index);
-            if (controllerInside)
+            // device = SteamVR_Controller.Input((int)rightController.index);
+            if (controllerInside)// && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
             {
                 AttachToGraph();
             }
         }
-
         private void AttachToGraph()
         {
             if (!attached)

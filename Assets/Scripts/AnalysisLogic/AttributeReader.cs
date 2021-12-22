@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using CellexalVR.General;
 using UnityEngine;
 using CellexalVR.AnalysisLogic.H5reader;
@@ -70,13 +71,14 @@ namespace CellexalVR.AnalysisLogic
 
             referenceManager.attributeSubMenu.CreateButtons(available_attributes.ToArray());
 
-            referenceManager.cellManager.Attributes = available_attributes.ToArray();
+            referenceManager.cellManager.Attributes = available_attributes;
             for (int i = CellexalConfig.Config.SelectionToolColors.Length;
-                i < referenceManager.cellManager.Attributes.Length;
+                i < referenceManager.cellManager.Attributes.Count;
                 i++)
             {
                 referenceManager.settingsMenu.AddSelectionColor();
             }
+
             referenceManager.settingsMenu.unsavedChanges = false;
             //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
             //{
@@ -146,24 +148,24 @@ namespace CellexalVR.AnalysisLogic
                         }
 
                         yieldCount++;
-                        if (yieldCount % 500 == 0)
+                        if (yieldCount % 1000 == 0)
                             yield return null;
                     }
 
                     metaCellStreamReader.Close();
                     metaCellFileStream.Close();
+                    referenceManager.cellManager.Attributes = new List<string>(); //actualAttributeTypes.ToList();
                     referenceManager.attributeSubMenu.CreateButtons(actualAttributeTypes);
-                    referenceManager.cellManager.Attributes = actualAttributeTypes;
                 }
 
-                for (int i = CellexalConfig.Config.SelectionToolColors.Length;
-                    i < referenceManager.cellManager.Attributes.Length;
-                    i++)
+                int nrOfAttributes = referenceManager.cellManager.Attributes.Count;
+                int nrOfSelToolColors = CellexalConfig.Config.SelectionToolColors.Length;
+                if (nrOfAttributes > nrOfSelToolColors)
                 {
-                    referenceManager.settingsMenu.AddSelectionColor();
+                    referenceManager.settingsMenu.AddSelectionColors(nrOfAttributes - nrOfSelToolColors);
+                    referenceManager.settingsMenu.unsavedChanges = false;
                 }
 
-                referenceManager.settingsMenu.unsavedChanges = false;
                 //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
                 //{
                 //    CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +

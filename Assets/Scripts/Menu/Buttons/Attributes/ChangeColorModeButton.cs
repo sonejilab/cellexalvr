@@ -28,6 +28,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             SetButtonActivated(true);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+            CellexalEvents.ScarfObjectLoaded.AddListener(TurnOn);
         }
 
         public override void Click()
@@ -40,13 +41,13 @@ namespace CellexalVR.Menu.Buttons.Attributes
             }
             else
             {
-                settingsMenu.GetComponent<ColormapManager>().GenerateRainbowColors(CellexalConfig.Config.SelectionToolColors.Length);
+                settingsMenu.GetComponent<DesktopUI.ColorMapManager>().GenerateRainbowColors(CellexalConfig.Config.SelectionToolColors.Length);
                 settingsMenu.unsavedChanges = false;
             }
             menuButton.SetMenuActivated(true);
             GetComponentInParent<MenuWithTabs>().TurnOffAllTabs();
             firstTab.SetTabActive(true);
-            firstTab.TabButton.SetHighlighted(true);
+            firstTab.tabButton.SetHighlighted(true);
             
             rainbowColors = !rainbowColors;
             //TurnOff();

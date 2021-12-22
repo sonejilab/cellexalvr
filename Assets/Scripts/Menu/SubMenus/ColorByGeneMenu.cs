@@ -8,10 +8,8 @@ namespace CellexalVR.Menu.SubMenus
     /// <summary>
     /// Represents the sub menu that pops up when the <see cref="TopDiffGenesMenuButton"/> is pressed.
     /// </summary>
-    public class ColorByGeneMenu : MonoBehaviour
+    public class ColorByGeneMenu : SubMenu
     {
-        public ReferenceManager referenceManager;
-
         public ColorByGeneButton buttonPrefab;
         public GameObject loadingText;
 

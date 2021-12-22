@@ -26,6 +26,7 @@ namespace CellexalVR.Menu.Buttons
         void Start()
         {
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+            CellexalEvents.ScarfObjectLoaded.AddListener(TurnOn);
             CellexalEvents.SelectionStarted.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
             CellexalEvents.SelectionCanceled.AddListener(TurnOff);

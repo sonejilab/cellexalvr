@@ -21,27 +21,22 @@ namespace CellexalVR.AnalysisLogic
         public GameObject particleSystemPrefab;
         public Material arrowMaterial;
         public Material standardMaterial;
-        public GameObject averageVelocityArrowPrefab;
-        [HideInInspector]
-        public List<Material> averageVelocityMaterials = new List<Material>();
 
         private float frequency = 1f;
         private float speed = 8f;
         private float threshold = 0f;
+        private float particleSize = 0.01f;
+        private const float particleSizeStartValue = 0.01f;
         private bool constantEmitOverTime = true;
         private bool graphPointsToggled = false;
         private bool useGraphPointColors = false;
         private bool useArrowParticle = true;
-        private bool emitAverageVelocity = false;
-        private int averageVelocityResolution = 20;
-
 
         private string particleSystemGameObjectName = "Velocity Particle System";
+
         private void Start()
         {
             ActiveGraphs = new List<Graph>();
-            //GenerateAverageVelocityMaterials();
-            CellexalEvents.ConfigLoaded.AddListener(GenerateAverageVelocityMaterials);
         }
 
         private void OnValidate()
@@ -114,10 +109,10 @@ namespace CellexalVR.AnalysisLogic
                 graph = originalGraph;
             }
 
-            int counter = 0;
+            //int counter = 0;
 
-            //print(graphName + " - " + graph.GraphName);
-            Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
+            Dictionary<Graph.GraphPoint, Vector3> velocities =
+                new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
             using (FileStream stream = new FileStream(path, FileMode.Open))
             using (StreamReader reader = new StreamReader(stream))
             {
@@ -146,12 +141,6 @@ namespace CellexalVR.AnalysisLogic
                     Vector3 to = originalGraph.ScaleCoordinates(new Vector3(xto, yto, zto));
                     Vector3 diff = to - from;
 
-                    if (counter < 3)
-                    {
-                        //UnityEngine.Debug.Log((new Vector3(xto, yto, zto) - new Vector3(xfrom, yfrom, zfrom)) *1000);
-                        counter++;
-                    }
-
                     velocities[point] = diff / 5f;
                 }
 
@@ -168,8 +157,7 @@ namespace CellexalVR.AnalysisLogic
                 emitter.Speed = speed;
                 emitter.UseGraphPointColors = useGraphPointColors;
                 emitter.UseArrowParticle = useArrowParticle;
-                emitter.averageVelocityArrowPrefab = averageVelocityArrowPrefab;
-                //emitter.AverageVelocitesResolution = averageVelocityResolution;
+                emitter.ParticleSize = particleSize;
                 graph.velocityParticleEmitter = emitter;
                 if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
                 {
@@ -178,7 +166,6 @@ namespace CellexalVR.AnalysisLogic
 
                 reader.Close();
                 stream.Close();
-
             }
 
             ActiveGraphs.Add(graph);
@@ -259,7 +246,7 @@ namespace CellexalVR.AnalysisLogic
             emitter.Speed = speed;
             emitter.UseGraphPointColors = useGraphPointColors;
             emitter.UseArrowParticle = useArrowParticle;
-            emitter.EmitAverageVelocities = emitAverageVelocity;
+            emitter.ParticleSize = particleSize;
             graph.velocityParticleEmitter = emitter;
             if (ActiveGraphs.Count > 0 && ActiveGraphs[0].graphPointsInactive)
             {
@@ -272,7 +259,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Changes how often the particles should be emitted.
+        /// Changes how often the particles should be emitted. Frequencies lower than 1/32 are set to 1/32 and frequencies greater than 32 are set to 32.
         /// </summary>
         /// <param name="amount">Amount to multiply the frequency by.</param>
         public void ChangeFrequency(float amount)
@@ -297,11 +284,12 @@ namespace CellexalVR.AnalysisLogic
             {
                 newFrequencyString = newFrequencyString.Substring(0, 8);
             }
+
             referenceManager.velocitySubMenu.frequencyText.text = "Frequency: " + newFrequencyString;
         }
 
         /// <summary>
-        /// Change the speed of the emitter arrows by some amount. Speeds lower than 0.001 are set to 0.001.
+        /// Change the speed of the emitter arrows by some amount. Speeds lower than 0.5 are set to 0.5 and speeds greater than 32 are set to 32.
         /// </summary>
         /// <param name="amount">The amount to change the speed by.</param>
         public void ChangeSpeed(float amount)
@@ -320,6 +308,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 g.velocityParticleEmitter.Speed = speed;
             }
+
             referenceManager.velocitySubMenu.speedText.text = "Speed: " + speed;
         }
 
@@ -345,6 +334,26 @@ namespace CellexalVR.AnalysisLogic
             }
 
             referenceManager.velocitySubMenu.thresholdText.text = "Threshold: " + threshold;
+        }
+
+
+        /// <summary>
+        /// Changes the size of the animated particles. Useful for larger graphs.
+        /// </summary>
+        /// <param name="value"></param>
+        public void ChangeParticleSize(float value)
+        {
+            // Make lower ranges differ more.
+            particleSize = value;
+            // if (value <= particleSizeStartValue / 2)
+            // {
+            //     particleSize /= 2f;
+            // }
+            //
+            foreach (Graph g in ActiveGraphs)
+            {
+                g.velocityParticleEmitter.ParticleSize = particleSize;
+            }
         }
 
         /// <summary>

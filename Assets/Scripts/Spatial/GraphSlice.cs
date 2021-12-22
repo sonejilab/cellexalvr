@@ -1,8 +1,8 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Spatial
 {
@@ -12,38 +12,34 @@ namespace CellexalVR.Spatial
     /// </summary>
     public class GraphSlice : MonoBehaviour
     {
-
         public ReferenceManager referenceManager;
         public bool sliceMode;
         public GameObject replacement;
         public GameObject wire;
         public int sliceNr;
         public float zCoord;
+        public Dictionary<int, List<GameObject>> lodGroupClusters = new Dictionary<int, List<GameObject>>();
 
-
-        protected Graph graph;
-
+        private Graph graph;
         private Vector3 originalPos;
         private Vector3 originalSc;
         private Quaternion originalRot;
         private SpatialGraph spatGraph;
-        // OpenXR
-        //private VRTK.VRTK_InteractableObject interactableObject;
-        private XRGrabInteractable interactableObject;
         private GameObject wirePrefab;
         private GameObject replacementPrefab;
         private Color replacementCol;
         private Color replacementHighlightCol;
         private bool grabbing;
+        private int flipped = 1;
 
 
         private void Start()
         {
             graph = gameObject.GetComponent<Graph>();
             spatGraph = transform.parent.gameObject.GetComponent<SpatialGraph>();
-            interactableObject = gameObject.GetComponent<XRGrabInteractable>();
-            interactableObject.selectEntered.AddListener(OnGrabbed);
-            interactableObject.selectExited.AddListener(OnUnGrabbed);
+            // interactableObject = gameObject.GetComponent<VRTK.VRTK_InteractableObject>();
+            // interactableObject.InteractableObjectGrabbed += OnGrabbed;
+            // interactableObject.InteractableObjectUngrabbed += OnUngrabbed;
             originalPos = transform.localPosition;
             originalRot = transform.localRotation;
             originalSc = transform.localScale;
@@ -51,36 +47,20 @@ namespace CellexalVR.Spatial
             //GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
         }
 
-        private void OnGrabbed(SelectEnterEventArgs args)
-        {
-            if (grabbing)
-                return;
-            if (!sliceMode)
-            {
-                grabbing = true;
-            }
-        }
+        // private void OnGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        // {
+        //     if (grabbing)
+        //         return;
+        //     if (!sliceMode)
+        //     {
+        //         grabbing = true;
+        //     }
+        // }
 
-        private void OnUnGrabbed(SelectExitEventArgs args)
-        {
-            grabbing = false;
-        }
-
-        // OpenXR
-        //private void OnGrabbed(object sender, VRTK.InteractableObjectEventArgs e)
-        //{
-        //    if (grabbing)
-        //        return;
-        //    if (!sliceMode)
-        //    {
-        //        grabbing = true;
-        //    }
-        //}
-
-        //private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
-        //{
-        //    grabbing = false;
-        //}
+        // private void OnUngrabbed(object sender, VRTK.InteractableObjectEventArgs e)
+        // {
+        //     grabbing = false;
+        // }
 
         /// <summary>
         /// Animation to move the slice back to its original position within the parent object.
@@ -88,10 +68,9 @@ namespace CellexalVR.Spatial
         /// <returns></returns>
         public IEnumerator MoveToGraphCoroutine()
         {
-            this.transform.parent = spatGraph.transform;
-            BoxCollider collider = graph.GetComponent<BoxCollider>();
-            Vector3 startPos = this.transform.localPosition;
-            Quaternion startRot = this.transform.localRotation;
+            transform.parent = spatGraph.transform;
+            Vector3 startPos = transform.localPosition;
+            Quaternion startRot = transform.localRotation;
             Quaternion targetRot = Quaternion.identity;
 
             float time = 1f;
@@ -99,19 +78,18 @@ namespace CellexalVR.Spatial
             while (t < time)
             {
                 float progress = Mathf.SmoothStep(0, time, t);
-                this.transform.localPosition = Vector3.Lerp(startPos, originalPos, progress);
-                this.transform.localRotation = Quaternion.Lerp(startRot, targetRot, progress);
+                transform.localPosition = Vector3.Lerp(startPos, originalPos, progress);
+                transform.localRotation = Quaternion.Lerp(startRot, targetRot, progress);
                 t += (Time.deltaTime / time);
                 yield return null;
             }
-            this.transform.localPosition = originalPos;
-            this.transform.localRotation = originalRot;
+
+            transform.localPosition = originalPos;
+            transform.localRotation = originalRot;
             //wire.SetActive(false);
             //replacement.GetComponent<Renderer>().material.color = replacementCol;
             //replacement.SetActive(false);
-
         }
-
 
 
         /// <summary>
@@ -135,7 +113,6 @@ namespace CellexalVR.Spatial
             lr.startColor = lr.endColor = new Color(255, 255, 255, 0.1f);
             lr.startWidth = lr.endWidth /= 2;
             wire.SetActive(false);
-
         }
 
         /// <summary>
@@ -144,43 +121,75 @@ namespace CellexalVR.Spatial
         /// </summary>
         /// <param name="activate"></param>
         /// <returns></returns>
-        public IEnumerator ActivateSlice(bool activate)
+        public void ActivateSlice(bool activate, bool move = true)
         {
             foreach (BoxCollider bc in GetComponents<BoxCollider>())
             {
                 bc.enabled = activate;
             }
+
             if (activate)
             {
-                var rigidbody = gameObject.GetComponent<Rigidbody>();
+                Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
                 if (rigidbody == null)
                 {
                     rigidbody = gameObject.AddComponent<Rigidbody>();
                 }
+
                 rigidbody.useGravity = false;
                 rigidbody.isKinematic = false;
                 rigidbody.drag = 10;
                 rigidbody.angularDrag = 15;
-                GetComponent<XRGrabInteractable>().enabled = true;
+                // GetComponent<VRTK_InteractableObject>().isGrabbable = true;
                 sliceMode = true;
-                Vector3 startPos = this.transform.localPosition;
-                Vector3 targetPos = new Vector3(this.transform.localPosition.x, this.transform.localPosition.y, zCoord);
-                float time = 1f;
-                float t = 0f;
-                while (t < time)
+                if (move)
                 {
-                    float progress = Mathf.SmoothStep(0, time, t);
-                    this.transform.localPosition = Vector3.Lerp(startPos, targetPos, progress);
-                    t += (Time.deltaTime / time);
-                    yield return null;
+                    Vector3 targetPos = new Vector3(transform.position.x, transform.position.y, zCoord);
+                    // transform.TransformPoint(targetPos);
+                    float time = 1f;
+                    StartCoroutine(MoveSlice(targetPos.x, targetPos.y, targetPos.z, time));
                 }
             }
             else
             {
-                GetComponent<XRGrabInteractable>().enabled = false;
+                // GetComponent<VRTK_InteractableObject>().isGrabbable = false;
                 Destroy(GetComponent<Rigidbody>());
                 sliceMode = false;
                 //graph.transform.localPosition = Vector3.zero;
+            }
+        }
+
+        public IEnumerator MoveSlice(float x, float y, float z, float animationTime, bool rotate = false)
+        {
+            Vector3 startPos = transform.localPosition;
+            Vector3 targetPosition = new Vector3(x, y, z);
+            float t = 0f;
+            while (t < animationTime)
+            {
+                float progress = Mathf.SmoothStep(0, animationTime, t);
+                transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
+                t += (Time.deltaTime / animationTime);
+                if (rotate)
+                {
+                    transform.LookAt(referenceManager.headset.transform);
+                }
+
+                yield return null;
+            }
+        }
+
+        public IEnumerator FlipSlice(float animationTime)
+        {
+            flipped *= -1;
+            Vector3 center = GetComponent<BoxCollider>().bounds.center;
+            float t = 0f;
+            float angle = 5f;
+            float finalAngle = 0f;
+            while (finalAngle <= 180)
+            {
+                transform.RotateAround(center, transform.up, angle);
+                finalAngle += angle;
+                yield return null;
             }
         }
 

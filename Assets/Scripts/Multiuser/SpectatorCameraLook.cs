@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace CellexalVR.Multiuser
 {
-
     /// <summary>
     /// Handles camera viewing with mouse if the user is not using a VR headset.
     /// </summary>
@@ -17,6 +16,7 @@ namespace CellexalVR.Multiuser
         public float sensitivity;
 
         GameObject controller;
+
         void Start()
         {
             controller = transform.parent.gameObject;
@@ -24,16 +24,17 @@ namespace CellexalVR.Multiuser
 
         private void Update()
         {
-            var dir = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-            smoothingV.x = Mathf.Lerp(smoothingV.x, dir.x, 1f / smoothing);
-            smoothingV.y = Mathf.Lerp(smoothingV.y, dir.y, 1f / smoothing);
-            mouseLook += smoothingV;
+            if (Input.GetMouseButton(1))
+            {
+                var dir = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+                smoothingV.x = Mathf.Lerp(smoothingV.x, dir.x, 1f / smoothing);
+                smoothingV.y = Mathf.Lerp(smoothingV.y, dir.y, 1f / smoothing);
+                mouseLook += smoothingV;
 
 
-            transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
-            controller.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, controller.transform.up);
+                transform.localRotation = Quaternion.AngleAxis(-mouseLook.y, Vector3.right);
+                controller.transform.localRotation = Quaternion.AngleAxis(mouseLook.x, controller.transform.up);
+            }
         }
-
     }
 }
-

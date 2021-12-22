@@ -4,6 +4,7 @@ using CellexalVR.General;
 using CellexalVR.Menu.Buttons.Facs;
 using System.Collections.Generic;
 using System.IO;
+using CellexalVR.Extensions;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
@@ -64,9 +65,14 @@ namespace CellexalVR.AnalysisLogic
                 b.ToggleOutline(false);
                 //b.activeOutline.SetActive(false);
             }
+
+            if (!referenceManager.sessionHistoryList.Contains(filePath, Definitions.HistoryEvent.FACSGRAPH))
+            {
+                referenceManager.sessionHistoryList.AddEntry(filePath, Definitions.HistoryEvent.FACSGRAPH);
+            }
         }
 
-        /// <summary
+        /// <summary>
         /// Dumping the selection with ids and facs values on the same format as the mds files so it can be read in by the inputreader.
         /// </summary>
         /// <param name="points">The points to save to the file. Either a selection or all the points in the graph.</param>

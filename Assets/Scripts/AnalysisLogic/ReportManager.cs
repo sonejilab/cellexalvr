@@ -134,7 +134,7 @@ namespace CellexalVR.AnalysisLogic
             heatmap.statusText.text = "Saving Heatmap...";
             referenceManager.floor.StartPulse();
             string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + heatmap.name + ".txt").UnFixFilePath();
-            string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + heatmap.selectionNr + ".txt").UnFixFilePath();
+            string groupingsFilepath = heatmap.selectionFile.UnFixFilePath();
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\logHeatmap.R").FixFilePath();
             string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + genesFilePath + " " + heatmapImageFilePath.UnFixFilePath() + " " + groupingsFilepath;
             bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&

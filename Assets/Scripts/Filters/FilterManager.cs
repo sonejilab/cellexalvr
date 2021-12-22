@@ -116,8 +116,8 @@ namespace CellexalVR.Filters
                 fileName += "_2";
             }
 
-            currentFilterPath = CellexalUser.UserSpecificFolder + "\\" + fileName + ".fil";
-            FileStream fileStream = new FileStream(currentFilterPath, FileMode.Create, FileAccess.Write, FileShare.None);
+            string filterPath = CellexalUser.UserSpecificFolder + "\\" + fileName + ".fil";
+            FileStream fileStream = new FileStream(filterPath, FileMode.Create, FileAccess.Write, FileShare.None);
 
             using (StreamWriter streamWriter = new StreamWriter(fileStream))
             {
@@ -352,7 +352,6 @@ namespace CellexalVR.Filters
             newFilter.Expression.SetFilterManager(this);
             currentFilter = newFilter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
-            CellexalEvents.FilterActivated.Invoke();
         }
 
         /// <summary>
@@ -376,7 +375,6 @@ namespace CellexalVR.Filters
             currentFilter = newFilter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
-            CellexalEvents.FilterActivated.Invoke();
         }
 
         /// <summary>
@@ -435,7 +433,6 @@ namespace CellexalVR.Filters
                 }
             }
             currentFilter = filter;
-            CellexalEvents.FilterActivated.Invoke();
         }
 
         /// <summary>
@@ -452,7 +449,6 @@ namespace CellexalVR.Filters
             currentFilter = filter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());
-            CellexalEvents.FilterActivated.Invoke();
         }
 
         /// <summary>
@@ -482,10 +478,7 @@ namespace CellexalVR.Filters
             referenceManager.filterBlockBoard.SetActive(false);
         }
 
-        /// <summary>
-        /// Removes the current filter, does not clear the filter board.
-        /// </summary>
-        public void ResetFilter()
+        public void ResetFilter(/*bool informMultiUser = true*/)
         {
             currentFilter = null;
             StopAllCoroutines();

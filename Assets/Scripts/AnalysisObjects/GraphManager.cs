@@ -21,9 +21,6 @@ namespace CellexalVR.AnalysisObjects
         public AudioSource goodSound;
         public List<string> directories;
         public SelectionManager selectionManager;
-        [HideInInspector]
-        public bool axesVisible;
-        public bool infoPanelsVisible;
 
         public List<Graph> Graphs;
         public List<Graph> originalGraphs;
@@ -169,11 +166,11 @@ namespace CellexalVR.AnalysisObjects
             var graph = Graphs[0];
             for (int i = 0; i < 256; ++i)
             {
-                graph.texture.SetPixels32(i, 0, 1, 1, new Color32[] { new Color32((byte)i, 0, 0, 1) });
+                graph.textures[0].SetPixels32(i, 0, 1, 1, new Color32[] { new Color32((byte)i, 0, 0, 1) });
             }
-            graph.texture.Apply();
+            graph.textures[0].Apply();
 
-            var data = graph.texture.GetRawTextureData();
+            var data = graph.textures[0].GetRawTextureData();
             for (int i = 0; i < data.Length; i += 4)
             {
                 print(i + ": " + data[i] + " " + data[i + 1] + " " + data[i + 2] + " " + data[i + 3]);
@@ -335,8 +332,8 @@ namespace CellexalVR.AnalysisObjects
         [ConsoleCommand("graphManager", aliases: new string[] { "resetcolor", "rc" })]
         public void ResetGraphsColor()
         {
-            CellexalEvents.GraphsReset.Invoke();
             selectionManager.CancelSelection();
+            selectionManager.Clear();
             foreach (Graph g in Graphs)
             {
                 g.ClearTopExprCircles();
@@ -347,6 +344,7 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
             CellexalEvents.CommandFinished.Invoke(true);
+            CellexalEvents.GraphsReset.Invoke();
         }
 
         /// <summary>
@@ -465,10 +463,9 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="visible"> TRue for visible, false for invisible </param>
         public void ToggleInfoPanels()
         {
-            infoPanelsVisible = !infoPanelsVisible;
             foreach (Graph g in Graphs)
             {
-                g.SetInfoTextVisible(infoPanelsVisible);
+                g.ToggleInfoText();
             }
         }
 
@@ -476,12 +473,11 @@ namespace CellexalVR.AnalysisObjects
         /// Set all graphs' axes to visible or not visible.
         /// </summary>
         /// <param name="visible"> TRue for visible, false for invisible </param>
-        public void ToggleAxes()
+        public void SetAxesVisible(bool visible)
         {
-            axesVisible = !axesVisible;
             foreach (Graph g in Graphs)
             {
-                g.SetAxesVisible(axesVisible);
+                g.SetAxesVisible(visible);
             }
         }
 

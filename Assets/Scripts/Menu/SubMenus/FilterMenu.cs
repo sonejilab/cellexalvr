@@ -10,7 +10,7 @@ namespace CellexalVR.Menu.SubMenus
     /// <summary>
     /// The menu that holds t he buttons for choosing and creating filters.
     /// </summary>
-    public class FilterMenu : MenuWithoutTabs
+    public class FilterMenu : SubMenu
     {
 
         public FilterButton buttonPrefab;
@@ -34,9 +34,9 @@ namespace CellexalVR.Menu.SubMenus
         }
 
         /// <summary>
-        /// Create buttons for files with filter information.
+        /// Create buttons for files with velocity information.
         /// </summary>
-        /// <param name="files">An array of strings of file paths to .mds files with filter information.</param>
+        /// <param name="files">An array of strings of file paths to .mds files with velocity information.</param>
         public void CreateButtons(string[] files)
         {
             filterPaths = files;

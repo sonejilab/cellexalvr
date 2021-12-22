@@ -19,6 +19,7 @@ namespace CellexalVR.Interaction
         private void Start()
         {
             CellexalEvents.GraphsLoaded.AddListener(ClearMarkers);
+            CellexalEvents.ScarfObjectLoaded.AddListener(ClearMarkers);
         }
 
         private void ClearMarkers()

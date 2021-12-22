@@ -56,12 +56,14 @@ namespace CellexalVR.General
         private GameObject _Console;
         public GameObject FPSCanvas;
         private GameObject _FPSCanvas;
-        public GameObject WaitingCanvas;
-        private GameObject _WaitingCanvas;
         public GameObject SpectatorRig;
         private GameObject _SpectatorRig;
         public GameObject H5Reader;
         private GameObject _H5Reader;
+        public GameObject PDFViewer;
+        private GameObject _PDFViewer;
+        public GameObject SnapShotCamera;
+        private GameObject _SnapShotCamera;
 
         private List<GameObject> instances;
         private IEnumerator buildSceneEnumerator;
@@ -126,9 +128,11 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _SettingsMenu, SettingsMenu);
             InstantiateSceneAsset(ref _Console, Console);
             InstantiateSceneAsset(ref _FPSCanvas, FPSCanvas);
-            InstantiateSceneAsset(ref _WaitingCanvas, WaitingCanvas);
             InstantiateSceneAsset(ref _SpectatorRig, SpectatorRig);
             InstantiateSceneAsset(ref _H5Reader, H5Reader);
+            InstantiateSceneAsset(ref _PDFViewer, PDFViewer);
+            InstantiateSceneAsset(ref _SnapShotCamera, SnapShotCamera);
+            InstantiateSceneAsset(ref _Teleporting, Teleporting);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
 
@@ -258,9 +262,11 @@ namespace CellexalVR.General
             SettingsMenu = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Settings Menu.prefab");
             Console = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/Console.prefab");
             FPSCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/FPS canvas.prefab");
-            WaitingCanvas = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/ScreenCanvas.prefab");
             SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SpectatorRig.prefab");
             H5Reader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/H5Reader/H5ReaderTestObjectManager.prefab");
+            PDFViewer = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PDFViewer/PDFViewer.prefab");
+            Teleporting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Teleport.prefab");
+            SnapShotCamera = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SnapShotCam.prefab");
         }
 
         [Obsolete]

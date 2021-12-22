@@ -1,25 +1,78 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using CellexalVR.General;
 
 namespace CellexalVR.DesktopUI
 {
-
-    public class ColormapManager : MonoBehaviour
+    public class ColorMapManager : MonoBehaviour
     {
         public TMPro.TMP_InputField nrGroupsInput;
 
+        public static List<Color> tab20 = new List<Color>
+        {
+            new Color(0.12157f, 0.46666f, 0.70588f, 1.0f),
+            new Color(0.68235f, 0.78039f, 0.90980f, 1.0f),
+            new Color(1.0f, 0.49803f, 0.05490f, 1.0f),
+            new Color(1.0f, 0.73333f, 0.47058f, 1.0f),
+            new Color(0.17254f, 0.62745f, 0.17254f, 1.0f),
+            new Color(0.59607f, 0.87450f, 0.54117f, 1.0f),
+            new Color(0.83921f, 0.15294f, 0.15686f, 1.0f),
+            new Color(1.0f, 0.59607f, 0.58823f, 1.0f),
+            new Color(0.58039f, 0.403921f, 0.74117f, 1.0f),
+            new Color(0.77254f, 0.690196f, 0.83529f, 1.0f),
+            new Color(0.54901f, 0.337254f, 0.29411f, 1.0f),
+            new Color(0.76862f, 0.611764f, 0.58039f, 1.0f),
+            new Color(0.89019f, 0.466666f, 0.76078f, 1.0f),
+            new Color(0.96862f, 0.713725f, 0.82352f, 1.0f),
+            new Color(0.49803f, 0.498039f, 0.49803f, 1.0f),
+            new Color(0.78039f, 0.780392f, 0.78039f, 1.0f),
+            new Color(0.73725f, 0.741176f, 0.13333f, 1.0f),
+            new Color(0.85882f, 0.858823f, 0.55294f, 1.0f),
+            new Color(0.09019f, 0.745098f, 0.81176f, 1.0f),
+            new Color(0.61960f, 0.854901f, 0.89803f, 1.0f)
+        };
+
         private SettingsMenu settingsMenu;
+
+        private Dictionary<string, List<Color>> colorMaps = new Dictionary<string, List<Color>>();
+
         // Use this for initialization
         private void Start()
         {
             settingsMenu = GetComponent<SettingsMenu>();
+            colorMaps["tab20"] = tab20;
+        }
+
+        public void SetColorMap()
+        {
+            settingsMenu.unsavedChanges = true;
+            int val = settingsMenu.selectionColorMapDropdown.value;
+            string name = settingsMenu.selectionColorMapDropdown.options[val].text;
+            switch (name)
+            {
+                case "tab20":
+                    List<Color> colorMap = colorMaps[name];
+                    foreach (ColorPickerButton button in settingsMenu.selectionColorButtons) //for (int i = 0; i < settingsMenu.selectionColorButtons.Count; i++)
+                    {
+                        Destroy(button.transform.parent.gameObject);
+                    }
+
+                    settingsMenu.selectionColorButtons.Clear();
+                    foreach (Color col in colorMap)
+                    {
+                        settingsMenu.AddSelectionColor(col, false);
+                    }
+
+                    settingsMenu.UpdateSelectionToolColors();
+                    break;
+            }
+            settingsMenu.referenceManager.graphGenerator.CreateShaderColors();
         }
 
         public void GenerateRandomColors(int n = 20)
         {
             DoGenerateRandomColors(n);
             settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRandomColors(n);
-
         }
 
         public void DoGenerateRandomColors(int n, bool multiuserUpdate = false)
@@ -28,19 +81,25 @@ namespace CellexalVR.DesktopUI
             {
                 n = int.Parse(nrGroupsInput.text);
             }
+
             if (n > 254)
             {
                 n = 254;
             }
-            foreach (ColorPickerButton button in settingsMenu.selectionColorButtons)//for (int i = 0; i < settingsMenu.selectionColorButtons.Count; i++)
+
+            foreach (ColorPickerButton button in settingsMenu.selectionColorButtons) //for (int i = 0; i < settingsMenu.selectionColorButtons.Count; i++)
             {
                 Destroy(button.transform.parent.gameObject);
             }
+
             settingsMenu.selectionColorButtons.Clear();
-            for (int j = 0; j < n; j++)
+            for (int j = 0;
+                j < n;
+                j++)
             {
                 settingsMenu.AddSelectionColor(false);
             }
+
             settingsMenu.UpdateSelectionToolColors();
         }
 
@@ -56,27 +115,32 @@ namespace CellexalVR.DesktopUI
             {
                 n = int.Parse(nrGroupsInput.text);
             }
+
             if (n > 254)
             {
                 n = 254;
             }
 
-            foreach (ColorPickerButton button in settingsMenu.selectionColorButtons)//for (int i = 0; i < settingsMenu.selectionColorButtons.Count; i++)
+            foreach (ColorPickerButton button in settingsMenu.selectionColorButtons) //for (int i = 0; i < settingsMenu.selectionColorButtons.Count; i++)
             {
                 Destroy(button.transform.parent.gameObject);
             }
+
             settingsMenu.selectionColorButtons.Clear();
-            for (float j = 0f; j < 1.0f; j += 1.0f / (float)n)
+            for (float j = 0f; j < 1.0f; j += 1.0f / (float) n)
             {
                 Color col = Color.HSVToRGB(j, 0.8f, 0.8f);
                 settingsMenu.AddSelectionColor(col, false);
             }
+
             settingsMenu.UpdateSelectionToolColors();
         }
+
         public void SetHeatmapColormap()
         {
             settingsMenu.unsavedChanges = true;
             int val = settingsMenu.heatmapColormapDropdown.value;
+
             string colormap = settingsMenu.heatmapColormapDropdown.options[val].text;
             switch (colormap)
             {
@@ -97,16 +161,18 @@ namespace CellexalVR.DesktopUI
                     CellexalConfig.Config.HeatmapLowExpressionColor = new Color(0.050383f, 0.029803f, 0.527975f);
                     break;
             }
+
             settingsMenu.referenceManager.heatmapGenerator.InitColors();
             settingsMenu.heatmapHighExpression.Color = CellexalConfig.Config.HeatmapHighExpressionColor;
             settingsMenu.heatmapMidExpression.Color = CellexalConfig.Config.HeatmapMidExpressionColor;
             settingsMenu.heatmapLowExpression.Color = CellexalConfig.Config.HeatmapLowExpressionColor;
         }
-        
+
         public void SetGraphColormap()
         {
             settingsMenu.unsavedChanges = true;
             int val = settingsMenu.graphColormapDropdown.value;
+
             string colormap = settingsMenu.graphColormapDropdown.options[val].text;
             switch (colormap)
             {
@@ -127,12 +193,11 @@ namespace CellexalVR.DesktopUI
                     CellexalConfig.Config.GraphLowExpressionColor = new Color(0.050383f, 0.029803f, 0.527975f);
                     break;
             }
+
             settingsMenu.referenceManager.graphGenerator.CreateShaderColors();
             settingsMenu.graphHighExpression.Color = CellexalConfig.Config.GraphHighExpressionColor;
             settingsMenu.graphMidExpression.Color = CellexalConfig.Config.GraphMidExpressionColor;
             settingsMenu.graphLowExpression.Color = CellexalConfig.Config.GraphLowExpressionColor;
         }
-
-
     }
 }

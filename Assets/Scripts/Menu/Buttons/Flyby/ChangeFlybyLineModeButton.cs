@@ -1,4 +1,5 @@
-﻿using CellexalVR.Menu.SubMenus;
+﻿using CellexalVR.Interaction;
+using CellexalVR.Menu.SubMenus;
 using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.Flyby

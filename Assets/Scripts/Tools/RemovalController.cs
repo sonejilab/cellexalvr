@@ -107,9 +107,6 @@ namespace CellexalVR.Tools
                     break;
 
                 case "SubGraph":
-                    referenceManager.graphManager.DeleteGraph(obj.gameObject.name, obj.tag);
-                    break;
-
                 case "FacsGraph":
                     referenceManager.graphManager.DeleteGraph(obj.gameObject.name, obj.tag);
                     break;

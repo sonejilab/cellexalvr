@@ -104,7 +104,7 @@ namespace CellexalVR.Tutorial
                                                                     "We are now going to use the TOUCHPAD. \n" +
                                                                     "Press the TOUCHPAD buttons in this order: \n" +
                                                                     "Red             Blue          Green         Red           Yellow";
-
+            
         }
 
         public void Final()

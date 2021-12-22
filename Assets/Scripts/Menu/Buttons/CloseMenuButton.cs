@@ -1,6 +1,8 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -9,18 +11,13 @@ namespace CellexalVR.Menu.Buttons
     /// </summary>
     public class CloseMenuButton : CellexalButton
     {
-        public GameObject buttonsToActivate;
-        public GameObject menuToClose;
-        public TMPro.TextMeshPro textMeshToUndarken;
+        public SubMenu menuToClose;
 
         public bool deactivateMenu = false;
 
         protected override string Description
         {
-            get
-            {
-                return "Close menu";
-            }
+            get { return "Close menu"; }
         }
 
         public override void Click()
@@ -33,26 +30,7 @@ namespace CellexalVR.Menu.Buttons
 
         public void CloseMenu()
         {
-            if (deactivateMenu)
-            {
-                menuToClose.SetActive(false);
-                menuToClose.GetComponent<MenuWithoutTabs>().SetMenuActive(false);
-            }
-
-            else
-            {
-                foreach (Renderer r in menuToClose.GetComponentsInChildren<Renderer>())
-                    r.enabled = false;
-                foreach (Collider c in menuToClose.GetComponentsInChildren<Collider>())
-                    c.enabled = false;
-            }
-            //textMeshToUndarken.GetComponent<Renderer>().material.SetColor("_Color", Color.white);
-            //MenuWithTabs subMenu = menuToClose.GetComponent<MenuWithTabs>();
-            textMeshToUndarken.GetComponent<MeshRenderer>().enabled = true;
-            foreach (CellexalButton b in buttonsToActivate.GetComponentsInChildren<CellexalButton>())
-            {
-                b.SetButtonActivated(b.storedState);
-            }
+            menuToClose.SetMenuActive(false);
             CellexalEvents.MenuClosed.Invoke();
         }
     }

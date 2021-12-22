@@ -37,7 +37,7 @@ namespace CellexalVR.Menu
         private Vector3 finalScale;
         private Vector3 startPosition;
         private Vector3 finalPosition;
-        private Vector3 originalScale = new Vector3(0.26f, 0.26f, 0.32f);
+        private Vector3 originalScale = new Vector3(0.25f, 0.25f, 0.25f);
         private readonly int animateSpeed = 8;
 
         private void OnValidate()
@@ -185,6 +185,31 @@ namespace CellexalVR.Menu
             if (MenuActive) return;
 
             SaveAndSetVisible(item, true, false);
+        }
+
+        /// <summary>
+        /// Removes the gameobject and all subsequent child gameobjects from the list of gameobjects to show when the menu is turned back on.
+        /// </summary>
+        /// <param name="item">The gameobject to remove.</param>
+        public void RemoveObjectToActivate(GameObject item)
+        {
+            if (MenuActive) return;
+
+            foreach (Renderer r in item.GetComponentsInChildren<Renderer>())
+            {
+                if (r)
+                {
+                    renderers.Remove(r);
+                }
+            }
+            foreach (Collider c in item.GetComponentsInChildren<Collider>())
+            {
+                if (c)
+                {
+                    colliders.Remove(c);
+                }
+            }
+
         }
 
         /// <summary>

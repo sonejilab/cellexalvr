@@ -16,7 +16,7 @@ namespace CellexalVR.Interaction
         private bool coroutineRunning = false;
         private int controllersInside;
 
-        void Start()
+        private void Start()
         {
             // calcuate an array of how much to rotate the lid every frame.
             // uses a sinus function to make it a bit more smooth.
@@ -24,16 +24,17 @@ namespace CellexalVR.Interaction
             var total = 0f;
             for (int i = 0; i < moveTime; ++i)
             {
-                dAngle[i] = Mathf.Sin(Mathf.PI * ((float)i / moveTime));
+                dAngle[i] = Mathf.Sin(Mathf.PI * ((float) i / moveTime));
                 total += Mathf.Abs(dAngle[i]);
             }
+
             for (int i = 0; i < moveTime; ++i)
             {
                 dAngle[i] *= 90 / total;
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (!coroutineRunning && desiredState != lidOpen)
             {
@@ -85,8 +86,8 @@ namespace CellexalVR.Interaction
                 transform.Rotate(Vector3.forward, angle);
                 yield return null;
             }
+
             coroutineRunning = false;
         }
-
     }
 }

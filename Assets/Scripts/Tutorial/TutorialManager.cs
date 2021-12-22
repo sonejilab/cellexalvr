@@ -307,7 +307,6 @@ namespace CellexalVR.Tutorial
                 case 8:
                     currentStep = 8;
                     CellexalEvents.NetworkEnlarged.RemoveListener(TurnOnSpot);
-
                     CellexalEvents.NetworkCreated.AddListener(NetworksCreated);
                     CellexalEvents.HeatmapCreated.AddListener(HeatmapCreated);
                     //CellexalEvents.HeatmapCreated.AddListener(FinalLevel);
@@ -510,7 +509,6 @@ namespace CellexalVR.Tutorial
             //deleteButton = GameObject.Find("MenuHolder/Main Menu/Right Buttons/Delete Tool Button");
             laserButton = GameObject.Find("MenuHolder/Main Menu/Right Buttons/Laser Tool Button");
             closeMenuButton = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu/Close Button Box/Close Menu Button");
-
 
             //screenCanvas = referenceManager.screenCanvas.gameObject;
             referencesSet = true;

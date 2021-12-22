@@ -20,17 +20,17 @@ namespace CellexalVR.Menu.Buttons.Tools
             {
                 //canvas.SetActive(false);
                 spriteRenderer.sprite = standardTexture;
-                referenceManager.screenshotCamera.gameObject.SetActive(false);
+                referenceManager.screenshotCamera.Toggle(false); //gameObject.SetActive(false);
                 referenceManager.screenshotCamera.gameObject.GetComponent<CaptureScreenshot>().enabled = false;
-                referenceManager.screenCanvas.gameObject.SetActive(false);
+                // referenceManager.screenCanvas.gameObject.SetActive(false);
             }
             else
             {
                 //canvas.SetActive(true);
                 spriteRenderer.sprite = deactivatedTexture;
-                referenceManager.screenshotCamera.gameObject.SetActive(true);
+                referenceManager.screenshotCamera.Toggle(true); //gameObject.SetActive(true));
                 referenceManager.screenshotCamera.gameObject.GetComponent<CaptureScreenshot>().enabled = true;
-                referenceManager.screenCanvas.gameObject.SetActive(true);
+                // referenceManager.screenCanvas.gameObject.SetActive(true);
 
             }
 

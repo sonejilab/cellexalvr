@@ -61,7 +61,7 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        void Start()
+        private void Start()
         {
             GetComponent<Renderer>().sharedMaterial = standardMaterial;
             GetComponent<Collider>().enabled = false;

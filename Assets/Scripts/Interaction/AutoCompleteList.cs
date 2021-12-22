@@ -40,6 +40,7 @@ namespace CellexalVR.Interaction
             if (buildTree)
             {
                 CellexalEvents.GraphsLoaded.AddListener(Init);
+                CellexalEvents.ScarfObjectLoaded.AddListener(Init);
             }
             CellexalEvents.GraphsUnloaded.AddListener(Clear);
         }
@@ -68,6 +69,10 @@ namespace CellexalVR.Interaction
                 results = referenceManager.inputReader.h5readers.First().Value.index2genename;
 
             }
+            else if (ScarfManager.scarfObject != null)
+            {
+                results = ScarfManager.scarfObject.feature_names.ToArray();
+            }
             else
             {
                 SQLiter.SQLite database = referenceManager.database;
@@ -95,22 +100,23 @@ namespace CellexalVR.Interaction
                 namesOfThings.Add(new Tuple<string, Definitions.Measurement>(name, Definitions.Measurement.GENE));
             }
 
-            string[] attributes = referenceManager.cellManager.Attributes;
-            try
-            {
-                foreach (string attribute in attributes)
-                {
-                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
-                    if (attribute.Length > longestNameLength)
-                    {
-                        longestNameLength = attribute.Length;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                CellexalLog.Log("Could not read attributes. Caught error - " + e.StackTrace);
-            }
+            // TODO: Make color by attr work from keyboard(?)
+            // string[] attributes = referenceManager.cellManager.Attributes;
+            // try
+            // {
+            //     foreach (string attribute in attributes)
+            //     {
+            //         namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
+            //         if (attribute.Length > longestNameLength)
+            //         {
+            //             longestNameLength = attribute.Length;
+            //         }
+            //     }
+            // }
+            // catch (Exception e)
+            // {
+            //     CellexalLog.Log("Could not read attributes. Caught error - " + e.StackTrace);
+            // }
 
             string[] facs = referenceManager.cellManager.Facs;
             try

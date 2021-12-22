@@ -115,6 +115,7 @@ namespace CellexalVR.Menu
                         SideFacingPlayer = Rotation.Front;
                         break;
                 }
+
                 StartCoroutine(RotateMe(90f * times, 0.15f));
             }
         }
@@ -176,10 +177,11 @@ namespace CellexalVR.Menu
                 {
                     transform.Rotate(0, 0, rotationThisFrame);
                 }
+
                 yield return null;
             }
+
             isRotating = false;
         }
     }
-
 }

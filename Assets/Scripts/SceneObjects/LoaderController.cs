@@ -21,8 +21,7 @@ namespace CellexalVR.SceneObjects
         public Transform cylinder;
         public GameObject helpVideoObj;
 
-        [HideInInspector]
-        public bool loaderMovedDown = false;
+        [HideInInspector] public bool loaderMovedDown = false;
         public GameObject keyboard;
         public bool loadingComplete = false;
         public List<string> pathsToLoad;
@@ -137,6 +136,7 @@ namespace CellexalVR.SceneObjects
             {
                 finalScale = new Vector3(1f, startScale.y, 1f);
             }
+
             if (moveLoader)
             {
                 finalPosition = distance;
@@ -145,6 +145,7 @@ namespace CellexalVR.SceneObjects
             {
                 finalPosition = transform.position + distance;
             }
+
             keyboard.SetActive(false);
             helpVideoObj.SetActive(false);
             // multiple_exp datasetList.gameObject.SetActive(false);
@@ -262,9 +263,9 @@ namespace CellexalVR.SceneObjects
                 if (child.CompareTag("Folder") && child.gameObject.GetComponent<Rigidbody>() == null)
                 {
                     child.gameObject.AddComponent<Rigidbody>();
-
                 }
             }
+
             collidersDestroyed = true;
         }
 
@@ -276,6 +277,7 @@ namespace CellexalVR.SceneObjects
             {
                 Destroy(child.gameObject);
             }
+
             cellsToDestroy.Clear();
             ResetLoaderBooleans();
         }
@@ -305,12 +307,14 @@ namespace CellexalVR.SceneObjects
 
                 CellexalEvents.GraphsUnloaded.Invoke();
             }
+
             // must reset loader before generating new folders
             if (loaderMovedDown)
             {
                 loaderMovedDown = false;
                 MoveLoader(new Vector3(0f, 2f, 0f), 2);
             }
+
             ResetLoaderBooleans();
             inputFolderGenerator.GenerateFolders();
             referenceManager.inputFolderGenerator.gameObject.SetActive(true);

@@ -24,6 +24,7 @@ namespace CellexalVR.Menu.Buttons.General
             graphManager = referenceManager.graphManager;
             SetButtonActivated(false);
             CellexalEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
+            CellexalEvents.ScarfObjectLoaded.AddListener(OnGraphsLoaded);
             CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
         }
 

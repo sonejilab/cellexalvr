@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,9 +18,11 @@ namespace CellexalVR.AnalysisLogic
     public class MDSReader : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        
-        private readonly char[] separators = new char[] {' ', '\t'};
-        
+
+        private readonly char[] separators = new char[] {' ', '\t', ','};
+        private int nrOfLODGroups;
+
+
         /// <summary>
         /// Coroutine to create graphs.
         /// </summary>
@@ -35,6 +38,8 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.loaderController.loaderMovedDown = true;
                 referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
             }
+
+            nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
 
             //int statusId = status.AddStatus("Reading folder " + path);
             //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
@@ -56,12 +61,14 @@ namespace CellexalVR.AnalysisLogic
                     yield return null;
                 }
 
-                // spatial if (file.Contains("slice"))
-                // spatial {
-                // spatial     StartCoroutine(ReadSpatialMDSFiles(file));
-                // spatial     graphGenerator.isCreating = true;
-                // spatial     continue;
-                // spatial }
+                // // TODO: Make a more robust way of deciding if it should be loaded as a spatial graph.
+                // if (file.Contains("slice"))
+                // {
+                //     StartCoroutine(ReadSpatialMDSFiles(file));
+                //     referenceManager.graphGenerator.isCreating = true;
+                //     continue;
+                // }
+
                 Graph combGraph = referenceManager.graphGenerator.CreateGraph(type);
                 // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
                 // file will be the full file name e.g C:\...\graph1.mds
@@ -79,35 +86,32 @@ namespace CellexalVR.AnalysisLogic
                         break;
                     case GraphGenerator.GraphType.FACS:
                     {
-                        string name = "";
+                        string graphName = "";
                         foreach (string s in referenceManager.newGraphFromMarkers.markers)
                         {
-                            name += s + " - ";
+                            graphName += s + " - ";
                         }
 
                         combGraph.GraphNumber = referenceManager.inputReader.facsGraphCounter;
-                        combGraph.GraphName = name;
+                        combGraph.GraphName = graphName;
                         combGraph.tag = "FacsGraph";
                         referenceManager.graphManager.facsGraphs.Add(combGraph);
                         break;
                     }
                     case GraphGenerator.GraphType.ATTRIBUTE:
-                        break;
                     case GraphGenerator.GraphType.BETWEEN:
-                        break;
                     case GraphGenerator.GraphType.SPATIAL:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
-                //combGraph.gameObject.name = combGraph.GraphName;
-                //FileStream mdsFileStream = new FileStream(file, FileMode.Open);
 
-                //image1 = new Bitmap(400, 400);
-                //System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(image1);
-                //int i, j;
                 string[] axes = new string[3];
                 string[] velo = new string[3];
+                List<string> names = new List<string>();
+                List<float> xcoords = new List<float>();
+                List<float> ycoords = new List<float>();
+                List<float> zcoords = new List<float>();
                 using (StreamReader mdsStreamReader = new StreamReader(file))
                 {
                     //List<string> cellnames = new List<string>();
@@ -117,9 +121,9 @@ namespace CellexalVR.AnalysisLogic
                     // first line is (if correct format) a header and the first word is cell_id (the name of the first column).
                     // If wrong and does not contain header read first line as a cell.
                     string header = mdsStreamReader.ReadLine();
-                    if (header != null && header.Split(null)[0].Equals("CellID"))
+                    if (header != null && header.Split(separators)[0].Equals("CellID"))
                     {
-                        string[] columns = header.Split(null).Skip(1).ToArray();
+                        string[] columns = header.Split(separators).Skip(1).ToArray();
                         Array.Copy(columns, 0, axes, 0, 3);
                         if (columns.Length == 6)
                         {
@@ -133,17 +137,19 @@ namespace CellexalVR.AnalysisLogic
                         string[] words = header.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                         if (words.Length != 4 && words.Length != 7)
                         {
-                            print(words.Length);
                             continue;
                         }
 
                         string cellName = words[0];
-                        //print(words[0]);
                         float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                        Cell cell = referenceManager.cellManager.AddCell(cellName);
-                        referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
+                        // Cell cell = referenceManager.cellManager.AddCell(cellName);
+                        // referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
+                        names.Add(cellName);
+                        xcoords.Add(x);
+                        ycoords.Add(y);
+                        zcoords.Add(z);
                         axes[0] = "x";
                         axes[1] = "y";
                         axes[2] = "z";
@@ -165,7 +171,6 @@ namespace CellexalVR.AnalysisLogic
                                 .Split(separators, StringSplitOptions.RemoveEmptyEntries);
                             if (words.Length != 4 && words.Length != 7)
                             {
-                                print(words.Length);
                                 continue;
                             }
 
@@ -176,8 +181,12 @@ namespace CellexalVR.AnalysisLogic
                                 System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                             float z = float.Parse(words[3],
                                 System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                            Cell cell = referenceManager.cellManager.AddCell(cellname);
-                            referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
+                            // Cell cell = referenceManager.cellManager.AddCell(cellname);
+                            // referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
+                            names.Add(cellname);
+                            xcoords.Add(x);
+                            ycoords.Add(y);
+                            zcoords.Add(z);
                             itemsThisFrame++;
                         }
 
@@ -216,14 +225,37 @@ namespace CellexalVR.AnalysisLogic
                     // if (debug)
                     //     newGraph.CreateConvexHull();
                 }
+                
+                CreateFromCoordinates(names, xcoords, ycoords, zcoords);
+
+                // If high quality mesh is used. Use LOD groups to swap to low q when further away.
+                // Improves performance a lot when analysing larger graphs.
+                int n = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
+                StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
+
+                while (referenceManager.graphGenerator.isCreating)
+                {
+                    yield return null;
+                }
+
+                if (nrOfLODGroups > 1)
+                {
+                    combGraph.gameObject.AddComponent<LODGroup>();
+                    referenceManager.graphGenerator.UpdateLODGroups(combGraph, nrOfLODGroups);
+                }
 
                 // Add axes in bottom corner of graph and scale points differently
-                referenceManager.graphGenerator.SliceClustering();
-                referenceManager.graphGenerator.AddAxes(combGraph, axes);
                 combGraph.SetInfoText();
-                CellexalLog.Log("Successfully read graph from " + graphFileName + " reading ~" + maximumItemsPerFrame +
-                                " lines every frame");
+                referenceManager.graphGenerator.AddAxes(combGraph, axes);
+
+                //status.UpdateStatus(statusId, "Reading index.facs file");
+                //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
+                //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
+                //status.RemoveStatus(statusId);
+                //statusDisplayHUD.RemoveStatus(statusIdHUD);
+                //statusDisplayFar.RemoveStatus(statusIdFar);
             }
+
             if (type.Equals(GraphGenerator.GraphType.MDS))
             {
                 referenceManager.inputReader.attributeReader =
@@ -235,22 +267,50 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.inputReader.ReadFacsFiles(path, totalNbrOfCells);
                 referenceManager.inputReader.ReadFilterFiles(CellexalUser.UserSpecificFolder);
             }
-            //status.UpdateStatus(statusId, "Reading index.facs file");
-            //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
-            //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
-            //status.RemoveStatus(statusId);
-            //statusDisplayHUD.RemoveStatus(statusIdHUD);
-            //statusDisplayFar.RemoveStatus(statusIdFar);
 
-            if (server)
-            {
-                StartCoroutine(referenceManager.inputReader.StartServer("main"));
-            }
-            while (referenceManager.graphGenerator.isCreating)
-            {
-                yield return null;
-            }
             CellexalEvents.GraphsLoaded.Invoke();
+        }
+
+        private void CreateFromCoordinates(List<string> names, List<float> x, List<float> y, List<float> z)
+        {
+            if (!referenceManager.loaderController.loaderMovedDown)
+            {
+                referenceManager.loaderController.loaderMovedDown = true;
+                referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+            }
+            int gpCount = x.Count;
+            for (int i = 0; i < gpCount; i++)
+            {
+                Cell cell = referenceManager.cellManager.AddCell(names[i]);
+                referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], z[i]);
+            }
+        }
+
+        public void CreateFromCoordinates(List<float> x, List<float> y)
+        {
+             int gpCount = x.Count;
+             for (int i = 0; i < gpCount; i++)
+             {
+                 string cellName = i.ToString();
+                 Cell cell = referenceManager.cellManager.AddCell(cellName);
+                 referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], 0);
+             }           
+        }
+
+        public void CreateFromCoordinates(List<float> x, List<float> y, List<float> z)
+        {
+            if (!referenceManager.loaderController.loaderMovedDown)
+            {
+                referenceManager.loaderController.loaderMovedDown = true;
+                referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+            }
+            int gpCount = x.Count;
+             for (int i = 0; i < gpCount; i++)
+             {
+                 string cellName = i.ToString();
+                 Cell cell = referenceManager.cellManager.AddCell(cellName);
+                 referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], z[i]);
+             }           
         }
 
         /// <summary>
@@ -258,7 +318,7 @@ namespace CellexalVR.AnalysisLogic
         /// First the list of points is ordered by the z coordinate then for each z coordinate a graph is created. 
         /// </summary>
         /// <returns></returns>
-        public IEnumerator ReadSpatialMDSFiles(string file)
+        private IEnumerator ReadSpatialMDSFiles(string file)
         {
             if (!referenceManager.loaderController.loaderMovedDown)
             {
@@ -266,9 +326,11 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
             }
 
+            // int nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
             List<Tuple<string, Vector3>> gps = new List<Tuple<string, Vector3>>();
             const float maximumDeltaTime = 0.05f; // 20 fps
             int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
+
             //string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + data + "\\tsne.mds";
             float prevCoord = float.NaN;
             while (referenceManager.graphGenerator.isCreating)
@@ -281,6 +343,7 @@ namespace CellexalVR.AnalysisLogic
             sg.gameObject.layer = LayerMask.NameToLayer("GraphLayer");
             referenceManager.graphManager.spatialGraphs.Add(sg);
             sg.referenceManager = referenceManager;
+
             int sliceNr = 0;
             using (StreamReader mdsStreamReader = new StreamReader(file))
             {
@@ -295,17 +358,14 @@ namespace CellexalVR.AnalysisLogic
                             ?.Split(separators, StringSplitOptions.RemoveEmptyEntries);
                         if (words != null && (words.Length != 4 && words.Length != 7))
                         {
-                            print(words.Length);
                             continue;
                         }
 
                         string cellName = words[0];
                         float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                        ;
                         float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                        ;
                         float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                        ;
+                        Cell cell = referenceManager.cellManager.AddCell(cellName);
                         gps.Add(new Tuple<string, Vector3>(cellName, new Vector3(x, y, z)));
                         itemsThisFrame++;
                     }
@@ -327,56 +387,86 @@ namespace CellexalVR.AnalysisLogic
                         maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
                     }
                 }
+            }
 
-                gps.Sort((x, y) => x.Item2.z.CompareTo(y.Item2.z));
-                Vector3 maxCoords = new Vector3();
-                Vector3 minCoords = new Vector3();
-                maxCoords.x = gps.Max(v => (v.Item2.x));
-                maxCoords.y = gps.Max(v => (v.Item2.y));
-                maxCoords.z = gps.Max(v => (v.Item2.z));
-                minCoords.x = gps.Min(v => (v.Item2.x));
-                minCoords.y = gps.Min(v => (v.Item2.y));
-                minCoords.z = gps.Min(v => (v.Item2.z));
+            gps.Sort((x, y) => x.Item2.z.CompareTo(y.Item2.z));
+            Vector3 maxCoords = new Vector3();
+            Vector3 minCoords = new Vector3();
+            maxCoords.x = gps.Max(v => (v.Item2.x));
+            maxCoords.y = gps.Max(v => (v.Item2.y));
+            maxCoords.z = gps.Max(v => (v.Item2.z));
+            minCoords.x = gps.Min(v => (v.Item2.x));
+            minCoords.y = gps.Min(v => (v.Item2.y));
+            minCoords.z = gps.Min(v => (v.Item2.z));
+            Graph combGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
+            yield return null;
+            referenceManager.graphManager.Graphs.Add(combGraph);
+            referenceManager.graphManager.originalGraphs.Add(combGraph);
+            combGraph.gameObject.name = "Slice" + sliceNr;
+            combGraph.GraphName = "Slice" + sliceNr;
+            Transform transform1 = combGraph.transform;
+            transform1.parent = parent.transform;
+            transform1.localPosition = new Vector3(0, 0, 0);
+            combGraph.lodGroups = nrOfLODGroups;
+            combGraph.textures = new Texture2D[nrOfLODGroups];
+            GraphSlice gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
+            gs.referenceManager = referenceManager;
+            yield return null;
 
-                Graph combGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
-                yield return null;
-                referenceManager.graphManager.Graphs.Add(combGraph);
-                referenceManager.graphManager.originalGraphs.Add(combGraph);
-                combGraph.gameObject.name = "Slice" + sliceNr;
-                combGraph.GraphName = "Slice" + sliceNr;
-                var transform1 = combGraph.transform;
-                transform1.parent = parent.transform;
-                transform1.localPosition = new Vector3(0, 0, 0);
-                //combGraph.
-                var gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
-                gs.referenceManager = referenceManager;
-                yield return null;
-                // const float sliceDist = 0.005f;
-                Tuple<string, Vector3> gpTuple = gps[0];
-                Cell cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
-                var gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
-                    gpTuple.Item2.z);
-                var currentCoord = gpTuple.Item2.z;
-                for (int n = 1; n < gps.Count; n++)
+            // const float sliceDist = 0.005f;
+            Tuple<string, Vector3> gpTuple = gps[0];
+            Cell c = referenceManager.cellManager.GetCell(gpTuple.Item1);
+
+            Graph.GraphPoint gp = referenceManager.graphGenerator.AddGraphPoint(c, gpTuple.Item2.x,
+                gpTuple.Item2.y,
+                gpTuple.Item2.z);
+
+            float currentCoord = gpTuple.Item2.z;
+            for (int n = 1; n < gps.Count; n++)
+            {
+                gpTuple = gps[n];
+                currentCoord = gpTuple.Item2.z;
+                if (n == 1)
                 {
-                    gpTuple = gps[n];
-                    if (n == 1)
+                    prevCoord = currentCoord;
+                }
+                // when we reach new slice (new z coordinate) build the graph and then start adding to a new one.
+                else if (Math.Abs(currentCoord - prevCoord) > 0.01f)
+                {
+                    for (int i = 0; i < nrOfLODGroups; i++)
                     {
-                        prevCoord = currentCoord;
-                    }
-                    // when we reach new slize (new z coord) build the graph and then start adding to a new one.
-                    else if (Math.Abs(currentCoord - prevCoord) > 0.01f)
-                    {
+                        referenceManager.graphGenerator.isCreating = true;
+                        // referenceManager.graphGenerator.AddLODGroup(combGraph, i);
+                        //
+                        // combGraph.maxCoordValues = maxCoords;
+                        // combGraph.minCoordValues = minCoords;
+                        // referenceManager.graphGenerator.SliceClustering(lodGroup: i);
+                        // while (referenceManager.graphGenerator.isCreating)
+                        // {
+                        //     yield return null;
+                        // }
+
+                        gs.zCoord = gp.WorldPosition.z;
                         combGraph.maxCoordValues = maxCoords;
                         combGraph.minCoordValues = minCoords;
-                        referenceManager.graphGenerator.SliceClustering();
+                        StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
+
                         while (referenceManager.graphGenerator.isCreating)
                         {
                             yield return null;
                         }
 
                         gs.zCoord = gp.WorldPosition.z;
+
+                        if (nrOfLODGroups > 1)
+                        {
+                            combGraph.gameObject.AddComponent<LODGroup>();
+                            referenceManager.graphGenerator.UpdateLODGroups(combGraph);
+                        }
+
                         combGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
+                        combGraph.lodGroups = nrOfLODGroups;
+                        combGraph.textures = new Texture2D[nrOfLODGroups];
                         yield return null;
                         referenceManager.graphManager.Graphs.Add(combGraph);
                         referenceManager.graphManager.originalGraphs.Add(combGraph);
@@ -389,26 +479,44 @@ namespace CellexalVR.AnalysisLogic
                         combGraph.GraphName = "Slice" + sliceNr;
                         combGraph.gameObject.name = "Slice" + sliceNr;
                     }
-                    else if (n == gps.Count - 1)
+                }
+
+                // last gp: finish the final slice
+                else if (n == gps.Count - 1)
+                {
+                    c = referenceManager.cellManager.GetCell(gpTuple.Item1);
+                    gp = referenceManager.graphGenerator.AddGraphPoint(c, gpTuple.Item2.x, gpTuple.Item2.y,
+                        gpTuple.Item2.z);
+                    for (int i = 0; i < nrOfLODGroups; i++)
                     {
+                        referenceManager.graphGenerator.isCreating = true;
+                        referenceManager.graphGenerator.AddLODGroup(combGraph, i);
                         combGraph.maxCoordValues = maxCoords;
                         combGraph.minCoordValues = minCoords;
-                        referenceManager.graphGenerator.SliceClustering();
+                        referenceManager.graphGenerator.SliceClustering(lodGroup: i);
                         while (referenceManager.graphGenerator.isCreating)
                         {
                             yield return null;
                         }
 
                         gs.zCoord = gp.WorldPosition.z;
+
+                        if (nrOfLODGroups > 1)
+                        {
+                            combGraph.gameObject.AddComponent<LODGroup>();
+                            referenceManager.graphGenerator.UpdateLODGroups(combGraph);
+                        }
+
                         combGraph.transform.localPosition = new Vector3(0, 0, 0);
                         continue;
                     }
 
-                    cell = referenceManager.cellManager.AddCell(gpTuple.Item1);
-                    gp = referenceManager.graphGenerator.AddGraphPoint(cell, gpTuple.Item2.x, gpTuple.Item2.y,
+                    c = referenceManager.cellManager.GetCell(gpTuple.Item1);
+                    gp = referenceManager.graphGenerator.AddGraphPoint(c, gpTuple.Item2.x, gpTuple.Item2.y,
                         gpTuple.Item2.z);
                     prevCoord = currentCoord;
                 }
+
 
                 StartCoroutine(sg.AddSlices());
             }

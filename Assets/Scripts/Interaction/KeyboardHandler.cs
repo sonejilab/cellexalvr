@@ -25,10 +25,10 @@ namespace CellexalVR.Interaction
     /// </summary>
     public abstract class KeyboardHandler : MonoBehaviour
     {
-        public CellexalVR.General.ReferenceManager referenceManager;
+        public ReferenceManager referenceManager;
         public GameObject keysParentObject;
-        public TMPro.TextMeshPro output;
-        public List<TMPro.TextMeshPro> additionalOutputs;
+        public TextMeshPro output;
+        public List<TextMeshPro> additionalOutputs;
         public float height = 5f;
         public float anglePerUnit = 5f;
         public float distance = 8f;

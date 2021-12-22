@@ -11,6 +11,7 @@ public class ToggleLegendButton : CellexalButton
     {
         TurnOff();
         CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+        CellexalEvents.ScarfObjectLoaded.AddListener(TurnOn);
         CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
     }
 

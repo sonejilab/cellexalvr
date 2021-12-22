@@ -29,7 +29,7 @@ namespace CellexalVR.DesktopUI
         private void ReadConfig()
         {
             configDir = Directory.GetCurrentDirectory() + @"\Config";
-            configPath = configDir + @"\config.xml";
+            configPath = configDir + @"\default_config.xml";
             sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.xml";
             if (!Directory.Exists("Config"))
             {
@@ -62,7 +62,7 @@ namespace CellexalVR.DesktopUI
         public void ShowFileDialog()
         {
             SetRScriptPath(StandaloneFileBrowser.OpenFilePanel("Select File", "", "exe", false));
-
+            
         }
 
 
@@ -73,6 +73,7 @@ namespace CellexalVR.DesktopUI
 
         public void SetRScriptPath(string[] paths)
         {
+            if (paths.Length == 0) return;
             if (paths[0] == null)
             {
                 paths[0] = rScriptInputField.text;
@@ -89,7 +90,7 @@ namespace CellexalVR.DesktopUI
                     {
                         CellexalConfig.Config.RscriptexePath = path;
                         string configDir = Directory.GetCurrentDirectory() + @"\Config";
-                        string configPath = configDir + @"\config.xml";
+                        string configPath = configDir + @"\default_config.xml";
                         if (!Directory.Exists("Config"))
                         {
                             Directory.CreateDirectory("Config");

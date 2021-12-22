@@ -29,6 +29,8 @@ namespace CellexalVR.Multiuser
     /// </summary>
     public class Launcher : Photon.PunBehaviour
     {
+        public static Launcher instance;
+
         #region Public Variables
 
         [Tooltip("The Ui Panel to let the user enter name, connect and play")]
@@ -75,7 +77,7 @@ namespace CellexalVR.Multiuser
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during early initialization phase.
         /// </summary>
-        void Awake()
+        private void Awake()
         {
             // #NotImportant
             // Force LogLevel
@@ -95,9 +97,10 @@ namespace CellexalVR.Multiuser
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during initialization phase.
         /// </summary>
-        void Start()
+        private void Start()
         {
             //progressLabel.SetActive(false);
+            instance = this;
             controlPanel.SetActive(true);
         }
 
@@ -106,6 +109,7 @@ namespace CellexalVR.Multiuser
 
 
         #region Public Methods
+
 
 
         public override void OnConnectedToMaster()

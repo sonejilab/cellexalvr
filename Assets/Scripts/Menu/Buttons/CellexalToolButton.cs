@@ -9,7 +9,6 @@ namespace CellexalVR.Menu.Buttons
     /// </summary>
     public abstract class CellexalToolButton : CellexalButton
     {
-
         protected ControllerModelSwitcher controllerModelSwitcher;
         public Sprite activatedTexture = null;
         public Sprite highlightActivatedTexture = null;
@@ -17,7 +16,7 @@ namespace CellexalVR.Menu.Buttons
         public Color meshActivatedColor = Color.blue;
         public bool toolActivated;
 
-        abstract protected ControllerModelSwitcher.Model ControllerModel
+        protected abstract ControllerModelSwitcher.Model ControllerModel
         {
             get;
         }
@@ -28,6 +27,7 @@ namespace CellexalVR.Menu.Buttons
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             CellexalEvents.ModelChanged.AddListener(UpdateButton);
             CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+            CellexalEvents.ScarfObjectLoaded.AddListener(TurnOn);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         }
 

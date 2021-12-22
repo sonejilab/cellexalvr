@@ -10,12 +10,11 @@ namespace CellexalVR.SceneObjects
     /// </summary>
     public class CellsToLoad : MonoBehaviour
     {
-
         private string directory;
         private bool graphsLoaded = false;
+        private Transform defaultParent;
         private Vector3 defaultPosition;
         private Quaternion defaultRotation;
-        public ReferenceManager referenceManager;
 
         public string Directory
         {
@@ -30,28 +29,10 @@ namespace CellexalVR.SceneObjects
             }
         }
 
-        private void OnValidate()
-        {
-            if (gameObject.scene.IsValid())
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-        }
-
         private void Start()
         {
             //referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             this.gameObject.name = directory;
-        }
-
-        private void Update()
-        {
-            //if (GetComponent<VRTK_InteractableObject>().enabled)
-            //{
-            //    referenceManager.MultiuserMessageSender.SendMessageMoveCells(transform.parent.gameObject.name, transform.position, transform.rotation);
-            //    referenceManager.inputFolderGenerator.FindCells(this.gameObject.name);
-
-            //}
         }
 
         public bool GraphsLoaded()
@@ -59,16 +40,19 @@ namespace CellexalVR.SceneObjects
             return graphsLoaded;
         }
 
+        
         internal void ResetPosition()
         {
+            transform.parent = defaultParent;
             transform.localPosition = defaultPosition;
             transform.localRotation = defaultRotation;
         }
 
-        internal void SavePosition()
+        internal void SavePosition(Transform parent)
         {
             defaultPosition = transform.localPosition;
             defaultRotation = transform.localRotation;
+            defaultParent = parent;
         }
     }
 }

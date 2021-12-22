@@ -146,8 +146,9 @@ namespace CellexalVR.Multiuser
                 lr = mlm.AddLaser(ownerId, ownerName);
                 if (lr == null) return;
             }
-            lr.startColor = lr.endColor = referenceManager.rightLaser.gameObject.GetComponent<XRInteractorLineVisual>().validColorGradient.colorKeys[0].color;
-            lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.gameObject.GetComponent<XRInteractorLineVisual>().validColorGradient.colorKeys[0].color;
+
+            // lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
+            // lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             lr.gameObject.SetActive(active);
         }
 
@@ -164,13 +165,49 @@ namespace CellexalVR.Multiuser
             {
                 lr = mlm.AddLaser(ownerId, ownerName);
                 if (lr == null) return;
-                lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.gameObject.GetComponent<XRInteractorLineVisual>().validColorGradient.colorKeys[0].color;
+                // lr.material.color = lr.startColor = lr.endColor = referenceManager.rightLaser.validCollisionColor;
             }
+
             lr.SetPosition(0, mlm.laserTransforms[ownerId].position);
             lr.SetPosition(1, new Vector3(hitX, hitY, hitZ));
             if (!lr.gameObject.activeSelf) lr.gameObject.SetActive(true);
-
         }
+
+        public void RecieveMessageUpdateSliderValue(string sliderType, float value)
+        {
+            VRSlider.SliderType slider = (VRSlider.SliderType)Enum.Parse(typeof(VRSlider.SliderType), sliderType);
+
+            switch (slider)
+            {
+                case VRSlider.SliderType.VelocityParticleSize:
+                    VRSlider veloSlider = referenceManager.velocitySubMenu.particleSizeSlider;
+                    veloSlider.UpdateSliderValue(value);
+                    referenceManager.velocityGenerator.ChangeParticleSize(veloSlider.Value);
+                    break;
+                case VRSlider.SliderType.PDFCurvature:
+                    VRSlider curvatureSlider = referenceManager.pdfMesh.curvatureSlider;
+                    curvatureSlider.UpdateSliderValue(value);
+                    referenceManager.pdfMesh.ChangeCurvature(curvatureSlider.Value);
+                    break;
+                case VRSlider.SliderType.PDFRadius:
+                    referenceManager.pdfMesh.radiusSlider.UpdateSliderValue(value);
+                    break;
+                case VRSlider.SliderType.PDFWidth:
+                    referenceManager.pdfMesh.scaleXSliderStationary.UpdateSliderValue(value);
+                    break;
+                case VRSlider.SliderType.PDFHeight:
+                    referenceManager.pdfMesh.scaleYSliderStationary.UpdateSliderValue(value);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void RecieveMessageShowPDFPages()
+        {
+            referenceManager.pdfMesh.ShowMultiplePages();
+        }
+
 
         #endregion
 
@@ -371,14 +408,14 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageGenerateRandomColors(int n)
         {
             CellexalLog.Log(message: "Recieved message to generate " + n + " random colors");
-            referenceManager.settingsMenu.GetComponent<ColormapManager>().DoGenerateRandomColors(n, true);
+            referenceManager.settingsMenu.GetComponent<DesktopUI.ColorMapManager>().DoGenerateRandomColors(n, true);
         }
 
         [PunRPC]
         public void RecieveMessageGenerateRainbowColors(int n)
         {
             CellexalLog.Log(message: "Recieved message to generate " + n + " rainbow colors");
-            referenceManager.settingsMenu.GetComponent<ColormapManager>().DoGenerateRainbowColors(n, true);
+            referenceManager.settingsMenu.GetComponent<DesktopUI.ColorMapManager>().DoGenerateRainbowColors(n, true);
         }
 
         [PunRPC]
@@ -435,14 +472,14 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageAddAnnotation(string annotation, int index)
         {
             CellexalLog.Log("Recieved message to add annotation: " + annotation);
-            referenceManager.selectionManager.AddAnnotation(annotation, index);
+            referenceManager.annotationManager.AddAnnotation(annotation, index);
         }
 
         [PunRPC]
         public void RecieveMessageExportAnnotations()
         {
             CellexalLog.Log("Recieved message to export annotations");
-            referenceManager.selectionManager.DumpAnnotatedSelectionToTextFile();
+            referenceManager.annotationManager.DumpAnnotatedSelectionToTextFile();
         }
 
         [PunRPC]
@@ -464,6 +501,18 @@ namespace CellexalVR.Multiuser
         {
             CellexalLog.Log("Recieved message to recolor graph points by current selection");
             referenceManager.selectionManager.RecolorSelectionPoints();
+        }
+
+        [PunRPC]
+        public void RecieveMessageHandleHistoryPanelClick(string panelName)
+        {
+            ClickableHistoryPanel panel = referenceManager.sessionHistoryList.GetPanel(panelName);
+            if (!panel)
+            {
+                CellexalLog.Log($"Could not find history panel with name: {panelName}");
+                return;
+            }
+            panel.HandleClick();
         }
 
         #endregion
@@ -523,6 +572,25 @@ namespace CellexalVR.Multiuser
             {
                 referenceManager.selectionManager.GoForwardOneStepInHistory();
             }
+        }
+
+        [PunRPC]
+        public void ReciveMessageToggleAnnotationFile(string path, bool toggle)
+        {
+            referenceManager.annotationManager.ToggleAnnotationFile(path, toggle);
+            SelectAnnotationButton button = referenceManager.selectionFromPreviousMenu.FindAnnotationButton(path);
+            button.ToggleOutline(toggle);
+            button.toggle = !toggle;
+        }
+
+
+        [PunRPC]
+        public void ReciveMessageToggleSelectionFile(string path)
+        {
+            referenceManager.inputReader.ReadSelectionFile(path);
+            SelectionFromPreviousButton button = referenceManager.selectionFromPreviousMenu.FindSelectionButton(path);
+            button.ToggleOutline(true);
+            button.toggle = true;
         }
 
         #endregion
@@ -1069,6 +1137,16 @@ namespace CellexalVR.Multiuser
             }
         }
 
+        [PunRPC]
+        public void RecieveMessageCumulativeRecolorFromSelection(string heatmapName, int groupLeft, int groupRight, int selectedTop, int selectedBottom)
+        {
+            Heatmap hm = referenceManager.heatmapGenerator.FindHeatmap(heatmapName);
+            if (hm != null)
+            {
+                hm.CumulativeRecolorFromSelection(groupLeft, groupRight, selectedTop, selectedBottom);
+            }
+        }
+
         #endregion
 
         #region Networks
@@ -1247,23 +1325,26 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageHighlightNetworkNode(string handlerName, string centerName, string geneName)
         {
-            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)?.HighlightNode(geneName, true);
+            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)
+                ?.HighlightNode(geneName, true);
         }
 
         [PunRPC]
         public void RecieveMessageUnhighlightNetworkNode(string handlerName, string centerName, string geneName)
         {
-            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)?.HighlightNode(geneName, false);
+            referenceManager.networkGenerator?.FindNetworkHandler(handlerName)?.FindNetworkCenter(centerName)
+                ?.HighlightNode(geneName, false);
         }
 
-        [PunRPC]
-        public void RecieveMessageSetArcsVisible(bool toggleToState, string networkName)
-        {
-            CellexalLog.Log("Toggle arcs of " + networkName);
-            NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
-            network.SetCombinedArcsVisible(false);
-            network.SetArcsVisible(toggleToState);
-        }
+        // [PunRPC]
+        // public void RecieveMessageSetArcsVisible(bool toggleToState, string buttonName)
+        // {
+        //     CellexalLog.Log("Toggle arcs of " + buttonName);
+        //     referenceManager.arcsSubMenu.NetworkArcsButtonClickedMultiUser(toggleToState, buttonName);
+        //     // NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
+        //     // network.SetCombinedArcsVisible(false);
+        //     // network.SetArcsVisible(toggleToState);
+        // }
 
         [PunRPC]
         public void RecieveMessageSetCombinedArcsVisible(bool toggleToState, string networkName)
@@ -1272,6 +1353,18 @@ namespace CellexalVR.Multiuser
             NetworkCenter network = GameObject.Find(networkName).GetComponent<NetworkCenter>();
             network.SetArcsVisible(false);
             network.SetCombinedArcsVisible(toggleToState);
+        }
+
+        [PunRPC]
+        public void RecieveMessageToggleAllArcs(bool toggleToState)
+        {
+            referenceManager.arcsSubMenu.ToggleAllArcs(toggleToState);
+        }
+
+        [PunRPC]
+        public void RecieveMessageNetworkArcButtonClicked(string buttonName)
+        {
+            referenceManager.arcsSubMenu.NetworkArcsButtonClickedMultiUser(buttonName);
         }
 
         #endregion
@@ -1436,8 +1529,8 @@ namespace CellexalVR.Multiuser
         {
             CellexalLog.Log("Recieved message to read velocity file - " + shorterFilePath);
             var veloButton = referenceManager.velocitySubMenu.FindButton(shorterFilePath, subGraphName);
-            //string path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" +
-            //                  shorterFilePath + ".mds";
+
+
             Graph graph = referenceManager.graphManager.FindGraph(subGraphName);
             //if (subGraphName != string.Empty)
             //{
@@ -1449,7 +1542,7 @@ namespace CellexalVR.Multiuser
             //}
             if (activate)
             {
-                referenceManager.velocityGenerator.ReadVelocityFile(veloButton.FilePath, subGraphName);
+                referenceManager.velocityGenerator.ReadVelocityFile(shorterFilePath, subGraphName);
             }
             else
             {

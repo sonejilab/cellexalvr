@@ -1,0 +1,173 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="mainStyleSheet.uss" />
+    <ui:VisualElement name="screen" style="text-shadow: 0 0 0 rgb(255, 255, 255); color: rgb(255, 255, 255); flex-grow: 1; background-color: rgba(0, 0, 0, 0); font-size: 14px; -unity-font-style: normal; letter-spacing: 7px; justify-content: space-between; align-items: center;">
+        <ui:VisualElement name="main-header" class="main-header" style="display: none;">
+            <ui:IMGUIContainer name="main-header-logo" class="header-logo" />
+        </ui:VisualElement>
+        <ui:ScrollView scroll-deceleration-rate="0,135" elasticity="0,1" style="align-items: center; justify-content: center; flex-direction: column; flex-grow: 1; border-left-width: 4px; border-right-width: 4px; border-top-width: 4px; border-bottom-width: 4px; border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: rgba(255, 255, 255, 0);">
+            <ui:VisualElement style="align-items: center; background-color: rgba(0, 0, 0, 0);">
+                <ui:VisualElement name="Menu" style="flex-grow: 0; align-items: stretch; background-color: rgba(89, 89, 89, 0); -unity-background-image-tint-color: rgb(0, 165, 255); border-top-left-radius: 8px; border-bottom-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-left-width: 8px; border-right-width: 8px; border-top-width: 8px; border-bottom-width: 8px;">
+                    <ui:VisualElement name="buttons" style="flex-grow: 0; justify-content: flex-start; align-items: stretch;">
+                        <ui:VisualElement name="filebuttoncontainer" style="flex-direction: row; flex-grow: 0;" />
+                        <ui:VisualElement style="flex-direction: row; justify-content: space-between; flex-grow: 1;">
+                            <ui:VisualElement name="left" style="flex-grow: 1;">
+                                <ui:VisualElement name="select-raw" style="flex-direction: column-reverse;">
+                                    <ui:VisualElement name="file" class="input-card" style="margin-top: 0; margin-left: 14px;">
+                                        <ui:VisualElement name="choose-file" class="button-row" style="flex-direction: row;">
+                                            <ui:TextField picking-mode="Ignore" focusable="true" name="raw-data" max-length="100" class="input-argument input-text-field">
+                                                <ui:Label text="file name: " display-tooltip-when-elided="true" />
+                                            </ui:TextField>
+                                            <ui:Button text="OPEN" display-tooltip-when-elided="true" name="choose-file-button" class="button" />
+                                            <ui:VisualElement name="file-done" class="inactive done-label" style="background-image: none; flex-grow: 1; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); flex-shrink: 1; align-items: center; justify-content: center;">
+                                                <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: normal;" />
+                                            </ui:VisualElement>
+                                        </ui:VisualElement>
+                                        <ui:Label text="Please enter a label (e.g. my_data)&#x9;" display-tooltip-when-elided="true" name="file-message-label" class="message-label" />
+                                    </ui:VisualElement>
+                                    <ui:VisualElement name="fileheader" class="input-card-header-container">
+                                        <ui:Label text="CHOOSE RAW DATA FILE" display-tooltip-when-elided="true" name="choose-file-header" enable-rich-text="true" class="input-argument input-card-header" />
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                                <ui:VisualElement name="convertheader" class="input-card-header-container" style="flex-grow: 1;">
+                                    <ui:Label text="CONVERT TO ZARR" display-tooltip-when-elided="true" class="input-card-header" />
+                                </ui:VisualElement>
+                                <ui:VisualElement name="convert" class="input-card">
+                                    <ui:VisualElement name="convert-to-zarr" class="button-row">
+                                        <ui:TextField picking-mode="Ignore" focusable="true" name="data-label" class="input-argument input-text-field" style="border-left-color: rgb(255, 255, 255); border-right-color: rgb(255, 255, 255); border-top-color: rgb(255, 255, 255); border-bottom-color: rgb(255, 255, 255);">
+                                            <ui:Label text="data label: " display-tooltip-when-elided="true" />
+                                        </ui:TextField>
+                                        <ui:Button text="RUN" display-tooltip-when-elided="true" name="convert-button" class="button" />
+                                        <ui:VisualElement name="convert-done" class="inactive done-label" style="background-image: none; flex-grow: 1; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); flex-shrink: 1; align-items: center; justify-content: center;">
+                                            <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: normal;" />
+                                        </ui:VisualElement>
+                                        <ui:VisualElement name="convert-running" class="inactive running-label" style="background-image: none; width: 46px; height: 46px; align-items: center; justify-content: center;">
+                                            <ui:VisualElement name="convert-outer-pivot" style="width: 1px; height: 1px;">
+                                                <ui:VisualElement name="convert-outer-image" class="gear-icon" style="left: -23px; top: -23px; flex-shrink: 0; flex-grow: 0; width: 46px; height: 46px; display: flex;" />
+                                            </ui:VisualElement>
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                    <ui:Label text="Please enter a label (e.g. my_data)&#x9;" display-tooltip-when-elided="true" name="convert-message-label" class="message-label" />
+                                </ui:VisualElement>
+                                <ui:VisualElement name="hvgsheader" class="input-card-header-container">
+                                    <ui:Label text="MARK HVGS" display-tooltip-when-elided="true" class="input-card-header" />
+                                </ui:VisualElement>
+                                <ui:VisualElement name="hvgs" class="input-card">
+                                    <ui:VisualElement name="mark-hvgs" class="button-row">
+                                        <ui:TextField picking-mode="Ignore" value="1000" text="1000" focusable="true" name="topn-label" class="input-argument input-text-field" style="width: 123px;">
+                                            <ui:Label text="top_n: " display-tooltip-when-elided="true" />
+                                        </ui:TextField>
+                                        <ui:Button text="RUN" display-tooltip-when-elided="true" name="hvgs-button" class="button" />
+                                        <ui:VisualElement name="hvgs-done" class="inactive done-label" style="background-image: none; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255);">
+                                            <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
+                                        </ui:VisualElement>
+                                        <ui:VisualElement name="hvgs-running" class="inactive running-label" style="background-image: none; width: 46px; height: 46px;">
+                                            <ui:VisualElement name="hvgs-outer-pivot" style="width: 1px; height: 1px;">
+                                                <ui:VisualElement name="hvgs-outer-image" class="gear-icon" />
+                                            </ui:VisualElement>
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                    <ui:Label text="Invalid argument. Please enter an integer (e.g. 1000).&#x9;" display-tooltip-when-elided="true" name="hvgs-message-label" class="message-label" />
+                                </ui:VisualElement>
+                                <ui:VisualElement name="graphheader" class="input-card-header-container">
+                                    <ui:Label text="MAKE GRAPH" display-tooltip-when-elided="true" class="input-card-header" />
+                                </ui:VisualElement>
+                                <ui:VisualElement name="graph" class="input-card">
+                                    <ui:VisualElement name="make-graph" class="button-row">
+                                        <ui:TextField picking-mode="Ignore" value="hvgs" text="hvgs" focusable="true" readonly="false" name="featkey-label" class="input-argument input-text-field" style="flex-grow: 0; font-size: 14px; -unity-text-align: middle-left; width: 156px;">
+                                            <ui:Label text="feature_key" display-tooltip-when-elided="true" />
+                                        </ui:TextField>
+                                        <ui:Button text="RUN" display-tooltip-when-elided="true" name="graph-button" class="button" />
+                                        <ui:VisualElement name="graph-done" class="inactive done-label" style="background-image: none; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255);">
+                                            <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
+                                        </ui:VisualElement>
+                                        <ui:VisualElement name="graph-running" class="inactive running-label" style="background-image: none; width: 46px; height: 46px;">
+                                            <ui:VisualElement name="graph-outer-pivot" style="width: 1px; height: 1px;">
+                                                <ui:VisualElement name="hvgs-outer-image" class="gear-icon" style="left: -23px; top: -23px; flex-shrink: 0; flex-grow: 0; width: 46px; height: 46px; display: flex;" />
+                                            </ui:VisualElement>
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                    <ui:Label text="Invalid argument. Please enter a feature key present in your data (e.g. hvgs)..." display-tooltip-when-elided="true" name="graph-message-label" class="message-label" />
+                                </ui:VisualElement>
+                                <ui:VisualElement name="umapheader" class="input-card-header-container">
+                                    <ui:Label text="RUN UAMP" display-tooltip-when-elided="true" class="input-card-header" />
+                                </ui:VisualElement>
+                                <ui:VisualElement name="umap" class="input-card">
+                                    <ui:VisualElement name="run-umap" class="button-row">
+                                        <ui:TextField picking-mode="Ignore" value="200" text="200" focusable="true" name="nepochs-label" class="input-argument input-text-field" style="width: 150px;">
+                                            <ui:Label text="n_epochs: " display-tooltip-when-elided="true" />
+                                        </ui:TextField>
+                                        <ui:Button text="RUN" display-tooltip-when-elided="true" name="umap-button" class="button" />
+                                        <ui:VisualElement name="umap-done" class="inactive done-label">
+                                            <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: bold; -unity-text-align: upper-left;" />
+                                        </ui:VisualElement>
+                                        <ui:VisualElement name="umap-running" class="inactive running-label">
+                                            <ui:VisualElement name="umap-outer-pivot" style="width: 1px; height: 1px;">
+                                                <ui:VisualElement name="clustering-outer-image" class="gear-icon" style="left: -23px; top: -23px; flex-shrink: 0; flex-grow: 0; width: 46px; height: 46px; display: flex;" />
+                                            </ui:VisualElement>
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                    <ui:Label text="Invalid argument. Please enter the number of epochs to run the umap (e.g. 200)." display-tooltip-when-elided="true" name="umap-message-label" class="message-label" />
+                                </ui:VisualElement>
+                                <ui:VisualElement name="clusteringheader" class="input-card-header-container">
+                                    <ui:Label text="RUN CLUSTERING" display-tooltip-when-elided="true" class="input-card-header" />
+                                </ui:VisualElement>
+                                <ui:VisualElement name="clustering" class="input-card">
+                                    <ui:VisualElement name="run-clustering" class="button-row">
+                                        <ui:TextField picking-mode="Ignore" value="1.0" text="1.0" focusable="true" name="resolution-label" class="input-argument input-text-field" style="width: 140px;">
+                                            <ui:Label text="resolution: " display-tooltip-when-elided="true" />
+                                        </ui:TextField>
+                                        <ui:Button text="RUN" display-tooltip-when-elided="true" name="clustering-button" class="button" />
+                                        <ui:VisualElement name="clustering-done" class="inactive done-label" style="background-image: none; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255);">
+                                            <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
+                                        </ui:VisualElement>
+                                        <ui:VisualElement name="clustering-running" class="inactive running-label" style="background-image: none; width: 46px; height: 46px;">
+                                            <ui:VisualElement name="clustering-outer-pivot" style="width: 1px; height: 1px;">
+                                                <ui:VisualElement name="clustering-outer-image" class="gear-icon" style="left: -23px; top: -23px; flex-shrink: 0; flex-grow: 0; width: 46px; height: 46px; display: flex;" />
+                                            </ui:VisualElement>
+                                        </ui:VisualElement>
+                                    </ui:VisualElement>
+                                    <ui:Label text="Invalid argument. Please enter a float (e.g. 1.0)." display-tooltip-when-elided="true" name="clustering-message-label" class="message-label" />
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement name="right" style="flex-grow: 1;">
+                                <ui:VisualElement name="select-zarr" style="flex-direction: column-reverse;">
+                                    <ui:VisualElement name="directory" class="input-card" style="margin-top: 0; margin-left: 14px;">
+                                        <ui:VisualElement name="choose-dir" class="button-row" style="flex-direction: row;">
+                                            <ui:TextField picking-mode="Ignore" focusable="true" name="zarr-data" max-length="100" class="input-argument input-text-field">
+                                                <ui:Label text="zarr directory: " display-tooltip-when-elided="true" />
+                                            </ui:TextField>
+                                            <ui:Button text="OPEN" display-tooltip-when-elided="true" name="choose-dir-button" class="button" />
+                                            <ui:VisualElement name="dir-done" class="inactive done-label" style="background-image: none; flex-grow: 1; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); flex-shrink: 1; align-items: center; justify-content: center;">
+                                                <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: normal;" />
+                                            </ui:VisualElement>
+                                        </ui:VisualElement>
+                                        <ui:Label text="Please enter a label (e.g. my_data)&#x9;" display-tooltip-when-elided="true" name="dir-message-label" class="message-label" />
+                                    </ui:VisualElement>
+                                    <ui:VisualElement name="fileheader" class="input-card-header-container">
+                                        <ui:Label text="CHOOSE ZARR DIRECTORY" display-tooltip-when-elided="true" name="choose-file-header" enable-rich-text="true" class="input-argument input-card-header" />
+                                    </ui:VisualElement>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="button-row" style="flex-direction: row; justify-content: space-between; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; align-items: center;">
+                        <ui:Button text="BACK" display-tooltip-when-elided="true" name="back-button" class="button back-button" style="-unity-text-align: middle-center; white-space: nowrap; flex-shrink: 1; flex-grow: 0;" />
+                        <ui:Button text="LOAD DATA" display-tooltip-when-elided="true" name="load-button" class="button" style="display: none;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="progress-container" class="inactive" style="width: 361px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-left-color: rgb(71, 255, 0); border-right-color: rgb(71, 255, 0); border-top-color: rgb(71, 255, 0); border-bottom-color: rgb(71, 255, 0);">
+                    <ui:VisualElement name="header" class="input-card-header" style="flex-direction: row; display: none;">
+                        <ui:Label text="LOADING..." display-tooltip-when-elided="true" name="text-header" style="flex-grow: 1;" />
+                        <ui:Label text="0" display-tooltip-when-elided="true" name="text-percentage" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="container-bar" class="inactive" style="height: 40px; border-left-color: rgb(71, 255, 0); border-right-color: rgb(71, 255, 0); border-top-color: rgb(71, 255, 0); border-bottom-color: rgb(71, 255, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; display: flex; width: 100%; flex-shrink: 1;">
+                        <ui:VisualElement name="bar-progress" style="width: 0; height: 100%; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; background-color: rgb(71, 255, 0); display: flex; flex-grow: 0;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="output-container" style="width: 856px; height: 120px;">
+                    <ui:Label display-tooltip-when-elided="true" name="output-label" style="color: rgb(71, 255, 0);" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:ScrollView>
+    </ui:VisualElement>
+</ui:UXML>

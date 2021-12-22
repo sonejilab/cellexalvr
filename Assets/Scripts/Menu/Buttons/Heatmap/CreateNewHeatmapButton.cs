@@ -7,7 +7,6 @@ namespace CellexalVR.Menu.Buttons.Heatmap
     /// </summary>
     class CreateNewHeatmapButton : CellexalButton
     {
-        private CellexalVR.AnalysisObjects.Heatmap heatmap;
         private HeatmapRaycast heatmapRaycast;
 
         protected override string Description

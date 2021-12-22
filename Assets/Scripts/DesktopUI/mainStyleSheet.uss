@@ -1,0 +1,376 @@
+.button {
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    background-color: rgb(62, 137, 33);
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex-grow: 0;
+    display: flex;
+    -unity-font-definition: resource('FontAssets/DynamicOSFontAssets/GlobalFallback/OSX/Helvetica SDF');
+    -unity-font: resource('UI Builder/TanksMainMenu/Teko-Regular');
+    font-size: 17px;
+    letter-spacing: 8px;
+}
+
+.button-row {
+    white-space: normal;
+    -unity-text-align: upper-left;
+    flex-direction: row;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    justify-content: space-between;
+}
+
+.input-argument > .unity-base-field__input {
+    height: 43px;
+    width: 223px;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    color: rgb(255, 255, 255);
+    background-color: rgb(82, 82, 82);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    padding-left: 10px;
+}
+
+.button:hover {
+    border-left-color: rgb(255, 162, 0);
+    border-right-color: rgb(255, 162, 0);
+    border-top-color: rgb(255, 162, 0);
+    border-bottom-color: rgb(255, 162, 0);
+}
+
+.button:active {
+    background-color: rgb(255, 162, 0);
+}
+
+.input-card {
+    background-color: rgb(41, 41, 41);
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    border-left-width: 1px;
+    border-right-width: 4px;
+    border-top-width: 1px;
+    border-bottom-width: 4px;
+    margin-left: 14px;
+    margin-right: 14px;
+    margin-top: 0;
+    margin-bottom: 14px;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    flex-grow: 0;
+    align-items: stretch;
+}
+
+.input-text-field {
+    flex-direction: row-reverse;
+    -unity-text-align: upper-left;
+    align-items: center;
+}
+
+.input-card:hover {
+    background-color: rgb(53, 53, 53);
+    border-left-color: rgb(145, 255, 112);
+    border-right-color: rgb(145, 255, 112);
+    border-top-color: rgb(145, 255, 112);
+    border-bottom-color: rgb(145, 255, 112);
+}
+
+.input-card-header-container {
+    align-items: auto;
+    justify-content: flex-end;
+    flex-grow: 1;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    background-color: rgba(0, 0, 0, 0);
+    margin-left: 14px;
+    padding-right: 2px;
+}
+
+.input-card-header {
+    -unity-text-align: upper-left;
+    align-items: auto;
+    background-color: rgb(41, 41, 41);
+    border-left-color: rgb(229, 221, 221);
+    border-right-color: rgb(229, 221, 221);
+    border-top-color: rgb(229, 221, 221);
+    border-bottom-color: rgb(229, 221, 221);
+    border-left-width: 1px;
+    border-right-width: 4px;
+    border-top-width: 1px;
+    border-bottom-width: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: rgb(0, 220, 255);
+    -unity-font-style: normal;
+    -unity-font: resource('UI Builder/TanksMainMenu/Teko-Regular');
+    -unity-font-definition: resource('FontAssets/DynamicOSFontAssets/GlobalFallback/OSX/Helvetica SDF');
+    font-size: 16px;
+    letter-spacing: 6px;
+}
+
+.inactive {
+    display: none;
+}
+
+.done-label {
+    background-image: none;
+    flex-grow: 0;
+    -unity-font-style: normal;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    flex-shrink: 1;
+    border-left-color: rgb(67, 207, 11);
+    border-right-color: rgb(67, 207, 11);
+    border-top-color: rgb(67, 207, 11);
+    border-bottom-color: rgb(67, 207, 11);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    align-items: center;
+    justify-content: center;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    color: rgb(67, 207, 11);
+}
+
+.running-label {
+    background-image: none;
+    flex-grow: 0;
+    width: 46px;
+    height: 46px;
+    align-items: center;
+    justify-content: center;
+}
+
+.message-label {
+    color: rgb(255, 98, 0);
+    display: none;
+}
+
+.header-logo {
+    flex-grow: 1;
+    background-image: url('/Assets/Images/Logo/logo_white_outline.png');
+    align-items: center;
+    flex-shrink: 0;
+    width: 650px;
+    height: 100px;
+    justify-content: center;
+    max-width: none;
+    max-height: none;
+    min-width: auto;
+    min-height: auto;
+}
+
+.main-header {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.option-button {
+    flex-grow: 0;
+    justify-content: flex-start;
+    align-items: stretch;
+    -unity-text-align: middle-center;
+    background-color: rgb(29, 29, 29);
+    border-left-width: 2px;
+    border-right-width: 4px;
+    border-top-width: 2px;
+    border-bottom-width: 6px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-left-color: rgb(125, 125, 125);
+    border-right-color: rgb(125, 125, 125);
+    border-top-color: rgb(125, 125, 125);
+    border-bottom-color: rgb(125, 125, 125);
+    margin-left: 0;
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.image-container {
+    align-items: stretch;
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    flex-grow: 0;
+    background-image: none;
+    justify-content: center;
+    flex-direction: row;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: rgb(0, 0, 0);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.option-card-label {
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    -unity-font-definition: none;
+    -unity-font: resource('UI Builder/TanksMainMenu/Teko-Regular');
+    font-size: 20px;
+    letter-spacing: 0;
+    border-left-color: rgb(255, 255, 255);
+    border-right-color: rgb(255, 255, 255);
+    border-top-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(255, 255, 255);
+    color: rgb(130, 130, 130);
+}
+
+.card-image {
+    background-image: url('/Assets/Images/Logo/scarflogo.png');
+    flex-grow: 1;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: auto;
+    height: auto;
+    background-color: rgb(91, 91, 91);
+    -unity-background-scale-mode: scale-to-fit;
+    -unity-background-image-tint-color: rgb(91, 91, 91);
+}
+
+.card-image:hover {
+    background-color: rgb(255, 255, 255);
+}
+
+.option-button:hover {
+    background-color: rgb(65, 65, 65);
+    border-left-color: rgb(145, 255, 112);
+    border-right-color: rgb(145, 255, 112);
+    border-top-color: rgb(145, 255, 112);
+    border-bottom-color: rgb(145, 255, 112);
+}
+
+.option-button:hover .card-image {
+    background-color: rgb(255, 255, 255);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.sponsor-logo {
+    background-image: none;
+    flex-grow: 0;
+    align-items: center;
+    width: 200px;
+    height: 120px;
+    margin-left: 0;
+    margin-right: 8px;
+    margin-top: 0;
+    margin-bottom: 8px;
+    border-left-color: rgb(58, 58, 58);
+    border-right-color: rgb(58, 58, 58);
+    border-top-color: rgb(58, 58, 58);
+    border-bottom-color: rgb(58, 58, 58);
+    border-left-width: 3px;
+    border-right-width: 3px;
+    border-top-width: 3px;
+    border-bottom-width: 3px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.subheader {
+    font-size: 46px;
+    -unity-font-definition: none;
+    -unity-font: resource('UI Builder/TanksMainMenu/Teko-Regular');
+    -unity-text-align: middle-left;
+    white-space: nowrap;
+    top: auto;
+    color: rgb(255, 255, 255);
+}
+
+.mode-toggle {
+    border-left-width: 0;
+    border-right-width: 20px;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.back-button {
+    background-color: rgb(58, 58, 58);
+    left: 0;
+    top: 0;
+}
+
+.option-button:hover .option-card-label {
+    color: rgb(145, 255, 112);
+}
+
+.gear-icon {
+    left: -23px;
+    top: -23px;
+    flex-shrink: 0;
+    background-image: url('/Assets/Images/Icons/gearicon.png');
+    flex-grow: 0;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}

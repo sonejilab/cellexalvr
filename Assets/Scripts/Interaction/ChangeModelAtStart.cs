@@ -35,7 +35,7 @@ namespace CellexalVR.Interaction
             {
                 yield return new WaitForEndOfFrame();
             }
-            modelSwitcher.SetMeshes();
+            modelSwitcher.TrySetMeshes();
             CellexalEvents.ControllersInitiated.Invoke();
         }
     }

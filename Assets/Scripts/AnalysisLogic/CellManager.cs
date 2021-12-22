@@ -22,7 +22,7 @@ namespace CellexalVR.AnalysisLogic
     {
         #region Properties
 
-        public string[] Attributes { get; set; }
+        public List<string> Attributes { get; set; }
         public string[] Facs { get; set; }
         public string[] Facs_values { get; set; }
 
@@ -151,10 +151,10 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="subSelection">The subselection of cells to select from.</param>
         /// <returns></returns>
         public Cell[] GetCells(int group, Cell[] subSelection)
-         {
-             return subSelection.Where(x => (x.GraphPoints[0].Group == group)).ToArray();
-         }
-                
+        {
+            return subSelection.Where(x => (x.GraphPoints[0].Group == group)).ToArray();
+        }
+
 
         public int GetNumberOfCells()
         {
@@ -163,6 +163,11 @@ namespace CellexalVR.AnalysisLogic
 
         public void HighlightCells(Cell[] cellsToHighlight, bool highlight)
         {
+            foreach (Graph graph in graphManager.Graphs)
+            {
+                graph.MakeAllPointsTransparent(highlight);
+            }
+
             foreach (Cell cell in cellsToHighlight)
             {
                 foreach (Graph.GraphPoint gp in cell.GraphPoints)
@@ -174,6 +179,11 @@ namespace CellexalVR.AnalysisLogic
 
         public void HighlightCells(Cell[] cellsToHighlight, bool highlight, int group)
         {
+            foreach (Graph graph in graphManager.Graphs)
+            {
+                graph.MakeAllPointsTransparent(highlight);
+            }
+
             referenceManager.multiuserMessageSender.SendMessageHighlightCells(group, highlight);
             foreach (Cell cell in cellsToHighlight)
             {
@@ -352,6 +362,11 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
+            if (!referenceManager.sessionHistoryList.Contains(geneName, Definitions.HistoryEvent.GENE))
+            {
+                referenceManager.sessionHistoryList.AddEntry(geneName, Definitions.HistoryEvent.GENE);
+            }
+
             if (triggerEvent)
             {
                 CellexalEvents.GraphsColoredByGene.Invoke();
@@ -422,12 +437,18 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
+            if (!referenceManager.sessionHistoryList.Contains(geneName, Definitions.HistoryEvent.GENE))
+            {
+                referenceManager.sessionHistoryList.AddEntry(geneName, Definitions.HistoryEvent.GENE);
+            }
+
             if (triggerEvent)
             {
                 CellexalEvents.GraphsColoredByGene.Invoke();
             }
 
             CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
+            RScriptRunner.WriteToServer("# colored graphs by " + geneName);
             stopwatch.Stop();
             //print("Time : " + stopwatch.Elapsed.ToString());
             CellexalEvents.CommandFinished.Invoke(true);
@@ -531,7 +552,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="attributeType">The name of the attribute.</param>
         /// <param name="color">True if the graphpoints should be colored to the attribute's color, false if they should be white.</param>
         [ConsoleCommand("cellManager", aliases: new string[] {"colorbyattribute", "cba"})]
-        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false /*, bool two_d = false*/)
+        public void ColorByAttribute(string attributeType, bool color, bool subGraph = false, int colIndex = 0)
         {
             if (!subGraph)
             {
@@ -546,6 +567,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             CellexalLog.Log("Colored graphs by " + attributeType);
+            RScriptRunner.WriteToServer("# colored graphs by " + attributeType);
             int numberOfCells = 0;
             // Dictionary<string, List<Vector3>> pos = new Dictionary<string, List<Vector3>>();
             // foreach (Graph graph in referenceManager.graphManager.Graphs)
@@ -556,7 +578,7 @@ namespace CellexalVR.AnalysisLogic
 
             foreach (Cell cell in cells.Values)
             {
-                cell.ColorByAttribute(attributeType, color);
+                cell.ColorByAttribute(attributeType, colIndex, color);
                 if (cell.GraphPoints.Count == 0) continue;
                 Graph.GraphPoint gp = cell.GraphPoints[0];
                 if (cell.Attributes.ContainsKey(attributeType.ToLower()))
@@ -564,7 +586,7 @@ namespace CellexalVR.AnalysisLogic
                     numberOfCells++;
                     if (color && !selectionList.ContainsKey(gp))
                     {
-                        selectionList.Add(gp, cell.Attributes[attributeType.ToLower()]);
+                        selectionList.Add(gp, colIndex);
                     }
 
                     if (!color)
@@ -579,7 +601,8 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            int attributeIndex = Attributes.IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
+            int attributeIndex = Attributes.IndexOf(attributeType);
+            // int attributeIndex = referenceManager.cellManager.Attributes.ToArray().IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
             Color attributeColor =
                 CellexalConfig.Config.SelectionToolColors[
                     attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
@@ -635,7 +658,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 if (expr.Eval(cell))
                 {
-                    cell.SetGroup(selectionToolCollider.currentColorIndex, true);
+                    cell.SetGroup(selectionToolCollider.CurrentColorIndex, true);
                 }
                 else
                 {
@@ -655,7 +678,15 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="group"> The attribute value </param>
         public void AddAttribute(string cellname, string attributeType, int group)
         {
-            cells[cellname].AddAttribute(attributeType, group);
+            try
+            {
+                cells[cellname].AddAttribute(attributeType, group);
+            }
+            catch (Exception e)
+            {
+                // could not find cell
+                // CellexalLog.Log($"Could not find cell : {cellname}"); // if many points are missing this logging them becomes very laggy...
+            }
         }
 
         internal void AddFacs(string cellName, string facs, float value)
@@ -675,11 +706,13 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("cellManager", aliases: new string[] {"colorbyindex", "cbi"})]
         public void ColorByIndex(string name)
         {
-            if (!previousSearchesList.Contains(name, Definitions.Measurement.FACS,
-                graphManager.GeneExpressionColoringMethod))
-                previousSearchesList.AddEntry(name, Definitions.Measurement.FACS,
-                    graphManager.GeneExpressionColoringMethod);
+            if (!previousSearchesList.Contains(name, Definitions.Measurement.FACS, graphManager.GeneExpressionColoringMethod))
+            {
+                previousSearchesList.AddEntry(name, Definitions.Measurement.FACS, graphManager.GeneExpressionColoringMethod);
+            }
+
             CellexalLog.Log("Colored graphs by " + name);
+            RScriptRunner.WriteToServer("# colored graphs by " + name);
             if (CellexalConfig.Config.GraphMostExpressedMarker)
             {
                 foreach (Graph graph in graphManager.Graphs)
@@ -705,6 +738,11 @@ namespace CellexalVR.AnalysisLogic
                 }
 
                 cell.ColorByGeneExpression(group);
+            }
+
+            if (!referenceManager.sessionHistoryList.Contains(name, Definitions.HistoryEvent.FACS))
+            {
+                referenceManager.sessionHistoryList.AddEntry(name, Definitions.HistoryEvent.FACS);
             }
 
             CellexalEvents.GraphsColoredByIndex.Invoke();
