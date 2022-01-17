@@ -215,13 +215,12 @@ namespace CellexalVR.Interaction
             if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
-                print($"{pos.x}, {pos.y}");
                 if (pos.x > 0.5f)
                 {
                     ChangeColor(true);
                 }
 
-                else if (pos.x < 0.5f)
+                else if (pos.x < -0.5f)
                 {
                     ChangeColor(false);
                 }
@@ -231,7 +230,7 @@ namespace CellexalVR.Interaction
                     controllerModelSwitcher.SwitchSelectionToolMesh(true);
                 }
 
-                else if (pos.y < 0.5f)
+                else if (pos.y < -0.5f)
                 {
                     controllerModelSwitcher.SwitchSelectionToolMesh(false);
                 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CellexalVR.General;
+using UnityEngine;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -12,7 +13,7 @@ namespace CellexalVR.AnalysisObjects
 
         void Start()
         {
-            CameraToLookAt = GameObject.Find("Main Camera").transform;
+            CameraToLookAt = ReferenceManager.instance.headset.transform;
         }
 
         void Update()

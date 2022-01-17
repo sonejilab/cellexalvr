@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using DG.Tweening;
 using TMPro;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.Spatial
 {
@@ -16,14 +17,14 @@ namespace CellexalVR.Spatial
     public class GeoMXImageHandler : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        public struct Cell
+        public struct GeoMxCell
         {
             public int id;
             public string AOIImageID;
             public string ROIImageID;
             public string ScanImageID;
 
-            public Cell(int id, string AOIImageID, string ROIImageID, string ScanImageID)
+            public GeoMxCell(int id, string AOIImageID, string ROIImageID, string ScanImageID)
             {
                 this.id = id;
                 this.AOIImageID = AOIImageID;
@@ -49,7 +50,8 @@ namespace CellexalVR.Spatial
         [SerializeField] private GeoMXROISlide roiPrefab;
         [SerializeField] private GeoMXAOISlide aoiPrefab;
         [SerializeField] private TextMeshPro textMesh;
-        private Dictionary<int, Cell> _cells = new Dictionary<int, Cell>();
+        private Dictionary<int, GeoMxCell> _cells = new Dictionary<int, GeoMxCell>();
+        private List<Cell> cellsToHighlight = new List<Cell>();
 
         private void Start()
         {
@@ -96,7 +98,7 @@ namespace CellexalVR.Spatial
                         scanDict[ScanImageID] = new HashSet<string>();
                     }
                     scanDict[ScanImageID].Add(ROIImageID);
-                    _cells[cellID] = new Cell(cellID, AOIImageID, ROIImageID, ScanImageID);
+                    _cells[cellID] = new GeoMxCell(cellID, AOIImageID, ROIImageID, ScanImageID);
                 }
             }
             SpawnAllScanImages();
@@ -299,12 +301,22 @@ namespace CellexalVR.Spatial
             slideScroller.currentType = 1;
         }
 
-        public IEnumerator SpawnROIImagesFromCells(Cell[] cells)
+        public IEnumerator SpawnROIImagesFromCells(GeoMxCell[] cells)
         {
+            foreach (GeoMXScanSlide scan in scanSlides.Values)
+            {
+                scan.gameObject.SetActive(false);
+            }
+            foreach (GeoMXROISlide roi in roiSlides.Values)
+            {
+                Destroy(roi.gameObject);
+            }
+            roiSlides.Clear();
             CellexalEvents.LoadingImages.Invoke();
             HashSet<string> uniqueImages = new HashSet<string>();
+            List<string> roiIDs = new List<string>();
             int i = 0;
-            foreach (Cell c in cells)
+            foreach (GeoMxCell c in cells)
             {
                 string path = $"{imagePath}\\{c.ScanImageID}\\{c.ROIImageID} - Segments.png";
                 if (!File.Exists(path))
@@ -330,6 +342,7 @@ namespace CellexalVR.Spatial
                         GeoMXROISlide roi = Instantiate(roiPrefab, transform);
                         roi.scanID = c.ScanImageID;
                         roi.roiID = c.ROIImageID;
+                        roiIDs.Add(roi.roiID);
                         roi.aoiIDs = roiDict[roi.roiID].ToArray();
                         roi.imageHandler = this;
                         Texture2D roiTexture = DownloadHandlerTexture.GetContent(uwr);
@@ -347,6 +360,7 @@ namespace CellexalVR.Spatial
                         }
                         float ratio = (float)roiTexture.width / (float)roiTexture.height;
                         roi.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
+                        roi.originalScale = roi.transform.localScale;
                         roiSlides[c.ROIImageID] = roi;
                         roi.type = 1;
                         uniqueImages.Add(path);
@@ -356,6 +370,8 @@ namespace CellexalVR.Spatial
                 slideScroller.currentSlides = roiSlides;
                 slideScroller.currentSlide[1] = 0;
                 slideScroller.currentType = 1;
+                slideScroller.currentIDs = roiIDs.ToArray();
+                slideScroller.currentROIIDs = roiIDs.ToArray();
                 CellexalEvents.ImagesLoaded.Invoke();
             }
         }
@@ -370,7 +386,7 @@ namespace CellexalVR.Spatial
             {
                 UnSelectScan(selectedScan.scanID);
             }
-            Cell[] cells = referenceManager.selectionManager.GetCurrentSelection().Select(x => _cells[int.Parse(x.Label)]).ToArray();
+            GeoMxCell[] cells = referenceManager.selectionManager.GetLastSelection().Select(x => _cells[int.Parse(x.Label)]).ToArray();
 
             StartCoroutine(SpawnROIImagesFromCells(cells));
             return;
@@ -391,7 +407,7 @@ namespace CellexalVR.Spatial
         {
             if (scanIDs.Length == 0)
             {
-                Cell c = _cells[0];
+                GeoMxCell c = _cells[0];
                 scanIDs = new string[1] { c.ScanImageID };
             }
             CellexalEvents.LoadingImages.Invoke();
@@ -419,10 +435,8 @@ namespace CellexalVR.Spatial
                             scan.rois = scanDict[scanIDs[i]].ToArray();
                             scan.imageHandler = this;
                             scan.transform.localPosition = new Vector3(0, 0, radius);
-                            //Vector3 center = new Vector3(0, scan.transform.localPosition.y, 0);
                             scan.transform.LookAt(2 * scan.transform.position - center);
                             Texture2D scanTexture = DownloadHandlerTexture.GetContent(uwr);
-                            //scanTexture.LoadImage(File.ReadAllBytes(path));
                             scan.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", scanTexture);
                             float ratio = (float)scanTexture.width / (float)scanTexture.height;
                             scan.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
@@ -458,9 +472,9 @@ namespace CellexalVR.Spatial
             slideScroller.currentType = 0;
         }
 
-        private Cell GetCellFromAoiID(string aoiID)
+        private GeoMxCell GetCellFromAoiID(string aoiID)
         {
-            KeyValuePair<int, Cell>[] target = _cells.Where(c => c.Value.AOIImageID == aoiID).ToArray();
+            KeyValuePair<int, GeoMxCell>[] target = _cells.Where(c => c.Value.AOIImageID == aoiID).ToArray();
             return target[0].Value;
         }
 
@@ -494,6 +508,23 @@ namespace CellexalVR.Spatial
                 slideScroller.currentType = 2;
                 slideScroller.currentIDs = slideScroller.currentAOIIDs;
             }
+        }
+
+        public void HighlightCells(string roiID)
+        {
+            HashSet<string> aoiIDs = roiDict[roiID];
+            foreach(string aoi in aoiIDs)
+            {
+                Cell c = referenceManager.cellManager.GetCell(GetCellFromAoiID(aoi).id.ToString());
+                cellsToHighlight.Add(c);
+            }
+            referenceManager.cellManager.HighlightCells(cellsToHighlight.ToArray(), true);
+        }
+
+        public void ResetHighlightedCells()
+        {
+            referenceManager.cellManager.HighlightCells(cellsToHighlight.ToArray(), false);
+            cellsToHighlight.Clear();
         }
     }
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using CellexalVR.AnalysisLogic;
+using System.IO;
 
 namespace CellexalVR.Interaction
 {
@@ -74,7 +75,7 @@ namespace CellexalVR.Interaction
             {
                 results = ScarfManager.scarfObject.feature_names.ToArray();
             }
-            else
+            else if (File.Exists($"{CellexalUser.UserSpecificFolder}/{CellexalUser.DataSourceFolder}/database.sqlite"))
             {
                 SQLiter.SQLite database = referenceManager.database;
                 //yield return new WaitForSeconds(2);
@@ -90,34 +91,34 @@ namespace CellexalVR.Interaction
                 }
                 //summertwerk
                 results = (string[])database._result.ToArray(typeof(string));
-            }
-            for (int i = 0; i < results.Length; ++i)
-            {
-                string name = (string)results[i];
-                if (name.Length > longestNameLength)
+                for (int i = 0; i < results.Length; ++i)
                 {
-                    longestNameLength = name.Length;
+                    string name = (string)results[i];
+                    if (name.Length > longestNameLength)
+                    {
+                        longestNameLength = name.Length;
+                    }
+                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(name, Definitions.Measurement.GENE));
                 }
-                namesOfThings.Add(new Tuple<string, Definitions.Measurement>(name, Definitions.Measurement.GENE));
             }
 
             // TODO: Make color by attr work from keyboard(?)
-            // string[] attributes = referenceManager.cellManager.Attributes;
-            // try
-            // {
-            //     foreach (string attribute in attributes)
-            //     {
-            //         namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
-            //         if (attribute.Length > longestNameLength)
-            //         {
-            //             longestNameLength = attribute.Length;
-            //         }
-            //     }
-            // }
-            // catch (Exception e)
-            // {
-            //     CellexalLog.Log("Could not read attributes. Caught error - " + e.StackTrace);
-            // }
+            string[] attributes = referenceManager.cellManager.Attributes.ToArray();
+            try
+            {
+                foreach (string attribute in attributes)
+                {
+                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
+                    if (attribute.Length > longestNameLength)
+                    {
+                        longestNameLength = attribute.Length;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                CellexalLog.Log("Could not read attributes. Caught error - " + e.StackTrace);
+            }
 
             string[] facs = referenceManager.cellManager.Facs;
             try
@@ -141,7 +142,7 @@ namespace CellexalVR.Interaction
             {
                 foreach (string n in numericalAttributes)
                 {
-                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(n, Definitions.Measurement.FACS));
+                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(n, Definitions.Measurement.NUM));
                     if (n.Length > longestNameLength)
                     {
                         longestNameLength = n.Length;

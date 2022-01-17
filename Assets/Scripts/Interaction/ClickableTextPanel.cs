@@ -34,7 +34,6 @@ namespace CellexalVR.Interaction
         /// </summary>
         public GraphManager.GeneExpressionColoringMethods ColoringMethod { get; set; }
 
-
         private KeyboardHandler parentKeyboard;
 
         protected override void Start()
@@ -78,7 +77,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
-            parentKeyboard.SetAllOutputs(NameOfThing);
+            parentKeyboard.SetAllOutputs(NameOfThing, Type);
             parentKeyboard.SubmitOutput(true);
             referenceManager.geneKeyboard.Clear();
             referenceManager.autoCompleteList.ClearList();

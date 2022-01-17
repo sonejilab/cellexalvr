@@ -89,9 +89,10 @@ namespace CellexalVR.General
         /// <param name="pointsToAnnotate">The points to annotate.</param>
         public void AddAnnotation(string annotation, List<Cell> cellsToAnnotate, string path = "")
         {
-            foreach (Cell cells in cellsToAnnotate)
+            foreach (Cell cell in cellsToAnnotate)
             {
-                annotatedPoints.Add(new Tuple<string, string>(cells.Label, annotation));
+                annotatedPoints.Add(new Tuple<string, string>(cell.Label, annotation));
+                selectionManager.AddGraphpointToSelection(graphManager.Graphs[0].FindGraphPoint(cell.Label));
             }
 
             List<GameObject> annotationTexts = new List<GameObject>();
@@ -103,8 +104,6 @@ namespace CellexalVR.General
                 textPanel.referenceManager = referenceManager;
                 textPanel.SetCells(cellsToAnnotate);
                 annotationText.gameObject.name = annotation;
-                Vector3 position = graph.FindGraphPoint(cellsToAnnotate[0].Label).Position;
-                annotationText.transform.localPosition = position;
                 annotationText.GetComponentInChildren<TextMeshPro>().text = annotation;
                 annotationTexts.Add(annotationText);
             }

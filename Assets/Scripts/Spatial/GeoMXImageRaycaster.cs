@@ -11,6 +11,7 @@ namespace CellexalVR.Spatial
     {
         private GeoMXImageHandler imageHandler;
         private bool block;
+        private GeoMXSlide currentSlideHit;
 
         private void Start()
         {
@@ -53,15 +54,23 @@ namespace CellexalVR.Spatial
                 if (slide != null)
                 {
                     slide.ShowName();
+                    if (currentSlideHit == slide)
+                        return;
+                    slide.OnRaycastHit();
+                    currentSlideHit = slide;
                 }
                 else
                 {
                     imageHandler.ResetDisplayName();
+                    imageHandler.ResetHighlightedCells();
+                    currentSlideHit = null;
                 }
             }
             else
             {
+                imageHandler.ResetHighlightedCells();
                 imageHandler.ResetDisplayName();
+                currentSlideHit = null;
             }
         }
     }

@@ -76,6 +76,7 @@ namespace CellexalVR.DesktopUI
         {
             var root = GetComponent<UIDocument>().rootVisualElement;
 
+
             openFileWindowButton = root.Q<Button>("choose-file-button");
             openDirWindowButton = root.Q<Button>("choose-dir-button");
             convertButton = root.Q<Button>("convert-button");

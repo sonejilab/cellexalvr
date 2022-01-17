@@ -802,6 +802,7 @@ namespace CellexalVR.AnalysisLogic
             /// <param name="result">A reference to a list where the results should be put.</param>
             /// <param name="onlyPercent">True if only attributes that are not yet converted from percent to absolute values should be returned, false otherwise.</param>
             public abstract void GetAttributes(ref List<string> result);
+            public abstract void GetNumericalAttributes(ref List<string> result);
             public abstract void GetGroups(ref List<int> result);
 
             /// <summary>
@@ -867,6 +868,7 @@ namespace CellexalVR.AnalysisLogic
             public override void GetFacs(ref List<string> result, bool onlyPercent = false) { }
 
             public override void GetAttributes(ref List<string> result) { }
+            public override void GetNumericalAttributes(ref List<string> result) { }
 
             public override string ToString()
             {
@@ -935,7 +937,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             public override void GetAttributes(ref List<string> result) { }
-
+            public override void GetNumericalAttributes(ref List<string> result) { }
             public override string ToString()
             {
                 return "facs:" + facs + " " + OpToString(compare) + " " + value + (percent ? "%" : "");
@@ -960,6 +962,7 @@ namespace CellexalVR.AnalysisLogic
 
             public override void SetFilterManager(FilterManager filterManager) { }
         }
+
 
         public class SelectionGroupExpr : ComparerExpr
         {
@@ -993,6 +996,7 @@ namespace CellexalVR.AnalysisLogic
             public override void SetFilterManager(FilterManager filterManager) { }
 
             public override void GetAttributes(ref List<string> result) { }
+            public override void GetNumericalAttributes(ref List<string> result) { }
 
             public override void GetGroups(ref List<int> result)
             {
@@ -1001,6 +1005,7 @@ namespace CellexalVR.AnalysisLogic
                     result.Add(group);
                 }
             }
+
         }
 
 
@@ -1034,6 +1039,7 @@ namespace CellexalVR.AnalysisLogic
                     result.Add(attribute);
                 }
             }
+            public override void GetNumericalAttributes(ref List<string> result) { }
             public override void GetGroups(ref List<int> result) { }
 
             public override string ToString()
@@ -1079,6 +1085,11 @@ namespace CellexalVR.AnalysisLogic
                 subExpr1.GetAttributes(ref result);
                 subExpr2.GetAttributes(ref result);
             }
+            public override void GetNumericalAttributes(ref List<string> result)
+            {
+                subExpr1.GetNumericalAttributes(ref result);
+                subExpr2.GetNumericalAttributes(ref result);
+            }
 
             public override void GetGroups(ref List<int> result)
             {
@@ -1101,6 +1112,7 @@ namespace CellexalVR.AnalysisLogic
                 subExpr1.SetFilterManager(filterManager);
                 subExpr2.SetFilterManager(filterManager);
             }
+
         }
 
         public class OrExpr : Expr
@@ -1136,6 +1148,11 @@ namespace CellexalVR.AnalysisLogic
                 subExpr1.GetAttributes(ref result);
                 subExpr2.GetAttributes(ref result);
             }
+            public override void GetNumericalAttributes(ref List<string> result)
+            {
+                subExpr1.GetNumericalAttributes(ref result);
+                subExpr2.GetNumericalAttributes(ref result);
+            }
 
             public override void GetGroups(ref List<int> result)
             {
@@ -1159,6 +1176,7 @@ namespace CellexalVR.AnalysisLogic
                 subExpr1.SetFilterManager(filterManager);
                 subExpr2.SetFilterManager(filterManager);
             }
+
         }
 
 
@@ -1194,6 +1212,12 @@ namespace CellexalVR.AnalysisLogic
             {
                 subExpr1.GetAttributes(ref result);
                 subExpr2.GetAttributes(ref result);
+            }
+
+            public override void GetNumericalAttributes(ref List<string> result)
+            {
+                subExpr1.GetNumericalAttributes(ref result);
+                subExpr2.GetNumericalAttributes(ref result);
             }
 
             public override void GetGroups(ref List<int> result)
@@ -1248,6 +1272,11 @@ namespace CellexalVR.AnalysisLogic
             public override void GetAttributes(ref List<string> result)
             {
                 subExpr.GetAttributes(ref result);
+            }
+
+            public override void GetNumericalAttributes(ref List<string> result)
+            {
+                subExpr.GetNumericalAttributes(ref result);
             }
 
             public override void GetGroups(ref List<int> result)

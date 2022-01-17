@@ -63,7 +63,7 @@ namespace CellexalVR.Filters
         public List<string> GetNumericalAttributes()
         {
             List<string> result = new List<string>();
-            Expression.GetAttributes(ref result);
+            Expression.GetNumericalAttributes(ref result);
             return result;
         }
 

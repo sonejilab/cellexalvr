@@ -23,10 +23,6 @@ namespace CellexalVR.Spatial
         private XRGrabInteractable interactable;
         private float yPos;
 
-        private void Raycast()
-        {
-
-        }
 
         private void Start()
         {
@@ -55,6 +51,7 @@ namespace CellexalVR.Spatial
         }
 
         public abstract void Select();
+        public virtual void OnRaycastHit() { }
 
         public virtual void Highlight()
         {

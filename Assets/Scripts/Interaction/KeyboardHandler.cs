@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
+using CellexalVR.Extensions;
 #if UNITY_EDITOR
 using System.Reflection;
 
@@ -206,8 +207,8 @@ namespace CellexalVR.Interaction
             public int Compare(KeyboardItem a, KeyboardItem b)
             {
                 return a.position.y == b.position.y
-                    ? (int) (a.position.x - b.position.x)
-                    : (int) (b.position.y - a.position.y);
+                    ? (int)(a.position.x - b.position.x)
+                    : (int)(b.position.y - a.position.y);
             }
         }
 
@@ -383,6 +384,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void SubmitOutput(bool invoke = true)
         {
+            string temp = "";
             foreach (var o in additionalOutputs)
             {
                 o.text = output.text;
@@ -392,6 +394,7 @@ namespace CellexalVR.Interaction
             {
                 OnEnter.Invoke(Text());
             }
+
 
             //referenceManager.cellManager.ColorGraphsByGene(output.text);
             //referenceManager.previousSearchesList.AddEntry(output.text, Extensions.Definitions.Measurement.GENE, referenceManager.graphManager.GeneExpressionColoringMethod);
@@ -426,11 +429,16 @@ namespace CellexalVR.Interaction
             gameObject.SetActive(false);
         }
 
+        public void SetAllOutputs(string text)
+        {
+            SetAllOutputs(text, Definitions.Measurement.GENE);
+        }
+
         /// <summary>
         /// Sets all outputs to a text.
         /// </summary>
         /// <param name="text">The text to set all outputs to</param>
-        public void SetAllOutputs(string text)
+        public void SetAllOutputs(string text, Definitions.Measurement type)
         {
             if (text == "")
             {
@@ -442,10 +450,22 @@ namespace CellexalVR.Interaction
                 displayingPlaceHolder = false;
             }
 
-            output.text = text;
             foreach (var o in additionalOutputs)
             {
                 o.text = text;
+            }
+
+            if (type == Definitions.Measurement.FACS)
+            {
+                output.text = $"FACS {text}";
+            }
+            else if (type == Definitions.Measurement.NUM)
+            {
+                output.text = $"NUM {text}";
+            }
+            else
+            {
+                output.text = text;
             }
         }
 
@@ -571,7 +591,7 @@ namespace CellexalVR.Interaction
             }
             else
             {
-                foreach (var asset in UnityEditor.AssetDatabase.FindAssets("", new string[] {keyboardMeshesFolder}))
+                foreach (var asset in UnityEditor.AssetDatabase.FindAssets("", new string[] { keyboardMeshesFolder }))
                 {
                     UnityEditor.AssetDatabase.DeleteAsset(UnityEditor.AssetDatabase.GUIDToAssetPath(asset));
                 }
@@ -691,7 +711,7 @@ namespace CellexalVR.Interaction
             float b = 0.1f, t = 0.1f;
             float uvl = l / 2f, uvr = r / 2f;
             float uvb = b / 2f, uvt = t / 2f;
-            int xSegments = (int) size.x;
+            int xSegments = (int)size.x;
             float maxXCoord = size.x / 2f;
             float minXCoord = -maxXCoord;
             float adjHeight = height / keyboardSize.y;

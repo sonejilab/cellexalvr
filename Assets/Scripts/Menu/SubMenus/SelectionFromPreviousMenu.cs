@@ -77,6 +77,7 @@ namespace CellexalVR.Menu.SubMenus
                 button.Path = file;
                 string[] words = file.Split('\\');
                 button.buttonDescription.text = words[words.Length - 1];
+
                 // selectionButtons.Add(buttonGameObject);
                 if ((i + 1) % 4 == 0)
                 {

@@ -16,7 +16,8 @@ namespace CellexalVR.Extensions
             INVALID,
             GENE,
             ATTRIBUTE,
-            FACS
+            FACS,
+            NUM
         }
 
         public enum HistoryEvent

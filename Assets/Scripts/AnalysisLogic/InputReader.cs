@@ -190,7 +190,7 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-            database.InitDatabase(fullPath + "\\database.sqlite");
+            //database.InitDatabase(fullPath + "\\database.sqlite");
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
 

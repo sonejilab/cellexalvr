@@ -384,35 +384,43 @@ namespace CellexalVR.Filters
         {
             // check that genes exists
             string[] genes = filter.GetGenes().ToArray();
-            Array.ForEach(genes, (s) => s.ToLower());
-            SQLiter.SQLite database = referenceManager.database;
-            while (database.QueryRunning)
-            {
-                yield return null;
-            }
-            database.QueryGenesIds(genes);
-            while (database.QueryRunning)
-            {
-                yield return null;
-            }
-            foreach (Tuple<string, string> geneId in database._result)
-            {
-                if (!genes.Contains(geneId.Item1.ToLower()))
-                {
-                    resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
-                    filterPreviewText.text = "FILTER ERROR: Gene " + geneId.Item1 + " not found";
-                    currentFilter = null;
-                    yield break;
-                }
-            }
+            //Array.ForEach(genes, (s) => s.ToLower());
+            //SQLiter.SQLite database = referenceManager.database;
+            //while (database.QueryRunning)
+            //{
+            //    yield return null;
+            //}
+            //database.QueryGenesIds(genes);
+            //while (database.QueryRunning)
+            //{
+            //    yield return null;
+            //}
+            //foreach (Tuple<string, string> geneId in database._result)
+            //{
+            //    if (!genes.Contains(geneId.Item1.ToLower()))
+            //    {
+            //        resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
+            //        filterPreviewText.text = "FILTER ERROR: Gene " + geneId.Item1 + " not found";
+            //        currentFilter = null;
+            //        yield break;
+            //    }
+            //}
 
             // check that facs exists
             CellManager cellManager = referenceManager.cellManager;
             List<string> facsList = filter.GetFacs();
+            string fac = facsList[0];
+
+            foreach (string a in cellManager.FacsRanges.Keys)
+            {
+                print($"in manager {fac}, {a} {a.Equals(fac)}, {a.Equals(fac, StringComparison.OrdinalIgnoreCase)}");
+
+            }
             foreach (string facs in facsList)
             {
                 if (!cellManager.FacsRanges.ContainsKey(facs))
                 {
+                    print("invalid FACS");
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Facs " + facs + " not found";
                     currentFilter = null;
@@ -422,10 +430,18 @@ namespace CellexalVR.Filters
 
             // check attributes
             List<string> attributes = filter.GetAttributes();
+            string attr = attributes[0];
+            foreach (string a in cellManager.Attributes)
+            {
+                print($"in manager {a} {a.Equals(attr)}, {a.Equals(attr, StringComparison.OrdinalIgnoreCase)}");
+                
+            }
             foreach (string attribute in attributes)
             {
-                if (!cellManager.Attributes.Contains(attribute, StringComparer.OrdinalIgnoreCase))
+                print($"filter {attribute}");
+                if (!cellManager.Attributes.Contains(attribute, StringComparer.CurrentCultureIgnoreCase))
                 {
+                    print("invalid");
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Attribute " + attribute + " not found";
                     currentFilter = null;
@@ -435,10 +451,15 @@ namespace CellexalVR.Filters
 
             // check numerical attributes
             List<string> numericalAttributes = filter.GetNumericalAttributes();
+            foreach (string numAttr in numericalAttributes)
+            {
+                print($"num attr : {numAttr}");
+            }
             foreach (string attribute in numericalAttributes)
             {
                 if (!cellManager.NumericalAttributes.Contains(attribute, StringComparer.OrdinalIgnoreCase))
                 {
+                    print($"invalid NUm");
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Attribute " + attribute + " not found";
                     currentFilter = null;

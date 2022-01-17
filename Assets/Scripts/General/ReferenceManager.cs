@@ -250,7 +250,7 @@ namespace CellexalVR.General
             cellManager = managersParent.GetComponentInChildren<CellManager>();
             lineBundler = managersParent.GetComponentInChildren<LineBundler>();
             selectionManager = managersParent.GetComponentInChildren<SelectionManager>();
-            annotationManager = managersParent.GetComponentInChildren<AnnotationManager>();
+            annotationManager = keyboardSwitch.GetComponent<AnnotationManager>();
             heatmapGenerator = generatorsParent.GetComponentInChildren<HeatmapGenerator>();
             networkGenerator = generatorsParent.GetComponentInChildren<NetworkGenerator>();
             graphGenerator = generatorsParent.GetComponentInChildren<GraphGenerator>();

@@ -100,8 +100,22 @@ namespace CellexalVR.Interaction
 
         public void GeneKeyboardEnterEvent(string geneName)
         {
-            referenceManager.cellManager.ColorGraphsByGene(geneName);
-            referenceManager.multiuserMessageSender.SendMessageColorGraphsByGene(geneName);
+            if (geneName.Contains("FACS"))
+            {
+                string facsName = geneName.Split(' ')[1];
+                referenceManager.cellManager.ColorByIndex(facsName);
+                referenceManager.multiuserMessageSender.SendMessageColorByIndex(facsName);
+            }
+            else if (geneName.Contains("NUM"))
+            {
+                string numName = geneName.Split(' ')[1];
+                referenceManager.cellManager.ColorByNumericalAttribute(numName);
+            }
+            else
+            {
+                referenceManager.cellManager.ColorGraphsByGene(geneName);
+                referenceManager.multiuserMessageSender.SendMessageColorGraphsByGene(geneName);
+            }
         }
 
         public void GeneKeyboardEditEvent(string s)

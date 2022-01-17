@@ -48,6 +48,11 @@ namespace CellexalVR.Spatial
             }
             Move(targetPos);
         }
+
+        public override void OnRaycastHit()
+        {
+            imageHandler.HighlightCells(roiID);
+        }
     }
 
 #if UNITY_EDITOR

@@ -11,12 +11,9 @@ namespace CellexalVR.Interaction
     {
         public TMPro.TextMeshPro text;
 
-        private AnnotationManager annotationManager;
-
         protected override void Start()
         {
             base.Start();
-            annotationManager = referenceManager.annotationManager;
         }
 
 
@@ -27,7 +24,7 @@ namespace CellexalVR.Interaction
         public override void Click()
         {
             referenceManager.multiuserMessageSender.SendMessageExportAnnotations();
-            annotationManager.DumpAnnotatedSelectionToTextFile();
+            referenceManager.annotationManager.DumpAnnotatedSelectionToTextFile();
         }
     }
 }
