@@ -10,12 +10,15 @@ using UnityEngine.Networking;
 using DG.Tweening;
 using TMPro;
 using CellexalVR.AnalysisLogic;
+using static CellexalVR.AnalysisObjects.Graph;
 
 namespace CellexalVR.Spatial
 {
 
     public class GeoMXImageHandler : MonoBehaviour
     {
+        public static GeoMXImageHandler instance;
+
         public ReferenceManager referenceManager;
         public struct GeoMxCell
         {
@@ -32,6 +35,7 @@ namespace CellexalVR.Spatial
                 this.ScanImageID = ScanImageID;
             }
         }
+        public static string imagePath;
         public Vector3 center;
         [HideInInspector] public SlideScroller slideScroller;
         [HideInInspector] public Vector3[] sliceCirclePositions = new Vector3[6];
@@ -40,7 +44,6 @@ namespace CellexalVR.Spatial
         [HideInInspector] public Dictionary<string, GeoMXSlide> roiSlides = new Dictionary<string, GeoMXSlide>();
         [HideInInspector] public GeoMXScanSlide selectedScan;
         [HideInInspector] public GeoMXROISlide selectedROI;
-        private string imagePath;
         private Dictionary<string, GeoMXSlide> aoiSlides = new Dictionary<string, GeoMXSlide>();
         private Dictionary<string, GeoMXSlide> scanSlides = new Dictionary<string, GeoMXSlide>();
         private Dictionary<string, HashSet<string>> scanDict = new Dictionary<string, HashSet<string>>();
@@ -48,19 +51,27 @@ namespace CellexalVR.Spatial
         [SerializeField] private float radius;
         [SerializeField] private GeoMXScanSlide scanPrefab;
         [SerializeField] private GeoMXROISlide roiPrefab;
-        [SerializeField] private GeoMXAOISlide aoiPrefab;
+        public GeoMXAOISlide aoiPrefab;
+        [SerializeField] private GeoMXSlideStack slideStackPrefab;
         [SerializeField] private TextMeshPro textMesh;
         private Dictionary<int, GeoMxCell> _cells = new Dictionary<int, GeoMxCell>();
         private List<Cell> cellsToHighlight = new List<Cell>();
+        private Dictionary<int, GeoMXSlideStack> stacks = new Dictionary<int, GeoMXSlideStack>();
+
+
+        private void Awake()
+        {
+            instance = this;
+        }    
 
         private void Start()
         {
-            double angleStep = (-1f * Mathf.PI) / (float)(7);
+            double angleStep = (-1.2f * Mathf.PI) / (float)(7);
             double angle;
             inactivePosLeft = new Vector3(Mathf.Cos(-Mathf.PI) * radius, 1.1f, Mathf.Sin(-Mathf.PI) * radius);
             for (int i = 0; i < 6; i++)
             {
-                angle = -Mathf.PI + angleStep + (float)i * angleStep;
+                angle = -0.7f * Mathf.PI + angleStep + (float)i * angleStep;
                 Vector3 pos = new Vector3(Mathf.Cos((float)angle) * radius, 1.1f, Mathf.Sin((float)angle) * radius);
                 sliceCirclePositions[i] = pos;
             }
@@ -71,6 +82,7 @@ namespace CellexalVR.Spatial
 
             CellexalEvents.GraphsLoaded.AddListener(ReadData);
             CellexalEvents.SelectionConfirmed.AddListener(SpawnROIFromSelection);
+            CellexalEvents.GraphsReset.AddListener(Reset);
         }
 
         public void ReadData()
@@ -109,18 +121,32 @@ namespace CellexalVR.Spatial
             referenceManager.cellManager.ColorByNumericalAttribute(attribute);
         }
 
-        private void UnSelectScan(string scanID)
+        public void UnSelectScan(string scanID, bool moveBack = false)
         {
             GeoMXScanSlide slide = scanSlides[scanID].GetComponent<GeoMXScanSlide>();
             slide.UnHighlight();
             string[] roiIDs = slide.rois;
+            if (selectedROI != null)
+            {
+                UnSelectROI(selectedROI.roiID);
+            }
             foreach (string roiID in roiIDs)
             {
                 Destroy(roiSlides[roiID].gameObject);
             }
+            if (moveBack)
+            {
+                foreach (KeyValuePair<string, GeoMXSlide> kvp in scanSlides)
+                {
+                    Vector3 targetPos = kvp.Value.transform.localPosition;
+                    targetPos.y = 1.1f;
+                    kvp.Value.Move(targetPos);
+                }
+            }
             roiSlides.Clear();
+            selectedScan = null;
         }
-        private void UnSelectROI(string roiID)
+        public void UnSelectROI(string roiID, bool moveBack = false)
         {
             GeoMXROISlide slide = roiSlides[roiID].GetComponent<GeoMXROISlide>();
             slide.UnHighlight();
@@ -129,6 +155,22 @@ namespace CellexalVR.Spatial
             {
                 Destroy(aoiSlides[aoiID].gameObject);
             }
+            if (moveBack)
+            {
+                foreach (KeyValuePair<string, GeoMXSlide> kvp in roiSlides)
+                {
+                    Vector3 targetPos = kvp.Value.transform.localPosition;
+                    targetPos.y = 1.1f;
+                    kvp.Value.Move(targetPos);
+                }
+                foreach (KeyValuePair<string, GeoMXSlide> kvp in scanSlides)
+                {
+                    Vector3 targetPos = kvp.Value.transform.localPosition;
+                    targetPos.y = 2.2f;
+                    kvp.Value.Move(targetPos);
+                }
+            }
+            selectedROI = null;
         }
         public void SpawnAOIImages(string scanID, string[] aoiIDs, string roiID)
         {
@@ -179,15 +221,14 @@ namespace CellexalVR.Spatial
                             if (i < 6)
                             {
                                 aoi.transform.localPosition = sliceCirclePositions[i];
-                                //Vector3 center = new Vector3(0, aoi.transform.localPosition.y, 0);
                                 aoi.transform.LookAt(2 * aoi.transform.position - center);
                             }
-
                             else
                             {
                                 aoi.transform.localPosition = inactivePosRight;
                                 aoi.gameObject.SetActive(false);
                             }
+
                             aoiSlides[aoiIDs[i]] = aoi;
                             aoi.index = i;
                             aoi.displayName = aoiIDs[i];
@@ -207,6 +248,7 @@ namespace CellexalVR.Spatial
             slideScroller.currentType = 2;
 
         }
+
 
         public void SpawnROIImages(string scanID, string[] roiIDs)
         {
@@ -301,7 +343,54 @@ namespace CellexalVR.Spatial
             slideScroller.currentType = 1;
         }
 
-        public IEnumerator SpawnROIImagesFromCells(GeoMxCell[] cells)
+
+        public void SpawnROIFromSelection()
+        {
+            if (selectedROI != null)
+            {
+                UnSelectROI(selectedROI.roiID);
+            }
+            if (selectedScan != null)
+            {
+                UnSelectScan(selectedScan.scanID);
+            }
+            List<GraphPoint> gps = referenceManager.selectionManager.GetLastSelection();
+
+            StartCoroutine(SpawnROIImagesFromGraphPoints(gps));
+            return;
+
+        }
+
+
+        private void Reset()
+        {
+            ClearSlideStacks();
+            int i = 0;
+            foreach(KeyValuePair<string, GeoMXSlide> kvp in scanSlides)
+            {
+                if (++i > 6)
+                    break;
+                kvp.Value.gameObject.SetActive(true);
+            }
+            slideScroller.currentIDs = scanSlides.Keys.ToArray();
+            slideScroller.currentSlides = scanSlides;
+            slideScroller.currentScanIDs = scanSlides.Keys.ToArray();
+            slideScroller.currentSlide[0] = 0;
+            slideScroller.currentType = 0;
+        }
+
+        private void ClearSlideStacks()
+        {
+            foreach (KeyValuePair<int, GeoMXSlideStack> kvp in stacks)
+            {
+                Destroy(kvp.Value.gameObject);
+            }
+            stacks.Clear();
+            roiSlides.Clear();
+            aoiSlides.Clear();
+        }
+
+        public IEnumerator SpawnROIImagesFromGraphPoints(List<GraphPoint> gps)
         {
             foreach (GeoMXScanSlide scan in scanSlides.Values)
             {
@@ -315,10 +404,22 @@ namespace CellexalVR.Spatial
             CellexalEvents.LoadingImages.Invoke();
             HashSet<string> uniqueImages = new HashSet<string>();
             List<string> roiIDs = new List<string>();
-            int i = 0;
-            foreach (GeoMxCell c in cells)
+            int[] groups = gps.Select(x => x.Group).Distinct().ToArray();
+            ClearSlideStacks();
+            int n = 0;
+            foreach (int group in groups)
             {
-                string path = $"{imagePath}\\{c.ScanImageID}\\{c.ROIImageID} - Segments.png";
+                GeoMXSlideStack stack = Instantiate(slideStackPrefab, transform);
+                stacks[group] = stack;
+                stack.transform.localPosition = sliceCirclePositions[n++];
+                stack.transform.LookAt(2 * stack.transform.position - center);
+                stack.Group = group;
+            }
+            int i = 0;
+            foreach (GraphPoint gp in gps)
+            {
+                GeoMxCell geoMXCell = _cells[int.Parse(gp.Label)];
+                string path = $"{imagePath}\\{geoMXCell.ScanImageID}\\{geoMXCell.ROIImageID} - Segments.png";
                 if (!File.Exists(path))
                 {
                     print($"Could not find image {path}");
@@ -339,29 +440,19 @@ namespace CellexalVR.Spatial
                     }
                     else
                     {
-                        GeoMXROISlide roi = Instantiate(roiPrefab, transform);
-                        roi.scanID = c.ScanImageID;
-                        roi.roiID = c.ROIImageID;
+                        GeoMXROISlide roi = Instantiate(roiPrefab, stacks[gp.Group].transform);
+                        roi.scanID = geoMXCell.ScanImageID;
+                        roi.roiID = geoMXCell.ROIImageID;
                         roiIDs.Add(roi.roiID);
                         roi.aoiIDs = roiDict[roi.roiID].ToArray();
                         roi.imageHandler = this;
                         Texture2D roiTexture = DownloadHandlerTexture.GetContent(uwr);
                         roi.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", roiTexture);
-                        if (i < 6)
-                        {
-                            roi.transform.localPosition = sliceCirclePositions[i];
-                            //Vector3 center = new Vector3(0, roi.transform.localPosition.y, 0);
-                            roi.transform.LookAt(2 * roi.transform.position - center);
-                        }
-                        else
-                        {
-                            roi.transform.localPosition = inactivePosLeft;
-                            roi.gameObject.SetActive(false);
-                        }
                         float ratio = (float)roiTexture.width / (float)roiTexture.height;
                         roi.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
                         roi.originalScale = roi.transform.localScale;
-                        roiSlides[c.ROIImageID] = roi;
+                        roiSlides[geoMXCell.ROIImageID] = roi;
+                        stacks[gp.Group].AddSlide(roi);
                         roi.type = 1;
                         uniqueImages.Add(path);
                     }
@@ -376,22 +467,6 @@ namespace CellexalVR.Spatial
             }
         }
 
-        public void SpawnROIFromSelection()
-        {
-            if (selectedROI != null)
-            {
-                UnSelectROI(selectedROI.roiID);
-            }
-            if (selectedScan != null)
-            {
-                UnSelectScan(selectedScan.scanID);
-            }
-            GeoMxCell[] cells = referenceManager.selectionManager.GetLastSelection().Select(x => _cells[int.Parse(x.Label)]).ToArray();
-
-            StartCoroutine(SpawnROIImagesFromCells(cells));
-            return;
-
-        }
 
         public void SpawnAllScanImages()
         {
@@ -513,7 +588,7 @@ namespace CellexalVR.Spatial
         public void HighlightCells(string roiID)
         {
             HashSet<string> aoiIDs = roiDict[roiID];
-            foreach(string aoi in aoiIDs)
+            foreach (string aoi in aoiIDs)
             {
                 Cell c = referenceManager.cellManager.GetCell(GetCellFromAoiID(aoi).id.ToString());
                 cellsToHighlight.Add(c);

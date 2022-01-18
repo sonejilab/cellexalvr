@@ -42,12 +42,23 @@ namespace CellexalVR.Spatial
             Physics.Raycast(rLaser.position, rLaser.forward, out RaycastHit hit);
             if (!hit.collider || !hit.collider.GetComponent<GeoMXSlide>())
                 return;
+            GeoMXSlideStack stack = hit.collider.transform.GetComponentInParent<GeoMXSlideStack>();
             if (pos.x > 0.5f)
             {
+                if (stack)
+                {
+                    ScrollStack(1, stack);
+                    return;
+                }
                 Scroll(1);
             }
             else if (pos.x < -0.5f)
             {
+                if (stack)
+                {
+                    ScrollStack(-1, stack);
+                    return;
+                }
                 Scroll(-1);
             }
             //else if (pos.y > 0.5f)
@@ -139,6 +150,11 @@ namespace CellexalVR.Spatial
                     }
                 }
             }
+        }
+
+        public void ScrollStack(int val, GeoMXSlideStack stack)
+        {
+            stack.Scroll(val);
         }
 
         public static int mod(int x, int m)

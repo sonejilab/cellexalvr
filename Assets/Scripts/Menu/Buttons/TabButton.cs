@@ -21,7 +21,7 @@ namespace CellexalVR.Menu.Buttons
         //protected SteamVR_Controller.Device device;
         private ActionBasedController rightController;
         private InputDevice device;
-        protected bool controllerInside = false;
+        [SerializeField] protected bool controllerInside = false;
         private MeshRenderer meshRenderer;
         private Color standardColor = Color.grey;
         private Color highlightColor = Color.blue;
@@ -77,6 +77,7 @@ namespace CellexalVR.Menu.Buttons
                 tab.SetTabActive(true);
                 highlight = true;
                 SetHighlighted(highlight);
+                controllerInside = false;
             }
         }
 
@@ -116,28 +117,28 @@ namespace CellexalVR.Menu.Buttons
             }
         }
 
-        protected void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.name == laserCollider)
-            {
-                highlight = true;
-                controllerInside = true;
-                SetHighlighted(highlight);
-            }
-        }
+        //protected void OnTriggerEnter(Collider other)
+        //{
+        //    if (other.gameObject.name == laserCollider)
+        //    {
+        //        highlight = true;
+        //        controllerInside = true;
+        //        SetHighlighted(highlight);
+        //    }
+        //}
 
-        protected void OnTriggerExit(Collider other)
-        {
-            if (other.gameObject.name == laserCollider)
-            {
-                controllerInside = false;
-                if (!tab.Active)
-                {
-                    highlight = false;
-                    SetHighlighted(highlight);
-                }
-            }
-        }
+        //protected void OnTriggerExit(Collider other)
+        //{
+        //    if (other.gameObject.name == laserCollider)
+        //    {
+        //        controllerInside = false;
+        //        if (!tab.Active)
+        //        {
+        //            highlight = false;
+        //            SetHighlighted(highlight);
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Changes the color of the button to either its highlighted color or standard color.

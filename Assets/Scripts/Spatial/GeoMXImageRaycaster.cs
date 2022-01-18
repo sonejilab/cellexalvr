@@ -10,7 +10,7 @@ namespace CellexalVR.Spatial
     public class GeoMXImageRaycaster : MonoBehaviour
     {
         private GeoMXImageHandler imageHandler;
-        private bool block;
+        private bool block = true;
         private GeoMXSlide currentSlideHit;
 
         private void Start()

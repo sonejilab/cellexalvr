@@ -47,7 +47,6 @@ namespace CellexalVR.Menu.SubMenus
             {
                 return;
             }
-
             Active = active;
             foreach (Renderer rend in GetComponentsInChildren<Renderer>(true))
             {

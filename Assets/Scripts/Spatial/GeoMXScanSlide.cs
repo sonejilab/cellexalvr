@@ -11,11 +11,25 @@ namespace CellexalVR.Spatial
         public string scanID;
         public string[] rois;
 
+        private bool selected;
+
         public override void Select()
         {
-            imageHandler.SpawnROIImages(scanID, rois);
-            Highlight();
+            if (selected)
+            {
+                selected = false;
+                imageHandler.UnSelectScan(scanID, true);
+                UnHighlight();
+
+            }
+            else
+            {
+                selected = true;
+                imageHandler.SpawnROIImages(scanID, rois);
+                Highlight();
+            }
         }
+
         public override void Detach()
         {
             base.Detach();

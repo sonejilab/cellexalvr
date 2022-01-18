@@ -12,10 +12,37 @@ namespace CellexalVR.Spatial
         public string roiID;
         public string[] aoiIDs;
 
+        private bool selected;
+
         public override void Select()
         {
-            imageHandler.SpawnAOIImages(scanID, aoiIDs, roiID);
-            Highlight();
+            GeoMXSlideStack stack = GetComponentInParent<GeoMXSlideStack>();
+            if (selected)
+            {
+                selected = false;
+                if (stack)
+                {
+                    stack.UnSelectROI(roiID);
+                }
+                else
+                {
+                    imageHandler.UnSelectROI(roiID, true);
+                }
+                UnHighlight();
+            }
+            else
+            {
+                selected = true;
+                if (stack)
+                {
+                    stack.SpawnAOIImages(scanID, roiID, aoiIDs);
+                }
+                else
+                {
+                    imageHandler.SpawnAOIImages(scanID, aoiIDs, roiID);
+                }
+                Highlight();
+            }
         }
 
         public override void Detach()
@@ -39,7 +66,7 @@ namespace CellexalVR.Spatial
             }
             else
             {
-                int i = SlideScroller.mod(index-imageHandler.slideScroller.currentSlide[1], imageHandler.slideScroller.currentROIIDs.Length);
+                int i = SlideScroller.mod(index - imageHandler.slideScroller.currentSlide[1], imageHandler.slideScroller.currentROIIDs.Length);
                 targetPos = imageHandler.sliceCirclePositions[i];
                 if (imageHandler.selectedROI != null)
                 {
