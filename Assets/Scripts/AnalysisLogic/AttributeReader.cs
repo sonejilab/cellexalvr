@@ -176,6 +176,7 @@ namespace CellexalVR.AnalysisLogic
             stopwatch.Stop();
             referenceManager.inputReader.attributeFileRead = true;
             CellexalLog.Log("read attributes in " + stopwatch.Elapsed.ToString());
+
         }
     }
 }

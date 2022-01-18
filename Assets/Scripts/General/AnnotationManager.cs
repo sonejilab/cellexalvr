@@ -40,7 +40,7 @@ namespace CellexalVR.General
             selectionManager = referenceManager.selectionManager;
         }
 
-        [ConsoleCommand("annotationManager", aliases: new string[] {"toggleannotations", "ta"})]
+        [ConsoleCommand("annotationManager", aliases: new string[] { "toggleannotations", "ta" })]
         public void ToggleAnnotationFile(string path, bool toggle)
         {
             if (toggle)
@@ -53,7 +53,7 @@ namespace CellexalVR.General
             }
         }
 
-        [ConsoleCommand("annotationManager", aliases: new string[] {"clearallannotations", "caa"})]
+        [ConsoleCommand("annotationManager", aliases: new string[] { "clearallannotations", "caa" })]
         public void ClearAllAnnotations()
         {
             foreach (string key in annotationDictionary.Keys)
@@ -189,8 +189,56 @@ namespace CellexalVR.General
                 annotationCtr++;
             }
 
-            annotatedPoints.Clear();
             referenceManager.selectionFromPreviousMenu.ReadAnnotationFiles();
+            ExportToMetaCellFile();
+            annotatedPoints.Clear();
+        }
+
+        public void ExportToMetaCellFile()
+        {
+            List<string> lines = new List<string>();
+            string metaCellFile = Directory.GetFiles(referenceManager.selectionManager.DataDir, "*.meta.cell")[0];
+
+            FileStream metaCellFileStream = new FileStream(metaCellFile, FileMode.Open);
+            StreamReader metaCellStreamReader = new StreamReader(metaCellFileStream);
+
+            // first line is a header line
+            string header = metaCellStreamReader.ReadLine();
+            lines.Add(header);
+            if (header != null)
+            {
+                //int yieldCount = 0;
+                while (!metaCellStreamReader.EndOfStream)
+                {
+                    string line = metaCellStreamReader.ReadLine();
+                    lines.Add(line);
+                    //yieldCount++;
+                    //if (yieldCount % 1000 == 0)
+                    //    yield return null;
+                }
+
+                metaCellStreamReader.Close();
+                metaCellFileStream.Close();
+            }
+
+            List<string> annotatedcellIDs = new List<string>();
+            foreach (Tuple<string, string> tuple in annotatedPoints)
+            {
+                annotatedcellIDs.Add(tuple.Item1);
+            }
+            using (StreamWriter sw = new StreamWriter(metaCellFile))
+            {
+                string firstLine = lines[0] + "\t" + "myGroups@" + annotatedPoints[0].Item2;
+                sw.WriteLine(firstLine);
+                for (int i = 1; i < lines.Count; i++)
+                {
+                    string line = lines[i];
+                    string[] words = line.Split('\t');
+                    string cellID = words[0];
+                    int inSet = annotatedcellIDs.Contains(cellID) ? 1 : 0;
+                    sw.WriteLine(line + '\t' + inSet);
+                }
+            }
         }
     }
 }

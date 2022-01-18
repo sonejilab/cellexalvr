@@ -128,6 +128,7 @@ namespace CellexalVR.Interaction
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
 
             {
+                print("hit env layer");
                 // if we hit a button in the environment (keyboard or env button)
                 //if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
                 //{
@@ -156,6 +157,7 @@ namespace CellexalVR.Interaction
             }
             if (alwaysActive)
             {
+                print("always active");
                 Vector3 hitPoint;
                 if (!hit.collider)
                 {
@@ -175,6 +177,7 @@ namespace CellexalVR.Interaction
                      controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
             {
                 //referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
+                print("miss toggle off");
                 ToggleLaser(false);
                 MultiUserToggle(false);
             }
@@ -208,7 +211,7 @@ namespace CellexalVR.Interaction
         {
             if (active == referenceManager.rightLaser.enabled)
                 return;
-            alwaysActive = active;
+            //alwaysActive = active;
             // OpenXR
             referenceManager.rightLaser.enabled = active;
             //referenceManager.rightLaser.tracerVisibility = active

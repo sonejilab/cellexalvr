@@ -41,11 +41,10 @@ namespace CellexalVR.Interaction
             Vector3 position = gp.Position;
             referenceManager.selectionManager.AddGraphpointToSelection(gp);
             transform.localPosition = position;
-            Vector3 dir = (graph.transform.position - transform.position).normalized;
-            line.useWorldSpace = true;
-            line.SetPosition(0, transform.position);
-            line.SetPosition(1, transform.position - (0.2f * dir));
-            textMesh.transform.position = transform.position - (0.2f * dir);
+            Vector3 dir = (Vector3.zero - transform.localPosition).normalized;
+            line.SetPosition(0, Vector3.zero);
+            line.SetPosition(1, Vector3.zero - (0.2f * dir));
+            textMesh.transform.localPosition = Vector3.zero - (0.2f * dir);
         }
 
         private void OnTriggerEnter(Collider other)
