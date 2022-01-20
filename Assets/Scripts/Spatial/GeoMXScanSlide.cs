@@ -30,6 +30,11 @@ namespace CellexalVR.Spatial
             }
         }
 
+        public override void SelectCells(int group)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void Detach()
         {
             base.Detach();
@@ -38,31 +43,7 @@ namespace CellexalVR.Spatial
         public override void Reattach()
         {
             base.Reattach();
-            Vector3 targetPos;
-            int i = SlideScroller.mod(index - imageHandler.slideScroller.currentSlide[0], imageHandler.slideScroller.currentScanIDs.Length);
-            if (i > 6)
-            {
-                targetPos = imageHandler.inactivePosRight;
-                Fade(false);
-            }
-            else if (i < 0)
-            {
-                targetPos = imageHandler.inactivePosLeft;
-                Fade(false);
-            }
-            else
-            {
-                targetPos = imageHandler.sliceCirclePositions[i];
-                if (imageHandler.selectedScan != null)
-                {
-                    targetPos.y += 1.1f;
-                }
-                if (imageHandler.selectedROI != null)
-                {
-                    targetPos.y += 1.1f;
-                }
-            }
-            Move(targetPos);
+
         }
 
     }

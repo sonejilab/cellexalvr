@@ -19,12 +19,12 @@ namespace CellexalVR.Spatial
         public int index;
 
         [SerializeField] private GameObject reattachButton;
-        [SerializeField] private GameObject highlight;
+        [SerializeField] protected GameObject highlight;
         private XRGrabInteractable interactable;
         private float yPos;
 
 
-        private void Start()
+        protected virtual void Start()
         {
             interactable = GetComponent<XRGrabInteractable>();
             interactable.selectEntered.AddListener(OnSelectEntered);
@@ -51,6 +51,7 @@ namespace CellexalVR.Spatial
         }
 
         public abstract void Select();
+        public abstract void SelectCells(int group);
         public virtual void OnRaycastHit() { }
 
         public virtual void Highlight()
@@ -97,6 +98,45 @@ namespace CellexalVR.Spatial
             detached = false;
             transform.parent = imageHandler.transform;
             reattachButton.SetActive(false);
+            Vector3 targetPos;
+            int length = 0;
+            switch (type)
+            {
+                case 0:
+                    length = imageHandler.slideScroller.currentScanIDs.Length;
+                    break;
+                case 1:
+                    length = imageHandler.slideScroller.currentROIIDs.Length;
+                    break;
+                case 2:
+                    length = imageHandler.slideScroller.currentAOIIDs.Length;
+                    break;
+            }
+            int i = SlideScroller.mod(index - imageHandler.slideScroller.currentSlide[type], length);
+            float yTargetPos = 1.1f;
+            if (imageHandler.selectedScan != null && type == 0)
+            {
+                yTargetPos += 1.1f;
+            }
+            if (imageHandler.selectedROI != null && type != 2)
+            {
+                yTargetPos += 1.1f;
+            }
+            if (i >= imageHandler.nrOfPositions)
+            {
+                targetPos = new Vector3(imageHandler.inactivePosRight.x, yTargetPos, imageHandler.inactivePosRight.z);
+                Fade(false);
+            }
+            else if (i < 0)
+            {
+                targetPos = new Vector3(imageHandler.inactivePosLeft.x, yTargetPos, imageHandler.inactivePosLeft.z);
+                Fade(false);
+            }
+            else
+            {
+                targetPos = new Vector3(imageHandler.sliceCirclePositions[i].x, yTargetPos, imageHandler.sliceCirclePositions[i].z);
+            }
+            Move(targetPos);
         }
 
 

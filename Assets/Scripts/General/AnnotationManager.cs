@@ -23,7 +23,7 @@ namespace CellexalVR.General
         private int annotationCtr = 0;
         private GraphManager graphManager;
         private SelectionManager selectionManager;
-        private List<Tuple<string, string>> annotatedPoints = new List<Tuple<string, string>>();
+        private Dictionary<string, List<string>> annotatedPoints = new Dictionary<string, List<string>>();
         private Dictionary<string, List<GameObject>> annotationDictionary = new Dictionary<string, List<GameObject>>();
 
         private void OnValidate()
@@ -91,7 +91,7 @@ namespace CellexalVR.General
         {
             foreach (Cell cell in cellsToAnnotate)
             {
-                annotatedPoints.Add(new Tuple<string, string>(cell.Label, annotation));
+                annotatedPoints[annotation].Add(cell.Label);
                 selectionManager.AddGraphpointToSelection(graphManager.Graphs[0].FindGraphPoint(cell.Label));
             }
 
@@ -177,13 +177,23 @@ namespace CellexalVR.General
                     if (selectionManager.selectionHistory != null)
                         CellexalLog.Log("\tThere are " + selectionManager.selectionHistory.Count +
                                         " entries in the history");
-                    foreach (Tuple<string, string> gp in annotatedPoints)
+                    foreach (KeyValuePair<string, List<string>> kvp in annotatedPoints)
                     {
-                        file.Write(gp.Item1);
-                        file.Write("\t");
-                        file.Write(gp.Item2);
-                        file.WriteLine();
+                        foreach (string s in kvp.Value)
+                        {
+                            file.Write(s);
+                            file.Write("\t");
+                            file.Write(kvp.Key);
+                            file.WriteLine();
+                        }
                     }
+                    //foreach (Tuple<string, string> gp in annotatedPoints)
+                    //{
+                    //    file.Write(gp.Item1);
+                    //    file.Write("\t");
+                    //    file.Write(gp.Item2);
+                    //    file.WriteLine();
+                    //}
                 }
 
                 annotationCtr++;
@@ -201,7 +211,6 @@ namespace CellexalVR.General
 
             FileStream metaCellFileStream = new FileStream(metaCellFile, FileMode.Open);
             StreamReader metaCellStreamReader = new StreamReader(metaCellFileStream);
-
             // first line is a header line
             string header = metaCellStreamReader.ReadLine();
             lines.Add(header);
@@ -221,24 +230,27 @@ namespace CellexalVR.General
                 metaCellFileStream.Close();
             }
 
-            List<string> annotatedcellIDs = new List<string>();
-            foreach (Tuple<string, string> tuple in annotatedPoints)
-            {
-                annotatedcellIDs.Add(tuple.Item1);
-            }
             using (StreamWriter sw = new StreamWriter(metaCellFile))
             {
-                string firstLine = lines[0] + "\t" + "myGroups@" + annotatedPoints[0].Item2;
-                sw.WriteLine(firstLine);
-                for (int i = 1; i < lines.Count; i++)
+                foreach (KeyValuePair<string, List<string>> kvp in annotatedPoints)
                 {
-                    string line = lines[i];
-                    string[] words = line.Split('\t');
-                    string cellID = words[0];
-                    int inSet = annotatedcellIDs.Contains(cellID) ? 1 : 0;
-                    sw.WriteLine(line + '\t' + inSet);
+                    string firstLine = lines[0] + "\t" + "myGroups@" + kvp.Key;
+                    sw.WriteLine(firstLine);
+                    var annotatedCellIDs = kvp.Value;
+                    for (int i = 1; i < lines.Count; i++)
+                    {
+                        string line = lines[i];
+                        string[] words = line.Split('\t');
+                        string cellID = words[0];
+                        int inSet = annotatedCellIDs.Contains(cellID) ? 1 : 0;
+                        sw.WriteLine(line + '\t' + inSet);
+                    }
+
                 }
             }
+
+            string path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder;
+            StartCoroutine(referenceManager.inputReader.attributeReader.ReadAttributeFilesCoroutine(path));
         }
     }
 }

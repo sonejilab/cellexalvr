@@ -109,7 +109,6 @@ namespace CellexalVR.Interaction
         private void Frame5Update()
         {
             RaycastHit hit;
-            //origin.localRotation = Quaternion.Euler(25f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskMenu);
             if (hit.collider)
             {
@@ -121,14 +120,12 @@ namespace CellexalVR.Interaction
                 }
                 return;
             }
-            //origin.localRotation = Quaternion.Euler(0f, 0, 0);
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskEnv);
             if (hit.collider &&
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Normal ||
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
 
             {
-                print("hit env layer");
                 // if we hit a button in the environment (keyboard or env button)
                 //if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
                 //{
@@ -157,7 +154,6 @@ namespace CellexalVR.Interaction
             }
             if (alwaysActive)
             {
-                print("always active");
                 Vector3 hitPoint;
                 if (!hit.collider)
                 {
@@ -176,8 +172,6 @@ namespace CellexalVR.Interaction
             else if (referenceManager.rightLaser.enabled &&
                      controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
             {
-                //referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
-                print("miss toggle off");
                 ToggleLaser(false);
                 MultiUserToggle(false);
             }
@@ -214,15 +208,8 @@ namespace CellexalVR.Interaction
             //alwaysActive = active;
             // OpenXR
             referenceManager.rightLaser.enabled = active;
-            //referenceManager.rightLaser.tracerVisibility = active
-            //    ? VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn
-            //    : VRTK_BasePointerRenderer.VisibilityStates.AlwaysOff;
-
-            //referenceManager.rightLaser.enabled = active;
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
                 referenceManager.leftLaser.enabled = true;
-            //referenceManager.leftLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
-            //origin.localRotation = Quaternion.identity;
             MultiUserToggle(active);
             rayEndPoint.SetActive(active);
         }

@@ -48,6 +48,7 @@ namespace CellexalVR.Spatial
         private Dictionary<string, GeoMXSlide> scanSlides = new Dictionary<string, GeoMXSlide>();
         private Dictionary<string, HashSet<string>> scanDict = new Dictionary<string, HashSet<string>>();
         private Dictionary<string, HashSet<string>> roiDict = new Dictionary<string, HashSet<string>>();
+        public int nrOfPositions;
         [SerializeField] private float radius;
         [SerializeField] private GeoMXScanSlide scanPrefab;
         [SerializeField] private GeoMXROISlide roiPrefab;
@@ -58,7 +59,6 @@ namespace CellexalVR.Spatial
         private List<Cell> cellsToHighlight = new List<Cell>();
         private Dictionary<int, GeoMXSlideStack> stacks = new Dictionary<int, GeoMXSlideStack>();
 
-
         private void Awake()
         {
             instance = this;
@@ -66,12 +66,12 @@ namespace CellexalVR.Spatial
 
         private void Start()
         {
-            double angleStep = (-1.2f * Mathf.PI) / (float)(7);
+            double angleStep = (-1.2f * Mathf.PI) / (float)(nrOfPositions + 1);
             double angle;
             inactivePosLeft = new Vector3(Mathf.Cos(-Mathf.PI) * radius, 1.1f, Mathf.Sin(-Mathf.PI) * radius);
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < nrOfPositions; i++)
             {
-                angle = -0.7f * Mathf.PI + angleStep + (float)i * angleStep;
+                angle = -0.8f * Mathf.PI + angleStep + (float)i * angleStep;
                 Vector3 pos = new Vector3(Mathf.Cos((float)angle) * radius, 1.1f, Mathf.Sin((float)angle) * radius);
                 sliceCirclePositions[i] = pos;
             }
@@ -213,12 +213,13 @@ namespace CellexalVR.Spatial
                         {
                             GeoMXAOISlide aoi = Instantiate(aoiPrefab, transform);
                             aoi.imageHandler = this;
+                            aoi.aoiID = aoiIDs[i];
                             Texture2D aoiTexture = DownloadHandlerTexture.GetContent(uwr);
                             aoi.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", aoiTexture);
                             float ratio = (float)aoiTexture.width / (float)aoiTexture.height;
                             aoi.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
                             aoi.originalScale = aoi.transform.localScale;
-                            if (i < 6)
+                            if (i < nrOfPositions)
                             {
                                 aoi.transform.localPosition = sliceCirclePositions[i];
                                 aoi.transform.LookAt(2 * aoi.transform.position - center);
@@ -274,7 +275,6 @@ namespace CellexalVR.Spatial
         private IEnumerator SpawnROIImagesCoroutine(string scanID, string[] roiIDs)
         {
             CellexalEvents.LoadingImages.Invoke();
-            ReferenceManager.instance.graphManager.ResetGraphsColor();
             for (int i = 0; i < roiIDs.Length; i++)
             {
                 string path = $"{imagePath}\\{scanID}\\{roiIDs[i]} - Segments.png";
@@ -302,7 +302,7 @@ namespace CellexalVR.Spatial
                             float ratio = (float)roiTexture.width / (float)roiTexture.height;
                             roi.transform.localScale = new Vector3(Math.Min(1f * ratio, 1f), Math.Min(1f / ratio, 1f), 1f);
                             roi.originalScale = roi.transform.localScale;
-                            if (i < 6)
+                            if (i < nrOfPositions)
                             {
                                 roi.transform.localPosition = sliceCirclePositions[i];
                                 //Vector3 center = new Vector3(0, roi.transform.localPosition.y, 0);
@@ -314,14 +314,14 @@ namespace CellexalVR.Spatial
                                 roi.gameObject.SetActive(false);
                             }
                             roiSlides[roiIDs[i]] = roi;
-                            foreach (string aoi in roi.aoiIDs)
-                            {
-                                var cellID = GetCellFromAoiID(aoi).id;
-                                var graph = referenceManager.graphManager.Graphs[0];
-                                var gPoint = graph.FindGraphPoint(cellID.ToString());
-                                Color c = Color.blue;
-                                referenceManager.selectionManager.AddGraphpointToSelection(gPoint, 0, false, c);
-                            }
+                            //foreach (string aoi in roi.aoiIDs)
+                            //{
+                            //    var cellID = GetCellFromAoiID(aoi).id;
+                            //    var graph = referenceManager.graphManager.Graphs[0];
+                            //    var gPoint = graph.FindGraphPoint(cellID.ToString());
+                            //    Color c = Color.blue;
+                            //    referenceManager.selectionManager.AddGraphpointToSelection(gPoint, 0, false, c);
+                            //}
                             ShowName($"Loading {i} of {roiIDs.Length}");
                             roi.type = 1;
                         }
@@ -364,11 +364,12 @@ namespace CellexalVR.Spatial
 
         private void Reset()
         {
+            print("reset");
             ClearSlideStacks();
             int i = 0;
             foreach(KeyValuePair<string, GeoMXSlide> kvp in scanSlides)
             {
-                if (++i > 6)
+                if (++i > nrOfPositions)
                     break;
                 kvp.Value.gameObject.SetActive(true);
             }
@@ -480,6 +481,7 @@ namespace CellexalVR.Spatial
 
         private IEnumerator SpawnScanImagesCoroutine(string[] scanIDs)
         {
+            print("Spawn scan");
             if (scanIDs.Length == 0)
             {
                 GeoMxCell c = _cells[0];
@@ -517,7 +519,7 @@ namespace CellexalVR.Spatial
                             scan.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
                             scan.originalScale = scan.transform.localScale;
                             scanSlides[scanIDs[i]] = scan;
-                            if (j < 6)
+                            if (j < nrOfPositions)
                             {
                                 scan.transform.localPosition = sliceCirclePositions[j];
                                 scan.transform.LookAt(2 * scan.transform.position - center);
@@ -547,7 +549,7 @@ namespace CellexalVR.Spatial
             slideScroller.currentType = 0;
         }
 
-        private GeoMxCell GetCellFromAoiID(string aoiID)
+        public GeoMxCell GetCellFromAoiID(string aoiID)
         {
             KeyValuePair<int, GeoMxCell>[] target = _cells.Where(c => c.Value.AOIImageID == aoiID).ToArray();
             return target[0].Value;
@@ -570,15 +572,18 @@ namespace CellexalVR.Spatial
                 slideScroller.currentSlides = scanSlides;
                 slideScroller.currentType = 0;
                 slideScroller.currentIDs = slideScroller.currentScanIDs;
+                print($"current scan : {slideScroller.currentSlide[0]}");
             }
             else if (type == 1)
             {
                 slideScroller.currentSlides = roiSlides;
                 slideScroller.currentType = 1;
                 slideScroller.currentIDs = slideScroller.currentROIIDs;
+                print($"current roi : {slideScroller.currentSlide[1]}");
             }
             else
             {
+                print($"current aoi : {slideScroller.currentSlide[2]}");
                 slideScroller.currentSlides = aoiSlides;
                 slideScroller.currentType = 2;
                 slideScroller.currentIDs = slideScroller.currentAOIIDs;

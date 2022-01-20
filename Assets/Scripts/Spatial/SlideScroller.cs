@@ -61,13 +61,6 @@ namespace CellexalVR.Spatial
                 }
                 Scroll(-1);
             }
-            //else if (pos.y > 0.5f)
-            //{
-            //}
-
-            //else if (pos.y < -0.5f)
-            //{
-            //}
         }
 
         public void ScrollTo(int toSlice)
@@ -78,7 +71,7 @@ namespace CellexalVR.Spatial
 
         public void Scroll(int val)
         {
-            if (currentSlides.Count <= 6)
+            if (currentSlides.Count <= imageHandler.nrOfPositions)
                 return;
             if (val > 0)
             {
@@ -94,11 +87,11 @@ namespace CellexalVR.Spatial
                     }
                     currentSlide[currentType] = mod(++currentSlide[currentType], currentIDs.Length);
                     Vector3 targetPos;
-                    for (int j = 0; j < 6; j++)
+                    for (int j = 0; j < imageHandler.nrOfPositions; j++)
                     {
                         GeoMXSlide s = currentSlides[currentIDs[mod(currentSlide[currentType] + j, currentIDs.Length)]].GetComponent<GeoMXSlide>();
                         s.gameObject.SetActive(true);
-                        if (j == 5)
+                        if (j == imageHandler.nrOfPositions - 1)
                         {
                             targetPos = new Vector3(imageHandler.inactivePosRight.x, s.transform.localPosition.y, imageHandler.inactivePosRight.z);
                             if (!s.detached)
@@ -119,7 +112,7 @@ namespace CellexalVR.Spatial
             {
                 for (int i = val; i < 0; i++)
                 {
-                    int index = mod(currentSlide[currentType] + 5, currentIDs.Length);
+                    int index = mod(currentSlide[currentType] + imageHandler.nrOfPositions - 1, currentIDs.Length);
                     GeoMXSlide sliceToToggleOff = currentSlides[currentIDs[index]].GetComponent<GeoMXSlide>();
                     Vector3 inactivePos = new Vector3(imageHandler.inactivePosRight.x, sliceToToggleOff.transform.localPosition.y, imageHandler.inactivePosRight.z);
                     if (!sliceToToggleOff.detached)
@@ -129,7 +122,7 @@ namespace CellexalVR.Spatial
                     }
                     currentSlide[currentType] = mod(--currentSlide[currentType], currentIDs.Length);
                     Vector3 targetPos;
-                    for (int j = 5; j >= 0; j--)
+                    for (int j = imageHandler.nrOfPositions; j >= 0; j--)
                     {
                         GeoMXSlide s = currentSlides[currentIDs[mod(currentSlide[currentType] + j, currentIDs.Length)]].GetComponent<GeoMXSlide>();
                         s.gameObject.SetActive(true);

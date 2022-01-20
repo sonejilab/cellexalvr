@@ -79,7 +79,7 @@ namespace CellexalVR.PDFViewer
             if (pageMesh != null) Destroy(pageMesh.gameObject);
             GameObject obj = Instantiate(meshObjPrefab, pageParent.transform);
             pageMesh = obj.GetComponent<MeshDeformer>();
-            obj.GetComponent<CurvedMeshGenerator>().GenerateNodes(currentViewingMode, radiusSlider.Value,
+            obj.GetComponent<CurvedMeshGenerator>().GenerateNodes(radiusSlider.Value,
                 curvatureSlider.Value);
         }
 
