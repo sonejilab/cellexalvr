@@ -17,14 +17,16 @@ namespace CellexalVR.Interaction
 
         private LineRenderer line;
         private TextMeshPro textMesh;
+        private GraphInfoPanelRotator infoPanel;
 
         private void Start()
         {
             line = GetComponentInChildren<LineRenderer>();
             textMesh = GetComponentInChildren<TextMeshPro>();
+            infoPanel = GetComponentInChildren<GraphInfoPanelRotator>();
         }
 
-        public void SetCells(List<Cell> cells)
+        public void SetCells(List<Cell> cells, Vector3 spawnPosition)
         {
             this.cells = new List<Cell>(cells);
 
@@ -37,30 +39,20 @@ namespace CellexalVR.Interaction
                 textMesh = GetComponentInChildren<TextMeshPro>();
             }
             Graph graph = GetComponentInParent<Graph>();
-            Graph.GraphPoint gp = graph.FindGraphPoint(cells[0].Label);
-            Vector3 position = gp.Position;
-            referenceManager.selectionManager.AddGraphpointToSelection(gp);
-            transform.localPosition = position;
+            //Graph.GraphPoint gp = graph.FindGraphPoint(cells[0].Label);
+            //Vector3 position = position;
+            //referenceManager.selectionManager.AddGraphpointToSelection(gp);
+            transform.localPosition = spawnPosition;
             Vector3 dir = (Vector3.zero - transform.localPosition).normalized;
             line.SetPosition(0, Vector3.zero);
             line.SetPosition(1, Vector3.zero - (0.2f * dir));
             textMesh.transform.localPosition = Vector3.zero - (0.2f * dir);
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.CompareTag("GameController"))
-            {
-                referenceManager.cellManager.HighlightCells(cells.ToArray(), true);
-            }
-        }
 
-        private void OnTriggerExit(Collider other)
+        public void Highlight(string toggle)
         {
-            if (other.gameObject.CompareTag("GameController"))
-            {
-                referenceManager.cellManager.HighlightCells(cells.ToArray(), false);
-            }
+            referenceManager.cellManager.HighlightCells(cells.ToArray(), toggle.Equals("on"));
         }
     }
 }

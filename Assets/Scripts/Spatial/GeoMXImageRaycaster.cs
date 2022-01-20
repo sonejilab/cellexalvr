@@ -62,13 +62,13 @@ namespace CellexalVR.Spatial
                 else
                 {
                     imageHandler.ResetDisplayName();
-                    imageHandler.ResetHighlightedCells();
+                    //imageHandler.ResetHighlightedCells();
                     currentSlideHit = null;
                 }
             }
             else
             {
-                imageHandler.ResetHighlightedCells();
+                //imageHandler.ResetHighlightedCells();
                 imageHandler.ResetDisplayName();
                 currentSlideHit = null;
             }

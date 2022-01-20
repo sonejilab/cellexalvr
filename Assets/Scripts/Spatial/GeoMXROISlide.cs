@@ -62,7 +62,7 @@ namespace CellexalVR.Spatial
 
         public override void OnRaycastHit()
         {
-            imageHandler.HighlightCells(roiID);
+            //imageHandler.HighlightCells(roiID);
         }
     }
 

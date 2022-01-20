@@ -103,6 +103,7 @@ namespace CellexalVR.AnalysisLogic
             //  CELLNAME_1  [0,1]   [0,1]
             //  CELLNAME_2  [0,1]   [0,1]
             // ...
+            yield return null;
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             string[] metaCellFiles = Directory.GetFiles(path, "*.meta.cell");
@@ -147,9 +148,9 @@ namespace CellexalVR.AnalysisLogic
                             }
                         }
 
-                        yieldCount++;
-                        if (yieldCount % 1000 == 0)
-                            yield return null;
+                        //yieldCount++;
+                        //if (yieldCount % 1000 == 0)
+                        //    yield return null;
                     }
 
                     metaCellStreamReader.Close();

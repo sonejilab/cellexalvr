@@ -481,7 +481,6 @@ namespace CellexalVR.Spatial
 
         private IEnumerator SpawnScanImagesCoroutine(string[] scanIDs)
         {
-            print("Spawn scan");
             if (scanIDs.Length == 0)
             {
                 GeoMxCell c = _cells[0];
@@ -572,18 +571,15 @@ namespace CellexalVR.Spatial
                 slideScroller.currentSlides = scanSlides;
                 slideScroller.currentType = 0;
                 slideScroller.currentIDs = slideScroller.currentScanIDs;
-                print($"current scan : {slideScroller.currentSlide[0]}");
             }
             else if (type == 1)
             {
                 slideScroller.currentSlides = roiSlides;
                 slideScroller.currentType = 1;
                 slideScroller.currentIDs = slideScroller.currentROIIDs;
-                print($"current roi : {slideScroller.currentSlide[1]}");
             }
             else
             {
-                print($"current aoi : {slideScroller.currentSlide[2]}");
                 slideScroller.currentSlides = aoiSlides;
                 slideScroller.currentType = 2;
                 slideScroller.currentIDs = slideScroller.currentAOIIDs;

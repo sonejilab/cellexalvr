@@ -626,7 +626,7 @@ namespace CellexalVR.AnalysisLogic
                 words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
                 if (words[1] != annotation)
                 {
-                    referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, path);
+                    referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, graph.FindGraphPoint(cellsToAnnotate[0].Label).Position, path);
                     cellsToAnnotate.Clear();
                     annotation = words[1];
                 }
@@ -635,7 +635,7 @@ namespace CellexalVR.AnalysisLogic
                 numPointsAdded++;
             }
 
-            referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, path);
+            referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, graph.FindGraphPoint(cellsToAnnotate[0].Label).Position, path);
             cellsToAnnotate.Clear();
             CellexalLog.Log($"Added {numPointsAdded} points to annotation");
             CellexalEvents.CommandFinished.Invoke(true);

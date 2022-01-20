@@ -30,6 +30,7 @@ namespace CellexalVR.Interaction
         public Collider[] selectionToolColliders;
         public Color[] Colors;
         public bool hapticFeedbackThisFrame = true;
+        public bool annotate;
 
         private int currentMeshIndex;
         private int tempColorIndex;
@@ -145,6 +146,9 @@ namespace CellexalVR.Interaction
             }
 
             CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            CellexalEvents.RightTriggerPressed.AddListener(OnTriggerDown);
+            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
         }
 
         private void Start()
@@ -154,11 +158,11 @@ namespace CellexalVR.Interaction
             selectionManager = referenceManager.selectionManager;
             UpdateShapeIcons();
 
-            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
-            CellexalEvents.RightTriggerPressed.AddListener(OnTriggerDown);
-            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
 
             touchPadClick.action.performed += OnTouchPadClick;
+
+            CurrentColorIndex = 0;
+
         }
 
         private void OnTriggerClick()
@@ -169,6 +173,7 @@ namespace CellexalVR.Interaction
                 selectionToolMaterial.SetFloat("_SelectionActive", 1);
                 selActive = true;
             }
+
         }
 
         private void OnTriggerDown()
@@ -198,6 +203,8 @@ namespace CellexalVR.Interaction
                 }
 
             }
+
+
         }
 
         private void OnTriggerUp()

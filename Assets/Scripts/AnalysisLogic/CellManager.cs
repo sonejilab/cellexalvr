@@ -166,6 +166,7 @@ namespace CellexalVR.AnalysisLogic
 
         public void HighlightCells(Cell[] cellsToHighlight, bool highlight)
         {
+            print("highlight cells");
             foreach (Graph graph in graphManager.Graphs)
             {
                 graph.MakeAllPointsTransparent(highlight);

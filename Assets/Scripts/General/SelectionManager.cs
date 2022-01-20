@@ -205,11 +205,6 @@ namespace CellexalVR.General
             else
             {
                 AddGraphpointToSelection(graphPoint, newGroup, hapticFeedback, selectionToolCollider.Colors[newGroup]);
-                print(multiuserMessageSender == null);
-                print(graphPoint == null);
-                print(graphPoint.parent.GraphName);
-                print(graphPoint.Label);
-                print(selectionToolCollider.CurrentColorIndex);
                 multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup,
                     selectionToolCollider.Colors[newGroup]);
             }

@@ -25,6 +25,11 @@ namespace CellexalVR.General
         private SelectionManager selectionManager;
         private Dictionary<string, List<string>> annotatedPoints = new Dictionary<string, List<string>>();
         private Dictionary<string, List<GameObject>> annotationDictionary = new Dictionary<string, List<GameObject>>();
+        private bool annotate;
+        private string annotation;
+        private bool reading;
+        private GameObject annotationSphere;
+
 
         private void OnValidate()
         {
@@ -38,6 +43,47 @@ namespace CellexalVR.General
         {
             graphManager = referenceManager.graphManager;
             selectionManager = referenceManager.selectionManager;
+
+        }
+
+        private void OnTriggerClick()
+        {
+            ManualAddAnnotation(annotation);
+        }
+
+        public void AddManualAnnotation(string s)
+        {
+            annotation = s;
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            annotationSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            annotationSphere.transform.parent = referenceManager.rightController.transform;
+            annotationSphere.transform.localRotation = Quaternion.identity;
+            annotationSphere.transform.localScale = Vector3.one * 0.02f;
+            annotationSphere.transform.localPosition = new Vector3(0, 0, 0.1f);
+        }
+
+        private void ManualAddAnnotation(string s)
+        {
+            var col = referenceManager.rightController.GetComponent<Collider>();
+            Vector3 colCenter = col.bounds.center;
+            Vector3 colExtents = col.bounds.extents;
+            foreach (var graph in graphManager.Graphs)
+            {
+                Graph.GraphPoint gp;
+                var closestPoints = graph.MinkowskiDetection(annotationSphere.transform.position, colCenter, colExtents, -2);
+                if (closestPoints.Count > 0)
+                {
+                    gp = closestPoints[0];
+                    if (gp.Group == -1) return;
+                    Cell[] cellsToAnnotate = referenceManager.cellManager.GetCells(gp.Group);
+                    referenceManager.annotationManager.AddAnnotation(s,
+                                        cellsToAnnotate.ToList(),
+                                        graph.transform.InverseTransformPoint(annotationSphere.transform.position));
+                    CellexalEvents.RightTriggerClick.RemoveListener(OnTriggerClick);
+                    Destroy(annotationSphere);
+                }
+            }
+
         }
 
         [ConsoleCommand("annotationManager", aliases: new string[] { "toggleannotations", "ta" })]
@@ -79,7 +125,7 @@ namespace CellexalVR.General
         {
             Cell[] cellsToAnnotate = referenceManager.cellManager.GetCells(index);
             selectionManager.RecolorSelectionPoints();
-            AddAnnotation(annotation, cellsToAnnotate.ToList());
+            AddAnnotation(annotation, cellsToAnnotate.ToList(), graphManager.Graphs[0].FindGraphPoint(cellsToAnnotate[0].Label).Position);
         }
 
         /// <summary>
@@ -87,12 +133,14 @@ namespace CellexalVR.General
         /// </summary>
         /// <param name="annotation">The annotation string.</param>
         /// <param name="pointsToAnnotate">The points to annotate.</param>
-        public void AddAnnotation(string annotation, List<Cell> cellsToAnnotate, string path = "")
+        public void AddAnnotation(string annotation, List<Cell> cellsToAnnotate, Vector3 spawnPosition, string path = "")
         {
             foreach (Cell cell in cellsToAnnotate)
             {
+                if (!annotatedPoints.ContainsKey(annotation))
+                    annotatedPoints[annotation] = new List<string>();
                 annotatedPoints[annotation].Add(cell.Label);
-                selectionManager.AddGraphpointToSelection(graphManager.Graphs[0].FindGraphPoint(cell.Label));
+                //selectionManager.AddGraphpointToSelection(graphManager.Graphs[0].FindGraphPoint(cell.Label));
             }
 
             List<GameObject> annotationTexts = new List<GameObject>();
@@ -102,7 +150,7 @@ namespace CellexalVR.General
                 GameObject annotationText = Instantiate(annotationTextPrefab, graph.annotationsParent.transform);
                 AnnotationTextPanel textPanel = annotationText.GetComponent<AnnotationTextPanel>();
                 textPanel.referenceManager = referenceManager;
-                textPanel.SetCells(cellsToAnnotate);
+                textPanel.SetCells(cellsToAnnotate, spawnPosition);
                 annotationText.gameObject.name = annotation;
                 annotationText.GetComponentInChildren<TextMeshPro>().text = annotation;
                 annotationTexts.Add(annotationText);
@@ -143,6 +191,9 @@ namespace CellexalVR.General
         /// <param name="annotation">The string to write next to cell id as annotation.</param>
         public void DumpAnnotatedSelectionToTextFile(string filePath = "")
         {
+            if (reading) return;
+            if (annotatedPoints.Count == 0) return;
+            reading = true;
             if (filePath != "")
             {
                 string savedSelectionsPath = CellexalUser.UserSpecificFolder + @"\SavedSelections\";
@@ -187,25 +238,21 @@ namespace CellexalVR.General
                             file.WriteLine();
                         }
                     }
-                    //foreach (Tuple<string, string> gp in annotatedPoints)
-                    //{
-                    //    file.Write(gp.Item1);
-                    //    file.Write("\t");
-                    //    file.Write(gp.Item2);
-                    //    file.WriteLine();
-                    //}
                 }
 
                 annotationCtr++;
             }
 
             referenceManager.selectionFromPreviousMenu.ReadAnnotationFiles();
+            reading = false;
             ExportToMetaCellFile();
             annotatedPoints.Clear();
         }
 
         public void ExportToMetaCellFile()
         {
+            if (!referenceManager.inputReader.attributeFileRead) return;
+            referenceManager.inputReader.attributeFileRead = false;
             List<string> lines = new List<string>();
             string metaCellFile = Directory.GetFiles(referenceManager.selectionManager.DataDir, "*.meta.cell")[0];
 
@@ -248,9 +295,9 @@ namespace CellexalVR.General
 
                 }
             }
-
             string path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder;
             StartCoroutine(referenceManager.inputReader.attributeReader.ReadAttributeFilesCoroutine(path));
+            
         }
     }
 }
