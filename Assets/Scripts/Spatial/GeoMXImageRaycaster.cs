@@ -30,7 +30,7 @@ namespace CellexalVR.Spatial
             if (hit.collider != null)
             {
                 GeoMXSlide slide = hit.collider.GetComponent<GeoMXSlide>();
-                if (slide != null)
+                if (slide != null && ReferenceManager.instance.rightLaser.enabled)
                 {
                     slide.Select();
                 }

@@ -20,6 +20,7 @@ namespace CellexalVR.General
     {
         public GameObject annotationTextPrefab;
         public ReferenceManager referenceManager;
+        [SerializeField] private GameObject placeAnnotationPrefab;
         private int annotationCtr = 0;
         private GraphManager graphManager;
         private SelectionManager selectionManager;
@@ -55,11 +56,13 @@ namespace CellexalVR.General
         {
             annotation = s;
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
-            annotationSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            //annotationSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            annotationSphere = Instantiate(placeAnnotationPrefab);
             annotationSphere.transform.parent = referenceManager.rightController.transform;
             annotationSphere.transform.localRotation = Quaternion.identity;
-            annotationSphere.transform.localScale = Vector3.one * 0.02f;
-            annotationSphere.transform.localPosition = new Vector3(0, 0, 0.1f);
+            //annotationSphere.transform.localScale = Vector3.one * 0.01f;
+            annotationSphere.transform.localPosition = new Vector3(0, 0, 0.07f);
+            annotationSphere.GetComponentInChildren<TextMeshPro>().text = s;
         }
 
         private void ManualAddAnnotation(string s)
@@ -156,17 +159,16 @@ namespace CellexalVR.General
                 annotationTexts.Add(annotationText);
             }
 
-            if (path == "") return;
-            if (annotationDictionary.ContainsKey(path))
+            if (annotationDictionary.ContainsKey(annotation))
             {
                 foreach (GameObject obj in annotationTexts)
                 {
-                    annotationDictionary[path].Add(obj);
+                    annotationDictionary[annotation].Add(obj);
                 }
             }
             else
             {
-                annotationDictionary[path] = annotationTexts;
+                annotationDictionary[annotation] = annotationTexts;
             }
         }
 

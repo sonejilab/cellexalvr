@@ -6,10 +6,10 @@ using System.Drawing.Imaging;
 using System.IO;
 using CellexalVR.General;
 using CellexalVR.Interaction;
-using PDFiumSharp;
-using PDFiumSharp.Types;
 using UnityEngine;
 using TMPro;
+
+
 
 
 namespace CellexalVR.PDFViewer
@@ -91,6 +91,7 @@ namespace CellexalVR.PDFViewer
         /// <param name="path"></param>
         public void ReadPDF(string path)
         {
+
             string folder = $"{CellexalUser.UserSpecificFolder}\\PDFImages";
             if (Directory.Exists(folder))
             {
@@ -111,27 +112,28 @@ namespace CellexalVR.PDFViewer
 
             Directory.CreateDirectory(folder);
             string pdfPath = files[0];
-            using (PdfDocument doc = new PdfDocument(pdfPath))
-            {
-                int i = 0;
-                foreach (PdfPage page in doc.Pages)
-                {
-                    print("page");
-                    int width = (int) (page.Width / 72.0f * 96);
-                    int height = (int) (page.Height / 72.0f * 96);
-                    string savePath = $"{folder}\\page{++i}.jpeg";
-                    using (var bitmap = new PDFiumBitmap(width, height, true)) 
-                    using (var stream = new FileStream(savePath, FileMode.Create))
-                    {
-                        bitmap.FillRectangle(0, 0, width, height, new FPDF_COLOR(255, 255, 255));
-                        page.Render(bitmap);
-                        Image image = Image.FromStream(bitmap.AsBmpStream());
-                        image.Save(stream, ImageFormat.Jpeg);
-                    }
 
-                    totalNrOfpages++;
-                }
-            }
+            //using (PdfDocument doc = new PdfDocument(pdfPath))
+            //{
+            //    int i = 0;
+            //    foreach (PdfPage page in doc.Pages)
+            //    {
+            //        print("page");
+            //        int width = (int)(page.Width / 72.0f * 96);
+            //        int height = (int)(page.Height / 72.0f * 96);
+            //        string savePath = $"{folder}\\page{++i}.jpeg";
+            //        using (var bitmap = new PDFiumBitmap(width, height, true))
+            //        using (var stream = new FileStream(savePath, FileMode.Create))
+            //        {
+            //            bitmap.FillRectangle(0, 0, width, height, new FPDF_COLOR(255, 255, 255));
+            //            page.Render(bitmap);
+            //            Image image = Image.FromStream(bitmap.AsBmpStream());
+            //            image.Save(stream, ImageFormat.Jpeg);
+            //        }
+
+            //        totalNrOfpages++;
+            //    }
+            //}
 
             CellexalEvents.PDFArticleRead.Invoke();
         }

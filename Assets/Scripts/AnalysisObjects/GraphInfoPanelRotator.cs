@@ -29,7 +29,7 @@ namespace CellexalVR.AnalysisObjects
             if (!other.CompareTag("GameController"))
                 return;
             controllerInside = true;
-            onTriggerEvent.Invoke("on");
+            onTriggerEvent?.Invoke("on");
         }
 
         private void OnTriggerExit(Collider other)
@@ -37,7 +37,7 @@ namespace CellexalVR.AnalysisObjects
             if (!other.CompareTag("GameController"))
                 return;
             controllerInside = false;
-            onTriggerEvent.Invoke("off");
+            onTriggerEvent?.Invoke("off");
         }
     }
 }

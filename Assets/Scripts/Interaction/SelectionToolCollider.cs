@@ -309,6 +309,7 @@ namespace CellexalVR.Interaction
         /// <param name="dir"> The direction to move in the array of colors. true for increment, false for decrement </param>
         public void ChangeColor(bool dir)
         {
+            if (currentColorIndex >= Colors.Length) return;
             if (currentColorIndex == Colors.Length - 1 && dir)
             {
                 currentColorIndex = 0;

@@ -200,8 +200,9 @@ namespace CellexalVR.AnalysisLogic
                     "The loaded dataset did not contain any .mds files. Make sure you have placed the dataset files in the correct folder.");
                 throw new System.InvalidOperationException("Empty dataset");
             }
+            // PDF reading (conversion to images) causing program to crash. Unknown problem... 
+            //pdfMesh.ReadPDF(fullPath);
 
-            pdfMesh.ReadPDF(fullPath);
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
             mdsReader.referenceManager = referenceManager;
             StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
