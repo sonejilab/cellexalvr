@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7084794458904397108}
   - component: {fileID: 7084794458904397109}
   m_Layer: 0
-  m_Name: placingAnnotation
+  m_Name: PlacingAnnotation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -21,6 +21,7 @@ TagManager:
   - SubGraph
   - FacsGraph
   - Subgraph
+  - GeoMXImage
   layers:
   - Default
   - TransparentFX
