@@ -217,7 +217,8 @@ namespace CellexalVR.General
             //GameObject helpMenu;
             drawTool = rightController.GetComponentInChildren<DrawTool>(true);
             webBrowser = GameObject.Find("WebBrowser");
-            screenshotCamera = headset.GetComponentInChildren<CaptureScreenshot>(true);
+            //screenshotCamera = headset.GetComponentInChildren<CaptureScreenshot>(true);
+            screenshotCamera = GameObject.Find("SnapShotCam").GetComponent<CaptureScreenshot>();
             teleportLaser = leftController.gameObject;
 
             mainMenu = GameObject.Find("MenuHolder/Main Menu");

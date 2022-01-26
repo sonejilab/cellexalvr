@@ -5,6 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 namespace CellexalVR.Interaction
 {
 
+    [CanSelectMultiple(true)]
     public class OffsetGrab : XRGrabInteractable
     {
         private Vector3 interactorPosition = Vector3.zero;
@@ -16,6 +17,7 @@ namespace CellexalVR.Interaction
             StoreInteractor(args.interactor);
             MatchAttachmentPoints(args.interactor);
             base.OnSelectEntered(args);
+            
         }
 
         private void StoreInteractor(XRBaseInteractor interactor)

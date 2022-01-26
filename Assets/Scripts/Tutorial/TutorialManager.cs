@@ -16,7 +16,6 @@ namespace CellexalVR.Tutorial
     /// </summary>
     public class TutorialManager : MonoBehaviour
     {
-
         public GameObject[] stepPanels;
         public GameObject descriptionCanvasPrefab;
         public ReferenceManager referenceManager;

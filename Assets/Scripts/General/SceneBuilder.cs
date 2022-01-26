@@ -68,6 +68,10 @@ namespace CellexalVR.General
         private GameObject _SnapShotCamera;
         public GameObject ScarfManager;
         private GameObject _ScarfManager;
+        public GameObject DesktopUI;
+        private GameObject _DesktopUI;
+        public GameObject GeoMXHandler;
+        private GameObject _GeoMXHandler;
 
         private List<GameObject> instances;
         private IEnumerator buildSceneEnumerator;
@@ -137,6 +141,8 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _H5Reader, H5Reader);
             InstantiateSceneAsset(ref _PDFViewer, PDFViewer);
             InstantiateSceneAsset(ref _SnapShotCamera, SnapShotCamera);
+            InstantiateSceneAsset(ref _DesktopUI, DesktopUI);
+            InstantiateSceneAsset(ref _GeoMXHandler, GeoMXHandler);
             //InstantiateSceneAsset(ref _Teleporting, Teleporting);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
@@ -272,8 +278,10 @@ namespace CellexalVR.General
             H5Reader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/H5Reader/H5ReaderTestObjectManager.prefab");
             PDFViewer = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PDFViewer/PDFViewer.prefab");
             //Teleporting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Teleport.prefab");
-            SnapShotCamera = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/SnapShotCam.prefab");
+            SnapShotCamera = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SnapShotCam.prefab");
             ScarfManager = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/ScarfManager.prefab");
+            DesktopUI = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/DesktopUI.prefab");
+            GeoMXHandler = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GeoMX/GeoMXHandler.prefab");
         }
 
         [Obsolete]
