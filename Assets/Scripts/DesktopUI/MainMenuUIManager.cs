@@ -3,6 +3,7 @@ using CellexalVR.Multiuser;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace CellexalVR.DesktopUI
@@ -57,7 +58,10 @@ namespace CellexalVR.DesktopUI
 
         private void OnTutorialButtonPressed()
         {
-            Launcher.instance.ConnectTutorialScene();
+            CrossSceneInformation.Tutorial = true;
+            //RScriptRunner.SetRScriptPath();
+            SceneManager.LoadScene("IntroTutorialScene");
+            //Launcher.instance.ConnectTutorialScene();
         }
 
         private void SetUsername()

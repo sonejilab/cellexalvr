@@ -143,6 +143,8 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _SnapShotCamera, SnapShotCamera);
             InstantiateSceneAsset(ref _DesktopUI, DesktopUI);
             InstantiateSceneAsset(ref _GeoMXHandler, GeoMXHandler);
+            InstantiateSceneAsset(ref _DesktopUI, DesktopUI);
+            InstantiateSceneAsset(ref _ScarfManager, ScarfManager);
             //InstantiateSceneAsset(ref _Teleporting, Teleporting);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);

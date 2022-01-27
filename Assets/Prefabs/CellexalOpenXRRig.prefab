@@ -6866,7 +6866,8 @@ MonoBehaviour:
   - {fileID: 587465448}
   - {fileID: 1776191386}
   - {fileID: 762250455}
-  Colors: []
+  Colors:
+  - {r: 0, g: 0, b: 0, a: 0}
   hapticFeedbackThisFrame: 1
   annotate: 0
 --- !u!1 &7647823879816925832
@@ -8036,11 +8037,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8166409087945416374}
-  - component: {fileID: 8166409087945416329}
   - component: {fileID: 8166409087945416328}
   - component: {fileID: 8166409087945416375}
   - component: {fileID: 639620770}
   - component: {fileID: 639620771}
+  - component: {fileID: 2036454916}
   m_Layer: 0
   m_Name: CellexalOpenXRRig
   m_TagString: Untagged
@@ -8063,24 +8064,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8166409087945416329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8166409087945416331}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7448815bd5148434682b3d931066cd10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Camera: {fileID: 0}
-  m_OriginBaseGameObject: {fileID: 8166409087945416331}
-  m_CameraFloorOffsetObject: {fileID: 8166409087959463201}
-  m_RequestedTrackingOriginMode: 0
-  m_CameraYOffset: 1.36144
-  m_CameraGameObject: {fileID: 8166409087972501198}
 --- !u!114 &8166409087945416328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8120,7 +8103,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Timeout: 10
-  m_XROrigin: {fileID: 8166409087945416329}
+  m_XROrigin: {fileID: 8166409087945416329, guid: 4d53d0f4ffe841e44a282ef3668be846,
+    type: 3}
 --- !u!114 &639620771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8134,6 +8118,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_System: {fileID: 0}
+--- !u!114 &2036454916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8166409087945416331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0cb9aa70a22847b5925ee5f067c10a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Camera: {fileID: 8166409087972501197}
+  m_OriginBaseGameObject: {fileID: 8166409087945416331}
+  m_CameraFloorOffsetObject: {fileID: 8166409087959463201}
+  m_RequestedTrackingOriginMode: 0
+  m_CameraYOffset: 1.1176
 --- !u!1 &8166409087959463201
 GameObject:
   m_ObjectHideFlags: 0

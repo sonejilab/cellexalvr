@@ -3,6 +3,7 @@ using System.Collections;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Xml.Serialization;
 using CellexalVR.General;
 
 namespace CellexalVR.AnalysisLogic
@@ -21,6 +22,39 @@ namespace CellexalVR.AnalysisLogic
         public static void SetReferenceManager(ReferenceManager rm)
         {
             referenceManager = rm;
+        }
+
+        public static void SetRScriptPath(string path)
+        {
+            if (path.Equals(string.Empty)) return;
+
+            if (File.Exists(path) && path.Contains(".exe"))
+            {
+                bool hasChanged = path != CellexalConfig.Config.RscriptexePath;
+                CrossSceneInformation.RScriptPath = path;
+                if (hasChanged)
+                {
+                    CellexalConfig.Config.RscriptexePath = path;
+                    string configDir = Directory.GetCurrentDirectory() + @"\Config";
+                    string configPath = configDir + @"\default_config.xml";
+                    if (!Directory.Exists("Config"))
+                    {
+                        Directory.CreateDirectory("Config");
+                        CellexalLog.Log("Created directory " + CellexalLog.FixFilePath(configDir));
+                    }
+
+                    CellexalLog.Log("Started saving the config file");
+
+                    FileStream fileStream = new FileStream(configPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    StreamWriter streamWriter = new StreamWriter(fileStream);
+
+                    XmlSerializer ser = new XmlSerializer(typeof(Config));
+                    ser.Serialize(streamWriter, CellexalConfig.Config);
+                    streamWriter.Close();
+                    fileStream.Close();
+
+                }
+            }
         }
 
         private static bool readGenes;
@@ -109,7 +143,7 @@ namespace CellexalVR.AnalysisLogic
                 if (ex.GetType() == typeof(System.ComponentModel.Win32Exception) ||
                     ex.GetType() == typeof(ArgumentException))
                 {
-                    return "Failed to Start Server"; 
+                    return "Failed to Start Server";
                     //CellexalEvents.ScriptFailed.Invoke();
                 }
                 throw new Exception("R Script failed: " + result, ex);
