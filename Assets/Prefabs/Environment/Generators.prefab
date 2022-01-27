@@ -50,6 +50,7 @@ MonoBehaviour:
   standardMaterial: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
   averageVelocityArrowPrefab: {fileID: 1384495715582512, guid: 0ed92af6f64448944b3046b46b6aa52a,
     type: 3}
+  averageVelocityMaterials: []
 --- !u!1 &1136056702234574
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,6 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   folderPrefab: {fileID: 1998918754094950, guid: c5fadf1b47882c745b3e02a5a1ef6305,
     type: 3}
+  sessionFolderPrefab: {fileID: 0}
   referenceManager: {fileID: 0}
 --- !u!1 &1473158195905826
 GameObject:
@@ -244,20 +246,21 @@ MonoBehaviour:
     type: 3}
   graphpointStandardQSmallSzMesh: {fileID: 4300000, guid: 8d99fbc90bf15b44497b960148f91ffa,
     type: 3}
-  graphpointStandardQLargeSzMesh: {fileID: 4300000, guid: 31f5fbd3c3942d748ad28b8941a11185,
+  graphpointStandardQLargeSzMesh: {fileID: 4300000, guid: e0821cc340676184193823b9964458c8,
     type: 3}
   graphpointLowQStandardSzMesh: {fileID: -5495902117074765545, guid: a13b39b558070b64380f898f09f918f8,
     type: 3}
   graphpointLowQSmallSzMesh: {fileID: -5495902117074765545, guid: 1722c1928244c8f4d99339b3c6ffd4fa,
     type: 3}
-  graphpointLowQLargeSzMesh: {fileID: -5495902117074765545, guid: 871420bada385a04ca5a18c7af104380,
+  graphpointLowQLargeSzMesh: {fileID: 4300000, guid: e0821cc340676184193823b9964458c8,
     type: 3}
   meshToUse: {fileID: 0}
   isCreating: 0
-  addingToExisting: 0
+  nrOfLODGroups: 1
   geneExpressionColors: []
   graphPointColors: {fileID: 0}
   graphCount: 0
+  newGraph: {fileID: 0}
 --- !u!1 &1900129272846280
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,6 +343,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   heatmapPrefab: {fileID: 1546507171833466, guid: 08f944bd386aa3c4eb320f9aee06c9ac,
     type: 3}
+  heatmapTexturePrefab: {fileID: 0}
   heatmapTexture: {fileID: 2800000, guid: 3dd503a730010b04d935bb95de5412ad, type: 3}
   selectionNr: 0
   heatmapsCreated: 0

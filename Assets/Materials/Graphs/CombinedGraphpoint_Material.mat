@@ -82,6 +82,8 @@ Material:
     - _OuterClipRadius: 0.31
     - _OutlineThickness: 0.001
     - _Parallax: 0.02
+    - _PulseSpeed: 1
+    - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 0
     - _SrcBlend: 1
@@ -97,4 +99,6 @@ Material:
     m_Colors:
     - _Color: {r: 0, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 12.54902, g: 28.611765, b: 32, a: 1}
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Tint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

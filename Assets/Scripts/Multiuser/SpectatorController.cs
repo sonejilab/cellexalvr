@@ -44,10 +44,16 @@ namespace CellexalVR.Multiuser
             // if (!CrossSceneInformation.Spectator)
             //     gameObject.SetActive(false);
             //Cursor.lockState = CursorLockMode.Locked;
+            ReferenceManager.instance.headset.gameObject.SetActive(false);
         }
 
         private void Update()
         {
+            if (referenceManager.consoleManager.consoleGameObject.activeSelf) return;
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ToggleSpectator(!active);
+            }
             if (!active) return;
             if (Input.anyKey || Input.GetKeyUp(KeyCode.Tab))
             {
@@ -58,11 +64,6 @@ namespace CellexalVR.Multiuser
 
         private void HandleInput()
         {
-            if (referenceManager.consoleManager.consoleGameObject.activeSelf) return;
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                ToggleSpectator(!active);
-            }
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 CtrlsCanvas.SetActive(true);
@@ -115,6 +116,8 @@ namespace CellexalVR.Multiuser
             CtrlsCanvas.SetActive(false);
             TextCanvas.SetActive(false);
             spectatorCamera.enabled = false;
+            avatar.SetActive(false);
+            ReferenceManager.instance.headset.gameObject.SetActive(true);
         }
 
         public void ToggleSpectator(bool toggle)

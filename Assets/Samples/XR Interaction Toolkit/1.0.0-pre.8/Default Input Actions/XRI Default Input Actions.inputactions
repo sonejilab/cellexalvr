@@ -170,6 +170,22 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "TouchPadClick",
+                    "type": "Button",
+                    "id": "11d71fb1-ac9c-4eac-8e3f-2890a6014bd6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "TouchPadPos",
+                    "type": "Button",
+                    "id": "ef676231-ba47-4360-aa5f-a4d3dc0dfea2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -513,6 +529,28 @@
                     "action": "RotateLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9d42d2b1-7db3-4ce7-a9fc-2d7fdab72b27",
+                    "path": "<XRController>{LeftHand}/trackpadClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchPadClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "93574386-b9b9-4528-bc8d-8246fded3d63",
+                    "path": "<XRController>{LeftHand}/Primary2DAxis",
+                    "interactions": "Sector(directions=-1,sweepBehavior=1)",
+                    "processors": "StickDeadzone",
+                    "groups": "Continuous Move",
+                    "action": "TouchPadPos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -652,6 +690,22 @@
                     "name": "RotateRight",
                     "type": "Button",
                     "id": "552171b6-3ee5-467b-b299-159d56791a13",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "TouchPadClick",
+                    "type": "Button",
+                    "id": "5a6a4e0d-b632-448e-917d-0eaa7b423eae",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "TouchPadPos",
+                    "type": "Button",
+                    "id": "822f403e-2df4-42d4-a18a-26368da46bd2",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -1007,6 +1061,28 @@
                     "processors": "",
                     "groups": "Generic XR Controller",
                     "action": "Up",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "17a3e06d-22f3-49de-be6f-530a730d295d",
+                    "path": "<XRController>{RightHand}/trackpadClicked",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchPadClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "459be56c-2306-4674-aa30-916352ecae57",
+                    "path": "<XRController>{RightHand}/Primary2DAxis",
+                    "interactions": "Sector(directions=-1,sweepBehavior=1)",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "TouchPadPos",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

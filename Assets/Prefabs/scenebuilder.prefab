@@ -1,21 +1,11 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &100100000
-Prefab:
-  m_ObjectHideFlags: 1
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications: []
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1491622215652672}
-  m_IsPrefabAsset: 1
 --- !u!1 &1491622215652672
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4110609605723658}
@@ -29,9 +19,10 @@ GameObject:
   m_IsActive: 0
 --- !u!4 &4110609605723658
 Transform:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491622215652672}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -42,9 +33,10 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114433012566905160
 MonoBehaviour:
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491622215652672}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -52,28 +44,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InputReader: {fileID: 1865869582214080, guid: 820fe67dd53608d469beb2bb2cc84441,
-    type: 2}
-  CameraRig: {fileID: 1200119748187238, guid: b51900c759a49794982681e8728adea6, type: 2}
-  VRTK: {fileID: 1312483784147908, guid: c63fcdbbeb634bf4292e0ece4a7d921a, type: 2}
-  Managers: {fileID: 1655421887270436, guid: 906996c1f795d6547896da4f4484d995, type: 2}
-  Generators: {fileID: 1900129272846280, guid: fc8400231f0ccf14dbf4ca343fd8c256, type: 2}
-  SQLiter: {fileID: 1592339975440912, guid: f4c11e7f9459f914bbb569d7272ffa39, type: 2}
+    type: 3}
+  CameraRig: {fileID: 8166409087945416331, guid: 4d53d0f4ffe841e44a282ef3668be846,
+    type: 3}
+  XRInteractionManager: {fileID: 1594508123948150649, guid: 3bb04a1b03d7d7b4e8ef84b8282f6b07,
+    type: 3}
+  Managers: {fileID: 1655421887270436, guid: 906996c1f795d6547896da4f4484d995, type: 3}
+  Generators: {fileID: 1900129272846280, guid: fc8400231f0ccf14dbf4ca343fd8c256, type: 3}
+  SQLiter: {fileID: 1592339975440912, guid: f4c11e7f9459f914bbb569d7272ffa39, type: 3}
   EventSystem: {fileID: 1227912879406582, guid: 6d3092b7335feab428787173db84354b,
-    type: 2}
-  Floor: {fileID: 1215023464588338, guid: a3e724a0a3faae94fbb8a5fd82603d71, type: 2}
-  Calculators: {fileID: 1256811505487270, guid: 6d34846e733a4c44eae5a5ec30a0ea9e,
-    type: 2}
+    type: 3}
+  Floor: {fileID: 1215023464588338, guid: a3e724a0a3faae94fbb8a5fd82603d71, type: 3}
   LightForTesting: {fileID: 1484828014217020, guid: 0d636179055b12a40a14f62d74813699,
-    type: 2}
-  MenuHolder: {fileID: 1915892760121796, guid: 04bd4990d5f5f1f42a354515c676f336, type: 2}
-  Loader: {fileID: 1599581179209888, guid: eb546eae74d9c2a4fa54240bc06b54c3, type: 2}
-  Keyboard: {fileID: 1300779574705418, guid: 04fcf1aa89c46fd4c9e5674e89b6f4f1, type: 2}
-  WebBrowser: {fileID: 1444221744563032, guid: 57fa6b1f2c578d8489bd1033a227c865, type: 2}
+    type: 3}
+  MenuHolder: {fileID: 1915892760121796, guid: 04bd4990d5f5f1f42a354515c676f336, type: 3}
+  Loader: {fileID: 3177385935704078282, guid: eb546eae74d9c2a4fa54240bc06b54c3, type: 3}
+  Keyboard: {fileID: 8436094135729772995, guid: 24b476317cf8c7146b9eb15e9759edb0,
+    type: 3}
+  WebBrowser: {fileID: 2178841032696158457, guid: 57fa6b1f2c578d8489bd1033a227c865,
+    type: 3}
+  FilterCreator: {fileID: 7704470918541515624, guid: 093e3b4493e294340af02ebb151b69a5,
+    type: 3}
   SettingsMenu: {fileID: 1411954133660600, guid: 3ff43d991f645f84397643bd00001c06,
-    type: 2}
-  Console: {fileID: 1325094886023510, guid: 8a2ffd86af146f94aa78c12658ed250a, type: 2}
-  FPSCanvas: {fileID: 1781189365238904, guid: ea5b777c23e2ab847addc074f3a5c8d1, type: 2}
-  WaitingCanvas: {fileID: 1597298401252412, guid: 071bbf15a284d924e8e7377189a76735,
-    type: 2}
+    type: 3}
+  Console: {fileID: 1325094886023510, guid: 8a2ffd86af146f94aa78c12658ed250a, type: 3}
+  FPSCanvas: {fileID: 1781189365238904, guid: ea5b777c23e2ab847addc074f3a5c8d1, type: 3}
   SpectatorRig: {fileID: 1220572595244950, guid: fffc95dc63a56d041b45d0e32c9ee33a,
-    type: 2}
+    type: 3}
+  H5Reader: {fileID: 1951170997804504963, guid: cd0550fe10c11e440b183d80aed218df,
+    type: 3}
+  PDFViewer: {fileID: 7486006706990871513, guid: 509cc55293c1acc46b1e57576d2f478a,
+    type: 3}
+  SnapShotCamera: {fileID: 1418566213884489412, guid: cc60f8f748146a841baa7b2c162eb4fc,
+    type: 3}
+  ScarfManager: {fileID: 3457636854970925418, guid: d7a112d337da9da46aeaacc742599fb9,
+    type: 3}
+  DesktopUI: {fileID: 1667186137773978087, guid: 7511b0c6f2dd9bb4fab91deff96e43d7,
+    type: 3}
+  GeoMXHandler: {fileID: 303402761764526230, guid: fc4b52890fd7fe54b8db12f75b5f0726,
+    type: 3}

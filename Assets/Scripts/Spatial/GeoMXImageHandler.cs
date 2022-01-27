@@ -79,10 +79,21 @@ namespace CellexalVR.Spatial
             inactivePosRight = new Vector3(Mathf.Cos(0) * radius, 1.1f, Mathf.Sin(0) * radius);
 
             slideScroller = GetComponent<SlideScroller>();
+            gameObject.SetActive(false);
+        }
 
+        private void OnEnable()
+        {
             CellexalEvents.GraphsLoaded.AddListener(ReadData);
             CellexalEvents.SelectionConfirmed.AddListener(SpawnROIFromSelection);
             CellexalEvents.GraphsReset.AddListener(Reset);
+        }
+
+        private void OnDisable()
+        {
+            CellexalEvents.GraphsLoaded.RemoveListener(ReadData);
+            CellexalEvents.SelectionConfirmed.RemoveListener(SpawnROIFromSelection);
+            CellexalEvents.GraphsReset.RemoveListener(Reset);
         }
 
         public void ReadData()

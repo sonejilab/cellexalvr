@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugMode: 0
+  _databaseOK: 0
   referenceManager: {fileID: 0}
 --- !u!114 &114546113411028626
 MonoBehaviour:

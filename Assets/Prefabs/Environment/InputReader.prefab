@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 114065228220667824}
   - component: {fileID: 114706478586369516}
   - component: {fileID: 797481884179529250}
+  - component: {fileID: 184120838}
   m_Layer: 0
   m_Name: InputReader
   m_TagString: Untagged
@@ -52,6 +53,7 @@ MonoBehaviour:
   facsGraphCounter: 0
   attributeFileRead: 0
   attributeReader: {fileID: 0}
+  mdsReader: {fileID: 184120838}
   debug: 0
 --- !u!114 &114405805043964006
 MonoBehaviour:
@@ -93,6 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 797481884179529250}
+  currentProfileFullPath: 
 --- !u!114 &797481884179529250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,9 +126,14 @@ MonoBehaviour:
   screenshotCamera: {fileID: 0}
   teleportLaser: {fileID: 0}
   mainMenu: {fileID: 0}
+  frontButtons: {fileID: 0}
+  rightButtons: {fileID: 0}
+  backButtons: {fileID: 0}
+  leftButtons: {fileID: 0}
   arcsSubMenu: {fileID: 0}
   attributeSubMenu: {fileID: 0}
   indexMenu: {fileID: 0}
+  cellStatMenu: {fileID: 0}
   createFromMarkerMenu: {fileID: 0}
   selectionFromPreviousMenu: {fileID: 0}
   colorByGeneMenu: {fileID: 0}
@@ -133,17 +141,15 @@ MonoBehaviour:
   velocitySubMenu: {fileID: 0}
   selectionMenu: {fileID: 0}
   flybyMenu: {fileID: 0}
-  frontButtons: {fileID: 0}
-  rightButtons: {fileID: 0}
-  backButtons: {fileID: 0}
-  leftButtons: {fileID: 0}
   menuRotator: {fileID: 0}
   minimizedObjectHandler: {fileID: 0}
   menuToggler: {fileID: 0}
+  menuUnfolder: {fileID: 0}
   graphManager: {fileID: 0}
   cellManager: {fileID: 0}
   lineBundler: {fileID: 0}
   selectionManager: {fileID: 0}
+  annotationManager: {fileID: 0}
   heatmapGenerator: {fileID: 0}
   networkGenerator: {fileID: 0}
   graphGenerator: {fileID: 0}
@@ -168,6 +174,7 @@ MonoBehaviour:
   filterManager: {fileID: 0}
   reportManager: {fileID: 0}
   floor: {fileID: 0}
+  pdfMesh: {fileID: 0}
   h5ReaderAnnotatorScriptManager: {fileID: 0}
   geneKeyboard: {fileID: 0}
   keyboardSwitch: {fileID: 0}
@@ -177,6 +184,7 @@ MonoBehaviour:
   coloringOptionsList: {fileID: 0}
   folderKeyboard: {fileID: 0}
   webBrowserKeyboard: {fileID: 0}
+  sessionHistoryList: {fileID: 0}
   filterBlockBoard: {fileID: 0}
   filterNameKeyboard: {fileID: 0}
   filterOperatorKeyboard: {fileID: 0}
@@ -187,3 +195,16 @@ MonoBehaviour:
   colorPicker: {fileID: 0}
   spectatorRig: {fileID: 0}
   VRRig: {fileID: 0}
+--- !u!114 &184120838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865869582214080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22caf717caa248f5adaf604bc5f4e2b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 797481884179529250}

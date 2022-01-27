@@ -1062,10 +1062,11 @@ namespace CellexalVR.AnalysisObjects
                     yield return null;
             }
 
-            LineRenderer line = convexHull.gameObject.AddComponent<LineRenderer>();
+            LineRenderer line = convexHull.gameObject.GetComponent<LineRenderer>();
             line.material = lineMaterial;
             line.startWidth = line.endWidth = 0.02f;
             line.useWorldSpace = false;
+            line.enabled = true;
             // line.alignment = LineAlignment.TransformZ;
             line.positionCount = posCount;
             line.SetPositions(sortedNodes.ToArray());

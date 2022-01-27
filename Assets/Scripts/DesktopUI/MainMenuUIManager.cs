@@ -44,9 +44,8 @@ namespace CellexalVR.DesktopUI
         private void OnSingleUserButtonPressed()
         {
             SetUsername();
-            ReferenceManager.instance.spectatorRig.GetComponent<SpectatorController>().ToggleSpectator(true);
+            ReferenceManager.instance.spectatorRig.GetComponent<SpectatorController>().MirrorVRView();
             gameObject.SetActive(false);
-            //Launcher.instance.ConnectSinglePlayer();
         }
 
         private void OnMultiUserButtonPressed()

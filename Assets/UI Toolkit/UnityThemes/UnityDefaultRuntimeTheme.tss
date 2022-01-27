@@ -1,1 +1,3 @@
-@import url("unity-theme://default");
+@import url("/Assets/Samples/UI Toolkit/1.0.0-preview.18/UI Toolkit Examples/Resources/StyleSheets/Samples_UnityDefaultRuntimeTheme.tss");
+
+

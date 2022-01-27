@@ -48,7 +48,7 @@ namespace CellexalVR.Multiuser
 
         private void Start()
         {
-            waitingCanvas = referenceManager.screenCanvas.gameObject;
+            //waitingCanvas = referenceManager.screenCanvas.gameObject;
             spectatorRig = referenceManager.spectatorRig;
             VRRig = referenceManager.VRRig;
 

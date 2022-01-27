@@ -18,7 +18,7 @@ namespace CellexalVR.Menu.SubMenus
     {
         public GameObject buttonPrefab;
         public GameObject wirePrefab;
-        public GameObject attachPoint;
+        [SerializeField] private GameObject attachPoint;
         public RemoveNetworkArcsButton removeNetworkArcsButton;
 
         // hard coded positions :)
