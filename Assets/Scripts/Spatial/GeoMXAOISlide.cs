@@ -35,6 +35,7 @@ namespace CellexalVR.Spatial
             imageHandler.referenceManager.selectionManager.AddGraphpointToSelection(gPoint, group, false);
             highlight.GetComponent<MeshRenderer>().material.color = CellexalConfig.Config.SelectionToolColors[group];
             Highlight();
+
         }
 
 

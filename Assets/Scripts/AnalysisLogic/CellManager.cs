@@ -774,7 +774,6 @@ namespace CellexalVR.AnalysisLogic
                 {
                     group = (int)((cell.NumericalAttributes[name] - range.Item1) / (range.Item2 - range.Item1) * nColors);
                 }
-
                 cell.ColorByGeneExpression(group);
             }
 

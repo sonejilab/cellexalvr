@@ -616,47 +616,47 @@ namespace CellexalVR.Spatial
     }
 
 
-#if UNITY_EDITOR
-    [CustomEditor(typeof(GeoMXImageHandler))]
-    public class SliceManagerEditor : Editor
-    {
+//#if UNITY_EDITOR
+//    [CustomEditor(typeof(GeoMXImageHandler))]
+//    public class SliceManagerEditor : Editor
+//    {
 
-        public override void OnInspectorGUI()
-        {
-            GeoMXImageHandler myTarget = (GeoMXImageHandler)target;
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Read Image Data"))
-            {
-                myTarget.ReadData();
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Spawn A Scan Image"))
-            {
-                myTarget.SpawnScanImage();
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Spawn All Scan Images"))
-            {
-                myTarget.SpawnAllScanImages();
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Spawn From Selection"))
-            {
-                myTarget.SpawnROIFromSelection();
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Color By Age"))
-            {
-                myTarget.ColorByNumericalAttribute("Age");
-            }
-            GUILayout.EndHorizontal();
+//        public override void OnInspectorGUI()
+//        {
+//            GeoMXImageHandler myTarget = (GeoMXImageHandler)target;
+//            GUILayout.BeginHorizontal();
+//            if (GUILayout.Button("Read Image Data"))
+//            {
+//                myTarget.ReadData();
+//            }
+//            GUILayout.EndHorizontal();
+//            GUILayout.BeginHorizontal();
+//            if (GUILayout.Button("Spawn A Scan Image"))
+//            {
+//                myTarget.SpawnScanImage();
+//            }
+//            GUILayout.EndHorizontal();
+//            GUILayout.BeginHorizontal();
+//            if (GUILayout.Button("Spawn All Scan Images"))
+//            {
+//                myTarget.SpawnAllScanImages();
+//            }
+//            GUILayout.EndHorizontal();
+//            GUILayout.BeginHorizontal();
+//            if (GUILayout.Button("Spawn From Selection"))
+//            {
+//                myTarget.SpawnROIFromSelection();
+//            }
+//            GUILayout.EndHorizontal();
+//            GUILayout.BeginHorizontal();
+//            if (GUILayout.Button("Color By Age"))
+//            {
+//                myTarget.ColorByNumericalAttribute("Age");
+//            }
+//            GUILayout.EndHorizontal();
 
-            DrawDefaultInspector();
-        }
-    }
-#endif
+//            DrawDefaultInspector();
+//        }
+//    }
+//#endif
 }

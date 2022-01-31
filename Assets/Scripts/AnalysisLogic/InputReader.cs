@@ -32,7 +32,7 @@ namespace CellexalVR.AnalysisLogic
         public AttributeReader attributeReader;
         public MDSReader mdsReader;
 
-        private readonly char[] separators = { ' ', '\t' };
+        private readonly char[] separators = { ' ', '\t', ',' };
         private CellManager cellManager;
         private SQLite database;
         private SelectionManager selectionManager;
@@ -419,35 +419,48 @@ namespace CellexalVR.AnalysisLogic
                 return;
             using (StreamReader sr = new StreamReader(fullPath))
             {
-                string[] header = sr.ReadLine().Split(',');
-                float[] min = new float[header.Length - 1];
-                float[] max = new float[header.Length - 1];
-                string attributeType = header[1];
-                for (int i = 0; i < header.Length - 1; i++)
+                string headerLine = sr.ReadLine();
+                if (headerLine == null)
+                {
+                    // empty file
+                    CellexalLog.Log("Empty index.facs file");
+                    return;
+                }
+
+                string[] header = headerLine.Split(new string[] { "\t", " " }, StringSplitOptions.RemoveEmptyEntries);
+                float[] min = new float[header.Length];
+                float[] max = new float[header.Length];
+                string[] values = new string[header.Length + 1];
+                int i = 0;
+                for (; i < min.Length; ++i)
                 {
                     min[i] = float.MaxValue;
                     max[i] = float.MinValue;
                 }
-                while (!sr.EndOfStream)
+
+                for (i = 0; !sr.EndOfStream; ++i)
                 {
-                    string[] values = sr.ReadLine().Split(',');
-                    for (int j = 0; j < values.Length - 1; j++)
+                    string line = sr.ReadLine();
+                    SplitValues(line, ref values, separators);
+                    string cellName = values[0];
+                    for (int j = 0; j < values.Length - 1; ++j)
                     {
-                        float val = float.Parse(values[j + 1]);
-                        if (val < min[j])
-                            min[j] = val;
-                        else if (val > max[j])
-                            max[j] = val;
+                        float value = float.Parse(values[j + 1],
+                            System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                        if (value < min[j])
+                            min[j] = value;
+                        if (value > max[j])
+                            max[j] = value;
                     }
                     for (int j = 0; j < values.Length - 1; ++j)
                     {
-                        cellManager.AddNumericalAttribute(values[0], attributeType, float.Parse(values[j + 1]));
+                        cellManager.AddNumericalAttribute(cellName, header[j], float.Parse(values[j + 1]));
                     }
                 }
 
-                for (int i = 1; i < header.Length; ++i)
+                for (i = 0; i < header.Length; ++i)
                 {
-                    cellManager.NumericalAttributeRanges[header[i].ToLower()] = new Tuple<float, float>(min[i - 1], max[i - 1]);
+                    cellManager.NumericalAttributeRanges[header[i].ToLower()] = new Tuple<float, float>(min[i], max[i]);
                 }
                 cellManager.NumericalAttributes = header;
             }

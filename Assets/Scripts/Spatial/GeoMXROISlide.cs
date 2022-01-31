@@ -66,29 +66,29 @@ namespace CellexalVR.Spatial
         }
     }
 
-#if UNITY_EDITOR
-    [CustomEditor(typeof(GeoMXROISlide))]
-    public class GeoMXROISlideEditor : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            GeoMXROISlide myTarget = (GeoMXROISlide)target;
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Select"))
-            {
-                myTarget.Select();
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Reattach"))
-            {
-                myTarget.Reattach();
-            }
-            GUILayout.EndHorizontal();
+//#if UNITY_EDITOR
+//    [CustomEditor(typeof(GeoMXROISlide))]
+//    public class GeoMXROISlideEditor : Editor
+//    {
+//        public override void OnInspectorGUI()
+//        {
+//            GeoMXROISlide myTarget = (GeoMXROISlide)target;
+//            GUILayout.BeginHorizontal();
+//            if (GUILayout.Button("Select"))
+//            {
+//                myTarget.Select();
+//            }
+//            GUILayout.EndHorizontal();
+//            GUILayout.BeginHorizontal();
+//            if (GUILayout.Button("Reattach"))
+//            {
+//                myTarget.Reattach();
+//            }
+//            GUILayout.EndHorizontal();
 
-            DrawDefaultInspector();
-        }
-    }
-#endif
+//            DrawDefaultInspector();
+//        }
+//    }
+//#endif
 
 }
