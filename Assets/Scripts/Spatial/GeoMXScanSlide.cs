@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using CellexalVR.General;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -11,7 +12,11 @@ namespace CellexalVR.Spatial
         public string scanID;
         public string[] rois;
 
+
         private bool selected;
+
+
+
 
         public override void Select()
         {
@@ -46,30 +51,32 @@ namespace CellexalVR.Spatial
 
         }
 
+
+
     }
 
 
-//#if UNITY_EDITOR
-//    [CustomEditor(typeof(GeoMXScanSlide))]
-//    public class GeoMXScanSlideEditor : Editor
-//    {
-//        public override void OnInspectorGUI()
-//        {
-//            GeoMXScanSlide myTarget = (GeoMXScanSlide)target;
-//            GUILayout.BeginHorizontal();
-//            if (GUILayout.Button("Select"))
-//            {
-//                myTarget.Select();
-//            }
-//            GUILayout.EndHorizontal();
-//            GUILayout.BeginHorizontal();
-//            if (GUILayout.Button("Reattach"))
-//            {
-//                myTarget.Reattach();
-//            }
-//            GUILayout.EndHorizontal();
-//            DrawDefaultInspector();
-//        }
-//    }
-//#endif
+    //#if UNITY_EDITOR
+    //    [CustomEditor(typeof(GeoMXScanSlide))]
+    //    public class GeoMXScanSlideEditor : Editor
+    //    {
+    //        public override void OnInspectorGUI()
+    //        {
+    //            GeoMXScanSlide myTarget = (GeoMXScanSlide)target;
+    //            GUILayout.BeginHorizontal();
+    //            if (GUILayout.Button("Select"))
+    //            {
+    //                myTarget.Select();
+    //            }
+    //            GUILayout.EndHorizontal();
+    //            GUILayout.BeginHorizontal();
+    //            if (GUILayout.Button("Reattach"))
+    //            {
+    //                myTarget.Reattach();
+    //            }
+    //            GUILayout.EndHorizontal();
+    //            DrawDefaultInspector();
+    //        }
+    //    }
+    //#endif
 }

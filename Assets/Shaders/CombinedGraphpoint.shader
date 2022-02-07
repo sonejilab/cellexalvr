@@ -51,6 +51,7 @@ Shader "Custom/CombinedGraphpoint"
             "Queue" = "Transparent"
             "RenderType" = "Transparent"
             "IgnoreProjector" = "True"
+            "RenderPipeline" = "UniversalPipeline"
         }
         Blend SrcAlpha OneMinusSrcAlpha 
 //        ZWrite Off
@@ -125,11 +126,11 @@ Shader "Custom/CombinedGraphpoint"
         {
             Tags
             {
-               "LightMode" = "ForwardBase"
+                "LightMode" = "UniversalForward"
             }
             
                CGPROGRAM
-               #pragma target 3.0
+               #pragma target 4.5
                #pragma vertex vert
                #pragma fragment frag 
                #pragma multi_compile_fwdbase                       // This line tells Unity to compile this pass for forward base.
@@ -148,6 +149,7 @@ Shader "Custom/CombinedGraphpoint"
                      float4 vertex : POSITION;
                      float3 normal : NORMAL;
                      float2 texcoord : TEXCOORD0;
+                     UNITY_VERTEX_INPUT_INSTANCE_ID //Insert  
                 };
                 
                 struct vertex_output
@@ -157,6 +159,7 @@ Shader "Custom/CombinedGraphpoint"
                      float3  lightDir    : TEXCOORD1;
                      float3  normal		: TEXCOORD2;
                      float3  worldPos     : TEXCOORD3;
+                     UNITY_VERTEX_OUTPUT_STEREO //Insert
                      LIGHTING_COORDS(3,4)                            // Macro to send shadow & attenuation to the vertex shader.
                 };
                 
@@ -167,6 +170,9 @@ Shader "Custom/CombinedGraphpoint"
                  vertex_output vert (vertex_input v)
                  {
                      vertex_output o;
+                     UNITY_SETUP_INSTANCE_ID(v); //Insert
+                     UNITY_INITIALIZE_OUTPUT(vertex_output, o); //Insert
+                     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o); //Insert
                      o.pos = UnityObjectToClipPos(v.vertex);
                      o.uv = v.texcoord.xy;
                      o.lightDir = ObjSpaceLightDir(v.vertex);
@@ -278,9 +284,11 @@ Shader "Custom/CombinedGraphpoint"
                         //clip(normalize(float2(x - floor(x + 0.5), abs(x) - 0.5)));
                 	#endif
                 }
-
+                UNITY_DECLARE_SCREENSPACE_TEXTURE(_ScreenTex); //Insert
                 fixed4 frag(vertex_output i) : COLOR
                 {
+                    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); //Insert
+                    fixed4 col = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_ScreenTex, i.uv); //Insert
                     ClipLOD(i.pos.xy, unity_LODFade.x);
                     i.lightDir = normalize(i.lightDir);
                     fixed atten = LIGHT_ATTENUATION(i); // Macro to get you the combined shadow & attenuation value.
@@ -332,7 +340,7 @@ Shader "Custom/CombinedGraphpoint"
                    
                    else 
                    {
-                       color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 15 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
+                       //color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 15 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
                        color.rgb += (color.rgb * _LightColor0.rgb * diff) * (atten * 2); // Diffuse and specular.
                        color.a = 1.0;
                    }

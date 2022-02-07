@@ -19,6 +19,8 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class SelectionToolCollider : MonoBehaviour
     {
+        public static SelectionToolCollider instance;
+
         [SerializeField] private InputActionAsset inputActionAsset;
         [SerializeField] private InputActionReference touchPadClick;
         //[SerializeField] private InputActionReference thumbStickClick;
@@ -56,6 +58,7 @@ namespace CellexalVR.Interaction
         public Color[] Colors;
         public bool hapticFeedbackThisFrame = true;
         public bool annotate;
+        public bool selActive = false;
 
         private int currentMeshIndex;
         private int tempColorIndex;
@@ -150,7 +153,6 @@ namespace CellexalVR.Interaction
         private ControllerModelSwitcher controllerModelSwitcher;
         private GraphManager graphManager;
         private MultiuserMessageSender multiuserMessageSender;
-        private bool selActive = false;
 
         private void OnValidate()
         {
@@ -162,6 +164,7 @@ namespace CellexalVR.Interaction
 
         private void Awake()
         {
+            instance = this;
             graphManager = referenceManager.graphManager;
             SetSelectionToolEnabled(false);
 

@@ -7,6 +7,7 @@ using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
 using CellexalVR.Spatial;
+using DefaultNamespace;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -232,6 +233,11 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="expressions">An arraylist with <see cref="SQLiter.CellExpressionPair"/>.</param>
         public void ColorAllGraphsByGeneExpression(string geneName, ArrayList expressions)
         {
+            if (TextureHandler.instance.textureCoordDict.Count > 0)
+            {
+                TextureHandler.instance.ColorByExpression(expressions);
+            }
+
             foreach (Graph graph in Graphs)
             {
                 graph.ColorByGeneExpression(expressions);
@@ -253,6 +259,8 @@ namespace CellexalVR.AnalysisObjects
                 referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
             }
         }
+
+
 
         /// <summary>
         /// Deletes all graphs and networks in the scene.
@@ -343,6 +351,10 @@ namespace CellexalVR.AnalysisObjects
                 {
                     Destroy(panel.gameObject);
                 }
+            }
+            if (TextureHandler.instance.textureCoordDict.Count > 0)
+            {
+                TextureHandler.instance.ResetTexture();
             }
             CellexalEvents.CommandFinished.Invoke(true);
             CellexalEvents.GraphsReset.Invoke();

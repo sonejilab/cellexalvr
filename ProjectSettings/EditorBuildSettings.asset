@@ -5,14 +5,14 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Launcher.unity
     guid: aeed05bb8ad9c5242a4764a845aad31a
   - enabled: 0
-    path: Assets/vrjeans_scene1.unity
-    guid: 14933dc213bea1a42b97f83fda842ff4
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 0
-    path: Assets/SceneLoaderTest.unity
+    path: Assets/VRLauncher_Unfinished.unity
     guid: 00cde3259dd216d46b968f5e350b1925
   - enabled: 0
     path: 

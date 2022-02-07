@@ -1015,13 +1015,16 @@ namespace CellexalVR.AnalysisObjects
             [ReadOnly] public NativeArray<int> clusterOffsets;
             [ReadOnly] public int clusterMaxSize;
 
-            [WriteOnly] [NativeDisableParallelForRestriction]
+            [WriteOnly]
+            [NativeDisableParallelForRestriction]
             public NativeArray<Vector3> resultVertices;
 
-            [WriteOnly] [NativeDisableParallelForRestriction]
+            [WriteOnly]
+            [NativeDisableParallelForRestriction]
             public NativeArray<int> resultTriangles;
 
-            [WriteOnly] [NativeDisableParallelForRestriction]
+            [WriteOnly]
+            [NativeDisableParallelForRestriction]
             public NativeArray<Vector2> resultUVs;
 
             // each call to execute merges the meshes of one cluster
@@ -1311,7 +1314,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     Vector2Int pos = point.Value.textureCoord[0];
                     Color32 oldColor = oldTextureColors[point.Key];
-                    graph.textures[0].SetPixels32(pos.x, pos.y, 1, 1, new Color32[] {oldColor});
+                    graph.textures[0].SetPixels32(pos.x, pos.y, 1, 1, new Color32[] { oldColor });
                 }
 
                 graph.textures[0].Apply();
@@ -1350,9 +1353,9 @@ namespace CellexalVR.AnalysisObjects
             for (int i = 0; i < nrOfLODGroups; i++)
             {
                 Renderer[] renderers;
+                renderers = new Renderer[graph.lodGroupClusters[i].Count];
                 if (graph != null)
                 {
-                    renderers = new Renderer[graph.lodGroupClusters[i].Count];
                     for (int j = 0; j < graph.lodGroupClusters[i].Count; j++)
                     {
                         renderers[j] = graph.lodGroupClusters[i][j].GetComponent<Renderer>();
@@ -1361,7 +1364,7 @@ namespace CellexalVR.AnalysisObjects
 
                 else
                 {
-                    renderers = new Renderer[slice.lodGroupClusters[i].Count];
+                    //renderers = new Renderer[slice.lodGroupClusters[i].Count];
                     // for (int j = 0; j < slice.lodGroupClusters[i].Count; j++)
                     // {
                     //     renderers[j] = slice.lodGroupClusters[i][j].GetComponent<Renderer>();

@@ -12,6 +12,8 @@ using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.AnalysisLogic.H5reader;
 using UnityEngine.XR.Interaction.Toolkit;
+using Unity.Entities;
+using DefaultNamespace;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -575,6 +577,8 @@ namespace CellexalVR.AnalysisLogic
                     referenceManager.attributeSubMenu.attributes.Remove(attributeType);
                 }
             }
+
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().ColorCluster(attributeType, color);
 
             CellexalLog.Log("Colored graphs by " + attributeType);
             RScriptRunner.WriteToServer("# colored graphs by " + attributeType);

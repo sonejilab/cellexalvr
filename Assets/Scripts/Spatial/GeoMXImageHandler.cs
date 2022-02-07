@@ -62,7 +62,7 @@ namespace CellexalVR.Spatial
         private void Awake()
         {
             instance = this;
-        }    
+        }
 
         private void Start()
         {
@@ -209,7 +209,7 @@ namespace CellexalVR.Spatial
             }
             for (int i = 0; i < aoiIDs.Length; i++)
             {
-                string path = $"{imagePath}\\{scanID}\\{aoiIDs[i]}.png";
+                string path = $"{imagePath}\\{scanID}\\_lowq_{aoiIDs[i]}.png";
                 if (File.Exists(path))
                 {
                     using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture($"file://{path}"))
@@ -226,7 +226,8 @@ namespace CellexalVR.Spatial
                             aoi.imageHandler = this;
                             aoi.aoiID = aoiIDs[i];
                             Texture2D aoiTexture = DownloadHandlerTexture.GetContent(uwr);
-                            aoi.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", aoiTexture);
+                            aoi.SetLowQ(aoiTexture);
+                            //aoi.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", aoiTexture);
                             float ratio = (float)aoiTexture.width / (float)aoiTexture.height;
                             aoi.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
                             aoi.originalScale = aoi.transform.localScale;
@@ -259,6 +260,33 @@ namespace CellexalVR.Spatial
             slideScroller.currentSlide[2] = 0;
             slideScroller.currentType = 2;
 
+            for (int i = 0; i < aoiIDs.Length; i++)
+            {
+                GeoMXAOISlide aoi = aoiSlides[aoiIDs[i]].GetComponent<GeoMXAOISlide>();
+                string path = $"{imagePath}\\{scanID}\\{aoiIDs[i]}.png";
+                if (File.Exists(path))
+                {
+                    using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture($"file://{path}"))
+                    {
+                        uwr.downloadHandler = new DownloadHandlerTexture(true);
+                        yield return uwr.SendWebRequest();
+                        if (uwr.result != UnityWebRequest.Result.Success)
+                        {
+                            print(uwr.error);
+                        }
+                        else
+                        {
+                            Texture2D aoiTexture = DownloadHandlerTexture.GetContent(uwr);
+                            aoi.SetHighQ(aoiTexture);
+                        }
+                    }
+                }
+                else
+                {
+                    print($"Could not find image {path}");
+                }
+            }
+
         }
 
 
@@ -288,7 +316,7 @@ namespace CellexalVR.Spatial
             CellexalEvents.LoadingImages.Invoke();
             for (int i = 0; i < roiIDs.Length; i++)
             {
-                string path = $"{imagePath}\\{scanID}\\{roiIDs[i]} - Segments.png";
+                string path = $"{imagePath}\\{scanID}\\_lowq_{roiIDs[i]} - Segments.png";
                 if (File.Exists(path))
                 {
                     using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture($"file://{path}"))
@@ -309,7 +337,8 @@ namespace CellexalVR.Spatial
                             roi.aoiIDs = roiDict[roi.roiID].ToArray();
                             roi.imageHandler = this;
                             Texture2D roiTexture = DownloadHandlerTexture.GetContent(uwr);
-                            roi.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", roiTexture);
+                            roi.SetLowQ(roiTexture);
+                            //roi.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", roiTexture);
                             float ratio = (float)roiTexture.width / (float)roiTexture.height;
                             roi.transform.localScale = new Vector3(Math.Min(1f * ratio, 1f), Math.Min(1f / ratio, 1f), 1f);
                             roi.originalScale = roi.transform.localScale;
@@ -352,6 +381,37 @@ namespace CellexalVR.Spatial
             slideScroller.currentSlides = roiSlides;
             slideScroller.currentSlide[1] = 0;
             slideScroller.currentType = 1;
+
+            for (int i = 0; i < roiIDs.Length; i++)
+            {
+                GeoMXROISlide roi = roiSlides[roiIDs[i]].GetComponent<GeoMXROISlide>();
+                string path = $"{imagePath}\\{roi.scanID}\\{roiIDs[i]} - Segments.png";
+                if (File.Exists(path))
+                {
+                    using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture($"file://{path}"))
+                    {
+                        uwr.downloadHandler = new DownloadHandlerTexture(true);
+                        yield return uwr.SendWebRequest();
+                        if (uwr.result != UnityWebRequest.Result.Success)
+                        {
+                            print(uwr.error);
+                        }
+                        else
+                        {
+                            Texture2D roiTexture = DownloadHandlerTexture.GetContent(uwr);
+                            //scan.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", scanTexture);
+
+                            //j++;
+                            //ShowName($"Loading {j} of {roiIDs.Count}");
+                            roi.SetHighQ(roiTexture);
+                        }
+                    }
+                }
+                else
+                {
+                    print($"Could not find image {path}");
+                }
+            }
         }
 
 
@@ -375,10 +435,9 @@ namespace CellexalVR.Spatial
 
         private void Reset()
         {
-            print("reset");
             ClearSlideStacks();
             int i = 0;
-            foreach(KeyValuePair<string, GeoMXSlide> kvp in scanSlides)
+            foreach (KeyValuePair<string, GeoMXSlide> kvp in scanSlides)
             {
                 if (++i > nrOfPositions)
                     break;
@@ -431,7 +490,7 @@ namespace CellexalVR.Spatial
             foreach (GraphPoint gp in gps)
             {
                 GeoMxCell geoMXCell = _cells[int.Parse(gp.Label)];
-                string path = $"{imagePath}\\{geoMXCell.ScanImageID}\\{geoMXCell.ROIImageID} - Segments.png";
+                string path = $"{imagePath}\\{geoMXCell.ScanImageID}\\_lowq_{geoMXCell.ROIImageID} - Segments.png";
                 if (!File.Exists(path))
                 {
                     print($"Could not find image {path}");
@@ -459,7 +518,8 @@ namespace CellexalVR.Spatial
                         roi.aoiIDs = roiDict[roi.roiID].ToArray();
                         roi.imageHandler = this;
                         Texture2D roiTexture = DownloadHandlerTexture.GetContent(uwr);
-                        roi.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", roiTexture);
+                        roi.SetLowQ(roiTexture);
+                        //roi.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", roiTexture);
                         float ratio = (float)roiTexture.width / (float)roiTexture.height;
                         roi.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
                         roi.originalScale = roi.transform.localScale;
@@ -470,12 +530,41 @@ namespace CellexalVR.Spatial
                     }
                     i++;
                 }
-                slideScroller.currentSlides = roiSlides;
-                slideScroller.currentSlide[1] = 0;
-                slideScroller.currentType = 1;
-                slideScroller.currentIDs = roiIDs.ToArray();
-                slideScroller.currentROIIDs = roiIDs.ToArray();
-                CellexalEvents.ImagesLoaded.Invoke();
+            }
+            slideScroller.currentSlides = roiSlides;
+            slideScroller.currentSlide[1] = 0;
+            slideScroller.currentType = 1;
+            slideScroller.currentIDs = roiIDs.ToArray();
+            slideScroller.currentROIIDs = roiIDs.ToArray();
+            CellexalEvents.ImagesLoaded.Invoke();
+
+
+            int j = 0;
+            for (int k = 0; k < roiIDs.Count; k++)
+            {
+                GeoMXROISlide roi = roiSlides[roiIDs[k]].GetComponent<GeoMXROISlide>();
+                string path = $"{imagePath}\\{roi.scanID}\\{roiIDs[k]} - Segments.png";
+                if (File.Exists(path))
+                {
+                    using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture($"file://{path}"))
+                    {
+                        uwr.downloadHandler = new DownloadHandlerTexture(true);
+                        yield return uwr.SendWebRequest();
+                        if (uwr.result != UnityWebRequest.Result.Success)
+                        {
+                            print(uwr.error);
+                        }
+                        else
+                        {
+                            Texture2D roiTexture = DownloadHandlerTexture.GetContent(uwr);
+                            roi.SetHighQ(roiTexture);
+                        }
+                    }
+                }
+                else
+                {
+                    print($"Could not find image {path}");
+                }
             }
         }
 
@@ -501,7 +590,7 @@ namespace CellexalVR.Spatial
             int j = 0;
             for (int i = 0; i < scanIDs.Length; i++)
             {
-                string path = $"{imagePath}\\{scanIDs[i]}\\{scanIDs[i]}.png";
+                string path = $"{imagePath}\\{scanIDs[i]}\\_lowq_{scanIDs[i]}.png";
                 if (File.Exists(path))
                 {
                     using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture($"file://{path}"))
@@ -524,7 +613,7 @@ namespace CellexalVR.Spatial
                             scan.transform.localPosition = new Vector3(0, 0, radius);
                             scan.transform.LookAt(2 * scan.transform.position - center);
                             Texture2D scanTexture = DownloadHandlerTexture.GetContent(uwr);
-                            scan.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", scanTexture);
+                            //scan.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", scanTexture);
                             float ratio = (float)scanTexture.width / (float)scanTexture.height;
                             scan.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
                             scan.originalScale = scan.transform.localScale;
@@ -541,7 +630,40 @@ namespace CellexalVR.Spatial
                             }
                             j++;
                             ShowName($"Loading {j} of {scanIDs.Length}");
+                            scan.SetLowQ(scanTexture);
                             scan.type = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    print($"Could not find image {path}");
+                }
+            }
+
+            j = 0;
+            for (int i = 0; i < scanIDs.Length; i++)
+            {
+                string path = $"{imagePath}\\{scanIDs[i]}\\{scanIDs[i]}.png";
+                if (File.Exists(path))
+                {
+                    using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture($"file://{path}"))
+                    {
+                        uwr.downloadHandler = new DownloadHandlerTexture(true);
+                        yield return uwr.SendWebRequest();
+                        if (uwr.result != UnityWebRequest.Result.Success)
+                        {
+                            print(uwr.error);
+                        }
+                        else
+                        {
+                            GeoMXScanSlide scan = scanSlides[scanIDs[i]].GetComponent<GeoMXScanSlide>();
+                            Texture2D scanTexture = DownloadHandlerTexture.GetContent(uwr);
+                            //scan.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", scanTexture);
+
+                            //j++;
+                            //ShowName($"Loading {j} of {scanIDs.Length}");
+                            scan.SetHighQ(scanTexture);
                         }
                     }
                 }
@@ -616,47 +738,47 @@ namespace CellexalVR.Spatial
     }
 
 
-//#if UNITY_EDITOR
-//    [CustomEditor(typeof(GeoMXImageHandler))]
-//    public class SliceManagerEditor : Editor
-//    {
+    //#if UNITY_EDITOR
+    //    [CustomEditor(typeof(GeoMXImageHandler))]
+    //    public class SliceManagerEditor : Editor
+    //    {
 
-//        public override void OnInspectorGUI()
-//        {
-//            GeoMXImageHandler myTarget = (GeoMXImageHandler)target;
-//            GUILayout.BeginHorizontal();
-//            if (GUILayout.Button("Read Image Data"))
-//            {
-//                myTarget.ReadData();
-//            }
-//            GUILayout.EndHorizontal();
-//            GUILayout.BeginHorizontal();
-//            if (GUILayout.Button("Spawn A Scan Image"))
-//            {
-//                myTarget.SpawnScanImage();
-//            }
-//            GUILayout.EndHorizontal();
-//            GUILayout.BeginHorizontal();
-//            if (GUILayout.Button("Spawn All Scan Images"))
-//            {
-//                myTarget.SpawnAllScanImages();
-//            }
-//            GUILayout.EndHorizontal();
-//            GUILayout.BeginHorizontal();
-//            if (GUILayout.Button("Spawn From Selection"))
-//            {
-//                myTarget.SpawnROIFromSelection();
-//            }
-//            GUILayout.EndHorizontal();
-//            GUILayout.BeginHorizontal();
-//            if (GUILayout.Button("Color By Age"))
-//            {
-//                myTarget.ColorByNumericalAttribute("Age");
-//            }
-//            GUILayout.EndHorizontal();
+    //        public override void OnInspectorGUI()
+    //        {
+    //            GeoMXImageHandler myTarget = (GeoMXImageHandler)target;
+    //            GUILayout.BeginHorizontal();
+    //            if (GUILayout.Button("Read Image Data"))
+    //            {
+    //                myTarget.ReadData();
+    //            }
+    //            GUILayout.EndHorizontal();
+    //            GUILayout.BeginHorizontal();
+    //            if (GUILayout.Button("Spawn A Scan Image"))
+    //            {
+    //                myTarget.SpawnScanImage();
+    //            }
+    //            GUILayout.EndHorizontal();
+    //            GUILayout.BeginHorizontal();
+    //            if (GUILayout.Button("Spawn All Scan Images"))
+    //            {
+    //                myTarget.SpawnAllScanImages();
+    //            }
+    //            GUILayout.EndHorizontal();
+    //            GUILayout.BeginHorizontal();
+    //            if (GUILayout.Button("Spawn From Selection"))
+    //            {
+    //                myTarget.SpawnROIFromSelection();
+    //            }
+    //            GUILayout.EndHorizontal();
+    //            GUILayout.BeginHorizontal();
+    //            if (GUILayout.Button("Color By Age"))
+    //            {
+    //                myTarget.ColorByNumericalAttribute("Age");
+    //            }
+    //            GUILayout.EndHorizontal();
 
-//            DrawDefaultInspector();
-//        }
-//    }
-//#endif
+    //            DrawDefaultInspector();
+    //        }
+    //    }
+    //#endif
 }

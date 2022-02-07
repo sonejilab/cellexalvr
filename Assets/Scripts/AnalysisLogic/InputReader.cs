@@ -16,6 +16,11 @@ using System.Diagnostics;
 using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.PDFViewer;
 using UnityEngine.XR;
+using AnalysisLogic;
+using DefaultNamespace;
+using System.Text.RegularExpressions;
+using UnityEngine.VFX;
+using CellexalVR.Spatial;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -31,6 +36,7 @@ namespace CellexalVR.AnalysisLogic
         public bool attributeFileRead;
         public AttributeReader attributeReader;
         public MDSReader mdsReader;
+        public PointCloudGenerator pointCloudGenerator;
 
         private readonly char[] separators = { ' ', '\t', ',' };
         private CellManager cellManager;
@@ -102,6 +108,14 @@ namespace CellexalVR.AnalysisLogic
             ReadFolder(path);
         }
 
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readbigfolder", "rbf" })]
+        public void ReadBigFolderConsole(string path)
+        {
+            referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
+            StartCoroutine(ReadBigFolder(path));
+            // ReadFolder(path);
+        }
+
         [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readscarffolder", "rscf" })]
         public void ReadScarfFolderConsole(string path)
         {
@@ -143,6 +157,162 @@ namespace CellexalVR.AnalysisLogic
             {
                 referenceManager.configManager.MultiUserSynchronise();
             }
+        }
+
+        private IEnumerator ReadBigFolder(string path)
+        {
+            if (!referenceManager.loaderController.loaderMovedDown)
+            {
+                referenceManager.loaderController.loaderMovedDown = true;
+                referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+            }
+
+
+            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            string workingDirectory = Directory.GetCurrentDirectory();
+            string fullPath = workingDirectory + "\\Data\\" + path;
+            CellexalUser.DataSourceFolder = path;
+            database.InitDatabase(fullPath + "\\database.sqlite");
+
+            string[] files = Directory.GetFiles(fullPath, "*.mds");
+            pointCloudGenerator.mdsFileCount = files.Length;
+            // string mdsFile = files[0];
+            foreach (string mdsFile in files)
+            {
+                PointCloud pc = pointCloudGenerator.CreateNewPointCloud();
+                string[] regexResult = Regex.Split(mdsFile, @"[\\/]");
+                string graphFileName = regexResult[regexResult.Length - 1];
+                //pc.gameObject.name = graphFileName.Substring(0, graphFileName.Length - 4);
+                pc.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+                pc.originalName = pc.GraphName;
+                float x;
+                float y;
+                float z;
+                using (StreamReader streamReader = new StreamReader(mdsFile))
+                {
+                    streamReader.ReadLine();
+
+                    int i = 0;
+                    while (!streamReader.EndOfStream)
+                    {
+                        if (i % 10000 == 0) yield return null;
+                        string[] words = streamReader.ReadLine().Split(separators);
+                        string cellName;
+                        // reading 2d graph or img pixel coordinates for spatial slice.
+                        if (words.Length == 2)
+                        {
+                            cellName = i.ToString();
+                            x = (float.Parse(words[0]));
+                            y = (float.Parse(words[1]));
+                            z = 0f;
+                        }
+                        else
+                        {
+                            cellName = words[0];
+                            x = (float.Parse(words[1]));
+                            y = (float.Parse(words[2]));
+                            z = float.Parse(words[3]);
+                        }
+                        pointCloudGenerator.AddGraphPoint(cellName, x, y, z);
+                        int textureX = i % PointCloudGenerator.textureWidth;
+                        int textureY = (i / PointCloudGenerator.textureWidth);
+                        TextureHandler.instance.textureCoordDict[words[0]] = new Vector2Int(textureX, textureY);
+                        i++;
+                    }
+                }
+                pointCloudGenerator.SpawnPoints(pc);
+                GC.Collect();
+            }
+
+            if (files.Length > 1)
+            {
+                PointCloud pc1 = pointCloudGenerator.pointClouds[0];
+                PointCloud pc2 = pointCloudGenerator.pointClouds[1];
+                pc1.morphTexture = pc2.positionTextureMap;
+                pc2.morphTexture = pc1.positionTextureMap;
+                pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc2.positionTextureMap);
+                pc2.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
+                pc1.otherName = pc2.GraphName;
+                pc2.otherName = pc1.GraphName;
+                pc1.originalName = pc1.GraphName;
+                pc2.otherName = pc1.GraphName;
+                pc2.originalName = pc2.GraphName;
+            }
+
+            attributeReader = gameObject.AddComponent<AttributeReader>();
+            attributeReader.referenceManager = referenceManager;
+            StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
+            while (!attributeFileRead)
+                yield return null;
+            referenceManager.attributeSubMenu.SwitchButtonStates(true);
+            ReadFacsFiles(path);
+            ReadFilterFiles(CellexalUser.UserSpecificFolder);
+            StartCoroutine(pointCloudGenerator.ReadMetaData(fullPath));
+            while (pointCloudGenerator.readingFile)
+                yield return null;
+            StartCoroutine(pointCloudGenerator.CreateColorTextureMap());
+
+            while (pointCloudGenerator.creatingGraph)
+                yield return null;
+
+            PointCloud parentPC = pointCloudGenerator.pointClouds[0];
+
+            files = Directory.GetFiles(fullPath, "*images.csv");
+            string[] imageFiles = Directory.GetFiles(fullPath, "*.png");
+            for (int i = 0; i < files.Length; i++)
+            {
+                int lineCount = 0;
+                string imageFile = imageFiles[i];
+                byte[] imageData = File.ReadAllBytes(imageFile);
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(imageData);
+                string[] names = files[i].Split(Path.DirectorySeparatorChar);
+                string n = names[names.Length - 1].Split('.')[0];
+                HistoImage hi = pointCloudGenerator.CreateNewHistoImage();
+                hi.sliceNr = int.Parse(Regex.Match(n, @"\d+").Value);
+                hi.gameObject.name = n;
+                hi.texture = texture;
+                hi.transform.position = new Vector3(0f, 1f, (float)i / 5f);
+                using (StreamReader sr = new StreamReader(files[i]))
+                {
+                    string header = sr.ReadLine();
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine();
+                        string[] words = line.Split(',');
+                        string cellName = words[0];
+                        float.TryParse(words[1], out float x);
+                        float.TryParse(words[2], out float y);
+                        int xCoord = (int)x;
+                        int yCoord = (int)y;
+                        PointCloudGenerator.instance.AddGraphPoint(cellName, x, y);
+                        if (lineCount % 100 == 0) yield return null;
+                        int textureX = lineCount % PointCloudGenerator.textureWidth;
+                        int textureY = (lineCount / PointCloudGenerator.textureWidth);
+                        hi.textureCoords[cellName] = new Vector2Int(textureX, textureY);
+                        //TextureHandler.instance.textureCoordDict[cellName] = new Vector2Int(textureX, textureY);
+                        lineCount++;
+                    }
+                }
+                //hi.Initialize();
+                MeshRenderer mr = hi.image.GetComponent<MeshRenderer>();
+                mr.material.mainTexture = texture;
+                mr.material.SetTexture("_EmissionMap", texture);
+                PointCloudGenerator.instance.SpawnPoints(hi, parentPC);
+                HistoImageHandler.instance.images.Add(hi);
+                string c = hi.sliceNr.ToString();
+                var carr = c.ToCharArray();
+                string id = n.Split(carr)[0];
+                if (!HistoImageHandler.instance.imageDict.ContainsKey(id))
+                {
+                    HistoImageHandler.instance.imageDict.Add(id, new List<HistoImage>());
+                }
+                print($"{id}, {hi.gameObject.name}");
+                HistoImageHandler.instance.imageDict[id].Add(hi);
+
+            }
+
+            CellexalEvents.GraphsLoaded.Invoke();
         }
 
         /// <summary>
@@ -334,7 +504,7 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Reads the index.facs file.
         /// </summary>
-        public void ReadFacsFiles(string path, int nbrOfCells)
+        public void ReadFacsFiles(string path)
         {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -383,8 +553,20 @@ namespace CellexalVR.AnalysisLogic
                 string cellName = values[0];
                 for (int j = 0; j < values.Length - 1; ++j)
                 {
-                    float value = float.Parse(values[j + 1],
-                        System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                    //float value;
+                    //try
+                    //{
+                    //    value = float.Parse(values[j + 1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    print($"could not parse {cellName}, {values[j+1]}, {values[j]}, {values[j + 2]}");
+                    //    value = 0f;
+                    //}
+                    float.TryParse(values[j + 1],
+                        System.Globalization.NumberStyles.Float,
+                        System.Globalization.CultureInfo.InvariantCulture.NumberFormat,
+                        out float value);
                     if (value < min[j])
                         min[j] = value;
                     if (value > max[j])
@@ -470,6 +652,7 @@ namespace CellexalVR.AnalysisLogic
                     cellManager.NumericalAttributeRanges[header[i].ToLower()] = new Tuple<float, float>(min[i], max[i]);
                 }
                 cellManager.NumericalAttributes = header;
+
             }
         }
 

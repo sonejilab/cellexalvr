@@ -74,6 +74,8 @@ namespace CellexalVR.General
         private GameObject _GeoMXHandler;
         public GameObject MeshGenerator;
         private GameObject _MeshGenerator;
+        public GameObject BrainParent;
+        private GameObject _BrainParent;
 
         private List<GameObject> instances;
         private IEnumerator buildSceneEnumerator;
@@ -148,6 +150,7 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _DesktopUI, DesktopUI);
             InstantiateSceneAsset(ref _ScarfManager, ScarfManager);
             InstantiateSceneAsset(ref _MeshGenerator, MeshGenerator);
+            InstantiateSceneAsset(ref _BrainParent, BrainParent);
             //InstantiateSceneAsset(ref _Teleporting, Teleporting);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
@@ -288,6 +291,7 @@ namespace CellexalVR.General
             DesktopUI = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/DesktopUI.prefab");
             GeoMXHandler = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GeoMX/GeoMXHandler.prefab");
             MeshGenerator = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/MarchingCubes/MeshGenerator.prefab");
+            BrainParent = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/BrainMeshes/BrainParent.prefab");
         }
 
         [Obsolete]

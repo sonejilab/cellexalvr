@@ -59,7 +59,7 @@ namespace CellexalVR.Menu.Buttons
             float currentTime = 0;
             Vector3 startPosition = slider.transform.localPosition;
             Vector3 targetPosition = currentState ? rightSide.localPosition : leftSide.localPosition;
-            targetPosition.z = -0.9f;
+            //targetPosition.z = -0.9f;
             while (currentTime <= slideTime)
             {
                 currentTime += Time.deltaTime;

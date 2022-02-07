@@ -2,6 +2,7 @@
 using CellexalVR.General;
 using UnityEngine.XR.Interaction.Toolkit;
 using CellexalVR.Menu;
+using CellexalVR.Spatial;
 
 namespace CellexalVR.Interaction
 {
@@ -140,6 +141,11 @@ namespace CellexalVR.Interaction
         public void FolderKeyboardEditEvent(string filter)
         {
             referenceManager.inputFolderGenerator.GenerateFolders(filter);
+        }
+
+        public void ReferenceModelKeyboardEditEvent(string filter)
+        {
+            AllenReferenceBrain.instance.UpdateSuggestions(filter);
         }
 
     }

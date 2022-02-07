@@ -3,6 +3,8 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
+using DefaultNamespace;
+using Unity.Entities;
 using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.Attributes
@@ -25,7 +27,8 @@ namespace CellexalVR.Menu.Buttons.Attributes
         public enum Mode
         {
             SINGLE,
-            BOOLEAN_EXPR
+            BOOLEAN_EXPR,
+            BIG_FOLDER
         }
 
         public Mode CurrentMode { get; set; } = Mode.SINGLE;
@@ -75,7 +78,14 @@ namespace CellexalVR.Menu.Buttons.Attributes
                     meshRenderer.material.color = booleanNotIncludedColor;
                 }
 
+
                 parentMenu.EvaluateExpression();
+            }
+            else if (CurrentMode == Mode.BIG_FOLDER)
+            {
+                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().ColorCluster(Attribute, !colored);
+                colored = !colored;
+                ToggleOutline(colored);
             }
         }
 
@@ -92,6 +102,11 @@ namespace CellexalVR.Menu.Buttons.Attributes
             //activeOutline.SetActive(toggle);
 
             //TurnOff();
+        }
+
+        public void SwitchModeToBigFolder(Mode m)
+        {
+            CurrentMode = Mode.BIG_FOLDER;
         }
 
         /// <summary>

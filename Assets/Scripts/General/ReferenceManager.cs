@@ -17,6 +17,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using CellexalVR.AnalysisLogic.H5reader;
 using UnityEngine.Serialization;
 using CellexalVR.PDFViewer;
+using CellexalVR.Spatial;
 
 namespace CellexalVR.General
 {
@@ -135,6 +136,7 @@ namespace CellexalVR.General
         public ReportManager reportManager;
         public Floor floor;
         public PDFViewer.PDFMesh pdfMesh;
+        public AllenReferenceBrain brainModel;
 
         //h5reader annotator
         public H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
@@ -152,6 +154,7 @@ namespace CellexalVR.General
         public KeyboardHandler folderKeyboard;
         public KeyboardHandler webBrowserKeyboard;
         public SessionHistoryList sessionHistoryList;
+        public ReferenceModelKeyboard referenceModelKeyboard;
 
         #endregion
 
@@ -282,6 +285,7 @@ namespace CellexalVR.General
             // reportReader = reportManager.GetComponent<ReportReader>();
             floor = GameObject.Find("Floor").GetComponent<Floor>();
             pdfMesh = GameObject.Find("PDFViewer").GetComponentInChildren<PDFMesh>();
+            brainModel = GameObject.Find("BrainParent").GetComponent<AllenReferenceBrain>();
 
             geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();
@@ -301,6 +305,7 @@ namespace CellexalVR.General
             filterOperatorKeyboard = keyboardParent.GetComponentInChildren<OperatorKeyboardHandler>(true);
             filterValueKeyboard = keyboardParent.GetComponentInChildren<NumericalKeyboardHandler>(true);
             filterNameKeyboardAutoCompleteList = filterNameKeyboard.gameObject.GetComponentInChildren<AutoCompleteList>(true);
+            referenceModelKeyboard = brainModel.GetComponentInChildren<ReferenceModelKeyboard>(true);
 
             settingsMenu = GameObject.Find("Settings Menu").GetComponent<SettingsMenu>();
             colorPicker = settingsMenu.transform.Find("Color Picker/Content").GetComponent<ColorPicker>();

@@ -31,15 +31,7 @@ namespace CellexalVR.Menu
         //private SteamVR_Controller.Device device;
         private UnityEngine.XR.Interaction.Toolkit.ActionBasedController leftController;
         private ControllerModelSwitcher controllerModelSwitcher;
-        private bool animate;
-        private float currentTime;
-        private float arrivalTime = 1f;
-        private Vector3 startScale;
-        private Vector3 finalScale;
-        private Vector3 startPosition;
-        private Vector3 finalPosition;
         private Vector3 originalScale = new Vector3(0.3f, 0.3f, 0.35f);
-        private readonly int animateSpeed = 8;
 
         private void OnValidate()
         {

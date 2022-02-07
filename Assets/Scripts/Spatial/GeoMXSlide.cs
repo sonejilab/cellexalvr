@@ -18,17 +18,36 @@ namespace CellexalVR.Spatial
         [HideInInspector] public bool detached;
         public int index;
 
+        [SerializeField] private GameObject lowQ;
+        [SerializeField] private GameObject highQ;
         [SerializeField] private GameObject reattachButton;
         [SerializeField] protected GameObject highlight;
         private XRGrabInteractable interactable;
         private float yPos;
-
+        private bool highQActive;
 
         protected virtual void Start()
         {
             interactable = GetComponent<XRGrabInteractable>();
             interactable.selectEntered.AddListener(OnSelectEntered);
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+        }
+
+        protected virtual void Update()
+        {
+            float dist = Vector3.Distance(transform.position, ReferenceManager.instance.headset.transform.position);
+            print($"{highQActive}, {dist}");
+            if (!highQActive && dist < 0.5f)
+            {
+                ToggleQuality(true);
+                highQActive = true;
+            }
+            else if (highQActive && dist >= 0.5f)
+            {
+                ToggleQuality(false);
+                highQActive = false;
+            }
+
         }
 
         private void OnTriggerClick()
@@ -139,7 +158,21 @@ namespace CellexalVR.Spatial
             Move(targetPos);
         }
 
+        public void SetLowQ(Texture2D texture)
+        {
+            lowQ.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", texture);
+        }
 
+        public void SetHighQ(Texture2D texture)
+        {
+            highQ.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", texture);
+        }
+
+        private void ToggleQuality(bool high)
+        {
+            lowQ.SetActive(!high);
+            highQ.SetActive(high);
+        }
     }
 }
 

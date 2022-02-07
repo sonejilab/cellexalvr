@@ -7,6 +7,8 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 using CellexalVR.Filters;
+using AnalysisLogic;
+using DefaultNamespace;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -221,9 +223,23 @@ namespace CellexalVR.AnalysisObjects
             geneNameLabel.text = "";
             DeactivateHighlightArea();
             DeactivateSelectedArea();
+        }
 
-
-
+        public void UpdateAlphaThreshold(float val)
+        {
+            foreach (PointCloud pc in PointCloudGenerator.instance.pointClouds)
+            {
+                pc.SetAlphaClipThreshold(val);
+            }
+            int ind = (int)val;
+            if (ind == 0)
+            {
+                DeactivateHighlightArea();
+            }
+            else
+            {
+                MoveHighlightArea(0, ind - 1);
+            }
         }
 
         private void ActivateExtraColumn()

@@ -264,7 +264,7 @@ namespace CellexalVR.AnalysisLogic
                 StartCoroutine(referenceManager.inputReader.attributeReader.ReadAttributeFilesCoroutine(path));
                 while (!referenceManager.inputReader.attributeFileRead)
                     yield return null;
-                referenceManager.inputReader.ReadFacsFiles(path, totalNbrOfCells);
+                referenceManager.inputReader.ReadFacsFiles(path);
                 referenceManager.inputReader.ReadNumericalData(path);
                 referenceManager.inputReader.ReadFilterFiles(CellexalUser.UserSpecificFolder);
             }
@@ -411,7 +411,6 @@ namespace CellexalVR.AnalysisLogic
             combGraph.lodGroups = nrOfLODGroups;
             combGraph.textures = new Texture2D[nrOfLODGroups];
             GraphSlice gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
-            gs.referenceManager = referenceManager;
             yield return null;
 
             // const float sliceDist = 0.005f;
@@ -447,7 +446,7 @@ namespace CellexalVR.AnalysisLogic
                         //     yield return null;
                         // }
 
-                        gs.zCoord = gp.WorldPosition.z;
+                        //gs.zCoord = gp.WorldPosition.z;
                         combGraph.maxCoordValues = maxCoords;
                         combGraph.minCoordValues = minCoords;
                         StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
@@ -457,7 +456,7 @@ namespace CellexalVR.AnalysisLogic
                             yield return null;
                         }
 
-                        gs.zCoord = gp.WorldPosition.z;
+                        //gs.zCoord = gp.WorldPosition.z;
 
                         if (nrOfLODGroups > 1)
                         {
@@ -474,8 +473,7 @@ namespace CellexalVR.AnalysisLogic
                         combGraph.transform.parent = parent.transform;
                         yield return null;
                         gs = combGraph.gameObject.AddComponent<GraphSlice>();
-                        gs.referenceManager = referenceManager;
-                        gs.sliceNr = ++sliceNr;
+                        gs.SliceNr = ++sliceNr;
                         combGraph.transform.localPosition = new Vector3(0, 0, 0);
                         combGraph.GraphName = "Slice" + sliceNr;
                         combGraph.gameObject.name = "Slice" + sliceNr;
@@ -500,7 +498,7 @@ namespace CellexalVR.AnalysisLogic
                             yield return null;
                         }
 
-                        gs.zCoord = gp.WorldPosition.z;
+                        //gs.zCoord = gp.WorldPosition.z;
 
                         if (nrOfLODGroups > 1)
                         {

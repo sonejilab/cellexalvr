@@ -10,6 +10,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.Interaction;
 using Valve.VR;
 using UnityEngine.XR.Interaction.Toolkit;
+using DefaultNamespace;
 
 namespace CellexalVR.Spatial
 {
@@ -357,6 +358,8 @@ namespace CellexalVR.Spatial
             {
                 graph.MakeAllPointsTransparent(toggle);
             }
+
+            TextureHandler.instance.MakeAllPointsTransparent(toggle);
         }
 
         /// <summary>

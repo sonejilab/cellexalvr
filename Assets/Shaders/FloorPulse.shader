@@ -5,9 +5,6 @@ Shader "Custom/FloorPulse"
         _MainTex("Main Texture", 2D) = "white" {}
         _RotationTex("Rotating Texture", 2D) = "white" {}
         _Tint("Tint Color", Color) = (1, 1, 1, 1)
-        _FadedTex("Faded Texture", 2D) = "white" {}
-        _LaserHitColor("Laser Hit Color", Color) = (1, 1, 1, 1)
-        _FadeRadius("Texture fade radius", float) = 5.0
         _WaveColor("Wave Color", Color) = (1, 1, 1, 1)
 		_WaveCoords("Wave and Laser Coords", Vector) = (0.5, 0.5, 0, 0)
 		_WaveStartTime("Wave Start Time", float) = 0.0
@@ -32,6 +29,7 @@ Shader "Custom/FloorPulse"
             
             Tags
             {
+                "RenderPipeline" = "UniversalRenderPipeline"
                 "RenderQueue" = "Opaque"
             }
 
@@ -46,12 +44,14 @@ Shader "Custom/FloorPulse"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                UNITY_VERTEX_INPUT_INSTANCE_ID //Insert                
             };
             
             struct v2f
             {
                 float4 position : POSITION;
                 float2 uv : TEXCOORD0;
+                UNITY_VERTEX_OUTPUT_STEREO //Insert
             };
 
             sampler2D _MainTex;
@@ -77,6 +77,9 @@ Shader "Custom/FloorPulse"
             v2f vert (Input IN)
             {
                 v2f OUT;
+                UNITY_SETUP_INSTANCE_ID(IN); //Insert
+                UNITY_INITIALIZE_OUTPUT(v2f, OUT); //Insert
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT); //Insert
                 OUT.position = UnityObjectToClipPos(IN.vertex);
                 OUT.uv = IN.uv;
                 return OUT;
@@ -101,8 +104,11 @@ Shader "Custom/FloorPulse"
                 return (RGB);
             }
 
+            UNITY_DECLARE_SCREENSPACE_TEXTURE(_ScreenTex); //Insert
             fixed4 frag(v2f IN) : SV_TARGET
             {
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN); //Insert
+                fixed4 col = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_ScreenTex, IN.uv); //Insert
                 fixed4 finalColor = tex2D(_MainTex, IN.uv) * _Tint;
                 float waveTime = _WaveStartTime;
                 float pulseToggle = _PulseToggle;
