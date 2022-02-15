@@ -12,6 +12,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.VFX;
+using DG.Tweening;
 
 namespace CellexalVR.Spatial
 {
@@ -221,7 +222,7 @@ namespace CellexalVR.Spatial
             {
                 if (toggle)
                 {
-                    //gameObject.SetActive(false);
+                    gameObject.SetActive(false);
                     //interactableObjectBasic.isGrabbable = false;
                     gs.gameObject.SetActive(true);
                     GetComponent<BoxCollider>().enabled = false;
@@ -273,40 +274,17 @@ namespace CellexalVR.Spatial
                 //rigidbody.isKinematic = false;
                 //rigidbody.drag = 10;
                 //rigidbody.angularDrag = 15;
-                //GetComponent<VRTK_InteractableObject>().isGrabbable = true;
                 sliceMode = true;
                 if (move)
                 {
-                    Vector3 targetPos = sliceCoords;
-                    // transform.TransformPoint(targetPos);
-                    float time = 1f;
-                    StartCoroutine(MoveSlice(targetPos.x, targetPos.y, targetPos.z, time));
+                    transform.DOLocalMove(sliceCoords, 0.8f).SetEase(Ease.InOutQuad);
+
                 }
             }
             else
             {
-                //GetComponent<VRTK_InteractableObject>().isGrabbable = false;
                 //Destroy(GetComponent<Rigidbody>());
                 sliceMode = false;
-            }
-        }
-
-        public IEnumerator MoveSlice(float x, float y, float z, float animationTime, bool rotate = false)
-        {
-            Vector3 startPos = transform.localPosition;
-            Vector3 targetPosition = new Vector3(x, y, z);
-            float t = 0f;
-            while (t < animationTime)
-            {
-                float progress = Mathf.SmoothStep(0, animationTime, t);
-                transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
-                t += (Time.deltaTime / animationTime);
-                if (rotate)
-                {
-                    //transform.LookAt(Player.instance.hmdTransform);
-                }
-
-                yield return null;
             }
         }
 

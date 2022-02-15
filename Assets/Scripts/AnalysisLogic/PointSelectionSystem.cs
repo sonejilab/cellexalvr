@@ -60,7 +60,7 @@ namespace DefaultNamespace
         protected override void OnUpdate()
         {
             if (SelectionToolCollider.instance == null || !SelectionToolCollider.instance.selActive) return;
-            Transform selTransform = SelectionToolCollider.instance.transform;
+            Transform selTransform = SelectionToolCollider.instance.GetCurrentCollider().transform;
             Collider[] colliders = Physics.OverlapBox(selTransform.position, Vector3.one * 0.1f, Quaternion.identity,
                 1 << LayerMask.NameToLayer("GraphLayer"));
             PointCloud pc = null;
@@ -133,7 +133,7 @@ namespace DefaultNamespace
         private void CheckForNearbyEntities(int hashMapKey, PointCloud pc)
         {
             NativeList<RaycastCheckComponent> entityArray = new NativeList<RaycastCheckComponent>(Allocator.Temp);
-            float3 origin = SelectionToolCollider.instance.transform.position;
+            float3 origin = SelectionToolCollider.instance.GetCurrentCollider().transform.position;
             // If a childSlice check quadrant map of parent slice;
             PointCloud parent = pc.graphSlice.parentSlice.pointCloud;
             int id = parent.pcID;
@@ -145,7 +145,7 @@ namespace DefaultNamespace
                 {
                     if (quadrantData.group == SelectionToolCollider.instance.CurrentColorIndex) continue;
                     float3 pos = pc.transform.TransformPoint(quadrantData.position);
-                    //Debug.DrawRay(origin, origin - pos, Color.green, 0.5f);
+                    Debug.DrawRay(origin, origin - pos, Color.green, 0.5f);
                     entityArray.Add(new RaycastCheckComponent
                     {
                         position = pos,

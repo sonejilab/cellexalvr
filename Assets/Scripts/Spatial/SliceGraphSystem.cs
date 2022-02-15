@@ -7,6 +7,7 @@ using AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using DefaultNamespace;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -16,7 +17,10 @@ using UnityEngine;
 
 namespace CellexalVR.Spatial
 {
-    public struct SliceTagComponent : IComponentData
+    public struct Slice1TagComponent : IComponentData
+    {
+    }
+    public struct Slice2TagComponent : IComponentData
     {
     }
 
@@ -34,6 +38,25 @@ namespace CellexalVR.Spatial
         private List<Point> sortedPointsX;
         private List<Point> sortedPointsY;
         private List<Point> sortedPointsZ;
+        private int graphToSliceID;
+        private Transform graphToSlice;
+
+        private GraphSlice slice1;
+        private GraphSlice slice2;
+        private PointCloud pc1;
+        private PointCloud pc2;
+        private float xMax;
+        private float xMax2;
+        private float yMax;
+        private float yMax2;
+        private float zMax;
+        private float zMax2;
+        private float xMin;
+        private float xMin2;
+        private float yMin;
+        private float yMin2;
+        private float zMin;
+        private float zMin2;
 
         protected override void OnCreate()
         {
@@ -57,34 +80,30 @@ namespace CellexalVR.Spatial
             // Slice(0, slicer.forward, slicer.position);
             //SliceAxis(0, 2);
             //}
-
-            //if (Input.GetKeyDown(KeyCode.N))
+            //var points = GetEntityQuery(typeof(Slice1TagComponent), typeof(Point)).ToComponentDataArray<Point>(Allocator.TempJob);
+            //var points2 = GetEntityQuery(typeof(Slice2TagComponent), typeof(Point)).ToComponentDataArray<Point>(Allocator.TempJob);
+            //if (points.Length > 0 && points2.Length > 0)
             //{
-            //    Slice(0, slicer.transform.forward, slicer.transform.position);
+            //    DoSlice(points, points2);
+            //    points.Dispose();
+            //    points2.Dispose();
             //}
+            //var ps = GetEntityQuery(typeof(Slice1TagComponent)).CalculateEntityCount();
+
         }
 
+        [BurstCompile]
         public void Slice(int graphNr, Vector3 planeNormal, Vector3 planePos)
         {
             Transform oldPc = quadrantSystem.graphParentTransforms[graphNr];
+            graphToSlice = oldPc;
             GraphSlice parentSlice = oldPc.GetComponent<GraphSlice>();
             float3 localPlanePos = oldPc.transform.InverseTransformPoint(planePos);
             float3 localPlaneNorm = oldPc.transform.InverseTransformVector(planeNormal);
             int entityCount = query.CalculateEntityCount();
             NativeArray<bool> move = new NativeArray<bool>(entityCount, Allocator.TempJob);
-            EntityCommandBuffer ecb = ecbSystem.CreateCommandBuffer();
-            float xMax = float.NegativeInfinity;
-            float xMax2 = float.NegativeInfinity;
-            float yMax = float.NegativeInfinity;
-            float yMax2 = float.NegativeInfinity;
-            float zMax = float.NegativeInfinity;
-            float zMax2 = float.NegativeInfinity;
-            float xMin = float.PositiveInfinity;
-            float xMin2 = float.PositiveInfinity;
-            float yMin = float.PositiveInfinity;
-            float yMin2 = float.PositiveInfinity;
-            float zMin = float.PositiveInfinity;
-            float zMin2 = float.PositiveInfinity;
+            //NativeArray<float3> dirs = new NativeArray<float3>(entityCount, Allocator.TempJob);
+            EntityCommandBuffer.ParallelWriter ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter();
             JobHandle jobHandle = Entities.WithAll<Point>().WithStoreEntityQueryInField(ref query).ForEach(
                 (Entity entity, int entityInQueryIndex, ref LocalToWorld localToWorld, ref Point point, ref Translation translation) =>
                 {
@@ -93,119 +112,100 @@ namespace CellexalVR.Spatial
                     if (side < 0)
                     {
                         move[entityInQueryIndex] = true;
+                        //dirs[entityInQueryIndex] = localPlaneNorm * -1;
+                        //ecb.AddComponent<Slice1TagComponent>(entityInQueryIndex, entity);
                     }
+                    //else
+                    //{
+                    //    dirs[entityInQueryIndex] = localPlaneNorm;
+                    //    //ecb.AddComponent<Slice2TagComponent>(entityInQueryIndex, entity);
+                    //}
                 }).ScheduleParallel(Dependency);
             jobHandle.Complete();
 
-            //Dictionary<int, float3> points = new Dictionary<int, float3>();
-            //Dictionary<int, float3> points2 = new Dictionary<int, float3>();
-            List<Point> points = new List<Point>();
-            List<Point> points2 = new List<Point>();
+
+            //oldPc.GetComponent<PointCloud>().SliceSpread(dirs);
+
+            //dirs.Dispose();
+            //ecbSystem.AddJobHandleForProducer(Dependency);
+            xMax = float.NegativeInfinity;
+            xMax2 = float.NegativeInfinity;
+            yMax = float.NegativeInfinity;
+            yMax2 = float.NegativeInfinity;
+            zMax = float.NegativeInfinity;
+            zMax2 = float.NegativeInfinity;
+            xMin = float.PositiveInfinity;
+            xMin2 = float.PositiveInfinity;
+            yMin = float.PositiveInfinity;
+            yMin2 = float.PositiveInfinity;
+            zMin = float.PositiveInfinity;
+            zMin2 = float.PositiveInfinity;
+            List<Point> firstSlicePoints = new List<Point>();
+            List<Point> secondSlicePoints = new List<Point>();
             Entities.WithoutBurst().WithAll<Point>().ForEach((Entity entity, int entityInQueryIndex, ref Point point) =>
-            {
-                if (point.parentID != graphNr) return;
-                ecb.AddComponent<RemoveEntityTagComponent>(entity);
-                if (move[entityInQueryIndex])
                 {
-                    //points[point.label] = point.offset;
-                    if (point.offset.x > xMax)
+                    if (point.parentID != graphNr) return;
+                    //ecb.AddComponent<RemoveEntityTagComponent>(entity);
+                    if (move[entityInQueryIndex])
                     {
-                        xMax = point.offset.x;
+                        xMax = math.max(point.offset.x, xMax);
+                        xMin = math.min(point.offset.x, xMin);
+                        yMax = math.max(point.offset.y, yMax);
+                        yMin = math.min(point.offset.y, yMin);
+                        zMax = math.max(point.offset.z, zMax);
+                        zMin = math.min(point.offset.z, zMin);
+                        firstSlicePoints.Add(point);
                     }
-                    else if (point.offset.x < xMin)
+                    else
                     {
-                        xMin = point.offset.x;
+                        xMax2 = math.max(point.offset.x, xMax2);
+                        xMin2 = math.min(point.offset.x, xMin2);
+                        yMax2 = math.max(point.offset.y, yMax2);
+                        yMin2 = math.min(point.offset.y, yMin2);
+                        zMax2 = math.max(point.offset.z, zMax2);
+                        zMin2 = math.min(point.offset.z, zMin2);
+                        secondSlicePoints.Add(point);
                     }
-                    if (point.offset.y > yMax)
-                    {
-                        yMax = point.offset.y;
-                    }
-                    else if (point.offset.y < yMin)
-                    {
-                        yMin = point.offset.y;
-                    }
-                    if (point.offset.z > zMax)
-                    {
-                        zMax = point.offset.z;
-                    }
-                    else if (point.offset.z < zMin)
-                    {
-                        zMin = point.offset.z;
-                    }
-                    points.Add(point);
-                }
-                else
-                {
-                    if (point.offset.x > xMax2)
-                    {
-                        xMax2 = point.offset.x;
-                    }
-                    else if (point.offset.x < xMin2)
-                    {
-                        xMin2 = point.offset.x;
-                    }
-                    if (point.offset.y > yMax2)
-                    {
-                        yMax2 = point.offset.y;
-                    }
-                    else if (point.offset.y < yMin2)
-                    {
-                        yMin2 = point.offset.y;
-                    }
-                    if (point.offset.z > zMax2)
-                    {
-                        zMax2 = point.offset.z;
-                    }
-                    else if (point.offset.z < zMin2)
-                    {
-                        zMin2 = point.offset.z;
-                    }
-                    points2.Add(point);
-                }
-            }).Run();
+                }).Run();
 
-            ecbSystem.AddJobHandleForProducer(Dependency);
-
-            if (points.Count > 0)
+            if (firstSlicePoints.ToList().Count > 0)
             {
-                PointCloud pc1 = PointCloudGenerator.instance.CreateFromOld(oldPc.transform);
-                oldPc.GetComponent<GraphSlice>().ClearSlices();
-                GraphSlice slice1 = pc1.GetComponent<GraphSlice>();
-                slice1.transform.position = pc1.transform.position;
-                slice1.sliceCoords = pc1.transform.position;
+                //DoSlice(points, points2, planeNormal);
+                pc1 = PointCloudGenerator.instance.CreateFromOld(graphToSlice.transform);
+                graphToSlice.GetComponent<GraphSlice>().ClearSlices();
+                slice1 = pc1.GetComponent<GraphSlice>();
+                slice1.sliceCoords = pc1.transform.position - 0.2f * planeNormal;
                 slice1.SliceNr = 0;
-                slice1.gameObject.name = oldPc.gameObject.name + "_" + slice1.SliceNr;
-                slice1.points = points;
-                slice1.sliceCoords -= 0.2f * planeNormal;
+                slice1.gameObject.name = graphToSlice.gameObject.name + "_" + slice1.SliceNr;
+                slice1.points = firstSlicePoints;
                 float3 max = new float3(xMax, yMax, zMax);
                 float3 min = new float3(xMin, yMin, zMin);
                 pc1.maxCoordValues = max;
                 pc1.minCoordValues = min;
                 pc1.SetCollider(true);
 
-                PointCloud pc2 = PointCloudGenerator.instance.CreateFromOld(oldPc.transform);
-                GraphSlice slice2 = pc2.GetComponent<GraphSlice>();
-                slice2.transform.position = pc2.transform.position;
-                slice2.sliceCoords = pc2.transform.position;
+                pc2 = PointCloudGenerator.instance.CreateFromOld(graphToSlice.transform);
+                slice2 = pc2.GetComponent<GraphSlice>();
+                slice2.sliceCoords = pc2.transform.position + 0.2f * planeNormal;
                 slice2.SliceNr = 1;
-                slice2.gameObject.name = oldPc.gameObject.name + "_" + slice2.SliceNr;
-                slice2.points = points2;
-                slice2.sliceCoords += 0.2f * planeNormal;
+                slice2.gameObject.name = graphToSlice.gameObject.name + "_" + slice2.SliceNr;
+                slice2.points = secondSlicePoints;
                 max = new Vector3(xMax2, yMax2, zMax2);
                 min = new Vector3(xMin2, yMin2, zMin2);
                 pc2.maxCoordValues = max;
                 pc2.minCoordValues = min;
                 pc2.SetCollider(true);
 
-                //parentSlice.childSlices.Add(slice1);
-                //parentSlice.childSlices.Add(slice2);
                 quadrantSystem.graphParentTransforms.Add(pc1.transform);
                 quadrantSystem.graphParentTransforms.Add(pc2.transform);
-                PointCloudGenerator.instance.BuildSlices(oldPc, new GraphSlice[] { slice1, slice2 });
+                PointCloudGenerator.instance.BuildSlices(graphToSlice, new GraphSlice[] { slice1, slice2 });
             }
-            //parentSlice.slicerBox.sliceAnimationActive = false;
-            //parentSlice.ActivateSlice(true);
             move.Dispose();
+        }
+
+        private void DoSlice(List<Point> slice1Points, List<Point> slice2Points, Vector3 planeNormal)
+        {
+
         }
 
         public List<Point> GetPoints(int graphID)

@@ -112,6 +112,11 @@ namespace CellexalVR.Spatial
             cullPos2.z = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[5].transform.position).z)) + 1f;
             vfx.SetVector3("CullingCubePos", cullPos1);
             vfx.SetVector3("CullingCube2Pos", cullPos2);
+
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                SliceGraphManual();
+            }
         }
 
         public void SetHandlePositions()
@@ -160,7 +165,12 @@ namespace CellexalVR.Spatial
 
         public void SliceGraphManual()
         {
-            StartCoroutine(SliceAnimation());
+            //StartCoroutine(SliceAnimation());
+            Material mat = blade.GetComponent<Renderer>().material;
+            DOVirtual.Float(0f, 0.49f, 0.5f, v =>
+            {
+                mat.SetFloat("_SliceOffset", v);
+            }).SetEase(Ease.InOutCubic).SetLoops(2, LoopType.Yoyo);
             sliceGraphSystem.Slice(pointCloud.pcID, plane.transform.forward, plane.transform.position);
         }
 

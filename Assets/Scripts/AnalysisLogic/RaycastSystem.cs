@@ -32,7 +32,7 @@ namespace DefaultNamespace
             if (!SelectionToolCollider.instance.selActive) return;
             int entityCount = query.CalculateEntityCount(); //GetEntityQuery(typeof(Point)).CalculateEntityCount();
 
-            float3 origin = SelectionToolCollider.instance.transform.position;
+            float3 origin = SelectionToolCollider.instance.GetCurrentCollider().transform.position;
             EntityCommandBuffer commandBuffer = ecbSystem.CreateCommandBuffer();
 
             NativeArray<RaycastHit> results = new NativeArray<RaycastHit>(entityCount, Allocator.TempJob);

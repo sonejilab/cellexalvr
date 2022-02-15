@@ -101,7 +101,6 @@ namespace DefaultNamespace
                 int y = point.yindex;
                 int label = point.label;
                 float3 pos = point.offset;
-                Debug.Log($"{point.label}, {id}, {point.offset}");
                 int hashMapKey = GetPositionHashMapKey(point.offset);
                 quadrantMultiHashMap.Add(hashMapKey, new QuadrantData
                 {

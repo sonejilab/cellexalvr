@@ -34,6 +34,7 @@ namespace DefaultNamespace
         public float3 offset;
         public int parentID;
         public int label;
+        public Entity entity;
     }
 
     public struct PointCloudComponent : IComponentData
@@ -78,6 +79,8 @@ namespace DefaultNamespace
         private EntityArchetype entityArchetype;
         private QuadrantSystem quadrantSystem;
         private int maxPointCount;
+        private int slicePrefabsUsed;
+        [SerializeField] private PointCloud[] slicePrefabs;
 
         private void Awake()
         {
@@ -122,7 +125,20 @@ namespace DefaultNamespace
             scaledCoordinates.Clear();
             minCoordValues = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
             maxCoordValues = new float3(float.MinValue, float.MinValue, float.MinValue);
-            PointCloud pc = Instantiate(parentPrefab, oldPc.position, oldPc.rotation).GetComponent<PointCloud>();
+            PointCloud pc;
+            if (slicePrefabsUsed >= slicePrefabs.Length)
+            {
+                pc = Instantiate(parentPrefab, oldPc.position, oldPc.rotation).GetComponent<PointCloud>();
+            }
+            else
+            {
+                pc = slicePrefabs[slicePrefabsUsed];
+                pc.transform.parent = null;
+                pc.transform.position = oldPc.position;
+                pc.transform.rotation = oldPc.rotation;
+                slicePrefabsUsed++;
+            }
+
             quadrantSystem.graphParentTransforms.Add(pc.transform);
             quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
             pc.Initialize(nrOfGraphs);
@@ -140,26 +156,31 @@ namespace DefaultNamespace
         {
             GraphSlice parentSlice = oldPc.GetComponent<GraphSlice>();
             GraphSlice[] oldSlices = parentSlice.childSlices.ToArray();
-            foreach (GraphSlice slice in oldSlices)
+            foreach (GraphSlice oldSlice in oldSlices)
             {
-                parentSlice.childSlices.Remove(slice);
-                Destroy(slice.gameObject);
+                parentSlice.childSlices.Remove(oldSlice);
+                Destroy(oldSlice.gameObject);
             }
             maxPointCount = newSlices.ToList().Max(x => x.points.Count);
+
+            yield return new WaitForSeconds(0.2f);
+            GraphSlice slice;
             for (int i = 0; i < newSlices.Length; i++)
             {
                 instance.creatingGraph = true;
-                GraphSlice slice = newSlices[i];
+                slice = newSlices[i];
                 slice.BuildPointCloud(oldPc);
                 while (instance.creatingGraph)
                 {
                     yield return null;
                 }
+                slice.gameObject.SetActive(true);
                 parentSlice.childSlices.Add(slice);
             }
-
             parentSlice.slicerBox.sliceAnimationActive = false;
-            //parentSlice.ActivateSlices(true);
+
+            yield return new WaitForSeconds(0.6f);
+            parentSlice.ActivateSlices(true);
 
         }
 
@@ -271,7 +292,7 @@ namespace DefaultNamespace
             }
 
             pointCount = scaledCoordinates.Count;
-            WriteToFile(pc.GraphName + ".txt");
+            //WriteToFile(pc.GraphName + ".txt");
             pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList(), scaledCoordinates.Keys.ToList());
             points.Clear();
             scaledCoordinates.Clear();

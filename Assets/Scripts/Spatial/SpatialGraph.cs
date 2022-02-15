@@ -11,6 +11,7 @@ using CellexalVR.Interaction;
 using Valve.VR;
 using UnityEngine.XR.Interaction.Toolkit;
 using DefaultNamespace;
+using DG.Tweening;
 
 namespace CellexalVR.Spatial
 {
@@ -264,8 +265,7 @@ namespace CellexalVR.Spatial
             {
                 gs = slices[i].GetComponent<GraphSlice>();
                 Vector3 pos = slicePositions[i];
-                StartCoroutine(gs.MoveSlice(pos.x, pos.y, pos.z, animationTime, true));
-                // yield return new WaitForSeconds(0.001f);
+                gs.transform.DOLocalMove(pos, 0.8f).SetEase(Ease.InOutQuad);
             }
 
             while (time < 1f + animationTime)

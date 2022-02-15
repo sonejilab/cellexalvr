@@ -47,14 +47,14 @@ namespace DefaultNamespace
             //if (frameCount >= 10)
             //{
             frameCount = 0;
-            Color col = new Color(); // SelectionToolCollider.instance.GetCurrentColor();
-            Color a = Color.white;
             List<Tuple<int, int>> orgPixels = new List<Tuple<int, int>>();
             Entities.WithAll<SelectedPointComponent>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref SelectedPointComponent sp) =>
             {
                 orgPixels.Add(new Tuple<int, int>(sp.orgXIndex, sp.orgYIndex));
                 sps.Add(new Tuple<int, int>(sp.label, sp.group));
             }).Run();
+            Color col = SelectionToolCollider.instance.GetCurrentColor();
+            Color a = Color.white;
             for (int i = 0; i < mainColorTextureMaps.Count; i++)
             {
                 Texture2D map = mainColorTextureMaps[i];

@@ -161,15 +161,16 @@ namespace AnalysisLogic
                 bc.center = mid;
             }
             bc.size = scaledOffset * 2;
-            //var slicerBox = GetComponentInChildren<SlicerBox>(true);
-            slicerBox = Instantiate(slicerBoxPrefab, transform);
+            var slicerBox = GetComponentInChildren<SlicerBox>(true);
+            //slicerBox = Instantiate(slicerBoxPrefab, transform);
             if (slicerBox != null)
             {
                 slicerBox.box.transform.localScale = bc.size;
-                slicerBox.box.transform.localPosition = bc.center - Vector3.one * 0.5f;
+                //slicerBox.box.transform.localPosition = bc.center - Vector3.one * 0.5f;
                 slicerBox.SetHandlePositions();
             }
-            slicerBox.gameObject.SetActive(false);
+            graphSlice.slicerBox = slicerBox;
+            //slicerBox.gameObject.SetActive(false);
         }
 
         public void SetCollider(Vector3 mid, Vector3 size)
@@ -195,14 +196,14 @@ namespace AnalysisLogic
         }
 
 
-        public void Morph()
+        public void Morph(float animationTime = 1f)
         {
             morphed = !morphed;
             float endVal = morphed ? 1f : -0.1f;
             float blendVal = vfx.GetFloat("morphStep");
-            DOTween.To(() => blendVal, x => blendVal = x, endVal, 1f).OnUpdate(
+            DOTween.To(() => blendVal, x => blendVal = x, endVal, animationTime).OnUpdate(
                 () => vfx.SetFloat("morphStep", blendVal))
-                .SetEase(Ease.InOutBack);
+                .SetEase(Ease.OutBack);
 
             GraphName = morphed ? otherName : originalName;
         }
@@ -268,24 +269,27 @@ namespace AnalysisLogic
             //    targetPositions[i] = c;
             //}
 
-            Color col;
+            Color c;
+            float3 pos;
+            float3 wPos;
+            Point p;
+            Point newP;
+            //Entity e;
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     int ind = x + (width * y);
                     if (ind >= pointCount) continue;
-                    Point p = points[ind];
-                    Color c = parentTargetTextureMap.GetPixel(p.xindex, p.yindex);
+                    p = points[ind];
+                    c = parentTargetTextureMap.GetPixel(p.xindex, p.yindex);
                     targetPositions[ind] = c;
 
-                    float3 pos = p.offset;
-                    col = new Color(pos.x, pos.y, pos.z, 1);
-                    Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
-                    float3 wPos = math.transform(transform.localToWorldMatrix, pos);
-                    entityManager.SetComponentData(e, new Translation { Value = wPos });
-                    entityManager.AddComponent(e, typeof(Point));
-                    Point newP = new Point();
+                    pos = p.offset;
+                    //Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
+                    wPos = math.transform(transform.localToWorldMatrix, pos);
+                    entityManager.SetComponentData(p.entity, new Translation { Value = wPos });
+                    newP = new Point();
                     newP.selected = false;
                     newP.orgXIndex = p.orgXIndex;
                     newP.orgYIndex = p.orgYIndex;
@@ -294,7 +298,7 @@ namespace AnalysisLogic
                     newP.label = p.label;
                     newP.offset = pos;
                     newP.parentID = pcID;
-                    entityManager.SetComponentData(e, newP);
+                    entityManager.SetComponentData(p.entity, newP);
                     //{
                     //    selected = false,
                     //    orgXIndex = p.orgXIndex,
@@ -306,7 +310,7 @@ namespace AnalysisLogic
                     //    parentID = pcID
                     //});
                     points[ind] = newP;
-                    positions[ind] = col;
+                    positions[ind] = new Color(pos.x, pos.y, pos.z, 1);
                 }
                 //if (y % 10 == 0) yield return null;
             }
@@ -357,7 +361,8 @@ namespace AnalysisLogic
                         yindex = y,
                         label = ind,
                         offset = pos,
-                        parentID = pcID
+                        parentID = pcID,
+                        entity = e
                     });
                     positions[ind] = col;
                 }
@@ -412,6 +417,27 @@ namespace AnalysisLogic
             }
             vfx.SetTexture("TargetPosMapTex", pointSpreadTexture);
             Morph();
+        }
+
+        public void SliceSpread(NativeArray<float3> dirs)
+        {
+            pointSpreadTexture = new Texture2D(positionTextureMap.width, positionTextureMap.height, TextureFormat.RGBAFloat, true, true);
+            Color[] positions = positionTextureMap.GetPixels();
+            Color[] newPositions = new Color[positions.Length];
+            float3 pos;
+            float3 newPos;
+            for (int i = 0; i < positions.Length; i++)
+            {
+                pos = new float3(positions[i].r, positions[i].g, positions[i].b);
+                newPos = (pos + dirs[i] * 0.2f);
+                newPositions[i] = new Color(newPos.x, newPos.y, newPos.z);
+            }
+
+            pointSpreadTexture.SetPixels(newPositions);
+            pointSpreadTexture.Apply();
+
+            vfx.SetTexture("TargetPosMapTex", pointSpreadTexture);
+            Morph(0.4f);
         }
 
         public void SpreadOutClusters()

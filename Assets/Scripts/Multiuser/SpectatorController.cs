@@ -40,9 +40,6 @@ namespace CellexalVR.Multiuser
             //    c.worldCamera = GetComponentInChildren<Camera>();
             //}
 
-
-            // if (!CrossSceneInformation.Spectator)
-            //     gameObject.SetActive(false);
             //Cursor.lockState = CursorLockMode.Locked;
             ReferenceManager.instance.headset.gameObject.SetActive(false);
         }
