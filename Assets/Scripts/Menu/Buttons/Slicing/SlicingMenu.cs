@@ -63,7 +63,8 @@ namespace CellexalVR.Menu.Buttons.Slicing
                     {
                         manualModeButton.CurrentState = !toggle;
                     }
-                    StartCoroutine(MoveContent(toggle ? -5.3f : -1.3f));
+                    movableContent.transform.DOLocalMoveZ(toggle ? -5.3f : -1.3f, 0.5f).SetEase(Ease.InOutBounce);
+                    //StartCoroutine(MoveContent(toggle ? -5.3f : -1.3f));
                     automaticModeMenu.SetActive(toggle);
                     break;
                 case SliceMode.Manual:
@@ -71,8 +72,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
                     {
                         autoModeButton.CurrentState = !toggle;
                     }
-                    slicerBox.plane.SetActive(toggle);
-                    //automaticModeMenu.SetActive(!toggle);
+                    slicerBox.sliceInteractable.SetActive(toggle);
                     break;
                 case SliceMode.Freehand:
                     break;
@@ -81,25 +81,26 @@ namespace CellexalVR.Menu.Buttons.Slicing
             }
             if (!(manualModeButton.CurrentState || autoModeButton.CurrentState))
             {
-                StartCoroutine(MoveContent(-1.3f));
+                movableContent.transform.DOLocalMoveZ(-1.3f, 0.5f).SetEase(Ease.InOutBounce);
+                //StartCoroutine(MoveContent(-1.3f));
             }
         }
 
-        private IEnumerator MoveContent(float zCoord)
-        {
-            float animationTime = 0.5f;
-            float t = 0f;
-            Vector3 startPos = movableContent.transform.localPosition;
-            Vector3 targetPos = new Vector3(movableContent.transform.localPosition.x, movableContent.transform.localPosition.y, zCoord);
-            while (t < animationTime)
-            {
-                //float progress = Mathf.SmoothStep(0, animationTime, t / animationTime);
-                movableContent.transform.localPosition = Vector3.Lerp(startPos, targetPos, t / animationTime);
-                t += (Time.deltaTime);
-                yield return null;
-            }
-            yield return null;
-        }
+        //private IEnumerator MoveContent(float zCoord)
+        //{
+            //float animationTime = 0.5f;
+            //float t = 0f;
+            //Vector3 startPos = movableContent.transform.localPosition;
+            //Vector3 targetPos = new Vector3(movableContent.transform.localPosition.x, movableContent.transform.localPosition.y, zCoord);
+            //while (t < animationTime)
+            //{
+            //    //float progress = Mathf.SmoothStep(0, animationTime, t / animationTime);
+            //    movableContent.transform.localPosition = Vector3.Lerp(startPos, targetPos, t / animationTime);
+            //    t += (Time.deltaTime);
+            //    yield return null;
+            //}
+            //yield return null;
+        //}
 
         public void ChangeAxis(SliceAxis axis)
         {

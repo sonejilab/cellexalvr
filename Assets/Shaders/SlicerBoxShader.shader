@@ -1,9 +1,13 @@
-Shader "Custom/SlicerPlaneShader"
+Shader "Custom/SlicerBoxShader"
 {
 	Properties
 	{
+		_MainTex("Main Texture", 2D) = "white" {}
 		_BaseColor("Color", Color) = (1, 0.5, 0, 0.5)
-		_SliceOffset("Toggle", float) = 0.0
+		_WaveCoords("Wave Coords", Vector) = (0.5, 0.5, 0, 0)
+		_WaveColor("Wave Color", Color) = (1, 1, 1, 1)
+		_WaveToggle("Wave Toggle", int) = 1
+		_WaveAxis("Wave Axis", int) = 1
 	}
 
 		SubShader
@@ -11,14 +15,14 @@ Shader "Custom/SlicerPlaneShader"
 		Tags
 		{
 			"Queue" = "Transparent"
-			"RenderType" = "Transparent"
+			//"RenderType" = "Transparent"
 			"IgnoreProjector" = "True"
 			"RenderPipeline" = "UniversalPipeline"
 		}
 
 		Blend SrcAlpha OneMinusSrcAlpha
 		LOD 100
-
+		ZWrite Off
 		Tags
 		{
 			"LightMode" = "UniversalForward"
@@ -31,9 +35,14 @@ Shader "Custom/SlicerPlaneShader"
 		CBUFFER_START(UnityPerMaterial)
 			float4 _BaseColor;
 			uniform float4x4 _BoxMatrix;
-			float _SliceOffset;
+			float3 _WaveCoords;
+			float4 _WaveColor;
+			int _WaveToggle;
+			int _WaveAxis;
 		CBUFFER_END
 
+		TEXTURE2D(_MainTex);
+		SAMPLER(sampler_MainTex);
 
 		struct VertexInput
 		{
@@ -47,6 +56,7 @@ Shader "Custom/SlicerPlaneShader"
 		{
 			float4 position : SV_POSITION;
 			float2 uv	: TEXCOORD0;
+
 			float3 worldPos : TEXCOORD1;
 			UNITY_VERTEX_OUTPUT_STEREO
 		};
@@ -72,58 +82,46 @@ Shader "Custom/SlicerPlaneShader"
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
 				o.position = TransformObjectToHClip(i.position.xyz);
-				o.uv = i.uv;
 				o.worldPos = TransformObjectToWorld(i.position);
+				o.uv = i.uv;
 				return o;
 			}
 
-
-			float isInsideBox(float4 pos)
-			{
-				if (pos.x < -.5 || pos.x > .5)
-					return 1;
-				if (pos.y < -.5 || pos.y > .5)
-					return 1;
-				if (pos.z < -.5 || pos.z > .5)
-					return 1;
-				return -1;
-			}
-
-			float clip_fragment(float inside_first)
-			{
-				if (inside_first >= 0)
-					return -1;
-				return 1;
-			}
 
 			//UNITY_DECLARE_SCREENSPACE_TEXTURE(_ScreenTex); //Insert
 			float4 frag(VertexOutput i) : SV_TARGET
 			{
 				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); //Insert
 				float4 col = _BaseColor;
-				float4 wpos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
-				float4 relpos_box1 = mul(_BoxMatrix, wpos);
-				float do_clip = clip_fragment(isInsideBox(relpos_box1));
-				clip(do_clip);
-				float xPos = abs(relpos_box1.x);
-				float yPos = abs(relpos_box1.y);
-				float zPos = abs(relpos_box1.z);
-				float threshold = 0.49 - _SliceOffset;
-				if (xPos < threshold && yPos < threshold && zPos < threshold)
+				float4 textureCol = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
+				if (_WaveToggle > 0)
 				{
-					col.a = 0.25;
+					float4 wpos = float4(i.worldPos.x, i.worldPos.y, i.worldPos.z, 1);
+					float4 relPos = mul(_BoxMatrix, wpos);
+					float dist;
+					if (_WaveAxis == 0)
+					{
+						dist = abs(relPos.x - _WaveCoords.x);
+					}
+					if (_WaveAxis == 1)
+					{
+						dist = abs(relPos.y - _WaveCoords.y);
+					}
+					if (_WaveAxis == 2)
+					{
+						dist = abs(relPos.z - _WaveCoords.z);
+					}
+
+					col = lerp(col, _WaveColor, (1-dist));
 				}
-				else
-				{
-					col.a = 1;
-				}
+				col.a = textureCol.r;
 				return col;
 			}
 
 			ENDHLSL
 		}
 	}
-		Fallback "Diffuse"
+		//Fallback "Diffuse"
 }
 
 //#pragma target 4.5

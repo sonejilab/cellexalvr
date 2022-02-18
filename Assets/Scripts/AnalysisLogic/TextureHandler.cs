@@ -105,18 +105,18 @@ namespace DefaultNamespace
             colorTextureMaps[0].Apply();
             alphaTextureMaps[0].Apply();
 
-            //if (MeshGenerator.instance.generateMeshes)
-            //{
-            //    if (toggle)
-            //    {
-            //        MeshGenerator.instance.GenerateMeshes();
-            //    }
-            //    else
-            //    {
-            //        MeshGenerator.instance.RemoveMesh(SelectionToolCollider.instance.GetColorIndex(PointCloudGenerator.instance.colorDict[cluster]));
-            //    }
+            if (MeshGenerator.instance.generateMeshes)
+            {
+                if (toggle)
+                {
+                    MeshGenerator.instance.GenerateMeshes();
+                }
+                else
+                {
+                    MeshGenerator.instance.RemoveMesh(SelectionToolCollider.instance.GetColorIndex(PointCloudGenerator.instance.colorDict[cluster]));
+                }
 
-            //}
+            }
         }
 
         public void MakeAllPointsTransparent(bool toggle)

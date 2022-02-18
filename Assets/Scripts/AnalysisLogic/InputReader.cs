@@ -179,7 +179,8 @@ namespace CellexalVR.AnalysisLogic
             // string mdsFile = files[0];
             foreach (string mdsFile in files)
             {
-                PointCloud pc = pointCloudGenerator.CreateNewPointCloud();
+                bool spatial = mdsFile.Contains("spatial");
+                PointCloud pc = pointCloudGenerator.CreateNewPointCloud(spatial);
                 string[] regexResult = Regex.Split(mdsFile, @"[\\/]");
                 string graphFileName = regexResult[regexResult.Length - 1];
                 //pc.gameObject.name = graphFileName.Substring(0, graphFileName.Length - 4);

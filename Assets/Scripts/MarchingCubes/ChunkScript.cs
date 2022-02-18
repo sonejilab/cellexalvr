@@ -30,6 +30,12 @@ namespace CellexalVR.MarchingCubes
 
         public void AddVerticesToMesh()
         {
+            //StartCoroutine(AddVerticesToMesh());
+            AddVerticesToMesh();
+        }
+
+        public void AddVerticesToMesh()
+        {
             vertices = new Vector3[n_vertices];
             if (ChunkManager.addVertexSpheres)
                 spheres = new GameObject[n_vertices];

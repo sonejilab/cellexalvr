@@ -196,7 +196,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
                 {
                     ColorButtonBooleanExpression();
                 }
-                else if (CurrentMode == Mode.SINGLE)
+                else if (CurrentMode == Mode.SINGLE || CurrentMode == Mode.BIG_FOLDER)
                 {
                     meshRenderer.material.color = meshStandardColor;
                 }

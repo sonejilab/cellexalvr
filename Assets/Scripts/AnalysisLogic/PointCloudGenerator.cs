@@ -45,24 +45,23 @@ namespace DefaultNamespace
     public class PointCloudGenerator : MonoBehaviour
     {
         public static PointCloudGenerator instance;
-        [SerializeField] public Material material;
-        [SerializeField] public Mesh mesh;
+        [SerializeField] private PointCloud pointCloudPrefab;
+        [SerializeField] private PointCloud spatialPointCloudPrefab;
         [HideInInspector] public int nrOfGraphs = 0;
-        public int mdsFileCount;
-        public bool creatingGraph;
-        public GameObject parentPrefab;
-        public float3 minCoordValues;
-        public float3 maxCoordValues;
-        public float3 longestAxis;
-        public float3 scaledOffset;
-        public Texture2D colorMap;
-        public Texture2D alphaMap;
-        public Texture2D clusterMap;
-        public Dictionary<int, string> clusterDict = new Dictionary<int, string>();
-        public Dictionary<string, Color> colorDict = new Dictionary<string, Color>();
-        public Dictionary<string, List<Vector2Int>> clusters = new Dictionary<string, List<Vector2Int>>();
-        public Dictionary<string, float3> scaledCoordinates = new Dictionary<string, float3>();
-        public List<PointCloud> pointClouds = new List<PointCloud>();
+        [HideInInspector] public int mdsFileCount;
+        [HideInInspector] public bool creatingGraph;
+        [HideInInspector] public float3 minCoordValues;
+        [HideInInspector] public float3 maxCoordValues;
+        [HideInInspector] public float3 longestAxis;
+        [HideInInspector] public float3 scaledOffset;
+        [HideInInspector] public Texture2D colorMap;
+        [HideInInspector] public Texture2D alphaMap;
+        [HideInInspector] public Texture2D clusterMap;
+        [HideInInspector] public Dictionary<int, string> clusterDict = new Dictionary<int, string>();
+        [HideInInspector] public Dictionary<string, Color> colorDict = new Dictionary<string, Color>();
+        [HideInInspector] public Dictionary<string, List<Vector2Int>> clusters = new Dictionary<string, List<Vector2Int>>();
+        [HideInInspector] public Dictionary<string, float3> scaledCoordinates = new Dictionary<string, float3>();
+        [HideInInspector] public List<PointCloud> pointClouds = new List<PointCloud>();
 
         public int pointCount;
 
@@ -80,7 +79,7 @@ namespace DefaultNamespace
         private QuadrantSystem quadrantSystem;
         private int maxPointCount;
         private int slicePrefabsUsed;
-        [SerializeField] private PointCloud[] slicePrefabs;
+        //[SerializeField] private PointCloud[] slicePrefabs;
 
         private void Awake()
         {
@@ -90,13 +89,21 @@ namespace DefaultNamespace
             CreateParentArchetype();
         }
 
-        public PointCloud CreateNewPointCloud()
+        public PointCloud CreateNewPointCloud(bool spatial = false)
         {
             points.Clear();
             scaledCoordinates.Clear();
             minCoordValues = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
             maxCoordValues = new float3(float.MinValue, float.MinValue, float.MinValue);
-            PointCloud pc = Instantiate(parentPrefab, new float3(graphNr, 1, graphNr), quaternion.identity).GetComponent<PointCloud>();
+            PointCloud pc;
+            if (spatial)
+            {
+                pc = Instantiate(spatialPointCloudPrefab, new float3(graphNr, 1, graphNr), quaternion.identity);
+            }
+            else
+            {
+                pc = Instantiate(pointCloudPrefab, new float3(graphNr, 1, graphNr), quaternion.identity);
+            }
             quadrantSystem.graphParentTransforms.Add(pc.transform);
             quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
             pc.Initialize(nrOfGraphs);
@@ -119,26 +126,21 @@ namespace DefaultNamespace
             return hi;
         }
 
-        public PointCloud CreateFromOld(Transform oldPc)
+        public PointCloud CreateFromOld(Transform oldPc, bool spatial = true)
         {
             points.Clear();
             scaledCoordinates.Clear();
             minCoordValues = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
             maxCoordValues = new float3(float.MinValue, float.MinValue, float.MinValue);
             PointCloud pc;
-            if (slicePrefabsUsed >= slicePrefabs.Length)
+            if (spatial)
             {
-                pc = Instantiate(parentPrefab, oldPc.position, oldPc.rotation).GetComponent<PointCloud>();
+                pc = Instantiate(spatialPointCloudPrefab, new float3(graphNr, 1, graphNr), quaternion.identity);
             }
             else
             {
-                pc = slicePrefabs[slicePrefabsUsed];
-                pc.transform.parent = null;
-                pc.transform.position = oldPc.position;
-                pc.transform.rotation = oldPc.rotation;
-                slicePrefabsUsed++;
+                pc = Instantiate(pointCloudPrefab, new float3(graphNr, 1, graphNr), quaternion.identity);
             }
-
             quadrantSystem.graphParentTransforms.Add(pc.transform);
             quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
             pc.Initialize(nrOfGraphs);
@@ -169,12 +171,9 @@ namespace DefaultNamespace
             {
                 instance.creatingGraph = true;
                 slice = newSlices[i];
-                slice.BuildPointCloud(oldPc);
-                while (instance.creatingGraph)
-                {
-                    yield return null;
-                }
+                yield return SpawnPoints(slice.pointCloud, parentSlice.pointCloud, slice.points);
                 slice.gameObject.SetActive(true);
+                slice.UpdateColorTexture();
                 parentSlice.childSlices.Add(slice);
             }
             parentSlice.slicerBox.sliceAnimationActive = false;
@@ -246,8 +245,10 @@ namespace DefaultNamespace
             );
         }
 
-        public void SpawnPoints(PointCloud pc, PointCloud parentPC, List<Point> points)
+        public IEnumerator SpawnPoints(PointCloud pc, PointCloud parentPC, List<Point> points)
         {
+            creatingGraph = false;
+            pc.GetComponent<GraphSlice>().parentSlice = parentPC.GetComponent<GraphSlice>();
             Entity parent = entityManager.CreateEntity(entityArchetype);
             entityManager.SetComponentData(parent, new Translation { Value = new float3(0, 0, 0) });
             entityManager.SetComponentData(parent, new Rotation { Value = new quaternion(0, 0, 0, 0) });
@@ -258,9 +259,8 @@ namespace DefaultNamespace
             graphNr++;
             pointClouds.Add(pc);
             pointCount = points.Count;
-            pc.CreatePositionTextureMap(points, parentPC);
-            //PointCloudGenerator.instance.creatingGraph = false;
-            StartCoroutine(CreateColorTextureMap(points, pc, parentPC));
+            yield return pc.CreatePositionTextureMap(points, parentPC);
+            yield return CreateColorTextureMap(points, pc, parentPC);
         }
 
         public void SpawnPoints(PointCloud pc)
@@ -441,6 +441,7 @@ namespace DefaultNamespace
             Texture2D parentTexture = (Texture2D)parentCloud.GetComponent<VisualEffect>().GetTexture("ColorMapTex");
             for (int i = 0; i < points.Count; i++)
             {
+                if (i % 2000 == 0) yield return null;
                 Point p = points[i];
                 c = parentTexture.GetPixel(p.xindex, p.yindex);
                 carray[i] = c;

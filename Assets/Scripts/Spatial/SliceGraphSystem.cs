@@ -67,30 +67,7 @@ namespace CellexalVR.Spatial
             slicer = GameObject.Find("SlicePlane");
         }
 
-        protected override void OnUpdate()
-        {
-            //if (slicer == null)
-            //{
-            //    slicer = GameObject.Find("SlicePlane");
-            //}
-
-            //EntityManager.DestroyEntity(GetEntityQuery(typeof(RemoveEntityTagComponent)));
-            //if (Input.GetKeyDown(KeyCode.K))
-            //{
-            // Slice(0, slicer.forward, slicer.position);
-            //SliceAxis(0, 2);
-            //}
-            //var points = GetEntityQuery(typeof(Slice1TagComponent), typeof(Point)).ToComponentDataArray<Point>(Allocator.TempJob);
-            //var points2 = GetEntityQuery(typeof(Slice2TagComponent), typeof(Point)).ToComponentDataArray<Point>(Allocator.TempJob);
-            //if (points.Length > 0 && points2.Length > 0)
-            //{
-            //    DoSlice(points, points2);
-            //    points.Dispose();
-            //    points2.Dispose();
-            //}
-            //var ps = GetEntityQuery(typeof(Slice1TagComponent)).CalculateEntityCount();
-
-        }
+        protected override void OnUpdate() {}
 
         [BurstCompile]
         public void Slice(int graphNr, Vector3 planeNormal, Vector3 planePos)
@@ -145,7 +122,6 @@ namespace CellexalVR.Spatial
             Entities.WithoutBurst().WithAll<Point>().ForEach((Entity entity, int entityInQueryIndex, ref Point point) =>
                 {
                     if (point.parentID != graphNr) return;
-                    //ecb.AddComponent<RemoveEntityTagComponent>(entity);
                     if (move[entityInQueryIndex])
                     {
                         xMax = math.max(point.offset.x, xMax);
@@ -170,7 +146,6 @@ namespace CellexalVR.Spatial
 
             if (firstSlicePoints.ToList().Count > 0)
             {
-                //DoSlice(points, points2, planeNormal);
                 pc1 = PointCloudGenerator.instance.CreateFromOld(graphToSlice.transform);
                 graphToSlice.GetComponent<GraphSlice>().ClearSlices();
                 slice1 = pc1.GetComponent<GraphSlice>();
@@ -178,11 +153,13 @@ namespace CellexalVR.Spatial
                 slice1.SliceNr = 0;
                 slice1.gameObject.name = graphToSlice.gameObject.name + "_" + slice1.SliceNr;
                 slice1.points = firstSlicePoints;
+                slice1.pointCloud = pc1;
                 float3 max = new float3(xMax, yMax, zMax);
                 float3 min = new float3(xMin, yMin, zMin);
                 pc1.maxCoordValues = max;
                 pc1.minCoordValues = min;
                 pc1.SetCollider(true);
+
 
                 pc2 = PointCloudGenerator.instance.CreateFromOld(graphToSlice.transform);
                 slice2 = pc2.GetComponent<GraphSlice>();
@@ -190,6 +167,7 @@ namespace CellexalVR.Spatial
                 slice2.SliceNr = 1;
                 slice2.gameObject.name = graphToSlice.gameObject.name + "_" + slice2.SliceNr;
                 slice2.points = secondSlicePoints;
+                slice2.pointCloud = pc2;
                 max = new Vector3(xMax2, yMax2, zMax2);
                 min = new Vector3(xMin2, yMin2, zMin2);
                 pc2.maxCoordValues = max;
@@ -203,10 +181,6 @@ namespace CellexalVR.Spatial
             move.Dispose();
         }
 
-        private void DoSlice(List<Point> slice1Points, List<Point> slice2Points, Vector3 planeNormal)
-        {
-
-        }
 
         public List<Point> GetPoints(int graphID)
         {
@@ -218,53 +192,6 @@ namespace CellexalVR.Spatial
             }).Run();
 
             return points;
-            // sliceSystem.slicing = true;
-            //if (axis == 0)
-            //{
-            //    // slice x
-            //}
-            //else if (axis == 1)
-            //{
-            //    // slice y
-            //}
-            //else
-            //{
-            //    // slice z the default slice axis
-
-            //    // Get the different z positions (slice positions) and place the slicer in each.
-            //    PointCloud pc = PointCloudGenerator.instance.pointClouds[graphID];
-            //    List<Point> sortedPoints = new List<Point>(points.Count);
-            //    if (axis == 0)
-            //    {
-            //        if (sortedPointsX == null)
-            //        {
-            //            sortedPointsX = SortPoints(points, 0);
-            //        }
-
-            //        sortedPoints = sortedPointsX;
-            //    }
-
-            //    else if (axis == 1)
-            //    {
-            //        if (sortedPointsY == null)
-            //        {
-            //            sortedPointsY = SortPoints(points, 1);
-            //        }
-
-            //        sortedPoints = sortedPointsY;
-            //    }
-            //    else if (axis == 2)
-            //    {
-            //        if (sortedPointsZ == null)
-            //        {
-            //            sortedPointsZ = SortPoints(points, 2);
-            //        }
-
-            //        sortedPoints = sortedPointsZ;
-            //    }
-            //}
-
-
         }
 
 
@@ -274,7 +201,6 @@ namespace CellexalVR.Spatial
             sortedPoints.Sort((x, y) => x.offset[axis].CompareTo(y.offset[axis]));
             return sortedPoints;
         }
-
 
 
         // public void GatherSlices()

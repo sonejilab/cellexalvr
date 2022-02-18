@@ -14,6 +14,8 @@ using UnityEngine;
 using UnityEngine.VFX;
 using DG.Tweening;
 using UnityEngine.InputSystem;
+using System.Threading.Tasks;
+using UnityEngine.Pool;
 
 namespace AnalysisLogic
 {
@@ -27,8 +29,9 @@ namespace AnalysisLogic
         private bool morphed;
         private SlicerBox slicerBox;
         [SerializeField] private SlicerBox slicerBoxPrefab;
+        private IObjectPool<PointCloud> pool;
 
-        Dictionary<string, Color> clusterCentroids = new Dictionary<string, Color>();
+        private Dictionary<string, Color> clusterCentroids = new Dictionary<string, Color>();
 
         public VisualEffectAsset pointCloudSphere;
         public VisualEffectAsset pointCloudQuad;
@@ -125,6 +128,10 @@ namespace AnalysisLogic
 
 
         }
+        public void SetPool(IObjectPool<PointCloud> pool)
+        {
+            this.pool = pool;
+        }
 
         //private void OnGrabbed(object sender, Hand hand)
         //{
@@ -169,7 +176,10 @@ namespace AnalysisLogic
                 //slicerBox.box.transform.localPosition = bc.center - Vector3.one * 0.5f;
                 slicerBox.SetHandlePositions();
             }
-            graphSlice.slicerBox = slicerBox;
+            if (TryGetComponent(out GraphSlice graphSlice))
+            {
+                graphSlice.slicerBox = slicerBox;
+            }
             //slicerBox.gameObject.SetActive(false);
         }
 
@@ -185,7 +195,7 @@ namespace AnalysisLogic
             if (slicerBox != null)
             {
                 slicerBox.box.transform.localScale = bc.size;
-                slicerBox.box.transform.localPosition = bc.center - Vector3.one * 0.5f;
+                slicerBox.box.transform.localPosition = bc.center;// - Vector3.one * 0.5f;
             }
         }
 
@@ -246,7 +256,7 @@ namespace AnalysisLogic
         }
 
 
-        public void CreatePositionTextureMap(List<Point> points, PointCloud parentPC)
+        public IEnumerator CreatePositionTextureMap(List<Point> points, PointCloud parentPC)
         {
             pointCount = points.Count;
             vfx.visualEffectAsset = pointCount > 50 ? pointCloudQuad : pointCloudSphere;
@@ -281,6 +291,7 @@ namespace AnalysisLogic
                 {
                     int ind = x + (width * y);
                     if (ind >= pointCount) continue;
+                    if (ind % 2000 == 0) yield return null;
                     p = points[ind];
                     c = parentTargetTextureMap.GetPixel(p.xindex, p.yindex);
                     targetPositions[ind] = c;
@@ -289,15 +300,17 @@ namespace AnalysisLogic
                     //Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
                     wPos = math.transform(transform.localToWorldMatrix, pos);
                     entityManager.SetComponentData(p.entity, new Translation { Value = wPos });
-                    newP = new Point();
-                    newP.selected = false;
-                    newP.orgXIndex = p.orgXIndex;
-                    newP.orgYIndex = p.orgYIndex;
-                    newP.xindex = x;
-                    newP.yindex = y;
-                    newP.label = p.label;
-                    newP.offset = pos;
-                    newP.parentID = pcID;
+                    newP = new Point
+                    {
+                        selected = false,
+                        orgXIndex = p.orgXIndex,
+                        orgYIndex = p.orgYIndex,
+                        xindex = x,
+                        yindex = y,
+                        label = p.label,
+                        offset = pos,
+                        parentID = pcID
+                    };
                     entityManager.SetComponentData(p.entity, newP);
                     //{
                     //    selected = false,
@@ -396,26 +409,46 @@ namespace AnalysisLogic
         }
 
 
-        public void SpreadOutPoints()
+        public void SpreadOutPoints(bool doSpread = true)
         {
-            if (!morphed && pointSpreadTexture == null)
+            //if (pointSpreadTexture == null && doSpread) // skip redo texture if it hasnt changed (?)
+            if (doSpread)
             {
                 pointSpreadTexture = new Texture2D(positionTextureMap.width, positionTextureMap.height, TextureFormat.RGBAFloat, true, true);
+                Color[] colors = alphaTextureMap.GetPixels();
                 Color[] positions = positionTextureMap.GetPixels();
                 Color[] newPositions = new Color[positions.Length];
+                Vector3 pos;
+                Vector3 dir;
+                Vector3 newPos;
                 for (int i = 0; i < positions.Length; i++)
                 {
-                    Vector3 pos = new Vector3(positions[i].r, positions[i].g, positions[i].b);
-                    Vector3 dir = pos - new Vector3(0f, 0, 0);
-                    //Vector3 dir = pos - new Vector3(1f, 0, 0); // for half sphere
-                    Vector3 newPos = (pos + dir).normalized; // / dir.magnitude;
-                    newPositions[i] = new Color(newPos.x, newPos.y, newPos.z);
+                    //if (i % 10000 == 0)
+                    //    yield return null;
+                    if (colors[i].r < 0.5f)
+                    {
+                        newPositions[i] = positions[i];
+                    }
+                    else
+                    {
+                        pos = new Vector3(positions[i].r, positions[i].g, positions[i].b);
+                        dir = pos - new Vector3(0f, 0, 0);
+
+                        //Vector3 dir = pos - new Vector3(1f, 0, 0); // for half sphere
+                        newPos = (pos + dir).normalized; 
+                        newPositions[i] = new Color(newPos.x, newPos.y, newPos.z);
+                    }
                 }
 
                 pointSpreadTexture.SetPixels(newPositions);
                 pointSpreadTexture.Apply();
+                vfx.SetTexture("TargetPosMapTex", pointSpreadTexture);
             }
-            vfx.SetTexture("TargetPosMapTex", pointSpreadTexture);
+            else if (doSpread)
+            {
+                vfx.SetTexture("TargetPosMapTex", pointSpreadTexture);
+            }
+
             Morph();
         }
 
@@ -442,10 +475,11 @@ namespace AnalysisLogic
 
         public void SpreadOutClusters()
         {
-            if (!morphed && clusterSpreadTexture == null)
+            if (!morphed)
             {
                 clusterSpreadTexture = new Texture2D(positionTextureMap.width, positionTextureMap.height, TextureFormat.RGBAFloat, true, true);
-                CalculateClusterCentroids();
+                if (clusterCentroids.Count == 0)
+                    CalculateClusterCentroids();
                 Color[] colors = alphaTextureMap.GetPixels();
                 Color[] positions = positionTextureMap.GetPixels();
                 Color[] newPositions = new Color[positionTextureMap.width * positionTextureMap.height];
@@ -453,14 +487,19 @@ namespace AnalysisLogic
                 {
                     if (i >= pointCount) break;
                     Color pos = positions[i];
-                    //if (colors[i].r > 0.7f) // if only for highlighted points
-                    //{
-                    string cluster = PointCloudGenerator.instance.clusterDict[i];
-                    Color centroid = clusterCentroids[cluster];
-                    Vector3 cP = (new Vector3(centroid.r, centroid.g, centroid.b) - Vector3.zero);
-                    Vector3 newPos = (new Vector3(pos.r, pos.g, pos.b) + cP) * 2f;//.normalized;
-                    Color newPosCol = new Color(newPos.x, newPos.y, newPos.z);
-                    newPositions[i] = newPosCol;
+                    if (colors[i].r < 0.7f) // if only for highlighted points
+                    {
+                        newPositions[i] = pos;
+                    }
+                    else
+                    {
+                        string cluster = PointCloudGenerator.instance.clusterDict[i];
+                        Color centroid = clusterCentroids[cluster];
+                        Vector3 cP = (new Vector3(centroid.r, centroid.g, centroid.b) - Vector3.zero);
+                        Vector3 newPos = (new Vector3(pos.r, pos.g, pos.b) + cP) * 2f;//.normalized;
+                        Color newPosCol = new Color(newPos.x, newPos.y, newPos.z);
+                        newPositions[i] = newPosCol;
+                    }
                     //}
 
                     //else
@@ -491,6 +530,7 @@ namespace AnalysisLogic
                 Color centroid = sum / kvp.Value.Count;
                 clusterCentroids[kvp.Key] = centroid;
             }
+
         }
 
         //

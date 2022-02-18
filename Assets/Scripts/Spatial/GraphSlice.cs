@@ -13,6 +13,8 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.VFX;
 using DG.Tweening;
+using UnityEngine.Pool;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.Spatial
 {
@@ -78,16 +80,20 @@ namespace CellexalVR.Spatial
             boxCollider = GetComponent<BoxCollider>();
             CellexalEvents.GraphsColoredByGene.AddListener(UpdateColorTexture);
             CellexalEvents.GraphsReset.AddListener(UpdateColorTexture);
-            //GetComponent<Rigidbody>().drag = Mathf.Infinity;
-            //GetComponent<Rigidbody>().angularDrag = Mathf.Infinity;
+            CellexalEvents.RightTriggerClick.AddListener(ActivateBox);
         }
 
         private void Update()
         {
-            //if (SelectionToolCollider.instance.selActive)
-            //{
-            //    UpdateColorTexture();
-            //}
+            if (SelectionToolCollider.instance.selActive)
+            {
+                UpdateColorTexture();
+            }
+
+            if (Keyboard.current.tKey.wasPressedThisFrame)
+            {
+                DisperseSlices();
+            }
 
             //if (++frameCount > 10)
             //{
@@ -98,28 +104,35 @@ namespace CellexalVR.Spatial
 
         }
 
-        //private void CheckForController()
-        //{
-        //    if (!boxCollider.enabled) return;
-        //    Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
-        //    if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("GameController")))
-        //    {
-        //        //parentSlice.controllerInsideSomeBox = true;
-        //        controllerInside = true;
-        //        slicerBox.box.SetActive(true);
-        //    }
-        //    else
-        //    {
-        //        controllerInside = false;
-        //        //parentSlice.controllerInsideSomeBox = false;
-        //        if (slicerBox != null && !slicerBox.Active)
-        //        {
-        //            slicerBox.box.SetActive(false);
-        //        }
-        //    }
 
-         
-        //}
+        private void ActivateBox()
+        {
+            if (SelectionToolCollider.instance.selActive) return;
+            bool controllerInsideBox = CheckForController();
+            if (slicerBox.gameObject.activeSelf && controllerInsideBox)
+            {
+                slicerBox.gameObject.SetActive(false);
+                slicerBox.Active = false;
+            }
+            else if (controllerInsideBox)
+            {
+                slicerBox.gameObject.SetActive(true);
+                slicerBox.Active = true;
+            }
+        }
+
+        private bool CheckForController()
+        {
+            if (!boxCollider.enabled) return false;
+            Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
+            if (colliders.Any(x => x.CompareTag("GameController")))
+            {
+                return true;
+            }
+            return false;
+
+
+        }
 
         public void UpdateColorTexture()
         {
@@ -182,14 +195,74 @@ namespace CellexalVR.Spatial
 
             transform.localPosition = originalPos;
             transform.localRotation = Quaternion.identity;
-            //interactableObjectBasic.isGrabbable = false;
             GetComponent<BoxCollider>().enabled = false;
-            //parentSlice.GetComponent<VisualEffect>().enabled = true;
-            //yield return new WaitForSeconds(0.3f);
-            //gameObject.SetActive(false);
-            //wire.SetActive(false);
-            //replacement.GetComponent<Renderer>().material.color = replacementCol;
-            //replacement.SetActive(false);
+        }
+
+
+        /// <summary>
+        /// Places the slices in a grid pattern to be able to look at them all individually.
+        /// </summary>
+        /// <returns></returns>
+        private void DisperseSlices()
+        {
+            //dispersing = true;
+            //_rigidBody.drag = 1;
+            //_rigidBody.angularDrag = 1;
+
+            //float time = 0;
+
+            //while (time <= 1.0f)
+            //{
+            //    time += Time.deltaTime;
+            //    yield return null;
+            //}
+
+            //_rigidBody.velocity = Vector3.zero;
+            //_rigidBody.angularVelocity = Vector3.zero;
+
+            float angle = (Mathf.PI * 1.1f);
+            Vector3 center = Vector3.zero; // referenceManager.headset.transform.position;
+            int slicesPerRow = childSlices.Count / 4;
+            float yDiff = transform.position.y;
+            float xPos;
+            float yPos = (yDiff > 0f) ? -0.5f : -yDiff;
+            float zPos;
+            float radius = 4.0f;
+            List<Vector3> slicePositions = new List<Vector3>();
+            GraphSlice gs;
+            Vector3 lookAtPos = new Vector3(0, 1.7f, 0);
+            for (int i = 0; i < childSlices.Count; i++)
+            {
+                if (i % slicesPerRow == 0 && i > 0)
+                {
+                    angle = (Mathf.PI * 1.1f);
+                    radius += 0.1f;
+                    yPos += 1.0f;
+                }
+
+                xPos = center.x + (float)Mathf.Cos(angle) * radius;
+                zPos = center.z + (float)Mathf.Sin(angle) * radius / 2f;
+                Vector3 pos = new Vector3(xPos, yPos, zPos);
+                slicePositions.Add(pos);
+                angle += (Mathf.PI * 0.9f) / (float)slicesPerRow;
+                gs = childSlices[i].GetComponent<GraphSlice>();
+                gs.transform.DOLocalMove(pos, 0.8f).SetEase(Ease.InOutQuad);
+                Vector3 wPos = transform.TransformPoint(pos);
+                gs.transform.DODynamicLookAt(2 * wPos - lookAtPos, 0.8f);
+            }
+
+            //float animationTime = 1f;
+            //for (int i = 0; i < childSlices.Count; i++)
+            //{
+            //}
+
+            //while (time < 1f + animationTime)
+            //{
+            //    time += Time.deltaTime;
+            //    yield return null;
+            //}
+
+            //ActivateSlices(false);
         }
 
 
@@ -218,25 +291,19 @@ namespace CellexalVR.Spatial
 
         public void ActivateSlices(bool toggle)
         {
+            gameObject.SetActive(!toggle);
+            GetComponent<BoxCollider>().enabled = !toggle;
             foreach (GraphSlice gs in childSlices)
             {
                 if (toggle)
                 {
-                    gameObject.SetActive(false);
-                    //interactableObjectBasic.isGrabbable = false;
                     gs.gameObject.SetActive(true);
-                    GetComponent<BoxCollider>().enabled = false;
                     gs.ActivateSlice(toggle, true);
                 }
 
                 else
                 {
-                    //slicerBox.gameObject.SetActive(false);
-                    gameObject.SetActive(true);
-                    //interactableObjectBasic.isGrabbable = true;
-                    GetComponent<BoxCollider>().enabled = true;
                     gs.slicerBox.Active = false;
-                    //gs.slicerBox.box.SetActive(false);
                     gs.MoveToGraph();
                 }
             }
@@ -251,10 +318,6 @@ namespace CellexalVR.Spatial
         /// <returns></returns>
         public void ActivateSlice(bool activate, bool move = true)
         {
-            //if (interactableObjectBasic == null)
-            //{
-            //    interactableObjectBasic = GetComponent<InteractableObjectBasic>();
-            //}
             foreach (BoxCollider bc in GetComponents<BoxCollider>())
             {
                 bc.enabled = activate;
@@ -262,28 +325,13 @@ namespace CellexalVR.Spatial
 
             if (activate)
             {
-                //interactableObjectBasic.isGrabbable = true;
-                transform.parent = null;
-                //Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-                //if (rigidbody == null)
-                //{
-                //    rigidbody = gameObject.AddComponent<Rigidbody>();
-                //}
-
-                //rigidbody.useGravity = false;
-                //rigidbody.isKinematic = false;
-                //rigidbody.drag = 10;
-                //rigidbody.angularDrag = 15;
-                sliceMode = true;
                 if (move)
                 {
                     transform.DOLocalMove(sliceCoords, 0.8f).SetEase(Ease.InOutQuad);
-
                 }
             }
             else
             {
-                //Destroy(GetComponent<Rigidbody>());
                 sliceMode = false;
             }
         }
@@ -312,19 +360,8 @@ namespace CellexalVR.Spatial
             {
                 pointCloud = GetComponent<PointCloud>();
             }
-            PointCloudGenerator.instance.SpawnPoints(pointCloud, parentSlice.pointCloud, points);
         }
 
-
-        //public IEnumerator SliceAxisCoroutine(int axis, List<Point> points, int nrOfSlices)
-        //{
-        //    Thread t = t = new Thread(() => SliceAxis(axis, points, nrOfSlices));
-        //    t.Start();
-        //    while (t.IsAlive)
-        //    {
-        //        yield return null;
-        //    }
-        //}
 
         public IEnumerator SliceAxis(int axis, List<Point> points, int nrOfSlices)
         {
@@ -368,19 +405,18 @@ namespace CellexalVR.Spatial
             List<GraphSlice> slices = new List<GraphSlice>();
             int sliceNr = 0;
             PointCloud newPc = PointCloudGenerator.instance.CreateFromOld(pointCloud.transform);
+            yield return null;
             GraphSlice slice = newPc.GetComponent<GraphSlice>();
             slice.transform.position = pointCloud.transform.position;
             slice.sliceCoords = pointCloud.transform.position;
             slice.SliceNr = ++sliceNr;
             slice.gameObject.name = "Slice" + sliceNr;
-            //GraphSlice parentSlice = pc.GetComponent<GraphSlice>();
             slice.SliceNr = SliceNr;
             slices.Add(slice);
             childSlices.Add(slice);
             slice.gameObject.name = pointCloud.gameObject.name + "_" + SliceNr;
 
 
-            //NativeList<Point> pointsInSlice = new NativeList<Point>(Allocator.Temp);
             float currentCoord, diff, prevCoord;
             Point point = sortedPoints[0];
             float firstCoord = prevCoord = point.offset[axis];
@@ -389,7 +425,6 @@ namespace CellexalVR.Spatial
             BoxCollider bc = newPc.GetComponent<BoxCollider>();
             Vector3 bcPos = bc.center;
             bcPos[axis] = firstCoord + epsilonToUse / 2;
-            //bc.center = bcPos;
             Vector3 bcSize = bc.size;
             bcSize[axis] /= nrOfSlices;
             newPc.SetCollider(bcPos, bcSize);
@@ -407,14 +442,15 @@ namespace CellexalVR.Spatial
 
                 if (diff > epsilonToUse)
                 {
-                    slice.BuildPointCloud(pointCloud.transform);
-                    while (PointCloudGenerator.instance.creatingGraph)
-                    {
-                        yield return null;
-                    }
+                    //slice.BuildPointCloud(pointCloud.transform);
+                    yield return PointCloudGenerator.instance.SpawnPoints(newPc, pointCloud, slice.points);
+                    newPc = PointCloudGenerator.instance.CreateFromOld(pointCloud.transform);
+                    //while (PointCloudGenerator.instance.creatingGraph)
+                    //{
+                    //    yield return null;
+                    //}
 
                     yield return new WaitForSeconds(0.1f);
-                    newPc = PointCloudGenerator.instance.CreateFromOld(pointCloud.transform);
                     slice = newPc.GetComponent<GraphSlice>();
                     slice.transform.position = pointCloud.transform.position;
                     slice.sliceCoords = pointCloud.transform.position;
@@ -429,13 +465,14 @@ namespace CellexalVR.Spatial
                     bcSize = bc.size;
                     bcSize[axis] /= nrOfSlices;
                     newPc.SetCollider(bcPos, bcSize);
-                    //yield return null;
+                    yield return null;
                 }
 
                 else if (i == sortedPoints.Count - 1)
                 {
                     slices.Add(slice);
-                    slice.BuildPointCloud(pointCloud.transform);
+                    yield return PointCloudGenerator.instance.SpawnPoints(newPc, pointCloud, slice.points);
+                    //slice.BuildPointCloud(pointCloud.transform);
                     childSlices.Add(slice);
                     while (PointCloudGenerator.instance.creatingGraph)
                     {
@@ -454,6 +491,7 @@ namespace CellexalVR.Spatial
             }
 
             slicerBox.sliceAnimationActive = false;
+            parentSlice.ActivateSlices(true);
             //ActivateSlices(true);
             //PointCloudGenerator.instance.BuildSlices(pointCloud.transform, slices.ToArray());
 

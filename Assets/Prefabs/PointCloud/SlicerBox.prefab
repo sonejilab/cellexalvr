@@ -4417,7 +4417,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2345504283444348913}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -4430,7 +4430,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: db37990110d72904fa06f1f906f41114, type: 2}
+  - {fileID: 2100000, guid: 4870caf6063dde64883dd746003d0c1e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9445,7 +9445,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4514091791789123636}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 1, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9471,6 +9471,7 @@ MonoBehaviour:
   blade: {fileID: 6871947039041477922}
   plane: {fileID: 2568809865412927990}
   box: {fileID: 2345504283444348913}
+  sliceInteractable: {fileID: 6871947039246662221}
   menuPosition: {fileID: 2272399921165636903}
   buttonPosition: {fileID: 1291968990375753540}
   slicingMenu: {fileID: 4194239990707896178}
@@ -16412,7 +16413,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8018943238505424795}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.5, y: 0.447, z: 0.444}
+  m_LocalPosition: {x: 0.506, y: 0.447, z: 0.444}
   m_LocalScale: {x: 0.012499999, y: 0.012500002, z: 0.012500001}
   m_ConstrainProportionsScale: 0
   m_Children: []

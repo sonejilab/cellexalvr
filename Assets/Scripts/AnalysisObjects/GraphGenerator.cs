@@ -14,6 +14,7 @@ using CellexalVR.Extensions;
 using CellexalVR.Spatial;
 using TMPro;
 using UnityEngine.Rendering;
+using DefaultNamespace;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -1118,12 +1119,10 @@ namespace CellexalVR.AnalysisObjects
             //CreateMesh();
         }
 
-
-        //public void CreateMesh()
-        //{
-        //    StartCoroutine(referenceManager.graphManager.Graphs[0].transform.parent.GetComponent<SpatialGraph>()
-        //        .CreateMesh());
-        //}
+        public void CreateMesh()
+        {
+            MeshGenerator.instance.GenerateMeshes();
+        }
 
 
         /// <summary>

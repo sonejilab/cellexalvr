@@ -1,5 +1,6 @@
 using AnalysisLogic;
 using CellexalVR.General;
+using DefaultNamespace;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,13 +57,18 @@ namespace CellexalVR.Spatial
 
         private void RightAction(InputAction.CallbackContext context)
         {
-            
             if (controllerR == null)
                 controllerR = ReferenceManager.instance.rightController.transform;
-            Physics.Raycast(controllerR.position, controllerR.forward, out RaycastHit hit, 10);
-            if (!(hit.collider && hit.collider.GetComponent<PointCloud>() != null))
-                return;
-            pointCloud = hit.collider.GetComponent<PointCloud>();
+            float minDist = float.MaxValue;
+            float dist;
+            foreach (PointCloud pc in PointCloudGenerator.instance.pointClouds)
+            {
+                dist = Vector3.Distance(controllerR.transform.position, pc.transform.position);
+                if (dist < minDist)
+                {
+                    pointCloud = pc;
+                }
+            }
             rightClick = true;
             if (leftClick)
             {
@@ -89,14 +95,23 @@ namespace CellexalVR.Spatial
         {
             if (bothClick)
             {
-                if (controllerL == null)
+                if (controllerL == null || controllerL == controllerR)
                     controllerL = ReferenceManager.instance.leftController.transform;
                 if (controllerR == null)
                     controllerR = ReferenceManager.instance.rightController.transform;
                 currentDistance = Vector3.Distance(controllerL.position, controllerR.position);
-                if (currentDistance > startDistance + 0.5f || currentDistance < startDistance - 0.5f)
+                if (currentDistance > startDistance + 0.4f)
                 {
                     pointCloud.SpreadOutPoints();
+                    //pointCloud.SpreadOutClusters();
+                    bothClick = false;
+                    currentDistance = 0;
+                }
+
+                else if (currentDistance < startDistance - 0.4f)
+                {
+                    pointCloud.SpreadOutPoints(false);
+                    //pointCloud.SpreadOutClusters();
                     bothClick = false;
                     currentDistance = 0;
                 }

@@ -12,6 +12,7 @@ using Unity.Entities;
 using UnityEngine;
 using UnityEngine.VFX;
 using DG.Tweening;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.Spatial
 {
@@ -20,6 +21,7 @@ namespace CellexalVR.Spatial
         public GameObject blade;
         public GameObject plane;
         public GameObject box;
+        public GameObject sliceInteractable;
         public Transform menuPosition;
         public Transform buttonPosition;
         public SlicingMenu slicingMenu;
@@ -41,9 +43,9 @@ namespace CellexalVR.Spatial
             set
             {
                 active = value;
-                Color c = boxMaterial.color;
-                c.a = active ? 0.5f : 0.05f;
-                boxMaterial.color = c;
+                //Color c = boxMaterial.color;
+                //c.a = active ? 0.5f : 0.05f;
+                //boxMaterial.color = c;
                 slicingMenu.gameObject.SetActive(active);
                 slicingMenu.transform.localPosition = transform.InverseTransformPoint(menuPosition.position);
                 toggleSlicingMenuButton.transform.localPosition = transform.InverseTransformPoint(buttonPosition.position);
@@ -79,12 +81,20 @@ namespace CellexalVR.Spatial
             pointCloud = GetComponentInParent<PointCloud>();
             graphSlice = GetComponentInParent<GraphSlice>();
             boxMaterial = box.GetComponent<MeshRenderer>().material;
-            Color c = boxMaterial.color;
-            c.a = 0.05f;
-            boxMaterial.color = c;
+            boxMaterial.SetMatrix("_BoxMatrix", transform.worldToLocalMatrix);
+            //Color c = boxMaterial.color;
+            //c.a = 0.05f;
+            //boxMaterial.color = c;
             toggleSlicingMenuButton = GetComponentInChildren<ToggleSlicingMenuButton>(true);
             vfx = GetComponentInParent<VisualEffect>();
         }
+
+        //private void OnValidate()
+        //{
+        //    Material mat = box.GetComponent<Renderer>().sharedMaterial;
+        //    print($"validate {box == null}, {mat == null}");
+        //    mat.SetMatrix("_BoxMatrix", transform.worldToLocalMatrix);
+        //}
 
         private void Update()
         {
@@ -110,13 +120,29 @@ namespace CellexalVR.Spatial
             cullPos2.x = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[3].transform.position).x)) + 1f;
             cullPos2.y = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[4].transform.position).y)) + 1f;
             cullPos2.z = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[5].transform.position).z)) + 1f;
-            vfx.SetVector3("CullingCubePos", cullPos1);
-            vfx.SetVector3("CullingCube2Pos", cullPos2);
+            //vfx.SetVector3("CullingCubePos", cullPos1);
+            //vfx.SetVector3("CullingCube2Pos", cullPos2);
 
-            if (Input.GetKeyDown(KeyCode.N))
+            if (Keyboard.current.nKey.wasPressedThisFrame)
             {
                 SliceGraphManual();
             }
+            if (Keyboard.current.mKey.wasPressedThisFrame)
+            {
+                SliceGraphAutomatic(2, 20);
+            }
+
+        }
+
+        private void BoxAnimation(int axis)
+        {
+            Material mat = box.GetComponent<Renderer>().material;
+            mat.SetInt("_WaveToggle", 1);
+            mat.SetInt("_WaveAxis", axis);
+            DOVirtual.Float(-1.5f, 1.5f, 1.2f, v =>
+            {
+                mat.SetVector("_WaveCoords", new Vector3(v, v, v));
+            }).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Restart);
         }
 
         public void SetHandlePositions()
@@ -176,7 +202,8 @@ namespace CellexalVR.Spatial
 
         public void SliceGraphAutomatic(int axis, int nrOfSlices)
         {
-            StartCoroutine(SliceAnimation());
+            //StartCoroutine(SliceAnimation());
+            BoxAnimation(axis);
             StartCoroutine(graphSlice.SliceAxis(axis, sliceGraphSystem.GetPoints(pointCloud.pcID), nrOfSlices));
         }
 

@@ -102,7 +102,6 @@ namespace CellexalVR.Menu.Buttons
             frameCount++;
             if (CrossSceneInformation.Normal)
             {
-                //CheckForClick();
                 CheckForHit();
             }
         }
@@ -114,32 +113,6 @@ namespace CellexalVR.Menu.Buttons
             {
                 Click();
             }
-        }
-
-        private void CheckForClick()
-        {
-            //bool triggerPressed;
-            //if (device.TryGetFeatureValue(CommonUsages.triggerButton, out triggerPressed) && triggerPressed && controllerInside)
-            //{
-            //    if (!TriggerPressed)
-            //    {
-            //        TriggerPressed = true;
-            //        Click();
-            //    }
-            //}
-            //else if (TriggerPressed)
-            //{
-            //    TriggerPressed = false;
-            //}
-            //device = SteamVR_Controller.Input((int)rightController.index);
-            //if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            //{
-            //    Click();
-            //}
-            //if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad) && device.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0).y < 0.5f)
-            //{
-            //    HelpClick();
-            //}
         }
 
         /// <summary>
