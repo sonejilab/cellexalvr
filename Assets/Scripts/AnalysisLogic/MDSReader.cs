@@ -169,10 +169,10 @@ namespace CellexalVR.AnalysisLogic
                         {
                             string[] words = mdsStreamReader.ReadLine()
                                 .Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                            if (words.Length != 4 && words.Length != 7)
-                            {
-                                continue;
-                            }
+                            //if (words.Length != 5 && words.Length != 7)
+                            //{
+                            //    continue;
+                            //}
 
                             string cellname = words[0];
                             float x = float.Parse(words[1],
@@ -228,6 +228,7 @@ namespace CellexalVR.AnalysisLogic
                 
                 CreateFromCoordinates(names, xcoords, ycoords, zcoords);
 
+                print($"{totalNbrOfCells}, {names.Count}, {CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount}");
                 // If high quality mesh is used. Use LOD groups to swap to low q when further away.
                 // Improves performance a lot when analysing larger graphs.
                 int n = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;

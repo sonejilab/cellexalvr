@@ -1,6 +1,6 @@
 ﻿using System;
 using CellexalVR.MarchingCubes;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using UnityEngine;
 
 namespace MarchingCubes

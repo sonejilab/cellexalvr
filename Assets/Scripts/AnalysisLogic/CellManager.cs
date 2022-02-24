@@ -13,7 +13,7 @@ using CellexalVR.Extensions;
 using CellexalVR.AnalysisLogic.H5reader;
 using UnityEngine.XR.Interaction.Toolkit;
 using Unity.Entities;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.AnalysisLogic
 {

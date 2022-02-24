@@ -7,7 +7,7 @@ using System.IO;
 using System.Threading;
 using Unity.Mathematics;
 using AnalysisLogic;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using UnityEditor;
 
 namespace CellexalVR.Spatial

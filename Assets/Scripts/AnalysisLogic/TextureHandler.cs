@@ -7,12 +7,13 @@ using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Spatial;
 using SQLiter;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CellexalVR.AnalysisLogic
 {
     public class TextureHandler : SystemBase
     {
@@ -21,7 +22,7 @@ namespace DefaultNamespace
         private int frameCount;
         private EntityQuery query;
 
-        public List<Tuple<int, int>> sps;
+        public Dictionary<int, int> sps;
         public List<Texture2D> colorTextureMaps = new List<Texture2D>();
         public List<Texture2D> mainColorTextureMaps = new List<Texture2D>();
         public List<Texture2D> alphaTextureMaps = new List<Texture2D>();
@@ -35,7 +36,7 @@ namespace DefaultNamespace
             base.OnCreate();
             entityManager = World.EntityManager;
             ecbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-            sps = new List<Tuple<int, int>>();
+            sps = new Dictionary<int, int>();
             query = GetEntityQuery(typeof(RaycastCheckComponent));
             instance = this;
         }
@@ -51,9 +52,10 @@ namespace DefaultNamespace
             Entities.WithAll<SelectedPointComponent>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref SelectedPointComponent sp) =>
             {
                 orgPixels.Add(new Tuple<int, int>(sp.orgXIndex, sp.orgYIndex));
-                sps.Add(new Tuple<int, int>(sp.label, sp.group));
+                sps[sp.label] = sp.group;
             }).Run();
             Color col = SelectionToolCollider.instance.GetCurrentColor();
+            col.a = 1f;
             Color a = Color.white;
             for (int i = 0; i < mainColorTextureMaps.Count; i++)
             {
@@ -70,6 +72,44 @@ namespace DefaultNamespace
             EntityManager.DestroyEntity(GetEntityQuery(typeof(SelectedPointComponent)));
             CellexalEvents.SelectionStarted.Invoke();
             frameCount++;
+        }
+
+        public void SelectFromFile(List<Tuple<int, int>> indices)
+        {
+            int i = 0;
+            indices.OrderBy(x => x.Item1);
+            //List<Tuple<int, int>> orgPixels = new List<Tuple<int, int>>();
+            //Entities.WithAll<Point>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref Point p) =>
+            //{
+            //    Debug.Log($"{indices[i].Item1}, {p.label}");
+            //    if (i < indices.Count && indices[i].Item1 == p.label)
+            //    {
+            //        orgPixels.Add(new Tuple<int, int>(p.orgXIndex, p.orgYIndex));
+            //        i++;
+            //    }
+            //}).Run();
+
+
+
+
+
+            Color col; // SelectionToolCollider.instance.GetCurrentColor();
+            col.a = 1f;
+            Color a = Color.white;
+            for (int j = 0; j < mainColorTextureMaps.Count; j++)
+            {
+                Texture2D map = mainColorTextureMaps[j];
+                Texture2D amap = alphaTextureMaps[j];
+                foreach (Tuple<int, int> tuple in indices)
+                {
+                    col = SelectionToolCollider.instance.Colors[tuple.Item2];
+                    Vector2Int xy = textureCoordDict[PointCloudGenerator.instance.indToLabelDict[tuple.Item1]];
+                    map.SetPixel(xy.x, xy.y, col);
+                    amap.SetPixel(xy.x, xy.y, a);
+                }
+                map.Apply();
+                amap.Apply();
+            }
         }
 
         public void ColorCluster(string cluster, bool toggle)

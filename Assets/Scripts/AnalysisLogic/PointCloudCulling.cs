@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CellexalVR.AnalysisLogic
 {
     public class PointCloudCulling : MonoBehaviour
     {

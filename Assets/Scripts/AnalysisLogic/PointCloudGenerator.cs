@@ -22,7 +22,7 @@ using Random = Unity.Mathematics.Random;
 using CellexalVR.Spatial;
 using System.Diagnostics;
 
-namespace DefaultNamespace
+namespace CellexalVR.AnalysisLogic
 {
     public struct Point : IComponentData
     {
@@ -57,6 +57,7 @@ namespace DefaultNamespace
         [HideInInspector] public Texture2D colorMap;
         [HideInInspector] public Texture2D alphaMap;
         [HideInInspector] public Texture2D clusterMap;
+        [HideInInspector] public Dictionary<int, string> indToLabelDict = new Dictionary<int, string>();
         [HideInInspector] public Dictionary<int, string> clusterDict = new Dictionary<int, string>();
         [HideInInspector] public Dictionary<string, Color> colorDict = new Dictionary<string, Color>();
         [HideInInspector] public Dictionary<string, List<Vector2Int>> clusters = new Dictionary<string, List<Vector2Int>>();
@@ -135,11 +136,11 @@ namespace DefaultNamespace
             PointCloud pc;
             if (spatial)
             {
-                pc = Instantiate(spatialPointCloudPrefab, new float3(graphNr, 1, graphNr), quaternion.identity);
+                pc = Instantiate(spatialPointCloudPrefab, oldPc.transform.position, quaternion.identity);
             }
             else
             {
-                pc = Instantiate(pointCloudPrefab, new float3(graphNr, 1, graphNr), quaternion.identity);
+                pc = Instantiate(pointCloudPrefab, oldPc.transform.position, quaternion.identity);
             }
             quadrantSystem.graphParentTransforms.Add(pc.transform);
             quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
@@ -477,7 +478,7 @@ namespace DefaultNamespace
             colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
-            Color c = new Color(0.32f, 0.32f, 0.32f);
+            Color c = new Color(0.32f, 0.32f, 0.32f, 0f);
             Color alpha = new Color(0.55f, 0f, 0);
             Color[] carray = new Color[width * height];
             Color[] aarray = new Color[width * height];

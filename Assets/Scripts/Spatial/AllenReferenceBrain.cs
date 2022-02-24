@@ -33,7 +33,6 @@ namespace CellexalVR.Spatial
         [HideInInspector] public Quaternion startRotation;
         [HideInInspector] public List<int> nonSplittableMeshes = new List<int> { 8, 997, 567, 824 };
 
-
         private ReferenceModelKeyboard keyboard;
         private List<BrainPartButton> brainPartButtons = new List<BrainPartButton>();
         private const float yInc = 0.20f;

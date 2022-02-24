@@ -2,7 +2,7 @@
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Interaction;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;

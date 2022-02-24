@@ -14,7 +14,7 @@ using CellexalVR.Extensions;
 using CellexalVR.Spatial;
 using TMPro;
 using UnityEngine.Rendering;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -1121,7 +1121,7 @@ namespace CellexalVR.AnalysisObjects
 
         public void CreateMesh()
         {
-            MeshGenerator.instance.GenerateMeshes();
+            MeshGenerator.instance.GenerateMeshes(false);
         }
 
 

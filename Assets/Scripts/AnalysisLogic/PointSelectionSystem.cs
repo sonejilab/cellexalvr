@@ -6,7 +6,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CellexalVR.AnalysisLogic
 {
     public struct SelectedPointComponent : IComponentData
     {

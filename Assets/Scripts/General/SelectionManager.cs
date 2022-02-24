@@ -569,10 +569,34 @@ namespace CellexalVR.General
         // more_cells       //selectionToolMenu.RemoveSelection();
         // more_cells   }
 
+        public void ConfirmSelectionForBigFolder()
+        {
+
+            DumpSelectionToTextFile(TextureHandler.instance.sps);
+
+
+            TextureHandler.instance.sps.Clear();
+
+            CellexalEvents.SelectionConfirmed.Invoke();
+            CellexalEvents.CommandFinished.Invoke(true);
+        }
+
         /// <summary>
         /// Confirms a selection and dumps the relevant data to a .txt file.
         /// </summary>
         [ConsoleCommand("selectionManager", aliases: new string[] { "confirmselection", "confirm" })]
+        public void ConfirmSelectionConsole()
+        {
+            if (PointCloudGenerator.instance.pointClouds.Count > 0)
+            { 
+                ConfirmSelectionForBigFolder();
+            }
+            else
+            {
+                ConfirmSelection();
+            }
+        }
+
         public void ConfirmSelection()
         {
             foreach (Graph graph in graphManager.Graphs)
@@ -580,7 +604,7 @@ namespace CellexalVR.General
                 graph.octreeRoot.Group = -1;
             }
 
-            if (selectedCells.Count == 0)
+            if (selectedCells.Count == 0)                                       
             {
                 print("empty selection confirmed");
             }
@@ -762,6 +786,36 @@ namespace CellexalVR.General
         public void DumpSelectionToTextFile()
         {
             DumpSelectionToTextFile(selectedCells);
+        }
+
+        public string DumpSelectionToTextFile(Dictionary<int, int> points, string filePath = "")
+        {
+            filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
+            using (StreamWriter file = new StreamWriter(filePath))
+            {
+                CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
+                CellexalLog.Log("\tSelection consists of  " + points.Values.Count + " points");
+                if (selectionHistory != null)
+                    CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
+
+                foreach (KeyValuePair<int, int> kvp in TextureHandler.instance.sps)
+                {
+                    file.Write(kvp.Key);
+                    file.Write("\t");
+                    Color c = SelectionToolCollider.instance.Colors[kvp.Value];
+                    int r = (int)(c.r * 255);
+                    int g = (int)(c.g * 255);
+                    int b = (int)(c.b * 255);
+                    // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
+                    file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
+                    file.Write("\t");
+                    //file.Write(graphName);
+                    //file.Write("\t");
+                    file.Write(kvp.Value);
+                    file.WriteLine();
+                }
+                return filePath;
+            }
         }
 
 

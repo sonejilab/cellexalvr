@@ -65,7 +65,7 @@ MonoBehaviour:
     type: 3}
   visualiseChunkPrefab: {fileID: 4094783700118341761, guid: 5ba5762dcec71d54aaaac9a33291c189,
     type: 3}
-  visualiseChunks: 1
+  visualiseChunks: 0
   positions: []
   smoothened: 0
   brushSize: 0.1

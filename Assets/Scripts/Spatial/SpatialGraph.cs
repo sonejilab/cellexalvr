@@ -10,7 +10,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.Interaction;
 using Valve.VR;
 using UnityEngine.XR.Interaction.Toolkit;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using DG.Tweening;
 
 namespace CellexalVR.Spatial

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using AnalysisLogic;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
 
 namespace CellexalVR.Spatial

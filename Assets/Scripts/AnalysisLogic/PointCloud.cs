@@ -4,7 +4,8 @@ using CellexalVR;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Spatial;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic
+    ;
 using TMPro;
 using Unity.Collections;
 using Unity.Entities;
@@ -175,6 +176,7 @@ namespace AnalysisLogic
                 slicerBox.box.transform.localScale = bc.size;
                 //slicerBox.box.transform.localPosition = bc.center - Vector3.one * 0.5f;
                 slicerBox.SetHandlePositions();
+                slicerBox.transform.localPosition = bc.center;
             }
             if (TryGetComponent(out GraphSlice graphSlice))
             {
@@ -309,7 +311,8 @@ namespace AnalysisLogic
                         yindex = y,
                         label = p.label,
                         offset = pos,
-                        parentID = pcID
+                        parentID = pcID,
+                        entity = p.entity
                     };
                     entityManager.SetComponentData(p.entity, newP);
                     //{

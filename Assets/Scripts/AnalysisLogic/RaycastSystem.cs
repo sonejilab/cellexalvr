@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CellexalVR.AnalysisLogic
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class RaycastSystem : SystemBase
@@ -57,10 +57,6 @@ namespace DefaultNamespace
             {
                 if (!hits[entityInQueryIndex])
                 {
-                    // commandBuffer.AddComponent<SelectedPointComponent>(entityInQueryIndex, entity);
-                    //Point p = GetComponent<Point>(rc.entity);
-                    //p.selected = true;
-                    //commandBuffer.SetComponent(rc.entity, p);
                     Entity e = commandBuffer.CreateEntity(entityArchetype);
                     commandBuffer.SetComponent(e, new SelectedPointComponent
                     {

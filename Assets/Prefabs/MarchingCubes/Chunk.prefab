@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mf: {fileID: 7639885224270075597}
-  material: {fileID: 2100000, guid: 682a3075ba9bc0749af02138b6b93b07, type: 2}
+  material: {fileID: 2100000, guid: 05a7440d743c0104892da0850a283468, type: 2}
   chunkManager: {fileID: 2973343067008227723, guid: 42bb42301be5d3c48a3924c4f686c7f4,
     type: 3}
   index: 

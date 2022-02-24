@@ -8,7 +8,7 @@ using TMPro;
 using UnityEngine;
 using CellexalVR.Filters;
 using AnalysisLogic;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {

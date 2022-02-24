@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -74,13 +74,10 @@ namespace CellexalVR.Spatial
         {
             Transform oldPc = quadrantSystem.graphParentTransforms[graphNr];
             graphToSlice = oldPc;
-            GraphSlice parentSlice = oldPc.GetComponent<GraphSlice>();
             float3 localPlanePos = oldPc.transform.InverseTransformPoint(planePos);
             float3 localPlaneNorm = oldPc.transform.InverseTransformVector(planeNormal);
             int entityCount = query.CalculateEntityCount();
             NativeArray<bool> move = new NativeArray<bool>(entityCount, Allocator.TempJob);
-            //NativeArray<float3> dirs = new NativeArray<float3>(entityCount, Allocator.TempJob);
-            EntityCommandBuffer.ParallelWriter ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter();
             JobHandle jobHandle = Entities.WithAll<Point>().WithStoreEntityQueryInField(ref query).ForEach(
                 (Entity entity, int entityInQueryIndex, ref LocalToWorld localToWorld, ref Point point, ref Translation translation) =>
                 {
@@ -89,22 +86,39 @@ namespace CellexalVR.Spatial
                     if (side < 0)
                     {
                         move[entityInQueryIndex] = true;
-                        //dirs[entityInQueryIndex] = localPlaneNorm * -1;
-                        //ecb.AddComponent<Slice1TagComponent>(entityInQueryIndex, entity);
                     }
-                    //else
-                    //{
-                    //    dirs[entityInQueryIndex] = localPlaneNorm;
-                    //    //ecb.AddComponent<Slice2TagComponent>(entityInQueryIndex, entity);
-                    //}
                 }).ScheduleParallel(Dependency);
             jobHandle.Complete();
 
+            DoSlice(move, graphNr, planeNormal);
+            move.Dispose();
+        }
 
-            //oldPc.GetComponent<PointCloud>().SliceSpread(dirs);
+        [BurstCompile]
+        public void SliceFromSelection(int graphNr)
+        {
+            //Color[] colors = TextureHandler.instance.colorTextureMaps[0].GetPixels();
+            NativeArray<Color> colorArray = new NativeArray<Color>(TextureHandler.instance.colorTextureMaps[0].GetPixels(), Allocator.TempJob);
+            int entityCount = query.CalculateEntityCount();
+            NativeArray<bool> move = new NativeArray<bool>(entityCount, Allocator.TempJob);
+            JobHandle jobHandle = Entities.WithAll<Point>().WithStoreEntityQueryInField(ref query).ForEach(
+                (Entity entity, int entityInQueryIndex, ref LocalToWorld localToWorld, ref Point point, ref Translation translation) =>
+                {
+                    if (point.parentID != graphNr) return;
+                    //move[entityInQueryIndex] = GetComponentDataFromEntity<SelectedPointComponent>().HasComponent(entity);
+                    move[entityInQueryIndex] = colorArray[entityInQueryIndex].a > 0.9f;
+                }).ScheduleParallel(Dependency);
+            jobHandle.Complete();
 
-            //dirs.Dispose();
-            //ecbSystem.AddJobHandleForProducer(Dependency);
+            colorArray.Dispose();
+            DoSlice(move, graphNr, PointCloudGenerator.instance.pointClouds[graphNr].transform.forward * 2f);
+            move.Dispose();
+        }
+
+        private void DoSlice(NativeArray<bool> slice, int graphNr, Vector3 moveDir)
+        {
+            Transform oldPc = quadrantSystem.graphParentTransforms[graphNr];
+            graphToSlice = oldPc;
             xMax = float.NegativeInfinity;
             xMax2 = float.NegativeInfinity;
             yMax = float.NegativeInfinity;
@@ -120,36 +134,36 @@ namespace CellexalVR.Spatial
             List<Point> firstSlicePoints = new List<Point>();
             List<Point> secondSlicePoints = new List<Point>();
             Entities.WithoutBurst().WithAll<Point>().ForEach((Entity entity, int entityInQueryIndex, ref Point point) =>
+            {
+                if (point.parentID != graphNr) return;
+                if (slice[entityInQueryIndex])
                 {
-                    if (point.parentID != graphNr) return;
-                    if (move[entityInQueryIndex])
-                    {
-                        xMax = math.max(point.offset.x, xMax);
-                        xMin = math.min(point.offset.x, xMin);
-                        yMax = math.max(point.offset.y, yMax);
-                        yMin = math.min(point.offset.y, yMin);
-                        zMax = math.max(point.offset.z, zMax);
-                        zMin = math.min(point.offset.z, zMin);
-                        firstSlicePoints.Add(point);
-                    }
-                    else
-                    {
-                        xMax2 = math.max(point.offset.x, xMax2);
-                        xMin2 = math.min(point.offset.x, xMin2);
-                        yMax2 = math.max(point.offset.y, yMax2);
-                        yMin2 = math.min(point.offset.y, yMin2);
-                        zMax2 = math.max(point.offset.z, zMax2);
-                        zMin2 = math.min(point.offset.z, zMin2);
-                        secondSlicePoints.Add(point);
-                    }
-                }).Run();
+                    xMax = math.max(point.offset.x, xMax);
+                    xMin = math.min(point.offset.x, xMin);
+                    yMax = math.max(point.offset.y, yMax);
+                    yMin = math.min(point.offset.y, yMin);
+                    zMax = math.max(point.offset.z, zMax);
+                    zMin = math.min(point.offset.z, zMin);
+                    firstSlicePoints.Add(point);
+                }
+                else
+                {
+                    xMax2 = math.max(point.offset.x, xMax2);
+                    xMin2 = math.min(point.offset.x, xMin2);
+                    yMax2 = math.max(point.offset.y, yMax2);
+                    yMin2 = math.min(point.offset.y, yMin2);
+                    zMax2 = math.max(point.offset.z, zMax2);
+                    zMin2 = math.min(point.offset.z, zMin2);
+                    secondSlicePoints.Add(point);
+                }
+            }).Run();
 
             if (firstSlicePoints.ToList().Count > 0)
             {
                 pc1 = PointCloudGenerator.instance.CreateFromOld(graphToSlice.transform);
                 graphToSlice.GetComponent<GraphSlice>().ClearSlices();
                 slice1 = pc1.GetComponent<GraphSlice>();
-                slice1.sliceCoords = pc1.transform.position - 0.2f * planeNormal;
+                slice1.sliceCoords = pc1.transform.position - 0.2f * moveDir;
                 slice1.SliceNr = 0;
                 slice1.gameObject.name = graphToSlice.gameObject.name + "_" + slice1.SliceNr;
                 slice1.points = firstSlicePoints;
@@ -163,7 +177,7 @@ namespace CellexalVR.Spatial
 
                 pc2 = PointCloudGenerator.instance.CreateFromOld(graphToSlice.transform);
                 slice2 = pc2.GetComponent<GraphSlice>();
-                slice2.sliceCoords = pc2.transform.position + 0.2f * planeNormal;
+                slice2.sliceCoords = pc2.transform.position + 0.2f * moveDir;
                 slice2.SliceNr = 1;
                 slice2.gameObject.name = graphToSlice.gameObject.name + "_" + slice2.SliceNr;
                 slice2.points = secondSlicePoints;
@@ -178,7 +192,7 @@ namespace CellexalVR.Spatial
                 quadrantSystem.graphParentTransforms.Add(pc2.transform);
                 PointCloudGenerator.instance.BuildSlices(graphToSlice, new GraphSlice[] { slice1, slice2 });
             }
-            move.Dispose();
+
         }
 
 

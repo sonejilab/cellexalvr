@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using CellexalVR.Spatial;
 using CellexalVR.Interaction;
 using CellexalVR.General;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using Unity.Mathematics;
 using AnalysisLogic;
 

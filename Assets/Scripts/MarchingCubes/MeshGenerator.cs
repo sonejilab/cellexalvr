@@ -5,14 +5,15 @@ using CellexalVR.MarchingCubes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using CellexalVR.Interaction;
-using System.Threading;
-using System.Diagnostics;
+using DG.Tweening;
+using CellexalVR.General;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.Spatial
 {
@@ -60,25 +61,24 @@ namespace CellexalVR.Spatial
             //    GenerateMeshes();
             //}
 
-            //if (Input.GetKeyDown(KeyCode.J))
-            //{
-            //    StartCoroutine(SpreadOutParts());
-            //}
+            if (Keyboard.current.jKey.wasPressedThisFrame)
+            {
+                SpreadOutParts();
+            }
         }
 
-        public void GenerateMeshes()
+        public void GenerateMeshes(bool removeOutliers = true)
         {
-            UpdateMesh(false);
+            UpdateMesh(removeOutliers);
         }
 
-        private void UpdateMesh(bool removeOutliers = false)
+        private void UpdateMesh(bool removeOutliers)
         {
             creatingMesh = true;
             Color[] colors = TextureHandler.instance.colorTextureMaps[0].GetPixels();
             Color[] alphas = TextureHandler.instance.alphaTextureMaps[0].GetPixels();
             Color[] positions = PointCloudGenerator.instance.pointClouds[0].positionTextureMap.GetPixels();
             Dictionary<int, List<float3>> meshPositions = new Dictionary<int, List<float3>>();
-
 
             for (int i = 0; i < positions.Length; i++)
             {
@@ -134,7 +134,7 @@ namespace CellexalVR.Spatial
                 if (!meshDict.ContainsKey(key))
                 {
                     ChunkManager chunkManager = Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
-                    chunkManager.transform.parent = GameObject.Find("BrainParent").transform;
+                    chunkManager.transform.parent = ReferenceManager.instance.brainModel.transform;
                     chunkManager.transform.localScale = Vector3.one * 1.55f;
                     chunkManager.transform.localPosition = Vector3.zero;
                     chunkManager.transform.localRotation = Quaternion.identity;
@@ -272,33 +272,40 @@ namespace CellexalVR.Spatial
             meshCreated = true;
         }
 
-        private IEnumerator SpreadOutParts()
+        private void SpreadOutParts()
         {
             spreadOut = !spreadOut;
-            float t = 0f;
-            float animationTime = 1f;
-            while (t < animationTime)
+            //float t = 0f;
+            //float animationTime = 1f;
+
+            foreach (KeyValuePair<int, ChunkManager> meshPair in meshDict)
             {
-                foreach (KeyValuePair<int, ChunkManager> meshPair in meshDict)
-                {
-                    Vector3 startPos = meshPair.Value.transform.localPosition;
-                    Vector3 centroid = centroids[meshPair.Key];
-                    if (spreadOut)
-                    {
-                        Vector3 targetPosition = (centroid - Vector3.zero).normalized * 0.5f;
-                        float progress = Mathf.SmoothStep(0, animationTime, t);
-                        meshPair.Value.transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
-                    }
-                    else
-                    {
-                        Vector3 targetPosition = Vector3.zero;
-                        float progress = Mathf.SmoothStep(0, animationTime, t);
-                        meshPair.Value.transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
-                    }
-                }
-                yield return null;
-                t += (Time.deltaTime / animationTime);
+                Vector3 centroid = centroids[meshPair.Key];
+                Vector3 targetPosition = spreadOut ? (centroid - Vector3.zero).normalized * 0.5f : Vector3.zero;
+                meshPair.Value.transform.DOLocalMove(targetPosition, 0.8f).SetEase(Ease.OutBounce);
             }
+            //while (t < animationTime)
+            //{
+            //    foreach (KeyValuePair<int, ChunkManager> meshPair in meshDict)
+            //    {
+            //        Vector3 startPos = meshPair.Value.transform.localPosition;
+            //        Vector3 centroid = centroids[meshPair.Key];
+            //        if (spreadOut)
+            //        {
+            //            Vector3 targetPosition = (centroid - Vector3.zero).normalized * 0.5f;
+            //            float progress = Mathf.SmoothStep(0, animationTime, t);
+            //            meshPair.Value.transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
+            //        }
+            //        else
+            //        {
+            //            Vector3 targetPosition = Vector3.zero;
+            //            float progress = Mathf.SmoothStep(0, animationTime, t);
+            //            meshPair.Value.transform.localPosition = Vector3.Lerp(startPos, targetPosition, progress);
+            //        }
+            //    }
+            //    yield return null;
+            //    t += (Time.deltaTime / animationTime);
+            //}
 
         }
     }

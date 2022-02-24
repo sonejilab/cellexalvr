@@ -7,7 +7,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Slicing;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -132,6 +132,11 @@ namespace CellexalVR.Spatial
                 SliceGraphAutomatic(2, 20);
             }
 
+            if (Keyboard.current.bKey.wasPressedThisFrame)
+            {
+                SliceGraphFromSelection();
+            }
+
         }
 
         private void BoxAnimation(int axis)
@@ -198,6 +203,16 @@ namespace CellexalVR.Spatial
                 mat.SetFloat("_SliceOffset", v);
             }).SetEase(Ease.InOutCubic).SetLoops(2, LoopType.Yoyo);
             sliceGraphSystem.Slice(pointCloud.pcID, plane.transform.forward, plane.transform.position);
+        }
+
+        public void SliceGraphFromSelection()
+        {
+            Material mat = blade.GetComponent<Renderer>().material;
+            DOVirtual.Float(0f, 0.49f, 0.5f, v =>
+            {
+                mat.SetFloat("_SliceOffset", v);
+            }).SetEase(Ease.InOutCubic).SetLoops(2, LoopType.Yoyo);
+            sliceGraphSystem.SliceFromSelection(pointCloud.pcID);
         }
 
         public void SliceGraphAutomatic(int axis, int nrOfSlices)

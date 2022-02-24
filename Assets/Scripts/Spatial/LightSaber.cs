@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.VFX;

@@ -11,7 +11,7 @@ using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
-namespace DefaultNamespace
+namespace CellexalVR.AnalysisLogic
 {
     // [MaterialProperty("_Color", MaterialPropertyFormat.Float4)]
     // public struct PointColor : IComponentData

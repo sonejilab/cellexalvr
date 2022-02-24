@@ -3,7 +3,7 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using Unity.Entities;
 using UnityEngine;
 

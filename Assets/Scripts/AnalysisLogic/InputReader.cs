@@ -17,7 +17,7 @@ using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.PDFViewer;
 using UnityEngine.XR;
 using AnalysisLogic;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 using System.Text.RegularExpressions;
 using UnityEngine.VFX;
 using CellexalVR.Spatial;
@@ -218,6 +218,7 @@ namespace CellexalVR.AnalysisLogic
                         int textureX = i % PointCloudGenerator.textureWidth;
                         int textureY = (i / PointCloudGenerator.textureWidth);
                         TextureHandler.instance.textureCoordDict[words[0]] = new Vector2Int(textureX, textureY);
+                        PointCloudGenerator.instance.indToLabelDict[i] = words[0];
                         i++;
                     }
                 }
@@ -860,6 +861,7 @@ namespace CellexalVR.AnalysisLogic
         {
             //string dataFolder = CellexalUser.UserSpecificFolder;
             List<Graph.GraphPoint> selection = new List<Graph.GraphPoint>();
+            List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
             if (!File.Exists(path))
             {
                 CellexalLog.Log("Could not find file:" + path);
@@ -901,16 +903,25 @@ namespace CellexalVR.AnalysisLogic
                     return new List<Graph.GraphPoint>();
                 }
 
-                Graph.GraphPoint graphPoint = graphManager.FindGraphPoint(words[2], words[0]);
-                selection.Add(graphPoint);
-                if (select)
+                if (PointCloudGenerator.instance.pointClouds.Count > 0)
                 {
-                    selectionManager.AddGraphpointToSelection(graphManager.FindGraphPoint(words[2], words[0]),
-                        group, false, groupColor);
-                    numPointsAdded++;
+                    Tuple<int, int> tuple = new Tuple<int, int>(int.Parse(words[0]), int.Parse(words[2]));
+                    indices.Add(tuple);
+                }
+                else
+                {
+                    Graph.GraphPoint graphPoint = graphManager.FindGraphPoint(words[2], words[0]);
+                    selection.Add(graphPoint);
+                    if (select)
+                    {
+                        selectionManager.AddGraphpointToSelection(graphPoint,
+                            group, false, groupColor);
+                        numPointsAdded++;
+                    }
                 }
             }
 
+            TextureHandler.instance.SelectFromFile(indices);
             CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
             CellexalEvents.CommandFinished.Invoke(true);
             CellexalEvents.SelectedFromFile.Invoke();

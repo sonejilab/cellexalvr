@@ -7,7 +7,7 @@ using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
 using CellexalVR.Spatial;
-using DefaultNamespace;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {

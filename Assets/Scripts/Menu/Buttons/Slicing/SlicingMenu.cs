@@ -14,6 +14,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
         public GameObject freeHandModeMenu;
         public SlicingModeToggleButton manualModeButton;
         public SlicingModeToggleButton autoModeButton;
+        public SlicingModeToggleButton fromSelectionModeButton;
         public ChangeNrOfSlicesButton addSliceButton;
         public ChangeNrOfSlicesButton subtractSliceButton;
         public int nrOfSlices;
@@ -62,6 +63,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
                     if (toggle)
                     {
                         manualModeButton.CurrentState = !toggle;
+                        fromSelectionModeButton.CurrentState = !toggle;
                     }
                     movableContent.transform.DOLocalMoveZ(toggle ? -5.3f : -1.3f, 0.5f).SetEase(Ease.InOutBounce);
                     //StartCoroutine(MoveContent(toggle ? -5.3f : -1.3f));
@@ -71,10 +73,16 @@ namespace CellexalVR.Menu.Buttons.Slicing
                     if (toggle)
                     {
                         autoModeButton.CurrentState = !toggle;
+                        fromSelectionModeButton.CurrentState = !toggle;
                     }
                     slicerBox.sliceInteractable.SetActive(toggle);
                     break;
                 case SliceMode.Freehand:
+                    if (toggle)
+                    {
+                        autoModeButton.CurrentState = !toggle;
+                        manualModeButton.CurrentState = !toggle;
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(modeToActivate), modeToActivate, null);
@@ -138,6 +146,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
                 case SliceMode.None:
                     break;
                 case SliceMode.Freehand:
+                    slicerBox.SliceGraphFromSelection();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

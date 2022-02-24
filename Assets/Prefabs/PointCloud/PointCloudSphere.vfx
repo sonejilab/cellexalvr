@@ -5112,7 +5112,7 @@ MonoBehaviour:
       slotIndex: 0
   m_OutputFlowSlot:
   - link: []
-  blendMode: 0
+  blendMode: 3
   useAlphaClipping: 0
   generateMotionVector: 0
   excludeFromTAA: 0
@@ -5174,7 +5174,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 0.5
+      m_SerializableObject: 0
     m_Space: 2147483647
   m_Property:
     name: smoothness
@@ -5276,7 +5276,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Mesh, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"obj":{"fileID":4300000,"guid":"64351f611f4733d4cb548966ebfd444f","type":3}}'
+      m_SerializableObject: '{"obj":{"fileID":-5495902117074765545,"guid":"1722c1928244c8f4d99339b3c6ffd4fa","type":3}}'
     m_Space: 2147483647
   m_Property:
     name: mesh
@@ -5711,7 +5711,7 @@ MonoBehaviour:
   m_InputSlots:
   - {fileID: 8926484042661616262}
   m_OutputSlots: []
-  m_Disabled: 0
+  m_Disabled: 1
   mode: 1
 --- !u!114 &8926484042661616262
 MonoBehaviour:
@@ -6041,7 +6041,7 @@ MonoBehaviour:
   m_InputSlots:
   - {fileID: 8926484042661616272}
   m_OutputSlots: []
-  m_Disabled: 0
+  m_Disabled: 1
   mode: 1
 --- !u!114 &8926484042661616272
 MonoBehaviour:
