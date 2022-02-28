@@ -209,7 +209,9 @@ namespace CellexalVR.AnalysisLogic
                         }
                         else
                         {
+                            //cellName = i.ToString();
                             cellName = words[0];
+
                             x = (float.Parse(words[1]));
                             y = (float.Parse(words[2]));
                             z = float.Parse(words[3]);
@@ -217,8 +219,10 @@ namespace CellexalVR.AnalysisLogic
                         pointCloudGenerator.AddGraphPoint(cellName, x, y, z);
                         int textureX = i % PointCloudGenerator.textureWidth;
                         int textureY = (i / PointCloudGenerator.textureWidth);
-                        TextureHandler.instance.textureCoordDict[words[0]] = new Vector2Int(textureX, textureY);
-                        PointCloudGenerator.instance.indToLabelDict[i] = words[0];
+                        TextureHandler.instance.textureCoordDict[cellName] = new Vector2Int(textureX, textureY);
+                        PointCloudGenerator.instance.indToLabelDict[i] = cellName;
+                        if (i < 10)
+                            print($"add i :{i}, name {cellName} to {pc.originalName}");
                         i++;
                     }
                 }

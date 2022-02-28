@@ -265,8 +265,8 @@ namespace AnalysisLogic
             vfx.SetInt("SpawnRate", pointCount);
             int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
             int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
-            positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
-            targetPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
+            positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            targetPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             Texture2D parentTargetTextureMap = parentPC.targetPositionTextureMap;
             if (parentTargetTextureMap == null)
             {
@@ -327,6 +327,7 @@ namespace AnalysisLogic
                     //});
                     points[ind] = newP;
                     positions[ind] = new Color(pos.x, pos.y, pos.z, 1);
+                    
                 }
                 //if (y % 10 == 0) yield return null;
             }
@@ -381,6 +382,7 @@ namespace AnalysisLogic
                         entity = e
                     });
                     positions[ind] = col;
+                    if (ind < 10) print($"pos {originalName}, {ind} : {pos.x}, {pos.y}, {pos.z}");
                 }
             }
 
