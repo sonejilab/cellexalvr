@@ -37,6 +37,7 @@ namespace CellexalVR.Menu.Buttons.General
 
         public void StartVideo()
         {
+            print(gameObject.name);
             referenceManager.helpVideoManager.videoCanv.SetActive(true);
             referenceManager.helpVideoManager.GetComponent<PlayVideo>().StartVideo(url, audioClip);
             infoMenu.SetActive(false);

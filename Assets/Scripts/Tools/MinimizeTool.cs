@@ -13,6 +13,9 @@ namespace CellexalVR.Tools
     public class MinimizeTool : MonoBehaviour
     {
         public ReferenceManager referenceManager;
+        [SerializeField] private GameObject tip;
+        [SerializeField] private Color activeColor;
+        [SerializeField] private Color inactiveColor;
 
         // Open XR 
         //private SteamVR_Controller.Device device;
@@ -26,6 +29,8 @@ namespace CellexalVR.Tools
         private bool controllerInside = false;
         private GameObject collidingWith;
         private int numberColliders;
+        private Light triggerLight => GetComponent<Light>();
+
 
         private void OnValidate()
         {
@@ -42,6 +47,7 @@ namespace CellexalVR.Tools
             jail = referenceManager.minimizedObjectHandler;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            tip.GetComponent<Renderer>().material.color = inactiveColor;
         }
 
         private void OnTriggerClick()
@@ -63,7 +69,6 @@ namespace CellexalVR.Tools
                     graph.GetComponent<Graph>().HideGraph();
                     string graphName = graph.GetComponent<Graph>().gameObject.name;
                     jail.MinimizeObject(graph.gameObject, graphName);
-                    //minimize = true;
                     referenceManager.multiuserMessageSender.SendMessageMinimizeGraph(graphName);
                 }
                 if (collidingWith.CompareTag("Network"))
@@ -103,8 +108,7 @@ namespace CellexalVR.Tools
             if (other.CompareTag("Graph") || other.CompareTag("SubGraph") || other.CompareTag("FacsGraph")
                 || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
             {
-                GetComponent<Light>().range = 0.08f;
-                GetComponent<Light>().intensity = 1.1f;
+                tip.GetComponent<Renderer>().material.color = activeColor;
             }
             collidingWith = other.gameObject;
             controllerInside = true;
@@ -116,8 +120,7 @@ namespace CellexalVR.Tools
             if (other.CompareTag("Graph") || other.CompareTag("SubGraph") || other.CompareTag("FacsGraph")
                 || other.CompareTag("HeatBoard") || other.CompareTag("Network"))
             {
-                GetComponent<Light>().range = 0.04f;
-                GetComponent<Light>().intensity = 0.8f;
+                tip.GetComponent<Renderer>().material.color = inactiveColor;
             }
             if (numberColliders == 0)
             {

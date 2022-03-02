@@ -1379,6 +1379,9 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
+            print(lods[0].screenRelativeTransitionHeight);
+            print(lods[1].screenRelativeTransitionHeight);
+
 
             // GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             // g.transform.parent = newGraph.transform;

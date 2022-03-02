@@ -14,9 +14,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using DG.Tweening;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -58,7 +58,6 @@ namespace CellexalVR.AnalysisObjects
         public Dictionary<int, UnityEngine.Color> groupingColors; //// these are numbers ranging [0, genes.Length)
         public Dictionary<int, UnityEngine.Color> attributeColors;
         public Cell[] cells;
-        [HideInInspector] public bool createAnim = false;
         [HideInInspector] public bool orderedByAttribute = false;
         [HideInInspector] public bool buildingTexture = false;
         [HideInInspector] public string[] genes;
@@ -72,25 +71,15 @@ namespace CellexalVR.AnalysisObjects
         private MultiuserMessageSender multiuserMessageSender;
         private HeatmapGenerator heatmapGenerator;
         // For creation animation
-        private float targetScale;
-        private float positionSpeed;
-        private float sizeSpeed;
-        private Vector3 targetPosition;
-
-        private Vector3 target;
+        private Vector3 startPosition;
 
         // Minimizing
         private Vector3 originalPos;
         private Quaternion originalRot;
         private Vector3 originalScale;
-        private float minScale;
-        private bool minimize;
-        private bool maximize;
         private bool highlight;
-        private bool delete;
         private float highlightTime = 0;
-        private float currentTime = 0;
-        private float animationTime = 0.7f;
+        private readonly float animationTime = 0.8f;
 
         #endregion
 
@@ -145,11 +134,8 @@ namespace CellexalVR.AnalysisObjects
 
         private void Start()
         {
-            targetScale = 2f;
-            positionSpeed = 2f;
-            sizeSpeed = 3f;
             transform.localScale = new Vector3(0f, 0f, 0f);
-            target = new Vector3(1.4f, 1.2f, 0.05f);
+            startPosition = new Vector3(1.4f, 1.2f, 0.05f);
             originalPos = originalScale = new Vector3();
             originalRot = new Quaternion();
         }
@@ -186,21 +172,6 @@ namespace CellexalVR.AnalysisObjects
 
         private void Update()
         {
-            if (createAnim)
-            {
-                CreateHeatmapAnimation();
-            }
-
-            if (minimize)
-            {
-                Minimize();
-            }
-
-            if (maximize)
-            {
-                Maximize();
-            }
-
             if (highlight)
             {
                 highlightTime += Time.deltaTime;
@@ -220,17 +191,10 @@ namespace CellexalVR.AnalysisObjects
 
         }
 
-        private void CreateHeatmapAnimation()
+        public void CreateHeatmapAnimation()
         {
-            if (transform.localScale.x >= targetScale)
-            {
-                createAnim = false;
-                return;
-            }
-
-            float step = positionSpeed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, target, step);
-            transform.localScale += Vector3.one * Time.deltaTime * sizeSpeed;
+            transform.DOMove(startPosition, animationTime).SetEase(Ease.InCubic);
+            transform.DOScale(Vector3.one * 2f, animationTime).SetEase(Ease.InCubic);
         }
 
         /// <summary>
@@ -238,14 +202,13 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void DeleteHeatmap()
         {
-            delete = true;
-            HideHeatmap();
+            HideHeatmap(true);
         }
 
         /// <summary>
         /// Starts the minimize animation and hides the heatmap.
         /// </summary>
-        internal void HideHeatmap()
+        internal void HideHeatmap(bool delete = false)
         {
             originalPos = transform.position;
             originalRot = transform.localRotation;
@@ -254,60 +217,38 @@ namespace CellexalVR.AnalysisObjects
             {
                 c.enabled = false;
             }
-
+            Vector3 targetPosition;
             if (delete)
             {
                 targetPosition = referenceManager.deleteTool.transform.position;
             }
-            else
+            else if (referenceManager.menuToggler.MenuActive)
             {
                 targetPosition = referenceManager.minimizedObjectHandler.transform.position;
             }
+            else
+            {
+                targetPosition = referenceManager.menuToggler.menuCube.transform.position;
+            }
 
-            sizeSpeed = (transform.localScale.x - minScale) / animationTime;
-            positionSpeed = Vector3.Distance(transform.localPosition, targetPosition) / animationTime;
-            currentTime = 0;
-            minimize = true;
+            transform.DOLocalMove(targetPosition, animationTime).SetEase(Ease.InCubic);
+            transform.DOScale(Vector3.zero, animationTime).SetEase(Ease.InCubic).OnComplete(() => OnHideComplete(delete));
         }
 
-        /// <summary>
-        /// Starts the maximize animation and shows the heatmap.
-        /// </summary>
-        private void Minimize()
+        private void OnHideComplete(bool delete)
         {
             if (delete)
             {
-                targetPosition = referenceManager.deleteTool.transform.position;
+                referenceManager.deleteTool.GetComponent<RemovalController>().ResetHighlight();
+                Destroy(this.gameObject);
             }
             else
             {
-                targetPosition = referenceManager.minimizedObjectHandler.transform.position;
+                foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                    r.enabled = false;
+                referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
+                referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
             }
-
-            float dT = Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, 2f * dT);
-            // transform.localScale = Vector3.MoveTowards(transform.localScale, Vector3.one * 0.01f, 2f * dT);
-            transform.localScale -= Vector3.one * dT * sizeSpeed;
-            // transform.Rotate(Vector3.one * Time.deltaTime * 50);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.02f || transform.localScale.x <= 0)
-            {
-                if (delete)
-                {
-                    referenceManager.deleteTool.GetComponent<RemovalController>().ResetHighlight();
-                    Destroy(this.gameObject);
-                }
-                else
-                {
-                    minimize = false;
-                    foreach (Renderer r in GetComponentsInChildren<Renderer>())
-                        r.enabled = false;
-                    // GetComponent<Renderer>().enabled = false;
-                    referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
-                    referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
-                }
-            }
-
-            currentTime += Time.deltaTime;
         }
 
         /// <summary>
@@ -318,31 +259,15 @@ namespace CellexalVR.AnalysisObjects
             transform.position = referenceManager.minimizedObjectHandler.transform.position;
             foreach (Renderer r in GetComponentsInChildren<Renderer>())
                 r.enabled = true;
-            sizeSpeed = (originalScale.x - transform.localScale.x) / animationTime;
-            positionSpeed = Vector3.Distance(transform.localPosition, targetPosition) / animationTime;
-            currentTime = 0;
-            maximize = true;
+
+            transform.DOLocalMove(originalPos, animationTime).SetEase(Ease.OutCubic);
+            transform.DOScale(originalScale, animationTime).SetEase(Ease.OutCubic).OnComplete(() => OnShowComplete());
         }
 
-        /// <summary>
-        /// Starts the minimize animation and hides the heatmap.
-        /// </summary>
-        private void Maximize()
+        private void OnShowComplete()
         {
-            float dT = Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, originalPos, 2f * dT);
-            transform.localScale += Vector3.one * dT * sizeSpeed;
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x >= originalScale.x)
-            {
-                transform.localScale = originalScale;
-                transform.position = originalPos;
-                transform.rotation = originalRot;
-                maximize = false;
-                foreach (Collider c in GetComponentsInChildren<Collider>())
-                    c.enabled = true;
-            }
-
-            currentTime += Time.deltaTime;
+            foreach (Collider c in GetComponentsInChildren<Collider>())
+                c.enabled = true;
         }
 
         /// <summary>

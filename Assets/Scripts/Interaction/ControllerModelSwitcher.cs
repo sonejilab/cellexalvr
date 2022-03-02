@@ -21,6 +21,7 @@ namespace CellexalVR.Interaction
         public Mesh menuControllerMesh;
         //public Texture menuControllerTexture;
         public Mesh minimizeMesh;
+        [SerializeField] private GameObject minimizeTool;
         public Material normalMaterial;
         public Material selectionToolHandlerMaterial;
         public Material leftControllerMaterial;
@@ -201,6 +202,7 @@ namespace CellexalVR.Interaction
                     drawTool.SetActive(false);
                     deleteTool.SetActive(false);
                     minimizer.SetActive(false);
+                    minimizeTool.SetActive(false);
                     selectionToolCollider.SetSelectionToolEnabled(false);
                     //rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.ToggleLaser(true);
@@ -216,6 +218,7 @@ namespace CellexalVR.Interaction
 
                 case Model.Minimizer:
                     //rightControllerBodyMeshFilter.mesh = minimizeMesh;
+                    minimizeTool.SetActive(true);
                     break;
 
             }

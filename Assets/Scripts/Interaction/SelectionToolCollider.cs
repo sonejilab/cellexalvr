@@ -153,11 +153,10 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
-            controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-            multiuserMessageSender = referenceManager.multiuserMessageSender;
-            selectionManager = referenceManager.selectionManager;
+            controllerModelSwitcher = ReferenceManager.instance.controllerModelSwitcher;
+            multiuserMessageSender = ReferenceManager.instance.multiuserMessageSender;
+            selectionManager = ReferenceManager.instance.selectionManager;
             UpdateShapeIcons();
-
 
             touchPadClick.action.performed += OnTouchPadClick;
 
@@ -312,22 +311,22 @@ namespace CellexalVR.Interaction
             if (currentColorIndex >= Colors.Length) return;
             if (currentColorIndex == Colors.Length - 1 && dir)
             {
-                currentColorIndex = 0;
+                CurrentColorIndex = 0;
             }
             else if (currentColorIndex == 0 && !dir)
             {
-                currentColorIndex = Colors.Length - 1;
+                CurrentColorIndex = Colors.Length - 1;
             }
             else if (dir)
             {
-                currentColorIndex++;
+                CurrentColorIndex++;
             }
             else
             {
-                currentColorIndex--;
+                CurrentColorIndex--;
             }
-            int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
-            int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
+            //int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
+            //int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
             // VRTK 3.3
             //radialMenu.RegenerateButtons();
             // OpenXR Replace VRTK radial menu with something else.
@@ -335,7 +334,7 @@ namespace CellexalVR.Interaction
             //radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[buttonIndexRight];
             //radialMenu.buttons[3].color = Colors[buttonIndexRight];
             selectedColor = Colors[currentColorIndex];
-            selectionToolColliders[currentMeshIndex].GetComponent<Renderer>().material.color = Colors[currentColorIndex];
+            //selectionToolColliders[currentMeshIndex].GetComponent<Renderer>().material.color = Colors[currentColorIndex];
             controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
 
             var main = particles.main;
@@ -348,16 +347,17 @@ namespace CellexalVR.Interaction
         /// <param name="enabled"> True if the selection tool should be activated, false if it should be deactivated. </param>
         public void SetSelectionToolEnabled(bool enabled)
         {
+            gameObject.SetActive(enabled);
             if (enabled)
             {
                 // controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
                 if (CurrentColorIndex > Colors.Length)
                 {
-                    controllerModelSwitcher.SwitchControllerModelColor(Color.white);
+                    ReferenceManager.instance.controllerModelSwitcher.SwitchControllerModelColor(Color.white);
                 }
                 else
                 {
-                    controllerModelSwitcher.SwitchControllerModelColor(Colors[CurrentColorIndex]);
+                    ReferenceManager.instance.controllerModelSwitcher.SwitchControllerModelColor(Colors[CurrentColorIndex]);
                 }
             }
             //particles.gameObject.SetActive(enabled && particles != null);
@@ -421,9 +421,7 @@ namespace CellexalVR.Interaction
             Color[] colorArray; // = new Color[CellexalConfig.Config.SelectionToolColors.Length];
             // if using spectator mode or for other reasons the selectionToolCollider hasnt been activated
             // return the index from the config.
-            colorArray = Colors.Length == 0
-                ? CellexalConfig.Config.SelectionToolColors
-                : referenceManager.selectionToolCollider.Colors;
+            colorArray = CellexalConfig.Config.SelectionToolColors;
 
             for (int i = 0; i < colorArray.Length; i++)
             {

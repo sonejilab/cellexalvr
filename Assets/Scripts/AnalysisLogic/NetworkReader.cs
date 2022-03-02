@@ -158,6 +158,7 @@ namespace CellexalVR.AnalysisLogic
                         BoxCollider newCollider = networkHandler.gameObject.AddComponent<BoxCollider>();
                         newCollider.center = graphCollider.center;
                         newCollider.size = graphCollider.size;
+                        newCollider.isTrigger = true;
                     }
 
                     var networkHandlerName =
@@ -339,6 +340,8 @@ namespace CellexalVR.AnalysisLogic
             }
 
             networkHandler.CreateNetworkAnimation(graph.transform);
+
+            CellexalEvents.NetworkCreated.Invoke();
         }
 
         /// <summary>

@@ -708,7 +708,7 @@ namespace CellexalVR.AnalysisLogic
             stopwatch.Stop();
             CellexalLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
             heatmap.buildingTexture = false;
-            heatmap.createAnim = true;
+            heatmap.CreateHeatmapAnimation();
 
             heatmapsCreated++;
             CellexalEvents.HeatmapCreated.Invoke();

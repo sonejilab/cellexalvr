@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using CellexalVR.Extensions;
 using CellexalVR.Menu.Buttons.Networks;
-using CellexalVR.SceneObjects;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using DG.Tweening;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -37,23 +37,11 @@ namespace CellexalVR.AnalysisObjects
         private Material[] unhighlightedMaterials;
 
         // For minimization animation
-        private bool minimize;
-        private bool maximize;
-        private bool delete;
-        private float speed;
-        private float targetMinScale;
-        private float targetMaxScale;
-        private float sizeSpeed;
-        private float positionSpeed;
         private Vector3 originalPos;
         private Quaternion originalRot;
         private Vector3 originalScale;
 
-        private bool createAnim;
-        private Vector3 targetPos;
-        private float targetScale;
-        private float currentTime = 0;
-        private float animationTime = 0.7f;
+        private float animationTime = 0.8f;
 
         private GameObject previewWire;
         private bool buttonClickedThisFrame;
@@ -73,12 +61,7 @@ namespace CellexalVR.AnalysisObjects
 
         private void Start()
         {
-            speed = 1.5f;
-            sizeSpeed = 2f;
-            positionSpeed = 2f;
-            targetMinScale = 0.05f;
-            targetMaxScale = targetScale = 1f;
-            targetPos = originalPos = originalScale = new Vector3();
+            originalPos = originalScale = new Vector3();
             originalRot = new Quaternion();
             Replacements = new List<NetworkCenter>();
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -105,21 +88,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 multiuserMessageSender.SendMessageMoveNetwork(name, transform.position, transform.rotation,
                     transform.localScale);
-            }
-
-            if (minimize)
-            {
-                Minimize();
-            }
-
-            if (maximize)
-            {
-                Maximize();
-            }
-
-            if (createAnim)
-            {
-                NetworkAnimation();
             }
         }
 
@@ -226,9 +194,6 @@ namespace CellexalVR.AnalysisObjects
         {
             networks.Add(network);
             networks.RemoveAll(item => item == null);
-            // print(referenceManager == null);
-            // print((referenceManager.arcsSubMenu == null));
-            // print((referenceManager.arcsSubMenu.buttonPrefab == null));
         }
 
         /// <summary>
@@ -251,60 +216,38 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            sizeSpeed = (originalScale.x - transform.localScale.x) / animationTime;
-            positionSpeed = Vector3.Distance(originalPos, transform.localPosition) / animationTime;
+            transform.DOLocalMove(originalPos, animationTime).SetEase(Ease.OutCubic);
+            transform.DOLocalRotate(originalRot.eulerAngles, animationTime, RotateMode.FastBeyond360).SetEase(Ease.OutCubic);
+            transform.DOScale(Vector3.one, animationTime).SetEase(Ease.InCubic).OnComplete(() => OnShowComplete());
             GetComponent<Renderer>().enabled = true;
-            //GetComponent<Collider>().enabled = true;
-            currentTime = 0;
-            maximize = true;
         }
 
-        /// <summary>
-        /// Animation for showing network.
-        /// </summary>
-        private void Maximize()
+        private void OnShowComplete()
         {
-            // float positionStep = positionSpeed * Time.deltaTime;
-            float dT = Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, originalPos, 2f * dT);
-            transform.localScale = Vector3.MoveTowards(transform.localScale, originalScale, 2f * dT);
-            // transform.Rotate(Vector3.one * Time.deltaTime * -100);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x >= originalScale.x)
+            foreach (NetworkCenter network in Replacements)
             {
-                transform.localScale = originalScale;
-                transform.localPosition = originalPos;
-                transform.localRotation = originalRot;
-                foreach (NetworkCenter network in Replacements)
-                {
-                    network.GetComponent<Collider>().enabled = true;
-                }
-
-                foreach (ToggleArcsButton button in GetComponentsInChildren<ToggleArcsButton>())
-                {
-                    button.GetComponent<Collider>().enabled = true;
-                }
-
-                foreach (NetworkCenter network in networks)
-                {
-                    network.GetComponent<Collider>().enabled = true;
-                    if (network.Enlarged)
-                    {
-                        foreach (Collider c in network.GetComponentsInChildren<Collider>())
-                            c.enabled = true;
-                    }
-                }
-
-                GetComponent<Collider>().enabled = true;
-                maximize = false;
+                network.GetComponent<Collider>().enabled = true;
             }
-
-            currentTime += Time.deltaTime;
+            foreach (ToggleArcsButton button in GetComponentsInChildren<ToggleArcsButton>())
+            {
+                button.GetComponent<Collider>().enabled = true;
+            }
+            foreach (NetworkCenter network in networks)
+            {
+                network.GetComponent<Collider>().enabled = true;
+                if (network.Enlarged)
+                {
+                    foreach (Collider c in network.GetComponentsInChildren<Collider>())
+                        c.enabled = true;
+                }
+            }
+            GetComponent<Collider>().enabled = true;
         }
 
         /// <summary>
         /// Toggles all renderers and colliders off for all networks on this convex hull.
         /// </summary>
-        internal void HideNetworks()
+        internal void HideNetworks(bool delete = false)
         {
             foreach (NetworkCenter network in networks)
             {
@@ -317,56 +260,44 @@ namespace CellexalVR.AnalysisObjects
             originalPos = transform.position;
             originalRot = transform.localRotation;
             originalScale = transform.localScale;
-            sizeSpeed = (transform.localScale.x - targetScale) / animationTime;
-            positionSpeed = Vector3.Distance(transform.localPosition, targetPos) / animationTime;
-            currentTime = 0;
-            minimize = true;
-        }
 
-        /// <summary>
-        /// Animation for hiding network.
-        /// </summary>
-        private void Minimize()
-        {
-            // float positionStep = positionSpeed * Time.deltaTime;
-            float dT = Time.deltaTime;
+            Vector3 targetPosition;
             if (delete)
             {
-                transform.position = Vector3.MoveTowards(transform.position,
-                    referenceManager.deleteTool.transform.position, 2f * dT);
+                targetPosition = referenceManager.deleteTool.transform.position;
+            }
+            else if (referenceManager.menuToggler.MenuActive)
+            {
+                targetPosition = referenceManager.minimizedObjectHandler.transform.position;
             }
             else
             {
-                transform.position = Vector3.MoveTowards(transform.position,
-                    referenceManager.minimizedObjectHandler.transform.position, 2f * dT);
+                targetPosition = referenceManager.menuToggler.menuCube.transform.position;
             }
-
-            transform.localScale = Vector3.MoveTowards(transform.localScale, Vector3.one * 0.01f, 2f * dT);
-            // transform.Rotate(Vector3.one * Time.deltaTime * 100);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.02f || transform.localScale.x <= 0f)
-            {
-                if (delete)
-                {
-                    referenceManager.deleteTool.GetComponent<RemovalController>().ResetHighlight();
-                    Destroy(gameObject);
-                    return;
-                }
-
-                foreach (NetworkCenter network in networks)
-                {
-                    foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
-                        r.enabled = false;
-                }
-
-                foreach (Renderer r in GetComponentsInChildren<Renderer>())
-                    r.enabled = false;
-                minimize = false;
-                referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
-                referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
-            }
-
-            currentTime += Time.deltaTime;
+            transform.DOLocalMove(targetPosition, animationTime).SetEase(Ease.InCubic);
+            transform.DOLocalRotate(new Vector3(0, 360, 0), animationTime, RotateMode.FastBeyond360).SetEase(Ease.InCubic);
+            transform.DOScale(Vector3.zero, animationTime).SetEase(Ease.OutCubic).OnComplete(() => OnHideComplete(delete));
         }
+
+        private void OnHideComplete(bool delete = false)
+        {
+            if (delete)
+            {
+                referenceManager.deleteTool.GetComponent<RemovalController>().ResetHighlight();
+                Destroy(gameObject);
+                return;
+            }
+            foreach (NetworkCenter network in networks)
+            {
+                foreach (Renderer r in network.GetComponentsInChildren<Renderer>())
+                    r.enabled = false;
+            }
+            foreach (Renderer r in GetComponentsInChildren<Renderer>())
+                r.enabled = false;
+            referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
+            referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
+        }
+
 
         /// <summary>
         /// Spawn network beside graph it was created from.
@@ -383,14 +314,10 @@ namespace CellexalVR.AnalysisObjects
                 transform.position = graph.position;
                 transform.rotation = graph.rotation;
                 transform.position += transform.forward * 0.3f;
-                //transform.position = referenceManager.headset.transform.position;
-                //transform.rotation = referenceManager.headset.transform.rotation;
-                //transform.position += transform.forward * 1f;
             }
 
-            //transform.Rotate(-20, 0, 0);
-            targetPos = transform.position;
-            createAnim = true;
+            transform.DOScale(Vector3.one, animationTime).SetEase(Ease.OutCubic).OnComplete(() => OnShowComplete());
+
         }
 
         /// <summary
@@ -420,25 +347,10 @@ namespace CellexalVR.AnalysisObjects
 
             referenceManager.networkGenerator.networkList.RemoveAll(item => item == null);
             referenceManager.graphManager.RemoveNetwork(this);
-            delete = true;
-            HideNetworks();
+            HideNetworks(true);
             removing = true;
             //Destroy(this.gameObject);
             //referenceManager.deleteTool.GetComponent<RemovalController>().DeleteObjectAnimation(this.gameObject);
-        }
-
-
-        private void NetworkAnimation()
-        {
-            float step = speed * Time.deltaTime;
-            //transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
-            transform.localScale += Vector3.one * Time.deltaTime * sizeSpeed;
-            if (transform.localScale.x >= targetScale)
-            {
-                createAnim = false;
-                transform.localScale = new Vector3(targetScale, targetScale, targetScale);
-                referenceManager.notificationManager.SpawnNotification("Transcription factor networks finished.");
-            }
         }
 
         /// <summary>

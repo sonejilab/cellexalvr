@@ -20,7 +20,7 @@ namespace CellexalVR.Tools
         public GameObject minimizedObjectContainerPrefab;
 
         private MenuToggler menuToggler;
-        private Vector3 startPos = new Vector3(.34f, .34f, .13f);
+        private Vector3 startPos = new Vector3(.34f, .34f, .1f);
         private Vector3 dNextPosRow = new Vector3(0f, -.17f, 0);
         private Vector3 dNextPosCol = new Vector3(-.17f, 0f, 0);
         private bool[,] spaceTaken = new bool[5, 5];
@@ -56,16 +56,16 @@ namespace CellexalVR.Tools
         {
             GameObject jail = Instantiate(minimizedObjectContainerPrefab, transform, true);
             minimizedObjects.Add(jail);
-            jail.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            jail.transform.localRotation = Quaternion.identity;
             //jail.transform.Rotate(0f, 0f, -90f);
-            jail.transform.localScale = new Vector3(1f, 1f, 1f);
+            jail.transform.localScale = new Vector3(0.2f, 0.2f, 0.15f);
             MinimizedObjectContainer container = jail.GetComponent<MinimizedObjectContainer>();
             container.MinimizedObject = objectToMinimize;
             container.Handler = this;
-            AutoMoveAndRotate rotateScript = jail.GetComponentInChildren<AutoMoveAndRotate>();
-            Vector3 rotation = new Vector3(Random.Range(-25f, 25f), Random.Range(-25f, 25f), 0f);
-            rotation.z = 50f - (Mathf.Abs(rotation.x) + Mathf.Abs(rotation.y));
-            rotateScript.rotateDegreesPerSecond.value = rotation;
+            //AutoMoveAndRotate rotateScript = jail.GetComponentInChildren<AutoMoveAndRotate>();
+            //Vector3 rotation = new Vector3(Random.Range(-25f, 25f), Random.Range(-25f, 25f), 0f);
+            //rotation.z = 50f - (Mathf.Abs(rotation.x) + Mathf.Abs(rotation.y));
+            //rotateScript.rotateDegreesPerSecond.value = rotation;
 
             // if a gameobject is minimized but the menu is not active, we have to tell the 
             // menu toggler to turn that item on later.

@@ -12,6 +12,7 @@ using SQLiter;
 using TMPro;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using DG.Tweening;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -45,17 +46,11 @@ namespace CellexalVR.AnalysisObjects
 
         public Dictionary<int, List<GameObject>> lodGroupClusters = new Dictionary<int, List<GameObject>>();
         public List<GameObject> lodGroupParents = new List<GameObject>();
-
-        // public int textureWidth;
-        // public int textureHeight;
         public Dictionary<int, int> textureWidths = new Dictionary<int, int>();
         public Dictionary<int, int> textureHeights = new Dictionary<int, int>();
-
-        // public Texture2D texture;
         public Texture2D[] textures;
-
-        // public Texture2D texture2;
         private bool textureChanged;
+
         public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
         public List<GameObject> topExprCircles = new List<GameObject>();
@@ -111,19 +106,11 @@ namespace CellexalVR.AnalysisObjects
         private MultiuserMessageSender multiuserMessageSender;
         private Vector3 startPosition;
         // For minimization animation
-        private bool minimize;
-        private bool maximize;
-        private bool delete;
-        private float speed = 1.5f;
-
         private bool minimized;
-        private float targetMinScale = 0.05f;
-        private float shrinkSpeed = 2f;
-        private Vector3 oldPos = new Vector3();
+        private Vector3 oldPos;
         private Quaternion oldRot;
         private Vector3 oldScale;
-        private float currentTime = 0f;
-        private float animationTime = 0.7f;
+        private readonly float animationTime = 1f;
 
 #if UNITY_EDITOR
         // Debug stuff
@@ -135,9 +122,6 @@ namespace CellexalVR.AnalysisObjects
         private string folderName;
         private int graphNr;
         private int nbrOfExpressionColors;
-
-
-
         private static LayerMask selectionToolLayerMask;
 
         public OctreeNode octreeRoot;
@@ -161,8 +145,8 @@ namespace CellexalVR.AnalysisObjects
             graphManager = referenceManager.graphManager;
             graphGenerator = referenceManager.graphGenerator;
             selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
-            startPosition = graphTransform.position;
             nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+            startPosition = transform.position;
         }
 
         private void Update()
@@ -182,27 +166,64 @@ namespace CellexalVR.AnalysisObjects
                 multiuserMessageSender.SendMessageMoveGraph(GraphName,
                     graphTransform.position, graphTransform.rotation, graphTransform.localScale);
             }
-            if (minimize)
-            {
-                Minimize();
-            }
-            if (maximize)
-            {
-                Maximize();
-            }
         }
 
         /// <summary>
-        /// Starts the maximize animation.
+        /// Maximize/Show the graph.
         /// </summary>
         internal void ShowGraph()
         {
-            transform.position = referenceManager.leftController.transform.position;
-            GraphActive = true;
+            if (referenceManager.menuToggler.MenuActive)
+            {
+                transform.position = referenceManager.minimizedObjectHandler.transform.position;
+            }
+            else
+            {
+                transform.position = referenceManager.menuToggler.menuCube.transform.position;
+            }
             gameObject.SetActive(true);
-            shrinkSpeed = (oldScale.x - transform.localScale.x) / animationTime;
-            currentTime = 0;
-            maximize = true;
+            transform.DOLocalMove(oldPos, animationTime).SetEase(Ease.OutCubic);
+            transform.DOLocalRotate(oldRot.eulerAngles, animationTime, RotateMode.FastBeyond360).SetEase(Ease.OutCubic);
+            transform.DOScale(Vector3.one, animationTime).SetEase(Ease.InCubic).OnComplete(() => OnShowComplete());
+        }
+
+        /// <summary>
+        /// Turns off all renderers and colliders for this graph. And minimizes/hides the graph.
+        /// </summary>
+        internal void HideGraph(bool delete = false)
+        {
+            GraphActive = false;
+            foreach (Collider c in GetComponentsInChildren<Collider>())
+            {
+                c.enabled = false;
+            }
+            foreach (GameObject obj in ctcGraphs)
+            {
+                if (obj != null)
+                {
+                    obj.SetActive(false);
+                }
+            }
+
+            oldPos = transform.position;
+            oldScale = transform.localScale;
+            oldRot = transform.localRotation;
+            Vector3 targetPosition;
+            if (delete)
+            {
+                targetPosition = referenceManager.deleteTool.transform.position;
+            }    
+            else if (referenceManager.menuToggler.MenuActive)
+            {
+                targetPosition = referenceManager.minimizedObjectHandler.transform.position;
+            }
+            else
+            {
+                targetPosition = referenceManager.menuToggler.menuCube.transform.position;
+            }
+            transform.DOLocalMove(targetPosition, animationTime).SetEase(Ease.InCubic);
+            transform.DOLocalRotate(new Vector3(0, 360, 0), animationTime, RotateMode.FastBeyond360).SetEase(Ease.InCubic);
+            transform.DOScale(Vector3.zero, animationTime).SetEase(Ease.OutCubic).OnComplete(() => OnHideComplete(delete));
         }
 
         /// <summary>
@@ -230,38 +251,6 @@ namespace CellexalVR.AnalysisObjects
             }
 
             isTransparent = toggle;
-        }
-
-        /// <summary>
-        /// Animation for showing graph.
-        /// </summary>
-        private void Maximize()
-        {
-            float step = speed * Time.deltaTime;
-            transform.position = Vector3.MoveTowards(transform.position, oldPos, step);
-            transform.localScale += Vector3.one * Time.deltaTime * shrinkSpeed;
-            transform.Rotate(Vector3.one * Time.deltaTime * -100);
-            //multiuserMessageSender.SendMessageMoveGraph(GraphName, transform.position, transform.rotation, transform.localScale);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f)
-            {
-                transform.localScale = oldScale;
-                transform.localPosition = oldPos;
-                transform.localRotation = oldRot;
-                //CellexalLog.Log("Maximized object" + name);
-                maximize = false;
-                GraphActive = true;
-                minimized = false;
-                foreach (GameObject obj in ctcGraphs)
-                {
-                    if (obj != null)
-                    {
-                        obj.SetActive(true);
-                    }
-                }
-                foreach (Collider c in GetComponentsInChildren<Collider>())
-                    c.enabled = true;
-            }
-            currentTime += Time.deltaTime;
         }
 
         /// <summary>
@@ -296,77 +285,41 @@ namespace CellexalVR.AnalysisObjects
                 }
                 ctcGraphs.Clear();
             }
-            shrinkSpeed = (transform.localScale.x - targetMinScale) / animationTime;
-            currentTime = 0;
-            minimize = true;
-            delete = true;
+
+            HideGraph(true);
         }
 
-        /// <summary>
-        /// Turns off all renderers and colliders for this graph. And starts the minimazation process by sett minimize to true.
-        /// </summary>
-        internal void HideGraph()
-        {
-            GraphActive = false;
-            //targetPos = referenceManager.minimizedObjectHandler.transform.position;
-            foreach (Collider c in GetComponentsInChildren<Collider>())
-            {
-                c.enabled = false;
-            }
-            foreach (GameObject obj in ctcGraphs)
-            {
-                if (obj != null)
-                {
-                    obj.SetActive(false);
-                }
-            }
-            oldPos = transform.position;
-            oldScale = transform.localScale;
-            shrinkSpeed = (transform.localScale.x - targetMinScale) / animationTime;
-            currentTime = 0;
-            minimize = true;
-        }
 
-        /// <summary>
-        /// Animation for hiding graph. Same animation is used when deleting the graph.
-        /// </summary>
-        void Minimize()
+
+        private void OnHideComplete(bool delete)
         {
-            float step = speed * Time.deltaTime;
-            Vector3 targetPosition;
-            if (CrossSceneInformation.Spectator)
+            if (delete)
             {
-                targetPosition = Vector3.zero;
-            }
-            else if (delete)
-            {
-                targetPosition = referenceManager.deleteTool.transform.position;
+                Destroy(gameObject);
                 referenceManager.deleteTool.GetComponent<RemovalController>().ResetHighlight();
             }
             else
             {
-                targetPosition = referenceManager.minimizedObjectHandler.transform.position;
+                gameObject.SetActive(false);
+                referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
+                referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
+                minimized = true;
             }
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
-            transform.localScale -= Vector3.one * Time.deltaTime * shrinkSpeed;
-            transform.Rotate(Vector3.one * Time.deltaTime * 100);
-            if (Mathf.Abs(currentTime - animationTime) <= 0.05f || transform.localScale.x < 0)
+        }
+
+        private void OnShowComplete()
+        {
+            GraphActive = true;
+            minimized = false;
+            foreach (GameObject obj in ctcGraphs)
             {
-                if (delete)
+                if (obj != null)
                 {
-                    Destroy(this.gameObject);
-                }
-                else
-                {
-                    minimize = false;
-                    GraphActive = false;
-                    gameObject.SetActive(false);
-                    referenceManager.minimizeTool.GetComponent<Light>().range = 0.04f;
-                    referenceManager.minimizeTool.GetComponent<Light>().intensity = 0.8f;
-                    minimized = true;
+                    obj.SetActive(true);
                 }
             }
-            currentTime += Time.deltaTime;
+            foreach (Collider c in GetComponentsInChildren<Collider>())
+                c.enabled = true;
         }
 
         /// <summary>
@@ -1239,7 +1192,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
                 byte greenChannel = (byte)(outline ? 4 : 0);
-                byte blueChannel = (byte) (outline ? 38 : 0);
+                byte blueChannel = (byte)(outline ? 38 : 0);
                 byte redChannel;
                 if (i == -1)
                 {

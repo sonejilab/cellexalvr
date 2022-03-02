@@ -68,17 +68,18 @@ namespace CellexalVR.Menu
         {
             // Open XR
             //device = SteamVR_Controller.Input((int)leftController.index);
+            Vector3 targetScale = MenuActive ? Vector3.zero : originalScale;
+            Vector3 targetPos = menuCube.transform.localPosition;
             if (!MenuActive)
             {
                 menu.transform.parent = leftController.transform;
                 menu.transform.position = menuCube.transform.position;
                 menu.transform.rotation = menuCube.transform.rotation;
+                targetPos += new Vector3(0, 0.1f, 0.178f);
             }
             menu.transform.DOKill();
-            Vector3 targetScale = MenuActive ? Vector3.zero : originalScale;
-            Vector3 targetPos = MenuActive ? menuCube.transform.position : menuCube.transform.position + menuCube.transform.forward * 0.2f;
             menu.transform.DOScale(targetScale, 0.3f).SetEase(Ease.InOutSine);
-            menu.transform.DOMove(targetPos, 0.3f).SetEase(Ease.InOutSine).OnComplete(ToggleMenu);
+            menu.transform.DOLocalMove(targetPos, 0.3f).SetEase(Ease.InOutSine).OnComplete(ToggleMenu);
             menuRotator.AllowRotation = !MenuActive;
             menuRotator.StopRotating();
         }
