@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224754361921100972}
   - component: {fileID: 23763349762271012}
-  - component: {fileID: 33490920593190778}
   - component: {fileID: 222866557871077680}
   - component: {fileID: 114391926852892900}
   m_Layer: 8
@@ -80,14 +79,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &33490920593190778
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1181890605520840}
-  m_Mesh: {fileID: 0}
 --- !u!222 &222866557871077680
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -198,7 +189,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224613510222072310}
   - component: {fileID: 23225618215430652}
-  - component: {fileID: 33222141356920568}
   - component: {fileID: 222077726479148812}
   - component: {fileID: 114092367866519662}
   m_Layer: 8
@@ -268,14 +258,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &33222141356920568
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1356973428513332}
-  m_Mesh: {fileID: 0}
 --- !u!222 &222077726479148812
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -497,7 +479,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224267865410174782}
   - component: {fileID: 23348077753160824}
-  - component: {fileID: 33778821690911734}
   - component: {fileID: 222067603463243176}
   - component: {fileID: 114625746547960874}
   m_Layer: 8
@@ -567,14 +548,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &33778821690911734
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1419128193855906}
-  m_Mesh: {fileID: 0}
 --- !u!222 &222067603463243176
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -927,7 +900,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_InteractionLayers:
-    m_Bits: 1
+    m_Bits: 4294967295
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
   m_FirstHoverEntered:

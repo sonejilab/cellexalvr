@@ -8,6 +8,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
+using CellexalVR.Spatial;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
@@ -133,8 +134,7 @@ namespace CellexalVR.AnalysisLogic
                         CellexalEvents.CommandFinished.Invoke(false);
                         yield break;
                     }
-
-                    StartCoroutine(graph.CreateGraphSkeleton(false));
+                    graph.CreateGraphSkeleton(false);
                     while (!graph.convexHull.activeSelf)
                     {
                         yield return null;

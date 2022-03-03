@@ -13,6 +13,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using DG.Tweening;
+using CellexalVR.Spatial;
+using System.Threading.Tasks;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -987,7 +989,7 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Method to greate lines between nodes in the octree. This gives a sort of skeleton representation of the graph.
         /// </summary>
-        public IEnumerator CreateGraphSkeleton(bool empty = false)
+        public async void CreateGraphSkeleton(bool empty = false)
         {
             if (empty)
             {
@@ -998,32 +1000,34 @@ namespace CellexalVR.AnalysisObjects
                 convexHull = Instantiate(skeletonPrefab);
             }
 
-            var nodes = octreeRoot.GetSkeletonNodesRecursive(octreeRoot, null, 0, 4);
-            int posCount = nodes.Count;
-            nodes.OrderBy(v => v.center.x).ToList();
-            var sortedNodes = new List<Vector3>();
-            var subNodes = nodes;
-            int frameCount = 0;
-            while (nodes.Count > 0)
-            {
-                var firstNode = subNodes[0];
-                sortedNodes.Add(firstNode.center);
-                nodes.Remove(firstNode);
-                subNodes = nodes.OrderBy(v => Vector3.Distance(firstNode.center, v.center)).ToList();
-                frameCount++;
-                if (nodes.Count % 60 == 0)
-                    yield return null;
-            }
+            var skeleton = await MeshGenerator.instance.GenerateGraphMesh(this);
+            skeleton.parent = convexHull.transform;
+            //var nodes = octreeRoot.GetSkeletonNodesRecursive(octreeRoot, null, 0, 4);
+            //int posCount = nodes.Count;
+            //nodes.OrderBy(v => v.center.x).ToList();
+            //var sortedNodes = new List<Vector3>();
+            //var subNodes = nodes;
+            //int frameCount = 0;
+            //while (nodes.Count > 0)
+            //{
+            //    var firstNode = subNodes[0];
+            //    sortedNodes.Add(firstNode.center);
+            //    nodes.Remove(firstNode);
+            //    subNodes = nodes.OrderBy(v => Vector3.Distance(firstNode.center, v.center)).ToList();
+            //    frameCount++;
+            //    if (nodes.Count % 60 == 0)
+            //        yield return null;
+            //}
 
-            LineRenderer line = convexHull.gameObject.GetComponent<LineRenderer>();
-            line.material = lineMaterial;
-            line.startWidth = line.endWidth = 0.02f;
-            line.useWorldSpace = false;
-            line.enabled = true;
-            // line.alignment = LineAlignment.TransformZ;
-            line.positionCount = posCount;
-            line.SetPositions(sortedNodes.ToArray());
-            convexHull.SetActive(true);
+            //LineRenderer line = convexHull.gameObject.GetComponent<LineRenderer>();
+            //line.material = lineMaterial;
+            //line.startWidth = line.endWidth = 0.02f;
+            //line.useWorldSpace = false;
+            //line.enabled = true;
+            //// line.alignment = LineAlignment.TransformZ;
+            //line.positionCount = posCount;
+            //line.SetPositions(sortedNodes.ToArray());
+            //convexHull.SetActive(true);
         }
 
         /// <summary>

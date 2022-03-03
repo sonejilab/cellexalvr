@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace CellexalVR.MarchingCubes
 {
-
     public class ChunkScript : MonoBehaviour
     {
         [SerializeField]
@@ -21,7 +20,7 @@ namespace CellexalVR.MarchingCubes
         private Cube[,,] cubes = new Cube[ChunkManager.chunkResolution - 1, ChunkManager.chunkResolution - 1, ChunkManager.chunkResolution - 1];
         public int[] index;
 
-        void Awake()
+        private void Awake()
         {
             initCubes();
             mesh = mf.mesh;
@@ -29,11 +28,7 @@ namespace CellexalVR.MarchingCubes
             mesh.MarkDynamic();
         }
 
-        public void Start()
-        {
-            addVerticesToMesh();
-        }
-        public void addVerticesToMesh()
+        public void AddVerticesToMesh()
         {
             vertices = new Vector3[n_vertices];
             if (ChunkManager.addVertexSpheres)
@@ -146,6 +141,16 @@ namespace CellexalVR.MarchingCubes
             foreach (Cube c in cubes)
             {
                 c.updateVertices();
+            }
+            mesh.vertices = vertices;
+        }
+
+        public IEnumerator UpdateVertices()
+        {
+            foreach (Cube c in cubes)
+            {
+                c.updateVertices();
+                yield return null;
             }
             mesh.vertices = vertices;
         }

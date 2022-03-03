@@ -1112,15 +1112,15 @@ namespace CellexalVR.AnalysisObjects
         [ConsoleCommand("graphGenerator", aliases: "cm")]
         public void CreateMeshFromCommandLine()
         {
-            CreateMesh();
+            //CreateMesh();
         }
 
 
-        public void CreateMesh()
-        {
-            StartCoroutine(referenceManager.graphManager.Graphs[0].transform.parent.GetComponent<SpatialGraph>()
-                .CreateMesh());
-        }
+        //public void CreateMesh()
+        //{
+        //    StartCoroutine(referenceManager.graphManager.Graphs[0].transform.parent.GetComponent<SpatialGraph>()
+        //        .CreateMesh());
+        //}
 
 
         /// <summary>
@@ -1186,7 +1186,7 @@ namespace CellexalVR.AnalysisObjects
             subGraph.GraphName = subGraphName;
             subGraph.tag = "SubGraph";
 
-            StartCoroutine(g.CreateGraphSkeleton(true));
+            g.CreateGraphSkeleton(true);
             while (g.convexHull.activeSelf == false)
             {
                 yield return null;

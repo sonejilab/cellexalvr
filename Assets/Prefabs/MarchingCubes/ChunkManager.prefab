@@ -47,9 +47,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sphereHolder: {fileID: 4866979709627758797}
   boxCollider: {fileID: 4866979709267056643}
-  chunkPrefab: {fileID: 7639885224270075595, guid: 22293016e933c034199c8c8c0791a23c,
+  chunkPrefab: {fileID: 7639885224270075594, guid: 22293016e933c034199c8c8c0791a23c,
     type: 3}
-  brushSize: 0
+  visualiseChunkPrefab: {fileID: 0}
+  visualiseChunks: 0
+  positions: []
+  smoothened: 0
+  brushSize: 0.1
 --- !u!65 &4866979709267056643
 BoxCollider:
   m_ObjectHideFlags: 0

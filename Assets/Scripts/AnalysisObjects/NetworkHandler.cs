@@ -316,7 +316,7 @@ namespace CellexalVR.AnalysisObjects
                 transform.position += transform.forward * 0.3f;
             }
 
-            transform.DOScale(Vector3.one, animationTime).SetEase(Ease.OutCubic).OnComplete(() => OnShowComplete());
+            transform.DOScale(Vector3.one, animationTime + 0.3f).SetEase(Ease.OutBounce).OnComplete(() => OnShowComplete());
 
         }
 

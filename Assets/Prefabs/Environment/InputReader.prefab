@@ -49,7 +49,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   referenceManager: {fileID: 797481884179529250}
-  spatialGraphPrefab: {fileID: 0}
+  spatialGraphPrefab: {fileID: 4866979709267056668, guid: 775827d6390ac5848a4f11b8f83d64f5,
+    type: 3}
   facsGraphCounter: 0
   attributeFileRead: 0
   attributeReader: {fileID: 0}

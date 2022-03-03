@@ -1,46 +1,56 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using CellexalVR.Spatial;
+using CellexalVR.MarchingCubes;
+using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
+using System.Threading.Tasks;
 
 namespace CellexalVR.MarchingCubes
 {
-
-
     public class ChunkManager : MonoBehaviour
     {
         public Transform sphereHolder;
-        public static int chunkResolution = 8;
-        public static int size = 8;
-        public static int n = (ChunkManager.chunkResolution - 1) * size + 1;
+        public static int chunkResolution = 32;
+        public static int size = 1;
+        public static int n = (chunkResolution - 1) * size + 1;
         public static bool addVertexSpheres = false;
         public static bool addDensitySpheres = false;
-        public static float surfaceLevel = 0.6f;
+        public static float surfaceLevel = 1f;
 
+        // public float SurfaceLevel
+        // {
+        //     get => SurfaceLevel;
+        //     set
+        //     {
+        //         SurfaceLevel = value;
+        //         toggleSurfaceLevelandUpdateCubes(0);
+        //     }
+        // }
 
         public BoxCollider boxCollider;
-        public GameObject chunkPrefab;
+        public ChunkScript chunkPrefab;
+        public GameObject visualiseChunkPrefab;
         public ChunkScript[,,] chunks;
         public float[,,] density = new float[n, n, n];
         public GameObject[,,] densitySpheres = new GameObject[n, n, n];
-        private GameObject turtle;
+        public bool visualiseChunks;
+        public List<float3> positions;
+        public bool smoothened;
+
 
         [Range(0, 1)] public float brushSize;
 
-        public void OnValidate()
+        private void Awake()
         {
-            //transform.localScale = (Vector3.one / size) * 2;
-        }
-
-        // Start is called before the first frame update
-        void Awake()
-        {
+            //size = MeshGenerator.instance.size;
+            //chunkResolution = MeshGenerator.instance.res;
             boxCollider.center = transform.position + Vector3.one * size * 0.5f;
             boxCollider.size = Vector3.one * size;
-
-            turtle = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            turtle.transform.localPosition = Vector3.one * 0.5f;
-            turtle.transform.localScale = Vector3.one * 0.2f / chunkResolution;
             chunks = new ChunkScript[size, size, size];
             for (int i = 0; i < size; i++)
             {
@@ -48,17 +58,72 @@ namespace CellexalVR.MarchingCubes
                 {
                     for (int k = 0; k < size; k++)
                     {
-                        //print(i + " " + j + " " + k);
-                        ChunkScript chunk = Instantiate(chunkPrefab, new Vector3(i, j, k), Quaternion.identity, transform).GetComponent<ChunkScript>();
+                        ChunkScript chunk = Instantiate(chunkPrefab);
+                        chunk.transform.parent = transform;
+                        // chunk.transform.localPosition = new Vector3((i - size/2), (j - size/2), (k - size/2));
+                        chunk.transform.localPosition = new Vector3(i, j, k);
+                        chunk.transform.localRotation = Quaternion.identity;
                         chunk.chunkManager = this;
                         chunk.index = new int[] { i, j, k };
                         chunks[i, j, k] = chunk;
+
+                        if (!visualiseChunks) continue;
+                        GameObject obj = Instantiate(visualiseChunkPrefab, transform);
+                        obj.transform.localPosition = chunk.transform.localPosition;
                     }
                 }
             }
-            //createSphereDensity();
-            //transform.localScale = (Vector3.one / size) * 2;
-            //transform.localPosition = Vector3.one * (size / 2);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                SmoothMesh();
+            }
+        }
+
+
+        public void SmoothMesh(int iterations = 1)
+        {
+            foreach (MeshFilter mf in GetComponentsInChildren<MeshFilter>())
+            {
+                Mesh smoothedMesh = MeshSmoother.SmoothMesh(mf.mesh, iterations);
+                mf.mesh = smoothedMesh;
+            }
+            //MeshGenerator.instance.creatingMesh = false;
+            smoothened = true;
+        }
+
+        public void SmoothMeshes()
+        {
+            var meshFilters = GetComponentsInChildren<MeshFilter>();
+            CombineInstance[] combine = new CombineInstance[meshFilters.Length];
+            int i = 0;
+            while (i < meshFilters.Length)
+            {
+                combine[i].mesh = meshFilters[i].sharedMesh;
+                combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
+                meshFilters[i].gameObject.SetActive(false);
+                i++;
+            }
+            transform.gameObject.AddComponent<MeshFilter>();
+            transform.GetComponent<MeshFilter>().mesh = new Mesh();
+            transform.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
+            //Mesh[] meshes = new Mesh[mfs.Length];
+            //int i = 0;
+            //foreach (MeshFilter mf in mfs)
+            //{
+            //    meshes[i++] = mf.mesh;
+            //}
+
+            //Mesh[] newMeshes = MeshSmoother.SmoothMeshes(meshes, 5);
+            //i = 0;
+            //foreach (MeshFilter mf in mfs)
+            //{
+            //    mf.mesh = newMeshes[i++];
+            //}
+
 
         }
 
@@ -72,75 +137,18 @@ namespace CellexalVR.MarchingCubes
                 while (!streamReader.EndOfStream)
                 {
                     string[] coords = streamReader.ReadLine().Split(null);
-                    addDensity(int.Parse(coords[1]), int.Parse(coords[2]), int.Parse(coords[3]), 1);
-
-                }
-                {
-
+                    AddDensity(int.Parse(coords[1]), int.Parse(coords[2]), int.Parse(coords[3]), 1);
                 }
             }
+
             foreach (ChunkScript c in chunks)
             {
                 c.updateVertices();
                 c.updateTriangles();
             }
-
-
         }
 
-        //private void Update()
-        //{
-        //    if (Input.GetKey(KeyCode.W))
-        //    {
-        //        turtle.transform.Translate(Vector3.forward / 50f);
-        //    }
-        //    if (Input.GetKey(KeyCode.S))
-        //    {
-        //        turtle.transform.Translate(-Vector3.forward / 50f);
-        //    }
-        //    if (Input.GetKey(KeyCode.A))
-        //    {
-        //        turtle.transform.Translate(-Vector3.right / 50f);
-        //    }
-        //    if (Input.GetKey(KeyCode.D))
-        //    {
-        //        turtle.transform.Translate(Vector3.right / 50f);
-        //    }
-        //    if (Input.GetKey(KeyCode.Q))
-        //    {
-        //        turtle.transform.Translate(-Vector3.up / 50f);
-        //    }
-        //    if (Input.GetKey(KeyCode.E))
-        //    {
-        //        turtle.transform.Translate(Vector3.up / 50f);
-        //    }
-        //    if (Input.GetKey(KeyCode.Q))
-        //    {
-        //        addSphericalDensity(turtle.transform.position);
-        //    }
-        //    if (Input.GetKeyDown(KeyCode.F))
-        //    {
-        //        toggleSurfaceLevelandUpdateCubes(0.05f);
-        //    }
-        //    if (Input.GetKeyDown(KeyCode.R))
-        //    {
-        //        toggleSurfaceLevelandUpdateCubes(-0.05f);
-        //    }
-        //    if (Input.GetKeyDown(KeyCode.Space))
-        //    {
-        //        foreach (ChunkScript c in chunks)
-        //        {
-        //            c.updateVertices();
-        //            c.updateTriangles();
-        //        }
-        //    }
-        //    if (Input.GetKeyDown(KeyCode.T))
-        //    {
-        //        ReadCoords();
-        //    }
-        //}
-
-        public void addSphericalDensity(Vector3 pos)
+        public void AddSphericalDensity(Vector3 pos)
         {
             pos = transform.InverseTransformPoint(pos);
             HashSet<ChunkScript> chunksToUpdate = new HashSet<ChunkScript>();
@@ -153,10 +161,11 @@ namespace CellexalVR.MarchingCubes
                         Vector3 temp = pos + new Vector3(i, j, k);
                         if (temp.x < 0 || temp.x > size || temp.y < 0 || temp.y > size || temp.z < 0 || temp.z > size)
                             continue;
-                        chunksToUpdate.Add(getChunkFromPos(temp));
+                        chunksToUpdate.Add(GetChunkFromPos(temp));
                     }
                 }
             }
+
             pos = pos * (chunkResolution - 1);
             int rad = (int)(((chunkResolution - 1) / 2) * brushSize);
             for (int i = 0; i < chunkResolution - 1; i++)
@@ -169,10 +178,11 @@ namespace CellexalVR.MarchingCubes
                         int y = Mathf.RoundToInt(pos.y + j - rad);
                         int z = Mathf.RoundToInt(pos.z + k - rad);
                         float dist = Vector3.Distance(pos, new Vector3(x, y, z)) / rad;
-                        addDensity(x, y, z, Mathf.Clamp01(1.0f - dist));
+                        AddDensity(x, y, z, Mathf.Clamp01(1.0f - dist));
                     }
                 }
             }
+
             foreach (ChunkScript c in chunksToUpdate)
             {
                 c.updateVertices();
@@ -180,23 +190,45 @@ namespace CellexalVR.MarchingCubes
             }
         }
 
-        private ChunkScript getChunkFromPos(Vector3 pos)
+        private ChunkScript GetChunkFromPos(Vector3 pos)
         {
             return chunks[(int)pos.x, (int)pos.y, (int)pos.z];
         }
 
-        public void toggleSurfaceLevelandUpdateCubes(float i)
+        public void UpdateMesh()
+        {
+
+        }
+
+        public void ToggleSurfaceLevelandUpdateCubes(float i, ChunkScript[,,] chunks, Color color)
         {
             //surfaceLevel += i;
             //surfaceLevel = Mathf.Clamp01(surfaceLevel);
+            //int chunksThisFrame = 0;
             foreach (ChunkScript c in chunks)
             {
+                c.AddVerticesToMesh();
                 c.updateVertices();
                 c.updateTriangles();
+                MeshFilter mf = c.GetComponent<MeshFilter>();
+                //color.a = 1;
+                //c.GetComponent<Renderer>().material.color = color;
+                mf.mesh.RecalculateBounds();
+                mf.mesh.RecalculateNormals();
+                float scale = 1f / transform.localScale.x;
+                c.transform.localPosition = Vector3.one * -0.5f * scale;
+                //if (++chunksThisFrame % 2 == 0) await Task.Yield();
             }
+
+            if (!smoothened)
+            {
+            }
+            //SmoothMesh();
+
+            MeshGenerator.instance.creatingMesh = false;
         }
 
-        public void createSphereDensity()
+        public void CreateSphereDensity()
         {
             Vector3 centre = Vector3.one * (n - 1) * 0.5f;
             for (int i = 0; i < n; i++)
@@ -206,55 +238,58 @@ namespace CellexalVR.MarchingCubes
                     for (int k = 0; k < n; k++)
                     {
                         float dist = Vector3.Distance(centre, new Vector3(i, j, k)) / ((n - 1) / 2);
-                        addDensity(i, j, k, Mathf.Clamp01(1.0f - dist));
+                        AddDensity(i, j, k, Mathf.Clamp01(1.0f - dist));
                     }
                 }
             }
         }
 
-        public void addDensity(int x, int y, int z, float d)
+        public void AddDensity(int x, int y, int z, float d)
         {
             if (x < 0 || x >= n || y < 0 || y >= n || z < 0 || z >= n)
-                return;
-            density[x, y, z] += d;
-            if (addDensitySpheres)
             {
-                if (densitySpheres[x, y, z] == null)
-                {
-                    GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    sphere.transform.SetParent(sphereHolder);
-                    sphere.transform.localPosition = new Vector3(x, y, z) / (chunkResolution - 1);
-                    sphere.transform.localScale = Vector3.one / ((ChunkManager.chunkResolution - 1) * 3) * density[x, y, z];
-                    densitySpheres[x, y, z] = sphere;
-                }
-                densitySpheres[x, y, z].GetComponent<Renderer>().material.color = new Color(1 - density[x, y, z], 1 - density[x, y, z], 1 - density[x, y, z], density[x, y, z]);
+                return;
             }
-
+            density[x, y, z] += d;
+            if (!addDensitySpheres) return;
+            //if (densitySpheres[x, y, z] == null)
+            //{
+            //    GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            //    DensitySphere ds = sphere.AddComponent<DensitySphere>();
+            //    ds.chunkManager = this;
+            //    ds.transform.SetParent(sphereHolder);
+            //    ds.transform.localPosition = new Vector3(x, y, z) / (chunkResolution - 1);
+            //    ds.transform.localScale = Vector3.one / ((ChunkManager.chunkResolution - 1) * 3) * density[x, y, z];
+            //    ds.index[0] = x;
+            //    ds.index[1] = y;
+            //    ds.index[2] = z;
+            //    densitySpheres[x, y, z] = sphere;
+            //}
+            densitySpheres[x, y, z].GetComponent<Renderer>().material.color = new Color(1 - density[x, y, z], 1 - density[x, y, z], 1 - density[x, y, z], density[x, y, z]);
         }
 
-        public void setDensity(int x, int y, int z, float d)
+        public void SetDensity(int x, int y, int z, float d, bool addSphere = false)
         {
             if (x < 0 || x >= n || y < 0 || y >= n || z < 0 || z >= n)
                 return;
             density[x, y, z] = d;
-            if (addDensitySpheres)
+            if (!addSphere) return;
+            if (densitySpheres[x, y, z] == null)
             {
-                if (densitySpheres[x, y, z] == null)
-                {
-                    GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    sphere.transform.SetParent(sphereHolder);
-                    sphere.transform.localPosition = new Vector3(x, y, z) / (chunkResolution - 1);
-                    sphere.transform.localScale = Vector3.one / ((ChunkManager.chunkResolution - 1) * 3) * d;
-                    densitySpheres[x, y, z] = sphere;
-                }
-                densitySpheres[x, y, z].GetComponent<Renderer>().material.color = new Color(1 - d, 1 - d, 1 - d, d);
+                print($"add sphere");
+                GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                sphere.transform.SetParent(sphereHolder);
+                sphere.transform.localPosition = new Vector3(x, y, z) / (chunkResolution - 1);
+                sphere.transform.localScale = Vector3.one / ((ChunkManager.chunkResolution - 1) * 3) * d;
+                densitySpheres[x, y, z] = sphere;
             }
+
+            densitySpheres[x, y, z].GetComponent<Renderer>().material.color = new Color(1 - d, 1 - d, 1 - d, d);
         }
 
         public void OnDrawGizmos()
         {
             Gizmos.DrawWireCube(transform.position + transform.localScale * size * 0.5f, transform.localScale * size);
         }
-
     }
 }
