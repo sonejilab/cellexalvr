@@ -118,8 +118,9 @@ namespace CellexalVR.AnalysisLogic
             scaledCoordinates.Clear();
             minCoordValues = new float3(float.MaxValue, float.MaxValue, float.MaxValue);
             maxCoordValues = new float3(float.MinValue, float.MinValue, float.MinValue);
-            HistoImage hi = Instantiate(HistoImageHandler.instance.slicePrefab);
-            PointCloud pc = hi.GetComponent<PointCloud>();
+            //HistoImage hi = Instantiate(HistoImageHandler.instance.slicePrefab);
+            PointCloud pc = Instantiate(spatialPointCloudPrefab);
+            HistoImage hi = pc.gameObject.AddComponent<HistoImage>();
             quadrantSystem.graphParentTransforms.Add(pc.transform);
             quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
             pc.Initialize(nrOfGraphs);
@@ -592,14 +593,14 @@ namespace CellexalVR.AnalysisLogic
                         clusterDict[id++] = cluster;
                         if (!clusters.ContainsKey(cluster))
                         {
-                            if (clusterCount >= SelectionToolCollider.instance.Colors.Length - 1)
+                            if (clusterCount >= CellexalConfig.Config.SelectionToolColors.Length - 1)
                             {
                                 c = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
                                 ReferenceManager.instance.settingsMenu.AddSelectionColor(c);
                             }
                             else
                             {
-                                c = SelectionToolCollider.instance.Colors[clusterCount];
+                                c = CellexalConfig.Config.SelectionToolColors[clusterCount];
                             }
 
                             c.a = 1;

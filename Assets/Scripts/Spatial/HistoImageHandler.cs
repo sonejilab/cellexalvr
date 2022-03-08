@@ -44,7 +44,7 @@ namespace CellexalVR.Spatial
             {
                 foreach (HistoImage hi in images)
                 {
-                    hi.CropToTissue2();
+                    hi.CropToTissue();
                 }
             }
 

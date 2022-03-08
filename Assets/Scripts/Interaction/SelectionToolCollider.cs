@@ -163,7 +163,6 @@ namespace CellexalVR.Interaction
         private void Awake()
         {
             instance = this;
-            graphManager = referenceManager.graphManager;
             SetSelectionToolEnabled(false);
 
             if (CellexalConfig.Config != null)
@@ -175,6 +174,7 @@ namespace CellexalVR.Interaction
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
             CellexalEvents.RightTriggerPressed.AddListener(OnTriggerDown);
             CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
+            gameObject.SetActive(false);
         }
 
         private void OnEnable()
@@ -182,6 +182,7 @@ namespace CellexalVR.Interaction
             controllerModelSwitcher = ReferenceManager.instance.controllerModelSwitcher;
             multiuserMessageSender = ReferenceManager.instance.multiuserMessageSender;
             selectionManager = ReferenceManager.instance.selectionManager;
+            graphManager = ReferenceManager.instance.graphManager;
             UpdateShapeIcons();
 
             _requireToggleToClick = false;

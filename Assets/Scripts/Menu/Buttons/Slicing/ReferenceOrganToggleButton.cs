@@ -2,6 +2,7 @@
 using System.Collections;
 using CellexalVR.Spatial;
 using CellexalVR.Interaction;
+using CellexalVR.General;
 
 namespace CellexalVR.Menu.Buttons.Slicing
 {
@@ -20,7 +21,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
         {
             base.Awake();
             graphSlice = GetComponentInParent<GraphSlice>();
-            referenceOrganPrefab = graphSlice.referenceOrgan;
+            referenceOrganPrefab = ReferenceManager.instance.brainModel.gameObject;
             referenceOrgan = AllenReferenceBrain.instance.gameObject;
         }
 

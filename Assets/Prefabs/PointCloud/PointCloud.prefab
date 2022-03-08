@@ -163,7 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slicerBoxPrefab: {fileID: 5308235727520749929, guid: 2349d5bd2b451f84a82a956f0e2bc5a1,
     type: 3}
-  pointCloudSphere: {fileID: 8926484042661614526, guid: 4ca08730f7e35cc49943fc533e62c2c6,
+  pointCloudHighCap: {fileID: 8926484042661614526, guid: 33d00ae71d249c14190f862abf947ac3,
     type: 3}
   pointCloudQuad: {fileID: 8926484042661614526, guid: 9a94ff62c35438f4fb67db9ae0881d43,
     type: 3}
@@ -195,7 +195,6 @@ MonoBehaviour:
     y: 0
     z: 0
   pcID: 0
-  selectionSphere: {fileID: 0}
   zPositions: []
   graphSlice: {fileID: 0}
   infoParent: {fileID: 7546808570524163359}

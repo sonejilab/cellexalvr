@@ -161,6 +161,8 @@ namespace CellexalVR.AnalysisLogic
 
         private IEnumerator ReadBigFolder(string path)
         {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             if (!referenceManager.loaderController.loaderMovedDown)
             {
                 referenceManager.loaderController.loaderMovedDown = true;
@@ -175,12 +177,12 @@ namespace CellexalVR.AnalysisLogic
             database.InitDatabase(fullPath + "\\database.sqlite");
 
             string[] files = Directory.GetFiles(fullPath, "*.mds");
-            pointCloudGenerator.mdsFileCount = files.Length;
+            PointCloudGenerator.instance.mdsFileCount = files.Length;
             // string mdsFile = files[0];
             foreach (string mdsFile in files)
             {
                 bool spatial = mdsFile.Contains("spatial");
-                PointCloud pc = pointCloudGenerator.CreateNewPointCloud(spatial);
+                PointCloud pc = PointCloudGenerator.instance.CreateNewPointCloud(spatial);
                 string[] regexResult = Regex.Split(mdsFile, @"[\\/]");
                 string graphFileName = regexResult[regexResult.Length - 1];
                 //pc.gameObject.name = graphFileName.Substring(0, graphFileName.Length - 4);
@@ -216,24 +218,22 @@ namespace CellexalVR.AnalysisLogic
                             y = (float.Parse(words[2]));
                             z = float.Parse(words[3]);
                         }
-                        pointCloudGenerator.AddGraphPoint(cellName, x, y, z);
+                        PointCloudGenerator.instance.AddGraphPoint(cellName, x, y, z);
                         int textureX = i % PointCloudGenerator.textureWidth;
                         int textureY = (i / PointCloudGenerator.textureWidth);
                         TextureHandler.instance.textureCoordDict[cellName] = new Vector2Int(textureX, textureY);
                         PointCloudGenerator.instance.indToLabelDict[i] = cellName;
-                        if (i < 10)
-                            print($"add i :{i}, name {cellName} to {pc.originalName}");
                         i++;
                     }
                 }
-                pointCloudGenerator.SpawnPoints(pc);
+                PointCloudGenerator.instance.SpawnPoints(pc);
                 GC.Collect();
             }
 
             if (files.Length > 1)
             {
-                PointCloud pc1 = pointCloudGenerator.pointClouds[0];
-                PointCloud pc2 = pointCloudGenerator.pointClouds[1];
+                PointCloud pc1 = PointCloudGenerator.instance.pointClouds[0];
+                PointCloud pc2 = PointCloudGenerator.instance.pointClouds[1];
                 pc1.morphTexture = pc2.positionTextureMap;
                 pc2.morphTexture = pc1.positionTextureMap;
                 pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc2.positionTextureMap);
@@ -253,17 +253,17 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.attributeSubMenu.SwitchButtonStates(true);
             ReadFacsFiles(path);
             ReadFilterFiles(CellexalUser.UserSpecificFolder);
-            StartCoroutine(pointCloudGenerator.ReadMetaData(fullPath));
-            while (pointCloudGenerator.readingFile)
+            StartCoroutine(PointCloudGenerator.instance.ReadMetaData(fullPath));
+            while (PointCloudGenerator.instance.readingFile)
                 yield return null;
-            StartCoroutine(pointCloudGenerator.CreateColorTextureMap());
+            StartCoroutine(PointCloudGenerator.instance.CreateColorTextureMap());
 
-            while (pointCloudGenerator.creatingGraph)
+            while (PointCloudGenerator.instance.creatingGraph)
                 yield return null;
 
-            PointCloud parentPC = pointCloudGenerator.pointClouds[0];
+            PointCloud parentPC = PointCloudGenerator.instance.pointClouds[0];
 
-            files = Directory.GetFiles(fullPath, "*images.csv");
+            files = Directory.GetFiles(fullPath, "*coords.csv");
             string[] imageFiles = Directory.GetFiles(fullPath, "*.png");
             for (int i = 0; i < files.Length; i++)
             {
@@ -274,7 +274,7 @@ namespace CellexalVR.AnalysisLogic
                 texture.LoadImage(imageData);
                 string[] names = files[i].Split(Path.DirectorySeparatorChar);
                 string n = names[names.Length - 1].Split('.')[0];
-                HistoImage hi = pointCloudGenerator.CreateNewHistoImage();
+                HistoImage hi = PointCloudGenerator.instance.CreateNewHistoImage();
                 hi.sliceNr = int.Parse(Regex.Match(n, @"\d+").Value);
                 hi.gameObject.name = n;
                 hi.texture = texture;
@@ -313,7 +313,6 @@ namespace CellexalVR.AnalysisLogic
                 {
                     HistoImageHandler.instance.imageDict.Add(id, new List<HistoImage>());
                 }
-                print($"{id}, {hi.gameObject.name}");
                 HistoImageHandler.instance.imageDict[id].Add(hi);
 
             }

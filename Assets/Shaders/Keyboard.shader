@@ -38,6 +38,7 @@ Shader "Custom/Keyboard"
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
                 float2 keyboardPos : TEXCOORD1;
+                UNITY_VERTEX_INPUT_INSTANCE_ID //Insert  
             };
             
             struct v2f
@@ -45,6 +46,7 @@ Shader "Custom/Keyboard"
                 float4 position : POSITION;
                 float2 uv : TEXCOORD0;
                 float2 keyboardPos : TEXCOORD1;
+                UNITY_VERTEX_OUTPUT_STEREO //Insert
             };
 
             sampler2D _NonFadedTex;
@@ -65,14 +67,20 @@ Shader "Custom/Keyboard"
             v2f vert (Input IN)
             {
                 v2f OUT;
+                UNITY_SETUP_INSTANCE_ID(IN); //Insert
+                UNITY_INITIALIZE_OUTPUT(v2f, OUT); //Insert
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT); //Insert
                 OUT.position = UnityObjectToClipPos(IN.vertex);
                 OUT.uv = IN.uv;
                 OUT.keyboardPos = IN.keyboardPos;
                 return OUT;
             }
 
+            UNITY_DECLARE_SCREENSPACE_TEXTURE(_ScreenTex); //Insert
             fixed4 frag (v2f IN) : SV_TARGET
             {
+                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN); //Insert
+                //fixed4 col = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_ScreenTex, IN.uv); //Insert
                 // the uv2 coordinates we are at
                 float2 keyboardPos = IN.keyboardPos;
                 // the uv2 coordinates that the laser hit the keyboard at

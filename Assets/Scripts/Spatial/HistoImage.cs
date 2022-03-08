@@ -59,14 +59,15 @@ namespace CellexalVR.Spatial
             originalScale = transform.localScale;
             originalImageRatio = (float)texture.width / (float)texture.height;
             layerMask = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
-
             maxValues = new Vector2(int.MinValue, int.MinValue);
             minValues = new Vector2(int.MaxValue, int.MaxValue);
+            image = GetComponent<GraphSlice>().image;
+            transform.Rotate(0, 0, -90);
         }
 
         public void Initialize()
         {
-            StartCoroutine(InitializeCoroutine());
+            InitializeCoroutine();
         }
 
         public void UpdateColorTexture()
@@ -93,9 +94,8 @@ namespace CellexalVR.Spatial
         }
 
 
-        private IEnumerator InitializeCoroutine()
+        private void InitializeCoroutine()
         {
-            yield return null;
             ScaleCoordinates();
             int width = 1000;
             int height = (int)math.ceil(tissueCoords.Count / 1000f);
@@ -167,25 +167,11 @@ namespace CellexalVR.Spatial
             //visualEffect.SetInt("SpawnRate", (width * height));
 
 
-
             visualEffect.Stop();
             visualEffect.Play();
         }
 
         public void CropToTissue()
-        {
-            Vector2 c1 = PointToTexture(maxValues.x, maxValues.y);
-            Vector2 c4 = PointToTexture(minValues.x, minValues.y);
-
-            c1.x += 5;
-            c1.y -= 5;
-            c4.x -= 5;
-            c4.y += 5;
-
-            CropImage((int)((c1.x)), (int)((c1.y)), (int)((c4.x)), (int)((c4.y)));
-        }
-
-        public void CropToTissue2()
         {
             Color[] colors = texture.GetPixels();
             for (int i = 0; i < colors.Length; i++)

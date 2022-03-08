@@ -34,7 +34,7 @@ namespace AnalysisLogic
 
         private Dictionary<string, Color> clusterCentroids = new Dictionary<string, Color>();
 
-        public VisualEffectAsset pointCloudSphere;
+        public VisualEffectAsset pointCloudHighCap;
         public VisualEffectAsset pointCloudQuad;
         public Texture2D positionTextureMap;
         public Texture2D colorTextureMap;
@@ -50,7 +50,7 @@ namespace AnalysisLogic
         public float3 diffCoordValues;
         public Dictionary<string, float3> points = new Dictionary<string, float3>();
         public int pcID;
-        public Transform selectionSphere;
+        //public Transform selectionSphere;
         public Entity parent;
         public List<float> zPositions = new List<float>();
         public GraphSlice graphSlice;
@@ -94,7 +94,7 @@ namespace AnalysisLogic
             {
                 vfx = GetComponentInChildren<VisualEffect>();
             }
-            selectionSphere = SelectionToolCollider.instance.transform;
+            //selectionSphere = SelectionToolCollider.instance.transform;
             vfx.pause = true;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             //interactableObjectBasic = GetComponent<InteractableObjectBasic>();
@@ -211,7 +211,7 @@ namespace AnalysisLogic
         public void Morph(float animationTime = 1f)
         {
             morphed = !morphed;
-            float endVal = morphed ? 1f : -0.1f;
+            float endVal = morphed ? 1f : -0.11f;
             float blendVal = vfx.GetFloat("morphStep");
             DOTween.To(() => blendVal, x => blendVal = x, endVal, animationTime).OnUpdate(
                 () => vfx.SetFloat("morphStep", blendVal))
@@ -261,7 +261,7 @@ namespace AnalysisLogic
         public IEnumerator CreatePositionTextureMap(List<Point> points, PointCloud parentPC)
         {
             pointCount = points.Count;
-            vfx.visualEffectAsset = pointCount > 50 ? pointCloudQuad : pointCloudSphere;
+            vfx.visualEffectAsset = pointCount < 500000 ? pointCloudQuad : pointCloudHighCap;
             vfx.SetInt("SpawnRate", pointCount);
             int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
             int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
@@ -347,7 +347,7 @@ namespace AnalysisLogic
         {
             pointCount = pointPositions.Count;
             if (vfx == null) vfx = GetComponent<VisualEffect>();
-            vfx.visualEffectAsset = pointCount > 50 ? pointCloudQuad : pointCloudSphere;  //
+            vfx.visualEffectAsset = pointCount < 500000 ? pointCloudQuad : pointCloudHighCap;  //
             vfx.SetInt("SpawnRate", pointCount);
             int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
             int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
@@ -382,7 +382,6 @@ namespace AnalysisLogic
                         entity = e
                     });
                     positions[ind] = col;
-                    if (ind < 10) print($"pos {originalName}, {ind} : {pos.x}, {pos.y}, {pos.z}");
                 }
             }
 

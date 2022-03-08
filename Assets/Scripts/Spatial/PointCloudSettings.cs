@@ -90,11 +90,12 @@ public class PointCloudSettings : MonoBehaviour
         {
             Transform cameraTransform = ReferenceManager.instance.headset.transform;
             transform.position = cameraTransform.position + cameraTransform.forward * 0.7f;
+            transform.LookAt(2 * transform.position - cameraTransform.position);
         }
         Vector3 targetScale = toggled ? Vector3.zero : Vector3.one;
-        sizeSlider.transform.DOScale(targetScale, 0.8f);
-        spreadSlider.transform.DOScale(targetScale, 0.8f);
-        alphaSlider.transform.DOScale(targetScale, 0.8f);
+        sizeSlider.transform.DOScale(targetScale, 0.8f).SetEase(Ease.OutBounce);
+        spreadSlider.transform.DOScale(targetScale, 0.8f).SetEase(Ease.OutBounce);
+        alphaSlider.transform.DOScale(targetScale, 0.8f).SetEase(Ease.OutBounce);
         toggled = !toggled;
     }
 

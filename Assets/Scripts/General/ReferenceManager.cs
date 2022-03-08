@@ -109,6 +109,7 @@ namespace CellexalVR.General
         public HeatmapGenerator heatmapGenerator;
         public NetworkGenerator networkGenerator;
         public GraphGenerator graphGenerator;
+        public PointCloudGenerator pointCloudGenerator;
         public LegendManager legendManager;
         public InputFolderGenerator inputFolderGenerator;
         public LoaderController loaderController;
@@ -257,6 +258,7 @@ namespace CellexalVR.General
             heatmapGenerator = generatorsParent.GetComponentInChildren<HeatmapGenerator>();
             networkGenerator = generatorsParent.GetComponentInChildren<NetworkGenerator>();
             graphGenerator = generatorsParent.GetComponentInChildren<GraphGenerator>();
+            pointCloudGenerator = generatorsParent.GetComponentInChildren<PointCloudGenerator>();
             legendManager = managersParent.GetComponentInChildren<LegendManager>();
             cullingFilterManager = managersParent.GetComponentInChildren<CullingFilterManager>();
             inputFolderGenerator = generatorsParent.GetComponentInChildren<InputFolderGenerator>();

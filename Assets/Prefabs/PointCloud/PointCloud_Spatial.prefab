@@ -1,5 +1,103 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6802090004062468001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6790384649455784677}
+  - component: {fileID: 7350380084673246496}
+  - component: {fileID: 854333417575570643}
+  - component: {fileID: 7701765712856905621}
+  m_Layer: 8
+  m_Name: Quad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6790384649455784677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6802090004062468001}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7148217975500203123}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!33 &7350380084673246496
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6802090004062468001}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &854333417575570643
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6802090004062468001}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: ec7e5b4b6c62c8a498d066470348cf98, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &7701765712856905621
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6802090004062468001}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &7148217975500203127
 GameObject:
   m_ObjectHideFlags: 0
@@ -38,6 +136,7 @@ Transform:
   - {fileID: 7545368249596458037}
   - {fileID: 343209921274702180}
   - {fileID: 7274460461216073959}
+  - {fileID: 6790384649455784677}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -64,6 +163,9 @@ VisualEffect:
       - m_Value: 0
         m_Name: SelectionRadius
         m_Overridden: 0
+      - m_Value: -0.11
+        m_Name: morphStep
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -163,7 +265,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24636caba77e0440abf89771f65b81e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sliceMode: 0
   replacement: {fileID: 0}
   wire: {fileID: 0}
   buildingSlice: 0
@@ -176,9 +277,8 @@ MonoBehaviour:
   parentSlice: {fileID: 0}
   childSlices: []
   pointCloud: {fileID: 1416619197411787972}
-  referenceOrgan: {fileID: 192816369537481473, guid: 662b6f8d7406e764ba610c78ab83256a,
-    type: 3}
   slicerBox: {fileID: 4038168159993889845}
+  image: {fileID: 6802090004062468001}
 --- !u!114 &1416619197411787972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,8 +293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slicerBoxPrefab: {fileID: 5308235727520749929, guid: 2349d5bd2b451f84a82a956f0e2bc5a1,
     type: 3}
-  pointCloudSphere: {fileID: 8926484042661614526, guid: 4ca08730f7e35cc49943fc533e62c2c6,
-    type: 3}
+  pointCloudHighCap: {fileID: 0}
   pointCloudQuad: {fileID: 8926484042661614526, guid: 9a94ff62c35438f4fb67db9ae0881d43,
     type: 3}
   positionTextureMap: {fileID: 0}
@@ -225,7 +324,6 @@ MonoBehaviour:
     y: 0
     z: 0
   pcID: 0
-  selectionSphere: {fileID: 0}
   zPositions: []
   graphSlice: {fileID: 6643451411206352734}
   infoParent: {fileID: 7546808570524163359}

@@ -16,7 +16,9 @@ namespace CellexalVR.Spatial
         private bool rightClick;
         private bool leftClick;
         private float currentDistance;
+        private float currentTime;
         private float startDistance;
+        private readonly float timeThreshold = 0.5f;
         private Transform controllerL;
         private Transform controllerR;
         private int controllersInside;
@@ -46,6 +48,7 @@ namespace CellexalVR.Spatial
             rightClick = false;
             bothClick = false;
             currentDistance = 0f;
+            currentTime = 0f;
         }
 
         private void LeftUp(InputAction.CallbackContext context)
@@ -53,6 +56,7 @@ namespace CellexalVR.Spatial
             leftClick = false;
             bothClick = false;
             currentDistance = 0f;
+            currentTime = 0f;
         }
 
         private void RightAction(InputAction.CallbackContext context)
@@ -61,12 +65,21 @@ namespace CellexalVR.Spatial
                 controllerR = ReferenceManager.instance.rightController.transform;
             float minDist = float.MaxValue;
             float dist;
-            foreach (PointCloud pc in PointCloudGenerator.instance.pointClouds)
+            Ray ray = new Ray(ReferenceManager.instance.headset.transform.position, ReferenceManager.instance.headset.transform.forward);
+            Physics.Raycast(ray, out RaycastHit hit);
+            if (hit.collider.TryGetComponent(out PointCloud pc))
             {
-                dist = Vector3.Distance(controllerR.transform.position, pc.transform.position);
-                if (dist < minDist)
+                pointCloud = pc;
+            }
+            else
+            {
+                foreach (PointCloud p in PointCloudGenerator.instance.pointClouds)
                 {
-                    pointCloud = pc;
+                    dist = Vector3.Distance(controllerR.transform.position, p.transform.position);
+                    if (dist < minDist)
+                    {
+                        pointCloud = p;
+                    }
                 }
             }
             rightClick = true;
@@ -93,6 +106,11 @@ namespace CellexalVR.Spatial
 
         private void Update()
         {
+            if (rightClick || leftClick)
+            {
+                currentTime += Time.deltaTime;
+            }
+
             if (bothClick)
             {
                 if (controllerL == null || controllerL == controllerR)
@@ -100,7 +118,7 @@ namespace CellexalVR.Spatial
                 if (controllerR == null)
                     controllerR = ReferenceManager.instance.rightController.transform;
                 currentDistance = Vector3.Distance(controllerL.position, controllerR.position);
-                if (currentDistance > startDistance + 0.4f)
+                if (currentDistance > startDistance + 0.4f && currentTime < timeThreshold)
                 {
                     pointCloud.SpreadOutPoints();
                     //pointCloud.SpreadOutClusters();
@@ -108,7 +126,7 @@ namespace CellexalVR.Spatial
                     currentDistance = 0;
                 }
 
-                else if (currentDistance < startDistance - 0.4f)
+                else if (currentDistance < startDistance - 0.4f && currentTime < timeThreshold)
                 {
                     pointCloud.SpreadOutPoints(false);
                     //pointCloud.SpreadOutClusters();

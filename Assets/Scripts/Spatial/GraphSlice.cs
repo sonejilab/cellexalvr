@@ -24,7 +24,6 @@ namespace CellexalVR.Spatial
     /// </summary>
     public class GraphSlice : MonoBehaviour
     {
-        public bool sliceMode;
         public GameObject replacement;
         public GameObject wire;
         public bool buildingSlice;
@@ -38,17 +37,16 @@ namespace CellexalVR.Spatial
             set { sliceNr = value; }
         }
         public Vector3 sliceCoords = new Vector3();
-        //public Dictionary<int, float3> points = new Dictionary<int, float3>();
         public List<Point> points = new List<Point>();
         public SpatialGraph spatialGraph;
         public GraphSlice parentSlice;
         public List<GraphSlice> childSlices = new List<GraphSlice>();
         public PointCloud pointCloud;
-        public GameObject referenceOrgan;
         public SlicerBox slicerBox;
+        public GameObject image;
+
 
         protected Graph graph;
-
         private Vector3 originalPos;
         private Vector3 originalSc;
         private Quaternion originalRot;
@@ -329,10 +327,6 @@ namespace CellexalVR.Spatial
                 {
                     transform.DOLocalMove(sliceCoords, 0.8f).SetEase(Ease.InOutQuad);
                 }
-            }
-            else
-            {
-                sliceMode = false;
             }
         }
 
