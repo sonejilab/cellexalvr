@@ -63,7 +63,7 @@ namespace CellexalVR.Interaction
             }
         }
 
-        void Awake()
+        private void Awake()
         {
             //selectionToolHandler = referenceManager.selectionToolHandler;
             selectionToolCollider = referenceManager.selectionToolCollider;

@@ -99,6 +99,7 @@ namespace CellexalVR.Tools
                     }
                 }
             }
+            tip.GetComponent<Renderer>().material.color = inactiveColor;
 
         }
 
