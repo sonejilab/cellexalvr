@@ -9,15 +9,17 @@ namespace CellexalVR.Interaction
     [RequireComponent(typeof(XRGrabInteractable))]
     public class ScaleGrab : MonoBehaviour
     {
+        public IXRSelectInteractor firstInteractor;
+        public IXRSelectInteractor secondInteractor;
+        public bool doScale;
+
         private Vector3 interactorPosition = Vector3.zero;
         private Quaternion interactorRotation = Quaternion.identity;
         private Vector3 interactorScale = Vector3.one;
-        private XRBaseInteractor firstInteractor;
-        private XRBaseInteractor secondInteractor;
 
         private Vector3 a;
+        private Vector3 localA;
         private Vector3 b;
-        private bool doScale;
 
         private void Update()
         {
@@ -42,27 +44,31 @@ namespace CellexalVR.Interaction
             interactor.attachTransform.localScale = interactorScale;
         }
 
+        public void InitialisePositions()
+        {
+            a = firstInteractor.transform.position;
+            localA = transform.InverseTransformPoint(a);
+            b = secondInteractor.transform.position;
+        }
+
         protected void UniformScale()
         {
             Vector3 aa = firstInteractor.transform.position;
             Vector3 bb = secondInteractor.transform.position;
+
             float c = (a - b).magnitude;
             float cc = (aa - bb).magnitude;
 
-            //float newScale = (cc / c);
             Vector3 axis = -Vector3.Cross(bb - aa, b - a);
             float angle = Vector3.Angle(bb - aa, b - a);
 
             transform.RotateAround(aa, axis, angle);
-            //transform.localScale *= newScale;
 
             Vector3 newScale = transform.localScale * (cc / c);
             transform.localScale = newScale;
-            //ApplyScale(newScale);
 
-            //joint.autoConfigureConnectedAnchor = false;
-            //joint.connectedAnchor = Vector3.zero;
-
+            Vector3 newWorldaa = transform.TransformPoint(localA);
+            transform.Translate(aa - newWorldaa, Space.World);
 
             a = aa;
             b = bb;

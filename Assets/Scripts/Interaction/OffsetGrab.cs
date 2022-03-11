@@ -14,45 +14,49 @@ namespace CellexalVR.Interaction
 
         protected override void OnSelectEntered(SelectEnterEventArgs args)
         {
-            StoreInteractor(args.interactor);
-            MatchAttachmentPoints(args.interactor);
+            StoreInteractor(args.interactorObject);
+            MatchAttachmentPoints(args.interactorObject);
             base.OnSelectEntered(args);
-            
+
         }
 
-        private void StoreInteractor(XRBaseInteractor interactor)
+        private void StoreInteractor(IXRInteractor interactor)
         {
-            interactorPosition = interactor.attachTransform.position;
-            interactorRotation = interactor.attachTransform.rotation;
-            interactorScale = interactor.attachTransform.localScale;
+            Transform attachTransform = interactor.GetAttachTransform(this);
+            interactorPosition = attachTransform.position;
+            interactorRotation = attachTransform.rotation;
+            interactorScale = attachTransform.localScale;
         }
-        private void MatchAttachmentPoints(XRBaseInteractor interactor)
+        private void MatchAttachmentPoints(IXRInteractor interactor)
         {
+            Transform attachTransform = interactor.GetAttachTransform(this);
+            Transform interactorAttachTransform = GetAttachTransform(interactor);
             bool hasAttach = attachTransform != null;
-            interactor.attachTransform.position = hasAttach ? attachTransform.position : transform.localPosition;
-            interactor.attachTransform.rotation = hasAttach ? attachTransform.rotation : transform.localRotation;
-            interactor.attachTransform.localScale = hasAttach ? attachTransform.localScale : transform.localScale;
+            attachTransform.position = hasAttach ? interactorAttachTransform.position : transform.localPosition;
+            attachTransform.rotation = hasAttach ? interactorAttachTransform.rotation : transform.localRotation;
+            attachTransform.localScale = hasAttach ? interactorAttachTransform.localScale : transform.localScale;
         }
 
         protected override void OnSelectExited(SelectExitEventArgs args)
         {
-            ClearInteractor(args.interactor);
-            ResetAttachmentPoints(args.interactor);
+            ClearInteractor(args.interactorObject);
+            ResetAttachmentPoints(args.interactorObject);
             base.OnSelectExited(args);
         }
 
-        private void ClearInteractor(XRBaseInteractor interactor)
+        private void ClearInteractor(IXRInteractor interactor)
         {
             interactorPosition = Vector3.zero;
             interactorRotation = Quaternion.identity;
             interactorScale = Vector3.one;
         }
 
-        private void ResetAttachmentPoints(XRBaseInteractor interactor)
+        private void ResetAttachmentPoints(IXRInteractor interactor)
         {
-            interactor.attachTransform.localPosition = interactorPosition;
-            interactor.attachTransform.localRotation = interactorRotation;
-            interactor.attachTransform.localScale = interactorScale;
+            Transform attachTransform = interactor.GetAttachTransform(this);
+            attachTransform.localPosition = interactorPosition;
+            attachTransform.localRotation = interactorRotation;
+            attachTransform.localScale = interactorScale;
         }
 
 

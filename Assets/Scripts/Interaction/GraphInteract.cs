@@ -12,7 +12,10 @@ namespace CellexalVR.Interaction
     class GraphInteract : OffsetGrab
     {
         public ReferenceManager referenceManager;
+        public ScaleGrab scaleGrab;
 
+        private bool ungrabbedThisFrame = false;
+        private IXRSelectInteractor savedInteractor;
         //private Coroutine runningCoroutine;
 
         private void OnValidate()
@@ -36,38 +39,55 @@ namespace CellexalVR.Interaction
             enabled = true;
         }
 
+        private void Update()
+        {
+            ungrabbedThisFrame = false;
+        }
+
         protected override void OnSelectEntering(SelectEnterEventArgs args)
         {
             base.OnSelectEntering(args);
             referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
+            if (base.interactorsSelecting.Count == 2)
+            {
+                base.trackPosition = false;
+                base.trackRotation = false;
+                scaleGrab.doScale = true;
+                scaleGrab.firstInteractor = savedInteractor;
+                scaleGrab.secondInteractor = args.interactorObject;
+                scaleGrab.InitialisePositions();
+            }
+            else
+            {
+                savedInteractor = args.interactorObject;
+            }
         }
-
-        //public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
-        //{
-        //    referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
-        //    //StopPositionSync();
-        //    base.OnInteractableObjectGrabbed(e);
-        //}
-
 
         protected override void OnSelectExiting(SelectExitEventArgs args)
         {
-            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
             referenceManager.multiuserMessageSender.SendMessageGraphUngrabbed(gameObject.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
+            if (base.interactorsSelecting.Count == 2)
+            {
+                base.trackPosition = true;
+                base.trackRotation = true;
+                scaleGrab.doScale = false;
+                if (scaleGrab.firstInteractor == args.interactorObject)
+                {
+                    savedInteractor = scaleGrab.secondInteractor;
+                }
+                else
+                {
+                    savedInteractor = scaleGrab.firstInteractor;
+                }
+                // positions and rotations have not been tracked since scaling begun, update them manually once.
+                scaleGrab.firstInteractor.GetAttachTransform(args.interactableObject).transform.position = transform.position;
+                scaleGrab.firstInteractor.GetAttachTransform(args.interactableObject).transform.rotation = transform.rotation;
+                scaleGrab.secondInteractor.GetAttachTransform(args.interactableObject).transform.position = transform.position;
+                scaleGrab.secondInteractor.GetAttachTransform(args.interactableObject).transform.rotation = transform.rotation;
+            }
+
             base.OnSelectExiting(args);
         }
-
-        //public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
-        //{
-        //    referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
-        //    Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-        //    referenceManager.multiuserMessageSender.SendMessageGraphUngrabbed(gameObject.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
-        //    //referenceManager.rightLaser.enabled = true;
-        //    //referenceManager.controllerModelSwitcher.ActivateDesiredTool();
-        //    //runningCoroutine = StartCoroutine(KeepGraphPositionSynched());
-        //    base.OnInteractableObjectUngrabbed(e);
-        //}
-
     }
 }
