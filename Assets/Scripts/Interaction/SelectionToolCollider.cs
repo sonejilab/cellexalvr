@@ -151,7 +151,7 @@ namespace CellexalVR.Interaction
             CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
         }
 
-        private void Start()
+        private void OnEnable()
         {
             controllerModelSwitcher = ReferenceManager.instance.controllerModelSwitcher;
             multiuserMessageSender = ReferenceManager.instance.multiuserMessageSender;
@@ -161,11 +161,12 @@ namespace CellexalVR.Interaction
             touchPadClick.action.performed += OnTouchPadClick;
 
             CurrentColorIndex = 0;
-
         }
 
         private void OnTriggerClick()
         {
+            if (controllerModelSwitcher == null)
+                controllerModelSwitcher = ReferenceManager.instance.controllerModelSwitcher;
             if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 particles.gameObject.SetActive(true);
