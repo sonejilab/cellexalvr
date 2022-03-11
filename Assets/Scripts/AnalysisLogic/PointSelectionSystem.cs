@@ -19,6 +19,7 @@ namespace CellexalVR.AnalysisLogic
         public int parentID;
     }
 
+
     public struct RaycastCheckComponent : IComponentData
     {
         public int orgXIndex;
@@ -135,17 +136,20 @@ namespace CellexalVR.AnalysisLogic
             NativeList<RaycastCheckComponent> entityArray = new NativeList<RaycastCheckComponent>(Allocator.Temp);
             float3 origin = SelectionToolCollider.instance.GetCurrentCollider().transform.position;
             // If a childSlice check quadrant map of parent slice;
-            PointCloud parent = pc.graphSlice.parentSlice.pointCloud;
-            int id = parent.pcID;
+            //PointCloud parent = pc.graphSlice.parentSlice.pointCloud;
+            //int id = parent.pcID;
             //Debug.Log($"{QuadrantSystem.GetEntityCountInHashMap(QuadrantSystem.quadrantMultiHashMaps[pc.pcID], hashMapKey)}");
             if (QuadrantSystem.quadrantMultiHashMaps[pc.pcID].TryGetFirstValue(hashMapKey, out QuadrantData quadrantData,
                 out NativeMultiHashMapIterator<int> nativeMultiHashMapIterator))
             {
                 do
                 {
-                    if (quadrantData.group == SelectionToolCollider.instance.CurrentColorIndex) continue;
+                    var c1 = pc.colorTextureMap.GetPixel(quadrantData.xindex, quadrantData.yindex);
+                    var c2 = SelectionToolCollider.instance.Colors[SelectionToolCollider.instance.CurrentColorIndex];
+                    var c = InputReader.CompareColor(c1, c2);
+                    if (c) continue;
                     float3 pos = pc.transform.TransformPoint(quadrantData.position);
-                    Debug.DrawRay(origin, origin - pos, Color.green, 0.5f);
+                    //Debug.DrawRay(origin, origin - pos, Color.green, 0.5f);
                     entityArray.Add(new RaycastCheckComponent
                     {
                         position = pos,

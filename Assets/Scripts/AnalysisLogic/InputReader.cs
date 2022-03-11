@@ -230,20 +230,20 @@ namespace CellexalVR.AnalysisLogic
                 GC.Collect();
             }
 
-            if (files.Length > 1)
-            {
-                PointCloud pc1 = PointCloudGenerator.instance.pointClouds[0];
-                PointCloud pc2 = PointCloudGenerator.instance.pointClouds[1];
-                pc1.morphTexture = pc2.positionTextureMap;
-                pc2.morphTexture = pc1.positionTextureMap;
-                pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc2.positionTextureMap);
-                pc2.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
-                pc1.otherName = pc2.GraphName;
-                pc2.otherName = pc1.GraphName;
-                pc1.originalName = pc1.GraphName;
-                pc2.otherName = pc1.GraphName;
-                pc2.originalName = pc2.GraphName;
-            }
+            //if (files.Length > 1)
+            //{
+            //    PointCloud pc1 = PointCloudGenerator.instance.pointClouds[0];
+            //    PointCloud pc2 = PointCloudGenerator.instance.pointClouds[1];
+            //    pc1.morphTexture = pc2.positionTextureMap;
+            //    pc2.morphTexture = pc1.positionTextureMap;
+            //    pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc2.positionTextureMap);
+            //    pc2.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
+            //    pc1.otherName = pc2.GraphName;
+            //    pc2.otherName = pc1.GraphName;
+            //    pc1.originalName = pc1.GraphName;
+            //    pc2.otherName = pc1.GraphName;
+            //    pc2.originalName = pc2.GraphName;
+            //}
 
             attributeReader = gameObject.AddComponent<AttributeReader>();
             attributeReader.referenceManager = referenceManager;

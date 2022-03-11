@@ -37,6 +37,7 @@ namespace AnalysisLogic
         public VisualEffectAsset pointCloudHighCap;
         public VisualEffectAsset pointCloudQuad;
         public Texture2D positionTextureMap;
+        public Texture2D orgPositionTextureMap;
         public Texture2D colorTextureMap;
         public Texture2D alphaTextureMap;
         public Texture2D targetPositionTextureMap;
@@ -327,7 +328,7 @@ namespace AnalysisLogic
                     //});
                     points[ind] = newP;
                     positions[ind] = new Color(pos.x, pos.y, pos.z, 1);
-                    
+
                 }
                 //if (y % 10 == 0) yield return null;
             }
@@ -351,7 +352,9 @@ namespace AnalysisLogic
             vfx.SetInt("SpawnRate", pointCount);
             int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
             int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
-            positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
+            positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            orgPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            targetPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             Color[] positions = new Color[width * height];
             Color col;
             for (int y = 0; y < height; y++)
@@ -386,9 +389,14 @@ namespace AnalysisLogic
             }
 
             positionTextureMap.SetPixels(positions);
+            orgPositionTextureMap.SetPixels(positions);
+            targetPositionTextureMap.SetPixels(positions);
             positionTextureMap.Apply();
+            orgPositionTextureMap.Apply();
+            targetPositionTextureMap.Apply();
             vfx.enabled = true;
             vfx.SetTexture("PositionMapTex", positionTextureMap);
+            vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
             vfx.pause = false;
             PointCloudGenerator.instance.creatingGraph = false;
             //SpreadOutPoints();
@@ -412,6 +420,38 @@ namespace AnalysisLogic
             vfx.SetFloat("SpawnAnimation", 1f);
         }
 
+
+        public void BlendToGlassOrgan()
+        {
+            pointSpreadTexture = new Texture2D(positionTextureMap.width, positionTextureMap.height, TextureFormat.RGBAFloat, true, true);
+            Color[] colors = alphaTextureMap.GetPixels();
+            Color[] positions = positionTextureMap.GetPixels();
+            Color[] newPositions = new Color[positions.Length];
+            Vector3 pos;
+            Vector3 dir;
+            Vector3 newPos;
+            for (int i = 0; i < positions.Length; i++)
+            {
+                if (colors[i].r < 0.5f)
+                {
+                    newPositions[i] = positions[i];
+                }
+                else
+                {
+                    pos = new Vector3(positions[i].r, positions[i].g, positions[i].b);
+                    dir = pos - new Vector3(0f, 0, 0);
+
+                    //Vector3 dir = pos - new Vector3(1f, 0, 0); // for half sphere
+                    newPos = (pos + dir).normalized;
+                    newPositions[i] = new Color(newPos.x, newPos.y, newPos.z);
+                }
+            }
+
+            pointSpreadTexture.SetPixels(newPositions);
+            pointSpreadTexture.Apply();
+            vfx.SetTexture("TargetPosMapTex", pointSpreadTexture);
+
+        }
 
         public void SpreadOutPoints(bool doSpread = true)
         {
@@ -439,7 +479,7 @@ namespace AnalysisLogic
                         dir = pos - new Vector3(0f, 0, 0);
 
                         //Vector3 dir = pos - new Vector3(1f, 0, 0); // for half sphere
-                        newPos = (pos + dir).normalized; 
+                        newPos = (pos + dir).normalized;
                         newPositions[i] = new Color(newPos.x, newPos.y, newPos.z);
                     }
                 }

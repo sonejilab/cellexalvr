@@ -67,7 +67,7 @@ namespace CellexalVR.Spatial
             float dist;
             Ray ray = new Ray(ReferenceManager.instance.headset.transform.position, ReferenceManager.instance.headset.transform.forward);
             Physics.Raycast(ray, out RaycastHit hit);
-            if (hit.collider.TryGetComponent(out PointCloud pc))
+            if (hit.collider && hit.collider.TryGetComponent(out PointCloud pc))
             {
                 pointCloud = pc;
             }

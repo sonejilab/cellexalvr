@@ -47,7 +47,7 @@ namespace CellexalVR.AnalysisLogic
             if (colorTextureMaps.Count == 0) return;
             //if (frameCount >= 10)
             //{
-            frameCount = 0;
+            //frameCount = 0;
             List<Tuple<int, int>> orgPixels = new List<Tuple<int, int>>();
             Entities.WithAll<SelectedPointComponent>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref SelectedPointComponent sp) =>
             {
@@ -56,23 +56,29 @@ namespace CellexalVR.AnalysisLogic
             }).Run();
             Color col = SelectionToolCollider.instance.GetCurrentColor();
             col.a = 1f;
-            Color a = Color.white;
+            Color a = Color.black;
+            Transform brain = ReferenceManager.instance.brainModel.transform;
             for (int i = 0; i < mainColorTextureMaps.Count; i++)
             {
                 Texture2D map = mainColorTextureMaps[i];
-                Texture2D amap = alphaTextureMaps[i];
+                Texture2D aMap = alphaTextureMaps[i];
                 foreach (Tuple<int, int> tuple in orgPixels)
                 {
                     map.SetPixel(tuple.Item1, tuple.Item2, col);
-                    amap.SetPixel(tuple.Item1, tuple.Item2, a);
+                    aMap.SetPixel(tuple.Item1, tuple.Item2, a);
                 }
                 map.Apply();
-                amap.Apply();
+                aMap.Apply();
             }
             EntityManager.DestroyEntity(GetEntityQuery(typeof(SelectedPointComponent)));
             CellexalEvents.SelectionStarted.Invoke();
-            frameCount++;
+
+            //frameCount++;
         }
+
+
+
+
 
         public void SelectFromFile(List<Tuple<int, int>> indices)
         {

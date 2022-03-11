@@ -179,7 +179,12 @@ namespace CellexalVR.Interaction
 
         private void OnEnable()
         {
-            controllerModelSwitcher = ReferenceManager.instance.controllerModelSwitcher;
+
+
+        }
+
+        private void OnEnable()
+        {
             multiuserMessageSender = ReferenceManager.instance.multiuserMessageSender;
             selectionManager = ReferenceManager.instance.selectionManager;
             graphManager = ReferenceManager.instance.graphManager;
@@ -208,7 +213,8 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerDown()
         {
-            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            if (PointCloudGenerator.instance.pointClouds.Count > 0) return;
+            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 hapticFeedbackThisFrame = true;
                 var activeCollider = selectionToolColliders[CurrentMeshIndex];
@@ -239,7 +245,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerUp()
         {
-            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 selActive = false;
                 vfx.gameObject.SetActive(false);
@@ -250,7 +256,7 @@ namespace CellexalVR.Interaction
 
         private void OnTouchPadClick(InputAction.CallbackContext context)
         {
-            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
                 float absX = System.Math.Abs(pos.x);
@@ -288,7 +294,7 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
 
 
@@ -375,7 +381,7 @@ namespace CellexalVR.Interaction
             //radialMenu.buttons[3].color = Colors[buttonIndexRight];
             selectedColor = Colors[currentColorIndex];
             //selectionToolColliders[currentMeshIndex].GetComponent<Renderer>().material.color = Colors[currentColorIndex];
-            controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
+            ReferenceManager.instance.controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
 
         }
 

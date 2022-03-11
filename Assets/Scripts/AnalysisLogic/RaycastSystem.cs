@@ -1,4 +1,5 @@
-﻿using CellexalVR.Interaction;
+﻿using AnalysisLogic;
+using CellexalVR.Interaction;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -13,18 +14,21 @@ namespace CellexalVR.AnalysisLogic
     {
         private EntityQuery query;
         private BeginSimulationEntityCommandBufferSystem ecbSystem;
-        private EntityArchetype entityArchetype;
-        
+        private EntityArchetype selectEntityArchetype;
+        private EntityArchetype moveEntityArchetype;
+
         protected override void OnCreate()
         {
             base.OnCreate();
             ecbSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
             query = GetEntityQuery(typeof(RaycastCheckComponent));
-            entityArchetype = EntityManager.CreateArchetype(typeof(SelectedPointComponent));
+            selectEntityArchetype = EntityManager.CreateArchetype(typeof(SelectedPointComponent));
+            moveEntityArchetype = EntityManager.CreateArchetype(typeof(MovePointComponent));
         }
 
         protected override void OnDestroy()
         {
+
         }
 
         protected override void OnUpdate()
@@ -53,12 +57,15 @@ namespace CellexalVR.AnalysisLogic
             }
 
             int group = SelectionToolCollider.instance.CurrentColorIndex;
+            PointCloud pc1 = PointCloudGenerator.instance.pointClouds[0];
+            PointCloud pc2 = PointCloudGenerator.instance.pointClouds[1];
             Entities.WithoutBurst().WithAll<RaycastCheckComponent>().ForEach((Entity entity, int entityInQueryIndex, ref RaycastCheckComponent rc) =>
             {
                 if (!hits[entityInQueryIndex])
                 {
-                    Entity e = commandBuffer.CreateEntity(entityArchetype);
-                    commandBuffer.SetComponent(e, new SelectedPointComponent
+                    Entity selectEntity = commandBuffer.CreateEntity(selectEntityArchetype);
+                    Entity moveEntity = commandBuffer.CreateEntity(moveEntityArchetype);
+                    commandBuffer.SetComponent(selectEntity, new SelectedPointComponent
                     {
                         orgXIndex = rc.orgXIndex,
                         orgYIndex = rc.orgYIndex,
@@ -68,6 +75,18 @@ namespace CellexalVR.AnalysisLogic
                         group = group,
                         parentID = rc.parentID
                     });
+                    var targetPositionC = pc1.orgPositionTextureMap.GetPixel(rc.xindex, rc.yindex);
+                    var currentPositionC = pc2.positionTextureMap.GetPixel(rc.xindex, rc.yindex);
+                    var posInWSpace = pc2.transform.TransformPoint(new Vector3(currentPositionC.r, currentPositionC.g, currentPositionC.b));
+                    var posInPc1Space = pc1.transform.InverseTransformPoint(posInWSpace);
+                    commandBuffer.SetComponent(moveEntity, new MovePointComponent
+                    {
+                        xindex = rc.xindex,
+                        yindex = rc.yindex,
+                        targetPosition = new Vector3(targetPositionC.r, targetPositionC.g, targetPositionC.b),
+                        currentPosition = posInPc1Space
+                    });
+
                 }
             }).Run();
 
@@ -75,7 +94,7 @@ namespace CellexalVR.AnalysisLogic
             results.Dispose();
             commands.Dispose();
             hits.Dispose();
-            
+
         }
     }
 }

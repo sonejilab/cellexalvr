@@ -21,6 +21,7 @@ using UnityEngine.VFX;
 using Random = Unity.Mathematics.Random;
 using CellexalVR.Spatial;
 using System.Diagnostics;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -88,6 +89,17 @@ namespace CellexalVR.AnalysisLogic
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             quadrantSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>();
             CreateParentArchetype();
+        }
+
+        private void Update()
+        {
+            if (Keyboard.current.lKey.wasPressedThisFrame)
+            {
+                Texture2D positionMap = pointClouds[0].positionTextureMap;
+                Color[] colors = new Color[positionMap.width * positionMap.height];
+                positionMap.SetPixels(colors);
+                positionMap.Apply();
+            }
         }
 
         public PointCloud CreateNewPointCloud(bool spatial = false)

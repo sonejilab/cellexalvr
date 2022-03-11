@@ -78,14 +78,7 @@ namespace CellexalVR.Tools
 
         private void OnTriggerClick()
         {
-            print($"{referenceManager.controllerModelSwitcher.ActualModel}, {gameObject.activeSelf}, {referenceManager.controllerModelSwitcher}");
-
-
             if (!gameObject.activeSelf || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu) return;
-            // Open XR
-            //device = SteamVR_Controller.Input((int)rightController.index);
-            //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-
             //// this happens only once when the trigger is pressed
             //if (skipNextDraw)
             //{
@@ -95,7 +88,6 @@ namespace CellexalVR.Tools
             //else
             //{
             //    // if the trigger was pressed we need to make sure that the controller is not inside a button.
-
             //}
             for (int i = 0; i < trailLines.Length; i++)
             {
@@ -110,8 +102,6 @@ namespace CellexalVR.Tools
         private void OnTriggerUp()
         {
             if (!gameObject.activeSelf) return;
-            // Open XR
-            //if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
             // this happens only once when the controller trigger is released
             if (drawing)
             {
