@@ -21,7 +21,32 @@ namespace CellexalVR.Interaction
     {
         [SerializeField] private InputActionAsset inputActionAsset;
         [SerializeField] private InputActionReference touchPadClick;
+        //[SerializeField] private InputActionReference thumbStickClick;
         [SerializeField] private InputActionReference touchPadPos;
+
+        private bool _requireToggleToClick;
+        public bool RequireToggleToClick
+        {
+            get { return _requireToggleToClick; }
+            set
+            {
+                if (_requireToggleToClick == value)
+                {
+                    return;
+                }
+                _requireToggleToClick = value;
+                if (value)
+                {
+                    touchPadClick.action.performed += OnTouchPadClick;
+                    touchPadPos.action.performed -= OnTouchPadClick;
+                }
+                else
+                {
+                    touchPadClick.action.performed -= OnTouchPadClick;
+                    touchPadPos.action.performed += OnTouchPadClick;
+                }
+            }
+        }
 
         public ReferenceManager referenceManager;
         public SelectionManager selectionManager;
@@ -158,7 +183,9 @@ namespace CellexalVR.Interaction
             selectionManager = ReferenceManager.instance.selectionManager;
             UpdateShapeIcons();
 
-            touchPadClick.action.performed += OnTouchPadClick;
+            _requireToggleToClick = false;
+            touchPadPos.action.performed += OnTouchPadClick;
+            CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
 
             CurrentColorIndex = 0;
         }
@@ -222,24 +249,34 @@ namespace CellexalVR.Interaction
             if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
-                if (pos.x > 0.5f)
+                float absX = System.Math.Abs(pos.x);
+                float absY = System.Math.Abs(pos.y);
+                if (absX > absY)
                 {
-                    ChangeColor(true);
+                    if (pos.x > 0)
+                    {
+                        // right quadrant
+                        ChangeColor(true);
+                    }
+                    else
+                    {
+                        // left quadrant
+                        ChangeColor(false);
+                    }
                 }
-
-                else if (pos.x < -0.5f)
+                else
                 {
-                    ChangeColor(false);
-                }
+                    if (pos.y > 0)
+                    {
+                        // upper quadrant
+                        controllerModelSwitcher.SwitchSelectionToolMesh(true);
+                    }
+                    else
+                    {
+                        // lower quadrant
+                        controllerModelSwitcher.SwitchSelectionToolMesh(false);
+                    }
 
-                if (pos.y > 0.5f)
-                {
-                    controllerModelSwitcher.SwitchSelectionToolMesh(true);
-                }
-
-                else if (pos.y < -0.5f)
-                {
-                    controllerModelSwitcher.SwitchSelectionToolMesh(false);
                 }
             }
         }

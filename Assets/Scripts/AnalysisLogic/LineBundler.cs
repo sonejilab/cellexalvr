@@ -64,6 +64,9 @@ namespace CellexalVR.AnalysisLogic
                     linesBundled = points.Count > 500;
                     StartCoroutine(gbg.ClusterLines(bundle: linesBundled));
                 }
+                Interaction.GraphInteract graphInteract = gbg.GetComponent<Interaction.GraphInteract>();
+                graphInteract.RegisterColliders();
+                graphInteract.trackPosition = false;
             }
 
             CellexalEvents.LinesBetweenGraphsDrawn.Invoke();

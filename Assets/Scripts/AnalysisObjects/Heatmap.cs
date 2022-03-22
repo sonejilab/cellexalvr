@@ -152,7 +152,7 @@ namespace CellexalVR.AnalysisObjects
         public void Init()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            GetComponent<HeatmapGrab>().referenceManager = referenceManager;
+            GetComponent<GraphInteract>().referenceManager = referenceManager;
             layout = new HeatmapLayout();
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             highlightQuad.SetActive(false);
@@ -291,10 +291,10 @@ namespace CellexalVR.AnalysisObjects
             int geneHit = Array.FindIndex(genes, s => s.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));
             if (geneHit != -1)
             {
-                float highlightMarkerWidth = (float) layout.geneListWidth / layout.bitmapWidth;
-                float highlightMarkerHeight = ((float) layout.heatmapHeight / layout.bitmapHeight) / genes.Length;
-                float highlightMarkerX = (float) layout.geneListX / layout.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
-                float highlightMarkerY = -(float) layout.heatmapY / layout.bitmapHeight - geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
+                float highlightMarkerWidth = (float)layout.geneListWidth / layout.bitmapWidth;
+                float highlightMarkerHeight = ((float)layout.heatmapHeight / layout.bitmapHeight) / genes.Length;
+                float highlightMarkerX = (float)layout.geneListX / layout.bitmapWidth + highlightMarkerWidth / 2 - 0.5f;
+                float highlightMarkerY = -(float)layout.heatmapY / layout.bitmapHeight - geneHit * (highlightMarkerHeight) - highlightMarkerHeight / 2 + 0.5f;
 
                 highlightGeneQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, 0);
                 highlightGeneQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
@@ -365,7 +365,7 @@ namespace CellexalVR.AnalysisObjects
 
             // rebuild the groupwidth and list with the new widths.
             List<Tuple<int, float, int>> newGroupWidths = new List<Tuple<int, float, int>>();
-            float newXCoordInc = (float) layout.heatmapWidth / newCells.Length;
+            float newXCoordInc = (float)layout.heatmapWidth / newCells.Length;
             for (int i = selectedGroupLeft; i <= selectedGroupRight; ++i)
             {
                 Tuple<int, float, int> old = groupWidths[i];
@@ -400,7 +400,7 @@ namespace CellexalVR.AnalysisObjects
         {
             cellAttributes = new List<Tuple<Cell, int>>();
             attributeColors = new Dictionary<int, UnityEngine.Color>();
-            float cellWidth = (float) layout.heatmapWidth / cells.Length;
+            float cellWidth = (float)layout.heatmapWidth / cells.Length;
             layout.lastAttribute = -1;
             layout.attributeWidth = 0;
             attributeWidths = new List<Tuple<int, float, int>>();
@@ -439,7 +439,7 @@ namespace CellexalVR.AnalysisObjects
 
             if (attribute != layout.lastAttribute)
             {
-                attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, (int) layout.attributeWidth));
+                attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, (int)layout.attributeWidth));
                 layout.attributeWidth = 0;
                 layout.lastAttribute = attribute;
             }
@@ -458,7 +458,7 @@ namespace CellexalVR.AnalysisObjects
             int currentAttribute = 0;
             layout.attributeWidth = 0;
             layout.lastAttribute = -1;
-            float cellWidth = (float) layout.heatmapWidth / cells.Length;
+            float cellWidth = (float)layout.heatmapWidth / cells.Length;
             List<Tuple<Cell, int>> cellGroup = new List<Tuple<Cell, int>>();
             List<Tuple<Cell, int>> reorderedGroup = new List<Tuple<Cell, int>>();
             List<Tuple<Cell, int>> reorderedList = new List<Tuple<Cell, int>>();
@@ -496,7 +496,7 @@ namespace CellexalVR.AnalysisObjects
 
                         if (ca.Item2 != layout.lastAttribute)
                         {
-                            attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, (int) layout.attributeWidth));
+                            attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, (int)layout.attributeWidth));
                             layout.attributeWidth = 0;
                             layout.lastAttribute = ca.Item2;
                         }
@@ -522,7 +522,7 @@ namespace CellexalVR.AnalysisObjects
 
                 if (ca.Item2 != layout.lastAttribute)
                 {
-                    attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, (int) layout.attributeWidth));
+                    attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, (int)layout.attributeWidth));
                     layout.attributeWidth = 0;
                     layout.lastAttribute = ca.Item2;
                 }

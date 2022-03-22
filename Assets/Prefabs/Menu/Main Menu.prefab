@@ -12794,6 +12794,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   tab: {fileID: 114825059768503924}
   Menu: {fileID: 114211563220486838}
+  controllerInside: 0
 --- !u!1 &1578287763690056
 GameObject:
   m_ObjectHideFlags: 0
@@ -21679,6 +21680,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   tab: {fileID: 114946134704591456}
   Menu: {fileID: 114783309186854530}
+  controllerInside: 0
   Handler: {fileID: 0}
 --- !u!1 &1881298564604914
 GameObject:
@@ -21917,6 +21919,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   tab: {fileID: 114414786721078602}
   Menu: {fileID: 114619231803853314}
+  controllerInside: 0
 --- !u!1 &1892017541983826
 GameObject:
   m_ObjectHideFlags: 0
@@ -22124,6 +22127,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   tab: {fileID: 114183585548077440}
   Menu: {fileID: 114211563220486838}
+  controllerInside: 0
 --- !u!1 &1906236555747648
 GameObject:
   m_ObjectHideFlags: 0
@@ -24596,6 +24600,7 @@ MonoBehaviour:
   referenceManager: {fileID: 0}
   tab: {fileID: 114865094941565096}
   Menu: {fileID: 114211563220486838}
+  controllerInside: 0
 --- !u!1 &1979306088517432
 GameObject:
   m_ObjectHideFlags: 0

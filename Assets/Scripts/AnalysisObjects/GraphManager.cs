@@ -333,7 +333,7 @@ namespace CellexalVR.AnalysisObjects
         [ConsoleCommand("graphManager", aliases: new string[] { "resetcolor", "rc" })]
         public void ResetGraphsColor()
         {
-            selectionManager.CancelSelection();
+            //selectionManager.CancelSelection();
             selectionManager.Clear();
             foreach (Graph g in Graphs)
             {

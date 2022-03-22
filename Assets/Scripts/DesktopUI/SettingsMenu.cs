@@ -23,6 +23,8 @@ namespace CellexalVR.DesktopUI
         //[Header("Menu items")]
         [Header("Username")] public TMPro.TMP_InputField usernameInputField;
         public TMPro.TMP_Text usernameText;
+        [Header("Hardware")]
+        public Toggle requireTouchpadToClickToggle;
         [Header("Heatmap")] public TMPro.TMP_Dropdown heatmapColormapDropdown;
         public ColorPickerButton heatmapHighExpression;
         public ColorPickerButton heatmapMidExpression;
@@ -135,15 +137,15 @@ namespace CellexalVR.DesktopUI
             }
 
             graphColormapDropdown.options = gColormaps;
-            
+
             var sColormaps = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (string s in selColorMaps)
             {
                 sColormaps.Add(new TMPro.TMP_Dropdown.OptionData(s));
             }
-            
+
             selectionColorMapDropdown.options = sColormaps;
-            
+
             var heatmapMethods = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (string s in heatmapAlgorithms)
             {
@@ -225,6 +227,11 @@ namespace CellexalVR.DesktopUI
                     colorPicker.gameObject.SetActive(false);
                 }
             }
+            if (Input.GetMouseButtonDown(0))
+            {
+                //UnityEngine.Input.mou
+            }
+
         }
 
         /// <summary>
@@ -233,6 +240,7 @@ namespace CellexalVR.DesktopUI
         private void SetValues()
         {
             usernameText.text = "Current user: " + CellexalUser.Username;
+            requireTouchpadToClickToggle.isOn = CellexalConfig.Config.RequireTouchpadClickToInteract;
             heatmapHighExpression.Color = CellexalConfig.Config.HeatmapHighExpressionColor;
             heatmapMidExpression.Color = CellexalConfig.Config.HeatmapMidExpressionColor;
             heatmapLowExpression.Color = CellexalConfig.Config.HeatmapLowExpressionColor;
@@ -343,6 +351,13 @@ namespace CellexalVR.DesktopUI
             string name = usernameInputField.text;
             CellexalUser.Username = name;
             usernameText.text = "Current user: " + name;
+        }
+
+        public void SetRequireTouchpadClickToInteract()
+        {
+            unsavedChanges = true;
+            referenceManager.menuRotator.RequireToggleToClick = requireTouchpadToClickToggle.isOn;
+            CellexalConfig.Config.RequireTouchpadClickToInteract = requireTouchpadToClickToggle.isOn;
         }
 
         public void SetNumberOfHeatmapColors()

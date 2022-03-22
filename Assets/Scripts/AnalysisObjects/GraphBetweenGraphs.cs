@@ -102,7 +102,10 @@ namespace CellexalVR.AnalysisObjects
             newGraph.tag = "Untagged";
             newGraph.transform.position = fromGraph.transform.position + (toGraph.transform.position - fromGraph.transform.position) / 2f;
             //newGraph.transform.localScale /= 2;
-            newGraph.ToggleInfoText();
+            if (fromGraph.infoParent.activeSelf)
+            {
+                newGraph.ToggleInfoText();
+            }
             foreach (Graph.GraphPoint g in points)
             {
                 Graph.GraphPoint sourceCell = fromGraph.points[g.Label];
@@ -189,8 +192,8 @@ namespace CellexalVR.AnalysisObjects
                         }
 
                         var joinedCluster = from gpfrom in fromCluster.Item1
-                            join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
-                            select gpfrom;
+                                            join gpto in toCluster.Item1 on gpfrom.Label equals gpto.Label
+                                            select gpfrom;
                         if (joinedCluster.ToList().Count > clusterSize)
                         {
                             prevjoinedclusters.UnionWith(joinedCluster);

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using CellexalVR.General;
 
 namespace CellexalVR.Menu
 {
@@ -13,15 +14,48 @@ namespace CellexalVR.Menu
         public Rotation SideFacingPlayer { get; set; }
         public Material menuMaterial;
 
+
         private bool isRotating = false;
         private Vector3 fromAngle;
         private float rotatedTotal;
 
         [SerializeField] private InputActionAsset actionAsset;
         [SerializeField] private InputActionReference touchPadClick;
+        //[SerializeField] private InputActionReference thumbStickClick;
         [SerializeField] private InputActionReference touchPadPos;
 
+        private bool _requireToggleToClick;
+        public bool RequireToggleToClick
+        {
+            get { return _requireToggleToClick; }
+            set
+            {
+                if (_requireToggleToClick == value)
+                {
+                    return;
+                }
+                _requireToggleToClick = value;
+                if (value)
+                {
+                    touchPadClick.action.performed += OnTouchPadClick;
+                    touchPadPos.action.performed -= OnTouchPadClick;
+                }
+                else
+                {
+                    touchPadClick.action.performed -= OnTouchPadClick;
+                    touchPadPos.action.performed += OnTouchPadClick;
+                }
+            }
+        }
+
         public enum Rotation { Front, Right, Back, Left }
+
+        private void Awake()
+        {
+            _requireToggleToClick = false;
+            touchPadPos.action.performed += OnTouchPadClick;
+            CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
+        }
 
         void Start()
         {
@@ -29,7 +63,6 @@ namespace CellexalVR.Menu
             transform.localRotation = Quaternion.Euler(-45f, 0f, 0f);
             SideFacingPlayer = Rotation.Front;
 
-            touchPadClick.action.performed += OnTouchPadClick;
             //var rotateRight = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateRight");
             //rotateRight.Enable();
             //rotateRight.performed += OnThumbpadRight;
@@ -37,6 +70,9 @@ namespace CellexalVR.Menu
             //var rotateLeft = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateLeft");
             //rotateLeft.Enable();
             //rotateLeft.performed += OnThumbpadLeft;
+            //touchPadClick.action.performed += OnTouchPadClick;
+            //touchPadPos.action.performed += OnThumbStickClick;
+
         }
 
         public bool AllowRotation { get; set; } = false;
@@ -61,14 +97,33 @@ namespace CellexalVR.Menu
 
         private void OnTouchPadClick(InputAction.CallbackContext context)
         {
-            Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
-            if (pos.x > 0.5f)
+            Vector2 pos = context.action.ReadValue<Vector2>();
+            HandleTouchPadClick(pos);
+        }
+
+        private void HandleTouchPadClick(Vector2 pos)
+        {
+
+            //if (pos.x > 0.5f)
+            //{
+            //    RotateRight(1);
+            //}
+            //else
+            //{
+            //    RotateLeft(1);
+            //}
+            // hp reverb
+            // make sure we are in the left or right quarter of the touchpad
+            if (System.Math.Abs(pos.y) < System.Math.Abs(pos.x))
             {
-                RotateRight(1);
-            }
-            else
-            {
-                RotateLeft(1);
+                if (pos.x > 0)
+                {
+                    RotateRight(1);
+                }
+                else
+                {
+                    RotateLeft(1);
+                }
             }
         }
 

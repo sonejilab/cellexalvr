@@ -42,8 +42,8 @@ namespace CellexalVR.General
         private ControllerModelSwitcher controllerModelSwitcher;
         private GraphManager graphManager;
         // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         // Open XR 
         //private SteamVR_Controller.Device device;
         private UnityEngine.XR.InputDevice device;
@@ -572,7 +572,7 @@ namespace CellexalVR.General
         /// <summary>
         /// Confirms a selection and dumps the relevant data to a .txt file.
         /// </summary>
-        [ConsoleCommand("selectionManager", aliases: new string[] {"confirmselection", "confirm"})]
+        [ConsoleCommand("selectionManager", aliases: new string[] { "confirmselection", "confirm" })]
         public void ConfirmSelection()
         {
             foreach (Graph graph in graphManager.Graphs)
@@ -732,7 +732,7 @@ namespace CellexalVR.General
         /// <summary>
         /// Unselects anything selected.
         /// </summary>
-        [ConsoleCommand("selectionManager", aliases: new string[] {"cancelselection", "cs"})]
+        [ConsoleCommand("selectionManager", aliases: new string[] { "cancelselection", "cs" })]
         public void CancelSelection()
         {
             int stepsToGoBack = selectionHistory.Count - historyIndexOffset;
@@ -798,9 +798,9 @@ namespace CellexalVR.General
                         file.Write(gp.Label);
                         file.Write("\t");
                         Color c = gp.GetColor();
-                        int r = (int) (c.r * 255);
-                        int g = (int) (c.g * 255);
-                        int b = (int) (c.b * 255);
+                        int r = (int)(c.r * 255);
+                        int g = (int)(c.g * 255);
+                        int b = (int)(c.b * 255);
                         // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
                         file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
                         file.Write("\t");
@@ -815,7 +815,7 @@ namespace CellexalVR.General
                 {
                     referenceManager.sessionHistoryList.AddEntry(filePath, Definitions.HistoryEvent.SELECTION);
                 }
-                
+
                 //referenceManager.selectionFromPreviousMenu.ReadSelectionFiles();
 
                 StartCoroutine(UpdateRObjectGrouping());

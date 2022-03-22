@@ -74,7 +74,7 @@ namespace CellexalVR.DesktopUI
 
         private void OnEnable()
         {
-            var root = GetComponent<UIDocument>().rootVisualElement;
+            var root = GetComponent<UIDocument>().rootVisualElement; 
 
             openFileWindowButton = root.Q<Button>("choose-file-button");
             openDirWindowButton = root.Q<Button>("choose-dir-button");

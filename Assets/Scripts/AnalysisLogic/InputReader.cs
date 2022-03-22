@@ -101,8 +101,8 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
             ReadFolder(path);
         }
-        
-        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] {"readprevioussession", "rps"})]
+
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readprevioussession", "rps" })]
         public void ReadPreviousSessionConsole(string path, string fromPreviousSession = "")
         {
             // referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
@@ -190,7 +190,7 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-            //database.InitDatabase(fullPath + "\\database.sqlite");
+            database.InitDatabase(fullPath + "\\database.sqlite");
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
 
@@ -607,7 +607,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             // referenceManager.selectionFromPreviousMenu.SelectionFromPreviousButton(graphNames, groupingNames.ToArray(),
-                // cellNames, groups, groupingColors);
+            // cellNames, groups, groupingColors);
             CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
         }
 
@@ -630,14 +630,14 @@ namespace CellexalVR.AnalysisLogic
             Graph graph = referenceManager.graphManager.Graphs[0];
             int numPointsAdded = 0;
             string line = streamReader.ReadLine();
-            string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             string firstCellName = words[0];
             cellsToAnnotate.Add(referenceManager.cellManager.GetCell(firstCellName));
             string annotation = words[1];
             while (!streamReader.EndOfStream)
             {
                 line = streamReader.ReadLine();
-                words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+                words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 if (words[1] != annotation)
                 {
                     referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, graph.FindGraphPoint(cellsToAnnotate[0].Label).Position, path);
@@ -664,7 +664,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="path"></param>
         /// <param name="select"></param>
         /// <returns></returns>
-        [ConsoleCommand("inputReader", aliases: new string[] {"readselectionfile", "rsf"})]
+        [ConsoleCommand("inputReader", aliases: new string[] { "readselectionfile", "rsf" })]
         public List<Graph.GraphPoint> ReadSelectionFile(string path, bool select = true)
         {
             //string dataFolder = CellexalUser.UserSpecificFolder;
@@ -684,7 +684,7 @@ namespace CellexalVR.AnalysisLogic
             while (!streamReader.EndOfStream)
             {
                 string line = streamReader.ReadLine();
-                string[] words = line.Split(new char[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+                string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 int group;
                 UnityEngine.Color groupColor;
 
@@ -729,7 +729,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        [ConsoleCommand("inputReader", aliases: new string[] {"selectfromprevious", "sfp"})]
+        [ConsoleCommand("inputReader", aliases: new string[] { "selectfromprevious", "sfp" })]
         public void ReadAndSelectPreviousSelection(int index)
         {
             string dataFolder = CellexalUser.UserSpecificFolder;
