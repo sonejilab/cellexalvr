@@ -63,14 +63,6 @@ public class PointCloudSettings : MonoBehaviour
         actionReference.action.performed += OnActionClick;
     }
 
-    private void Update()
-    {
-        if (Keyboard.current.gKey.wasPressedThisFrame)
-        {
-            ToggleSettings();
-        }
-    }
-
     private void PopulateList()
     {
         foreach (PointCloud pc in PointCloudGenerator.instance.pointClouds)

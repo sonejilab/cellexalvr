@@ -30,6 +30,7 @@ namespace CellexalVR.Interaction
         public void RegisterColliders()
         {
             enabled = false;
+            colliders.Clear();
             colliders.AddRange(gameObject.GetComponents<BoxCollider>());
             enabled = true;
         }

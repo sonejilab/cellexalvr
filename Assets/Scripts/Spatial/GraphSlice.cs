@@ -39,6 +39,7 @@ namespace CellexalVR.Spatial
         public Vector3 sliceCoords = new Vector3();
         public List<Point> points = new List<Point>();
         public SpatialGraph spatialGraph;
+        public PointCloud parentPC;
         public GraphSlice parentSlice;
         public List<GraphSlice> childSlices = new List<GraphSlice>();
         public PointCloud pointCloud;
@@ -63,6 +64,7 @@ namespace CellexalVR.Spatial
         private List<Point> sortedPointsZ;
         private BoxCollider boxCollider;
         private int frameCount;
+        private HistoImage histoImage;
 
         private void Start()
         {
@@ -70,28 +72,34 @@ namespace CellexalVR.Spatial
             originalRot = transform.localRotation;
             originalSc = transform.localScale;
             slicerBox = GetComponentInChildren<SlicerBox>(true);
+            pointCloud = GetComponent<PointCloud>();
+            if (parentPC == null)
+            {
+                parentPC = pointCloud;
+            }
             if (parentSlice == null)
             {
                 parentSlice = this;
             }
-            pointCloud = GetComponent<PointCloud>();
             boxCollider = GetComponent<BoxCollider>();
+            TryGetComponent(out HistoImage histoImage);
             CellexalEvents.GraphsColoredByGene.AddListener(UpdateColorTexture);
             CellexalEvents.GraphsReset.AddListener(UpdateColorTexture);
             CellexalEvents.RightTriggerClick.AddListener(ActivateBox);
+            CellexalEvents.ColorTextureUpdated.AddListener(UpdateColorTexture);
         }
 
         private void Update()
         {
-            if (SelectionToolCollider.instance.selActive)
-            {
-                UpdateColorTexture();
-            }
+            //if (SelectionToolCollider.instance.selActive)
+            //{
+            //    UpdateColorTexture();
+            //}
 
-            if (Keyboard.current.tKey.wasPressedThisFrame)
-            {
-                DisperseSlices();
-            }
+            //if (Keyboard.current.tKey.wasPressedThisFrame)
+            //{
+            //    DisperseSlices();
+            //}
 
             //if (++frameCount > 10)
             //{
@@ -109,20 +117,20 @@ namespace CellexalVR.Spatial
             bool controllerInsideBox = CheckForController();
             if (slicerBox.gameObject.activeSelf && controllerInsideBox)
             {
-                slicerBox.gameObject.SetActive(false);
                 slicerBox.Active = false;
             }
             else if (controllerInsideBox)
             {
-                slicerBox.gameObject.SetActive(true);
                 slicerBox.Active = true;
             }
+            //GetComponent<OffsetGrab>().colliders.Clear();
+            //GetComponent<OffsetGrab>().colliders.Add(GetComponent<BoxCollider>());
         }
 
         private bool CheckForController()
         {
             if (!boxCollider.enabled) return false;
-            Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
+            Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, LayerMask.GetMask("Ignore Raycast")) ;
             if (colliders.Any(x => x.CompareTag("GameController")))
             {
                 return true;
@@ -134,12 +142,12 @@ namespace CellexalVR.Spatial
 
         public void UpdateColorTexture()
         {
-            if (points.Count > 0)
+            if (points.Count > 0 && histoImage == null)
             {
                 Color[] carray = pointCloud.colorTextureMap.GetPixels();
                 Color[] aarray = new Color[carray.Length];
-                Texture2D parentTexture = parentSlice.pointCloud.colorTextureMap;
-                Texture2D parentATexture = parentSlice.pointCloud.alphaTextureMap;
+                Texture2D parentTexture = parentPC.colorTextureMap;
+                Texture2D parentATexture = parentPC.alphaTextureMap;
                 for (int i = 0; i < points.Count; i++)
                 {
                     Point p = points[i];
@@ -164,9 +172,16 @@ namespace CellexalVR.Spatial
             childSlices.Clear();
         }
 
+        /// <summary>
+        /// Animation to move the slice back to its original position within the parent object.
+        /// </summary>
+        /// <returns></returns>
         public void MoveToGraph()
         {
-            StartCoroutine(MoveToGraphCoroutine());
+            //StartCoroutine(MoveToGraphCoroutine());
+            transform.parent = parentPC.transform;
+            transform.DOLocalMove(originalPos, 0.8f).SetEase(Ease.InOutSine);
+            transform.DOLocalRotate(Vector3.zero, 0.8f).SetEase(Ease.InOutSine).OnComplete(() => gameObject.SetActive(false));
         }
 
         /// <summary>
@@ -175,7 +190,7 @@ namespace CellexalVR.Spatial
         /// <returns></returns>
         public IEnumerator MoveToGraphCoroutine()
         {
-            transform.parent = parentSlice.transform;
+            transform.parent = parentPC.transform;
             Vector3 startPos = transform.localPosition;
             Quaternion startRot = transform.localRotation;
             Quaternion targetRot = Quaternion.identity;
@@ -305,6 +320,7 @@ namespace CellexalVR.Spatial
                     gs.MoveToGraph();
                 }
             }
+            slicerBox.BoxAnimation(0, -1);
 
         }
 
@@ -349,7 +365,7 @@ namespace CellexalVR.Spatial
         public void BuildPointCloud(Transform oldPc)
         {
             PointCloudGenerator.instance.creatingGraph = false;
-            parentSlice = oldPc.GetComponent<GraphSlice>();
+            parentPC = oldPc.GetComponent<PointCloud>();
             if (pointCloud == null)
             {
                 pointCloud = GetComponent<PointCloud>();

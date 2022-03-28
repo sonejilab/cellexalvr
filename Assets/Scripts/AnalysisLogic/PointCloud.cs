@@ -28,12 +28,11 @@ namespace AnalysisLogic
         private EntityManager entityManager;
         private int frameCount;
         private bool morphed;
-        private SlicerBox slicerBox;
         [SerializeField] private SlicerBox slicerBoxPrefab;
-        private IObjectPool<PointCloud> pool;
 
         private Dictionary<string, Color> clusterCentroids = new Dictionary<string, Color>();
 
+        public GameObject sliceImage;
         public VisualEffectAsset pointCloudHighCap;
         public VisualEffectAsset pointCloudQuad;
         public Texture2D positionTextureMap;
@@ -130,10 +129,6 @@ namespace AnalysisLogic
 
 
         }
-        public void SetPool(IObjectPool<PointCloud> pool)
-        {
-            this.pool = pool;
-        }
 
         //private void OnGrabbed(object sender, Hand hand)
         //{
@@ -202,10 +197,11 @@ namespace AnalysisLogic
             }
         }
 
-        public void SetTargetTexture(Texture2D texture)
+        public void SetTargetTexture(Color[] newCols)
         {
-            targetPositionTextureMap = texture;
-            vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
+            targetPositionTextureMap.SetPixels(newCols);
+            targetPositionTextureMap.Apply(false);
+            //vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
         }
 
 
@@ -242,7 +238,7 @@ namespace AnalysisLogic
             }
 
             targetTex.SetPixels(newCoords);
-            targetTex.Apply();
+            targetTex.Apply(false);
             vfx.SetTexture("TargetPosMapTex", targetTex);
         }
 
@@ -271,6 +267,7 @@ namespace AnalysisLogic
             Texture2D parentTargetTextureMap = parentPC.targetPositionTextureMap;
             if (parentTargetTextureMap == null)
             {
+                print("parent target is null");
                 parentTargetTextureMap = parentPC.morphTexture;
             }
             Color[] positions = new Color[width * height];
@@ -313,19 +310,10 @@ namespace AnalysisLogic
                         label = p.label,
                         offset = pos,
                         parentID = pcID,
+                        orgParentID = parentPC.pcID,
                         entity = p.entity
                     };
                     entityManager.SetComponentData(p.entity, newP);
-                    //{
-                    //    selected = false,
-                    //    orgXIndex = p.orgXIndex,
-                    //    orgYIndex = p.orgYIndex,
-                    //    xindex = x,
-                    //    yindex = y,
-                    //    label = p.label,
-                    //    offset = pos,
-                    //    parentID = pcID
-                    //});
                     points[ind] = newP;
                     positions[ind] = new Color(pos.x, pos.y, pos.z, 1);
 
@@ -334,8 +322,8 @@ namespace AnalysisLogic
             }
             targetPositionTextureMap.SetPixels(targetPositions);
             positionTextureMap.SetPixels(positions);
-            positionTextureMap.Apply();
-            targetPositionTextureMap.Apply();
+            positionTextureMap.Apply(false);
+            targetPositionTextureMap.Apply(false);
             vfx.enabled = true;
             vfx.SetTexture("PositionMapTex", positionTextureMap);
             vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
@@ -372,7 +360,7 @@ namespace AnalysisLogic
                     float3 wPos = math.transform(transform.localToWorldMatrix, pos);
                     entityManager.SetComponentData(e, new Translation { Value = wPos });
                     entityManager.AddComponent(e, typeof(Point));
-                    entityManager.SetComponentData(e, new Point
+                    Point p = new Point
                     {
                         selected = false,
                         orgXIndex = textureCoord.x,
@@ -382,8 +370,10 @@ namespace AnalysisLogic
                         label = ind,
                         offset = pos,
                         parentID = pcID,
+                        orgParentID = pcID,
                         entity = e
-                    });
+                    };
+                    entityManager.SetComponentData(e, p);
                     positions[ind] = col;
                 }
             }
@@ -391,9 +381,9 @@ namespace AnalysisLogic
             positionTextureMap.SetPixels(positions);
             orgPositionTextureMap.SetPixels(positions);
             targetPositionTextureMap.SetPixels(positions);
-            positionTextureMap.Apply();
-            orgPositionTextureMap.Apply();
-            targetPositionTextureMap.Apply();
+            positionTextureMap.Apply(false);
+            orgPositionTextureMap.Apply(false);
+            targetPositionTextureMap.Apply(false);
             vfx.enabled = true;
             vfx.SetTexture("PositionMapTex", positionTextureMap);
             vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
@@ -402,6 +392,70 @@ namespace AnalysisLogic
             //SpreadOutPoints();
             //StartCoroutine(SpawnAnimation());
         }
+        
+        public void CreatePositionTextureMap(List<float3> pointPositions, List<string> names, ref List<Point> slicePoints)
+        {
+            pointCount = pointPositions.Count;
+            if (vfx == null) vfx = GetComponent<VisualEffect>();
+            vfx.visualEffectAsset = pointCount < 500000 ? pointCloudQuad : pointCloudHighCap;  //
+            vfx.SetInt("SpawnRate", pointCount);
+            int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
+            int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
+            positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            orgPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            targetPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
+            Color[] positions = new Color[width * height];
+            Color col;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int ind = x + (width * y);
+                    if (ind >= pointCount) continue;
+                    float3 pos = pointPositions[ind];
+                    col = new Color(pos.x, pos.y, pos.z, 1);
+
+                    Vector2Int textureCoord = TextureHandler.instance.textureCoordDict[names[ind]];
+
+                    Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
+                    float3 wPos = math.transform(transform.localToWorldMatrix, pos);
+                    entityManager.SetComponentData(e, new Translation { Value = wPos });
+                    entityManager.AddComponent(e, typeof(Point));
+                    Point p = new Point
+                    {
+                        selected = false,
+                        orgXIndex = textureCoord.x,
+                        orgYIndex = textureCoord.y,
+                        xindex = x,
+                        yindex = y,
+                        label = ind,
+                        offset = pos,
+                        parentID = pcID,
+                        orgParentID = pcID,
+                        entity = e
+                    };
+                    slicePoints.Add(p);
+                    entityManager.SetComponentData(e, p);
+                    positions[ind] = col;
+                }
+            }
+
+            positionTextureMap.SetPixels(positions);
+            orgPositionTextureMap.SetPixels(positions);
+            targetPositionTextureMap.SetPixels(positions);
+            positionTextureMap.Apply(false);
+            orgPositionTextureMap.Apply(false);
+            targetPositionTextureMap.Apply(false);
+            vfx.enabled = true;
+            vfx.SetTexture("PositionMapTex", positionTextureMap);
+            vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
+            vfx.pause = false;
+            PointCloudGenerator.instance.creatingGraph = false;
+            GetComponent<GraphSlice>().points = slicePoints;
+            //SpreadOutPoints();
+            //StartCoroutine(SpawnAnimation());
+        }
+
 
         private IEnumerator SpawnAnimation()
         {
@@ -448,7 +502,7 @@ namespace AnalysisLogic
             }
 
             pointSpreadTexture.SetPixels(newPositions);
-            pointSpreadTexture.Apply();
+            pointSpreadTexture.Apply(false);
             vfx.SetTexture("TargetPosMapTex", pointSpreadTexture);
 
         }
@@ -485,7 +539,7 @@ namespace AnalysisLogic
                 }
 
                 pointSpreadTexture.SetPixels(newPositions);
-                pointSpreadTexture.Apply();
+                pointSpreadTexture.Apply(false);
                 vfx.SetTexture("TargetPosMapTex", pointSpreadTexture);
             }
             else if (doSpread)
@@ -511,7 +565,7 @@ namespace AnalysisLogic
             }
 
             pointSpreadTexture.SetPixels(newPositions);
-            pointSpreadTexture.Apply();
+            pointSpreadTexture.Apply(false);
 
             vfx.SetTexture("TargetPosMapTex", pointSpreadTexture);
             Morph(0.4f);
@@ -553,7 +607,7 @@ namespace AnalysisLogic
                 }
 
                 clusterSpreadTexture.SetPixels(newPositions);
-                clusterSpreadTexture.Apply();
+                clusterSpreadTexture.Apply(false);
                 targetPositionTextureMap = clusterSpreadTexture;
             }
             vfx.SetTexture("TargetPosMapTex", clusterSpreadTexture);

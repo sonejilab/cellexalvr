@@ -30,12 +30,11 @@ namespace CellexalVR.Spatial
         public override void SelectCells(int group)
         {
             int cellID = imageHandler.GetCellFromAoiID(aoiID).id;
-            var graph = imageHandler.referenceManager.graphManager.Graphs[0];
+            var graph = ReferenceManager.instance.graphManager.Graphs[0];
             var gPoint = graph.FindGraphPoint(cellID.ToString());
-            imageHandler.referenceManager.selectionManager.AddGraphpointToSelection(gPoint, group, false);
+            ReferenceManager.instance.selectionManager.AddGraphpointToSelection(gPoint, group, false);
             highlight.GetComponent<MeshRenderer>().material.color = CellexalConfig.Config.SelectionToolColors[group];
             Highlight();
-
         }
 
 

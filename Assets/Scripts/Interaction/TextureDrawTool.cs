@@ -2,6 +2,7 @@ using CellexalVR.General;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TextureDrawTool : MonoBehaviour
 {
@@ -13,9 +14,9 @@ public class TextureDrawTool : MonoBehaviour
     private List<LineRenderer> temporaryLines = new List<LineRenderer>();
     [SerializeField] private LineRenderer linePrefab;
     private BoxCollider boxCollider => GetComponent<BoxCollider>();
-    private float brushWidth;
-    private Color brushColor;
-    private Color[] blockColors = new Color[25];
+    [SerializeField] private int brushWidth = 4;
+    [SerializeField] private Color brushColor;
+    private Color[] blockColors;
 
 
     private void Start()
@@ -25,9 +26,10 @@ public class TextureDrawTool : MonoBehaviour
         CellexalEvents.RightTriggerClick.AddListener(OnRightTriggerClick);
         CellexalEvents.RightTriggerUp.AddListener(OnRightTriggerUp);
 
+        blockColors = new Color[brushWidth * 2 * brushWidth * 2];
         for (int i = 0; i < blockColors.Length; i++)
         {
-            blockColors[i] = Color.white;
+            blockColors[i] = brushColor;
         }
     }
 
@@ -36,6 +38,16 @@ public class TextureDrawTool : MonoBehaviour
         if (drawing)
         {
             DrawOnTexture();
+        }
+
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            drawing = true;
+        }
+        if (Mouse.current.leftButton.wasReleasedThisFrame)
+        {
+            drawing = false;
+            firstDraw = true;
         }
     }
 
@@ -56,8 +68,9 @@ public class TextureDrawTool : MonoBehaviour
 
     private void DrawLineRenderer()
     {
-        Ray ray = new Ray(rightHand.position, rightHand.forward);
-        Physics.Raycast(ray, out RaycastHit hit, 0.05f, 1 << LayerMask.NameToLayer("EnvironmentButtonLayer"));
+        //Ray ray = new Ray(rightHand.position, rightHand.forward);
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Physics.Raycast(ray, out RaycastHit hit, 0.1f, 1 << LayerMask.NameToLayer("EnvironmentButtonLayer"));
         if (hit.collider)
         {
             //Vector3 pointInDrawableSpace = hit.collider.transform.InverseTransformPoint(hit.point);
@@ -74,7 +87,10 @@ public class TextureDrawTool : MonoBehaviour
     private void DrawOnTexture()
     {
         Ray ray = new Ray(rightHand.position, rightHand.forward);
-        Physics.Raycast(ray, out RaycastHit hit, 0.08f, 1 << LayerMask.NameToLayer("FloorLayer"));
+        Physics.Raycast(ray, out RaycastHit hit, 0.08f, 1 << LayerMask.NameToLayer("EnvironmentButtonLayer"));
+        //var pos = Mouse.current.position.ReadValue();
+        //Ray ray = Camera.main.ScreenPointToRay(pos);
+        //Physics.Raycast(ray, out RaycastHit hit, 1f, 1 << LayerMask.NameToLayer("EnvironmentButtonLayer"));
         if (hit.collider && hit.collider.TryGetComponent(out DrawableTexture drawableTexture))
         {
             if (firstDraw)
@@ -84,18 +100,19 @@ public class TextureDrawTool : MonoBehaviour
             }
 
             float lineLength = Vector2.Distance(hit.textureCoord * 1000, lastHit * 1000);
-            int lerpCountAdjustNum = 5;
+            int lerpCountAdjustNum = 3;
             int lerpCount = Mathf.CeilToInt(lineLength / lerpCountAdjustNum);
             for (int i = 1; i <= lerpCount; i++)
             {
                 float lerpWeight = (float)i / lerpCount;
                 var lerpPosition = Vector2.Lerp(lastHit * 1000, hit.textureCoord * 1000, lerpWeight);
-                drawableTexture.texture.SetPixels((int)lerpPosition.x, (int)lerpPosition.y, 5, 5, blockColors);
+                //drawableTexture.texture.SetPixels((int)lerpPosition.x - 5, (int)lerpPosition.y - 5, 10, 10, blockColors2);
+                //drawableTexture.texture.Apply();
+                drawableTexture.texture.SetPixels((int)lerpPosition.x - brushWidth, (int)lerpPosition.y - brushWidth, brushWidth * 2, brushWidth * 2, blockColors);
                 drawableTexture.texture.Apply();
+
             }
-            //drawableTexture.texture.SetPixel((int)(hit.textureCoord.x * 1000), (int)(hit.textureCoord.y * 1000), Color.white);
-            //drawableTexture.texture.SetPixels((int)(hit.textureCoord.x * 1000), (int)(hit.textureCoord.y * 1000), 5, 5, blockColors);
-            //drawableTexture.texture.Apply();
+            lastHit = hit.textureCoord;
         }
     }
 

@@ -146,8 +146,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     var c1 = pc.colorTextureMap.GetPixel(quadrantData.xindex, quadrantData.yindex);
                     var c2 = SelectionToolCollider.instance.Colors[SelectionToolCollider.instance.CurrentColorIndex];
-                    var c = InputReader.CompareColor(c1, c2);
-                    if (c) continue;
+                    if (InputReader.CompareColor(c1, c2)) continue;
                     float3 pos = pc.transform.TransformPoint(quadrantData.position);
                     //Debug.DrawRay(origin, origin - pos, Color.green, 0.5f);
                     entityArray.Add(new RaycastCheckComponent

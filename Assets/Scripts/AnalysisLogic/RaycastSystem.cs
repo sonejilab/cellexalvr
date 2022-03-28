@@ -12,6 +12,8 @@ namespace CellexalVR.AnalysisLogic
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class RaycastSystem : SystemBase
     {
+        public bool move;
+
         private EntityQuery query;
         private BeginSimulationEntityCommandBufferSystem ecbSystem;
         private EntityArchetype selectEntityArchetype;
@@ -75,17 +77,20 @@ namespace CellexalVR.AnalysisLogic
                         group = group,
                         parentID = rc.parentID
                     });
-                    var targetPositionC = pc1.orgPositionTextureMap.GetPixel(rc.xindex, rc.yindex);
-                    var currentPositionC = pc2.positionTextureMap.GetPixel(rc.xindex, rc.yindex);
-                    var posInWSpace = pc2.transform.TransformPoint(new Vector3(currentPositionC.r, currentPositionC.g, currentPositionC.b));
-                    var posInPc1Space = pc1.transform.InverseTransformPoint(posInWSpace);
-                    commandBuffer.SetComponent(moveEntity, new MovePointComponent
+                    if (move)
                     {
-                        xindex = rc.xindex,
-                        yindex = rc.yindex,
-                        targetPosition = new Vector3(targetPositionC.r, targetPositionC.g, targetPositionC.b),
-                        currentPosition = posInPc1Space
-                    });
+                        var targetPositionC = pc1.orgPositionTextureMap.GetPixel(rc.xindex, rc.yindex);
+                        var currentPositionC = pc2.positionTextureMap.GetPixel(rc.xindex, rc.yindex);
+                        var posInWSpace = pc2.transform.TransformPoint(new Vector3(currentPositionC.r, currentPositionC.g, currentPositionC.b));
+                        var posInPc1Space = pc1.transform.InverseTransformPoint(posInWSpace);
+                        commandBuffer.SetComponent(moveEntity, new MovePointComponent
+                        {
+                            xindex = rc.xindex,
+                            yindex = rc.yindex,
+                            targetPosition = new Vector3(targetPositionC.r, targetPositionC.g, targetPositionC.b),
+                            currentPosition = posInPc1Space
+                        });
+                    }
 
                 }
             }).Run();

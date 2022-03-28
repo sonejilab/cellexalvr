@@ -23,7 +23,6 @@ namespace CellexalVR.Spatial
         public Dictionary<int, SpatialReferenceModelPart> idToModelDictionary = new Dictionary<int, SpatialReferenceModelPart>();
         public Dictionary<string, string> acronyms = new Dictionary<string, string>();
         public Dictionary<string, int> names = new Dictionary<string, int>();
-        public Transform midPoint;
         public BrainPartButton brainPartButtonPrefab;
         private List<LoadReferenceModelMeshButton> suggestionButtons = new List<LoadReferenceModelMeshButton>();
         public Dictionary<string, GameObject> spawnedParts = new Dictionary<string, GameObject>();
@@ -236,6 +235,7 @@ namespace CellexalVR.Spatial
         {
             suggestionOffset = Mathf.Max(0, Mathf.Min(suggestionOffset + dir, names.Keys.Count - 1));
             UpdateSuggestions(keyboard.output.text, suggestionOffset);
+            print($"dir {dir}, {suggestionOffset}");
         }
 
 

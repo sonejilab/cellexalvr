@@ -17,6 +17,7 @@ namespace CellexalVR.Spatial
         [HideInInspector] public int type;
         [HideInInspector] public bool detached;
         public int index;
+        public int group = -1;
 
         [SerializeField] private GameObject lowQ;
         [SerializeField] private GameObject highQ;
@@ -36,7 +37,6 @@ namespace CellexalVR.Spatial
         protected virtual void Update()
         {
             float dist = Vector3.Distance(transform.position, ReferenceManager.instance.headset.transform.position);
-            print($"{highQActive}, {dist}");
             if (!highQActive && dist < 0.5f)
             {
                 ToggleQuality(true);
@@ -114,46 +114,55 @@ namespace CellexalVR.Spatial
 
         public virtual void Reattach()
         {
-            detached = false;
-            transform.parent = imageHandler.transform;
-            reattachButton.SetActive(false);
             Vector3 targetPos;
-            int length = 0;
-            switch (type)
+            reattachButton.SetActive(false);
+            detached = false;
+            if (group > 0)
             {
-                case 0:
-                    length = imageHandler.slideScroller.currentScanIDs.Length;
-                    break;
-                case 1:
-                    length = imageHandler.slideScroller.currentROIIDs.Length;
-                    break;
-                case 2:
-                    length = imageHandler.slideScroller.currentAOIIDs.Length;
-                    break;
-            }
-            int i = SlideScroller.mod(index - imageHandler.slideScroller.currentSlide[type], length);
-            float yTargetPos = 1.1f;
-            if (imageHandler.selectedScan != null && type == 0)
-            {
-                yTargetPos += 1.1f;
-            }
-            if (imageHandler.selectedROI != null && type != 2)
-            {
-                yTargetPos += 1.1f;
-            }
-            if (i >= imageHandler.nrOfPositions)
-            {
-                targetPos = new Vector3(imageHandler.inactivePosRight.x, yTargetPos, imageHandler.inactivePosRight.z);
-                Fade(false);
-            }
-            else if (i < 0)
-            {
-                targetPos = new Vector3(imageHandler.inactivePosLeft.x, yTargetPos, imageHandler.inactivePosLeft.z);
-                Fade(false);
+                transform.parent = imageHandler.stacks[group].transform;
+                targetPos = Vector3.zero;
             }
             else
             {
-                targetPos = new Vector3(imageHandler.sliceCirclePositions[i].x, yTargetPos, imageHandler.sliceCirclePositions[i].z);
+
+                transform.parent = imageHandler.transform;
+                int length = 0;
+                switch (type)
+                {
+                    case 0:
+                        length = imageHandler.slideScroller.currentScanIDs.Length;
+                        break;
+                    case 1:
+                        length = imageHandler.slideScroller.currentROIIDs.Length;
+                        break;
+                    case 2:
+                        length = imageHandler.slideScroller.currentAOIIDs.Length;
+                        break;
+                }
+                int i = SlideScroller.mod(index - imageHandler.slideScroller.currentSlide[type], length);
+                float yTargetPos = 1.1f;
+                if (imageHandler.selectedScan != null && type == 0)
+                {
+                    yTargetPos += 1.1f;
+                }
+                if (imageHandler.selectedROI != null && type != 2)
+                {
+                    yTargetPos += 1.1f;
+                }
+                if (i >= imageHandler.nrOfPositions)
+                {
+                    targetPos = new Vector3(imageHandler.inactivePosRight.x, yTargetPos, imageHandler.inactivePosRight.z);
+                    Fade(false);
+                }
+                else if (i < 0)
+                {
+                    targetPos = new Vector3(imageHandler.inactivePosLeft.x, yTargetPos, imageHandler.inactivePosLeft.z);
+                    Fade(false);
+                }
+                else
+                {
+                    targetPos = new Vector3(imageHandler.sliceCirclePositions[i].x, yTargetPos, imageHandler.sliceCirclePositions[i].z);
+                }
             }
             Move(targetPos);
         }

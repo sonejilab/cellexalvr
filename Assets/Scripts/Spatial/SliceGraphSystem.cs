@@ -81,7 +81,7 @@ namespace CellexalVR.Spatial
             JobHandle jobHandle = Entities.WithAll<Point>().WithStoreEntityQueryInField(ref query).ForEach(
                 (Entity entity, int entityInQueryIndex, ref LocalToWorld localToWorld, ref Point point, ref Translation translation) =>
                 {
-                    if (point.parentID != graphNr) return;
+                    if (point.parentID != graphNr && point.orgParentID != graphNr) return;
                     float side = math.dot(localPlaneNorm, (point.offset - localPlanePos));
                     if (side < 0)
                     {
@@ -104,7 +104,7 @@ namespace CellexalVR.Spatial
             JobHandle jobHandle = Entities.WithAll<Point>().WithStoreEntityQueryInField(ref query).ForEach(
                 (Entity entity, int entityInQueryIndex, ref LocalToWorld localToWorld, ref Point point, ref Translation translation) =>
                 {
-                    if (point.parentID != graphNr) return;
+                    if (point.parentID != graphNr && point.orgParentID != graphNr) return;
                     //move[entityInQueryIndex] = GetComponentDataFromEntity<SelectedPointComponent>().HasComponent(entity);
                     move[entityInQueryIndex] = colorArray[entityInQueryIndex].a > 0.9f;
                 }).ScheduleParallel(Dependency);
@@ -135,7 +135,7 @@ namespace CellexalVR.Spatial
             List<Point> secondSlicePoints = new List<Point>();
             Entities.WithoutBurst().WithAll<Point>().ForEach((Entity entity, int entityInQueryIndex, ref Point point) =>
             {
-                if (point.parentID != graphNr) return;
+                if (point.parentID != graphNr && point.orgParentID != graphNr) return;
                 if (slice[entityInQueryIndex])
                 {
                     xMax = math.max(point.offset.x, xMax);
@@ -157,7 +157,6 @@ namespace CellexalVR.Spatial
                     secondSlicePoints.Add(point);
                 }
             }).Run();
-
             if (firstSlicePoints.ToList().Count > 0)
             {
                 pc1 = PointCloudGenerator.instance.CreateFromOld(graphToSlice.transform);
@@ -201,7 +200,7 @@ namespace CellexalVR.Spatial
             List<Point> points = new List<Point>();
             Entities.WithoutBurst().WithAll<Point>().ForEach((Entity entity, int entityInQueryIndex, ref Point point) =>
             {
-                if (point.parentID != graphID) return;
+                if (point.parentID != graphID && point.orgParentID != graphID) return;
                 points.Add(point);
             }).Run();
 

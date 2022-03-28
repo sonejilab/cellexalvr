@@ -34,7 +34,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
                 referenceOrgan.gameObject.name = "BrainParent";
             }
             referenceOrgan.transform.parent = currentState ? graphSlice.transform : null;
-            referenceOrgan.transform.localPosition = Vector3.zero;
+            referenceOrgan.transform.localPosition = Vector3.one * -0.5f;
             referenceOrgan.transform.localScale = Vector3.one;
             referenceOrgan.transform.localRotation = Quaternion.identity;
             referenceOrgan.SetActive(currentState);

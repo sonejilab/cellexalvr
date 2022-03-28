@@ -83,7 +83,7 @@ namespace CellexalVR.Spatial
             for (int i = 0; i < positions.Length; i++)
             {
                 Color a = alphas[i];
-                if (a.maxColorComponent > 0.4f)
+                if (a.maxColorComponent > 0.8f)
                 {
                     Color pos = positions[i];
                     Color c = colors[i];

@@ -1,4 +1,5 @@
-﻿using CellexalVR.AnalysisLogic;
+﻿using AnalysisLogic;
+using CellexalVR.AnalysisLogic;
 using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.Slicing
@@ -19,8 +20,12 @@ namespace CellexalVR.Menu.Buttons.Slicing
         
         public override void Click()
         {
+            if (!GetComponentInParent<PointCloud>().gameObject.activeSelf)
+            {
+                controllerInside = false;
+                return;
+            }
             slicingMenu.SliceGraph();
-            
             // TODO: Add multi-user functionality.
         }
     }

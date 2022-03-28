@@ -14,15 +14,6 @@ public class PointCloudSpawner : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        pool = new ObjectPool<PointCloud>(CreatePooledObject, OnTakePooledObject, OnReleasePooledObject, OnDestroyPooledObject, true, 40);
-    }
-
-    private PointCloud CreatePooledObject()
-    {
-        var pointCloud = Instantiate(pointCloudPrefab, transform);
-        pointCloud.SetPool(pool);
-        pointCloud.gameObject.SetActive(false);
-        return pointCloud;
     }
 
     private void OnTakePooledObject(PointCloud pointCloud)

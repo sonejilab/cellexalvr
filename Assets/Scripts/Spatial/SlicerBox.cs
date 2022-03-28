@@ -33,6 +33,7 @@ namespace CellexalVR.Spatial
         public GameObject cullingWallsParent;
 
         private bool active;
+        private Tweener boxTween;
         public bool Active
         {
             get
@@ -49,8 +50,10 @@ namespace CellexalVR.Spatial
                 slicingMenu.gameObject.SetActive(active);
                 slicingMenu.transform.localPosition = transform.InverseTransformPoint(menuPosition.position);
                 toggleSlicingMenuButton.transform.localPosition = transform.InverseTransformPoint(buttonPosition.position);
+                vfx.SetVector3("CullingCubeSize", Vector3.one * (active ? 1.02f : 50f));
                 toggleSlicingMenuButton.gameObject.SetActive(active);
                 cullingWallsParent.SetActive(active);
+                gameObject.SetActive(active);
             }
         }
 
@@ -87,6 +90,7 @@ namespace CellexalVR.Spatial
             //boxMaterial.color = c;
             toggleSlicingMenuButton = GetComponentInChildren<ToggleSlicingMenuButton>(true);
             vfx = GetComponentInParent<VisualEffect>();
+            Active = false;
         }
 
         //private void OnValidate()
@@ -98,56 +102,85 @@ namespace CellexalVR.Spatial
 
         private void Update()
         {
-            cullPos1.x = Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[0].transform.position).x);
-            cullPos1.y = Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[1].transform.position).y);
-            cullPos1.z = Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[2].transform.position).z);
+            //if (Keyboard.current.nKey.wasPressedThisFrame)
+            //{
+            //    SliceGraphManual();
+            //}
+            //if (Keyboard.current.mKey.wasPressedThisFrame)
+            //{
+            //    SliceGraphAutomatic(2, 20);
+            //}
 
-            if (singleSliceViewMode == 0)
-            {
-                cullingWalls[3].transform.position = cullingWalls[0].transform.position;
-                cullingWalls[3].transform.position += new Vector3(-0.1f, 0, 0);
-            }
-            else if (singleSliceViewMode == 1)
-            {
-                cullingWalls[4].transform.position = cullingWalls[1].transform.position;
-                cullingWalls[4].transform.position += new Vector3(0, -0.1f, 0);
-            }
-            else if (singleSliceViewMode == 2)
-            {
-                cullingWalls[5].transform.position = cullingWalls[2].transform.position;
-                cullingWalls[5].transform.position += new Vector3(0, 0, -0.1f);
-            }
-            cullPos2.x = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[3].transform.position).x)) + 1f;
-            cullPos2.y = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[4].transform.position).y)) + 1f;
-            cullPos2.z = (Math.Min(0.6f, transform.InverseTransformPoint(cullingWalls[5].transform.position).z)) + 1f;
-            //vfx.SetVector3("CullingCubePos", cullPos1);
-            //vfx.SetVector3("CullingCube2Pos", cullPos2);
+            //if (Keyboard.current.bKey.wasPressedThisFrame)
+            //{
+            //    SliceGraphFromSelection();
+            //}
 
-            if (Keyboard.current.nKey.wasPressedThisFrame)
+            if (Keyboard.current.qKey.wasPressedThisFrame)
             {
-                SliceGraphManual();
+                SingleSliceViewMode(0);
+                SliceBySliceAnimation();
             }
-            if (Keyboard.current.mKey.wasPressedThisFrame)
+            if (Keyboard.current.wKey.wasPressedThisFrame)
             {
-                SliceGraphAutomatic(2, 20);
+                SingleSliceViewMode(1);
+                SliceBySliceAnimation();
             }
-
-            if (Keyboard.current.bKey.wasPressedThisFrame)
+            if (Keyboard.current.rKey.wasPressedThisFrame)
             {
-                SliceGraphFromSelection();
+                SingleSliceViewMode(2);
+                SliceBySliceAnimation();
             }
+            if (Keyboard.current.tKey.wasPressedThisFrame)
+            {
+                SingleSliceViewMode();
+            }
+            UpdateCullingBox();
 
         }
 
-        private void BoxAnimation(int axis)
+        public void UpdateCullingBox()
         {
-            Material mat = box.GetComponent<Renderer>().material;
-            mat.SetInt("_WaveToggle", 1);
-            mat.SetInt("_WaveAxis", axis);
-            DOVirtual.Float(-1.5f, 1.5f, 1.2f, v =>
+            //cullPos1.x = Math.Min(0.6f, cullingWalls[0].handle.transform.localPosition.x);
+            //cullPos1.y = Math.Min(0.6f, cullingWalls[1].handle.transform.localPosition.x);
+            //cullPos1.z = Math.Min(0.6f, cullingWalls[2].handle.transform.localPosition.x);
+            cullPos1.x = 1f - cullingWalls[0].handle.transform.localPosition.x;
+            cullPos1.y = 1f - cullingWalls[1].handle.transform.localPosition.x;
+            cullPos1.z = 1f - cullingWalls[2].handle.transform.localPosition.x;
+            if (singleSliceViewMode != -1)
             {
-                mat.SetVector("_WaveCoords", new Vector3(v, v, v));
-            }).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Restart);
+                //cullingWalls[singleSliceViewMode + 3].handle.transform.localPosition = cullingWalls[singleSliceViewMode].handle.transform.localPosition;
+                //cullingWalls[singleSliceViewMode + 3].transform.localPosition = new Vector3(0.1f, 0, 0);
+                cullPos2[singleSliceViewMode] = cullPos1[singleSliceViewMode] - 0.9f;
+            }
+            else
+            {
+                cullPos2.x = cullingWalls[3].handle.transform.localPosition.x - 1f;
+                cullPos2.y = cullingWalls[4].handle.transform.localPosition.x - 1f;
+                cullPos2.z = cullingWalls[5].handle.transform.localPosition.x - 1f;
+            }
+
+            vfx.SetVector3("CullingCubePos", cullPos1);
+            vfx.SetVector3("CullingCube2Pos", cullPos2);
+        }
+
+        public void BoxAnimation(int axis, int toggle)
+        {
+            print($"box anim {axis}, {toggle}");
+            Material mat = box.GetComponent<Renderer>().material;
+            mat.SetInt("_WaveToggle", toggle);
+            mat.SetInt("_WaveAxis", axis);
+            if (toggle > 0)
+            {
+                boxTween = DOVirtual.Float(-1.5f, 1.5f, 1.2f, v =>
+                {
+                    mat.SetVector("_WaveCoords", new Vector3(v, v, v));
+                }).SetEase(Ease.InOutQuad).SetLoops(-1, LoopType.Restart);
+            }
+            else
+            {
+                boxTween.Kill();
+            }
         }
 
         public void SetHandlePositions()
@@ -213,17 +246,21 @@ namespace CellexalVR.Spatial
                 mat.SetFloat("_SliceOffset", v);
             }).SetEase(Ease.InOutCubic).SetLoops(2, LoopType.Yoyo);
             sliceGraphSystem.SliceFromSelection(pointCloud.pcID);
+            BoxAnimation(2, 1);
         }
 
         public void SliceGraphAutomatic(int axis, int nrOfSlices)
         {
             //StartCoroutine(SliceAnimation());
-            BoxAnimation(axis);
+            BoxAnimation(axis, 1);
             StartCoroutine(graphSlice.SliceAxis(axis, sliceGraphSystem.GetPoints(pointCloud.pcID), nrOfSlices));
         }
 
-        public void MorphGraph()
+        public void MorphToOtherGraph()
         {
+            //int index = (pointCloud.pcID + 1) % PointCloudGenerator.instance.pointClouds.Count;
+            //pointCloud.targetPositionTextureMap = PointCloudGenerator.instance.pointClouds[index].positionTextureMap;
+            pointCloud.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pointCloud.targetPositionTextureMap);
             pointCloud.Morph();
         }
 

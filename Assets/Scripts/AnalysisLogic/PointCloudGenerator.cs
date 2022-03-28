@@ -34,6 +34,7 @@ namespace CellexalVR.AnalysisLogic
         public int yindex;
         public float3 offset;
         public int parentID;
+        public int orgParentID;
         public int label;
         public Entity entity;
     }
@@ -98,7 +99,7 @@ namespace CellexalVR.AnalysisLogic
                 Texture2D positionMap = pointClouds[0].positionTextureMap;
                 Color[] colors = new Color[positionMap.width * positionMap.height];
                 positionMap.SetPixels(colors);
-                positionMap.Apply();
+                positionMap.Apply(false);
             }
         }
 
@@ -124,7 +125,7 @@ namespace CellexalVR.AnalysisLogic
             return pc;
         }
 
-        public HistoImage CreateNewHistoImage()
+        public HistoImage CreateNewHistoImage(PointCloud parentPC)
         {
             points.Clear();
             scaledCoordinates.Clear();
@@ -132,6 +133,7 @@ namespace CellexalVR.AnalysisLogic
             maxCoordValues = new float3(float.MinValue, float.MinValue, float.MinValue);
             //HistoImage hi = Instantiate(HistoImageHandler.instance.slicePrefab);
             PointCloud pc = Instantiate(spatialPointCloudPrefab);
+            pc.sliceImage.SetActive(true);
             HistoImage hi = pc.gameObject.AddComponent<HistoImage>();
             quadrantSystem.graphParentTransforms.Add(pc.transform);
             quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
@@ -380,7 +382,8 @@ namespace CellexalVR.AnalysisLogic
             }
             hi.scaledMaxValues = new Vector2(maxX, maxY);
             hi.scaledMinValues = new Vector2(minX, minY);
-            pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList(), scaledCoordinates.Keys.ToList());
+            GraphSlice gs = hi.GetComponent<GraphSlice>();
+            pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList(), scaledCoordinates.Keys.ToList(), ref gs.points);
             StartCoroutine(CreateColorTextureMap(points, hi, parentPC));
             points.Clear();
             scaledCoordinates.Clear();
@@ -391,7 +394,7 @@ namespace CellexalVR.AnalysisLogic
         {
             while (readingFile) yield return null;
             int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(3500 / (float)textureWidth);//width;
+            int height = (int)math.ceil(points.Count / (float)textureWidth);//width;
             //int height = parentCloud.positionTextureMap.height;
             PointCloud pc = hi.GetComponent<PointCloud>();
             colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
@@ -406,7 +409,8 @@ namespace CellexalVR.AnalysisLogic
             Color[] aarray = new Color[width * height];
             alphaMap.SetPixels(0, 0, width, height, aarray);
 
-            Texture2D parentTexture = (Texture2D)parentCloud.GetComponent<VisualEffect>().GetTexture("ColorMapTex");
+            Texture2D parentTexture = parentCloud.colorTextureMap;
+            //Fix spawning of histo image points. Maybe use same as other parentPC spawning...
             foreach (KeyValuePair<string, float3> kvp in points)
             {
                 Vector2Int textureCoord = TextureHandler.instance.textureCoordDict[kvp.Key];

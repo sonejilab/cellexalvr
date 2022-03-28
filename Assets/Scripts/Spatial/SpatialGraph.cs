@@ -349,7 +349,7 @@ namespace CellexalVR.Spatial
         {
             foreach (GraphSlice gs in GetComponentsInChildren<GraphSlice>())
             {
-                StartCoroutine(gs.MoveToGraphCoroutine());
+                gs.MoveToGraph();
             }
 
             if (dispersing)

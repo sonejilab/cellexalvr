@@ -65,7 +65,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
                         manualModeButton.CurrentState = !toggle;
                         fromSelectionModeButton.CurrentState = !toggle;
                     }
-                    movableContent.transform.DOLocalMoveZ(toggle ? -5.3f : -1.3f, 0.5f).SetEase(Ease.InOutBounce);
+                    movableContent.transform.DOLocalMoveZ(toggle ? -5.3f : -1.3f, 0.5f).SetEase(Ease.InOutSine);
                     //StartCoroutine(MoveContent(toggle ? -5.3f : -1.3f));
                     automaticModeMenu.SetActive(toggle);
                     break;
@@ -89,7 +89,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
             }
             if (!(manualModeButton.CurrentState || autoModeButton.CurrentState))
             {
-                movableContent.transform.DOLocalMoveZ(-1.3f, 0.5f).SetEase(Ease.InOutBounce);
+                movableContent.transform.DOLocalMoveZ(-1.3f, 0.5f).SetEase(Ease.InOutSine);
                 //StartCoroutine(MoveContent(-1.3f));
             }
         }

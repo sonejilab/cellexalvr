@@ -17,7 +17,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
         {
             base.Awake();
             graphSlice = GetComponentInParent<GraphSlice>();
-            if (graphSlice.parentSlice == null)
+            if (graphSlice.parentSlice == graphSlice)
             {
                 SetButtonActivated(false);
             }
@@ -25,6 +25,11 @@ namespace CellexalVR.Menu.Buttons.Slicing
         
         public override void Click()
         {
+            if (!graphSlice.gameObject.activeSelf)
+            {
+                controllerInside = false;
+                return;
+            }
             graphSlice.parentSlice.ActivateSlices(false);
         }
     }

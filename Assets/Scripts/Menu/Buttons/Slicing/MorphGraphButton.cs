@@ -20,7 +20,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
 
         public override void Click()
         {
-            slicerBox.MorphGraph();
+            slicerBox.MorphToOtherGraph();
 
             // TODO: Add multi-user functionality.
         }

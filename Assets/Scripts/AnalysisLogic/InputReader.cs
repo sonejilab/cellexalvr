@@ -230,20 +230,22 @@ namespace CellexalVR.AnalysisLogic
                 GC.Collect();
             }
 
-            //if (files.Length > 1)
-            //{
-            //    PointCloud pc1 = PointCloudGenerator.instance.pointClouds[0];
-            //    PointCloud pc2 = PointCloudGenerator.instance.pointClouds[1];
-            //    pc1.morphTexture = pc2.positionTextureMap;
-            //    pc2.morphTexture = pc1.positionTextureMap;
-            //    pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc2.positionTextureMap);
-            //    pc2.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
-            //    pc1.otherName = pc2.GraphName;
-            //    pc2.otherName = pc1.GraphName;
-            //    pc1.originalName = pc1.GraphName;
-            //    pc2.otherName = pc1.GraphName;
-            //    pc2.originalName = pc2.GraphName;
-            //}
+            if (files.Length > 1)
+            {
+                PointCloud pc1 = PointCloudGenerator.instance.pointClouds[0];
+                PointCloud pc2 = PointCloudGenerator.instance.pointClouds[1];
+                pc1.SetTargetTexture(pc2.positionTextureMap.GetPixels());
+                pc2.SetTargetTexture(pc1.positionTextureMap.GetPixels());
+                //pc1.morphTexture = pc2.positionTextureMap;
+                //pc2.morphTexture = pc1.positionTextureMap;
+                //pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc2.positionTextureMap);
+                //pc2.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
+                //pc1.otherName = pc2.GraphName;
+                //pc2.otherName = pc1.GraphName;
+                //pc1.originalName = pc1.GraphName;
+                //pc2.otherName = pc1.GraphName;
+                //pc2.originalName = pc2.GraphName;
+            }
 
             attributeReader = gameObject.AddComponent<AttributeReader>();
             attributeReader.referenceManager = referenceManager;
@@ -274,7 +276,7 @@ namespace CellexalVR.AnalysisLogic
                 texture.LoadImage(imageData);
                 string[] names = files[i].Split(Path.DirectorySeparatorChar);
                 string n = names[names.Length - 1].Split('.')[0];
-                HistoImage hi = PointCloudGenerator.instance.CreateNewHistoImage();
+                HistoImage hi = PointCloudGenerator.instance.CreateNewHistoImage(parentPC);
                 hi.sliceNr = int.Parse(Regex.Match(n, @"\d+").Value);
                 hi.gameObject.name = n;
                 hi.texture = texture;
@@ -384,6 +386,11 @@ namespace CellexalVR.AnalysisLogic
             }
             // PDF reading (conversion to images) causing program to crash. Unknown problem... 
             //pdfMesh.ReadPDF(fullPath);
+
+            if (path.Contains("geoMX"))
+            {
+                GeoMXImageHandler.instance.gameObject.SetActive(true);
+            }
 
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
             mdsReader.referenceManager = referenceManager;

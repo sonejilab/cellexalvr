@@ -57,7 +57,7 @@ namespace CellexalVR.Spatial
         [SerializeField] private TextMeshPro textMesh;
         private Dictionary<int, GeoMxCell> _cells = new Dictionary<int, GeoMxCell>();
         private List<Cell> cellsToHighlight = new List<Cell>();
-        private Dictionary<int, GeoMXSlideStack> stacks = new Dictionary<int, GeoMXSlideStack>();
+        public Dictionary<int, GeoMXSlideStack> stacks = new Dictionary<int, GeoMXSlideStack>();
 
         private void Awake()
         {
@@ -425,7 +425,7 @@ namespace CellexalVR.Spatial
             {
                 UnSelectScan(selectedScan.scanID);
             }
-            List<GraphPoint> gps = referenceManager.selectionManager.GetLastSelection();
+            List<GraphPoint> gps = ReferenceManager.instance.selectionManager.GetLastSelection();
 
             StartCoroutine(SpawnROIImagesFromGraphPoints(gps));
             return;
@@ -512,6 +512,7 @@ namespace CellexalVR.Spatial
                     else
                     {
                         GeoMXROISlide roi = Instantiate(roiPrefab, stacks[gp.Group].transform);
+                        roi.group = gp.Group;
                         roi.scanID = geoMXCell.ScanImageID;
                         roi.roiID = geoMXCell.ROIImageID;
                         roiIDs.Add(roi.roiID);
@@ -724,15 +725,15 @@ namespace CellexalVR.Spatial
             HashSet<string> aoiIDs = roiDict[roiID];
             foreach (string aoi in aoiIDs)
             {
-                Cell c = referenceManager.cellManager.GetCell(GetCellFromAoiID(aoi).id.ToString());
+                Cell c = ReferenceManager.instance.cellManager.GetCell(GetCellFromAoiID(aoi).id.ToString());
                 cellsToHighlight.Add(c);
             }
-            referenceManager.cellManager.HighlightCells(cellsToHighlight.ToArray(), true);
+            ReferenceManager.instance.cellManager.HighlightCells(cellsToHighlight.ToArray(), true);
         }
 
         public void ResetHighlightedCells()
         {
-            referenceManager.cellManager.HighlightCells(cellsToHighlight.ToArray(), false);
+            ReferenceManager.instance.cellManager.HighlightCells(cellsToHighlight.ToArray(), false);
             cellsToHighlight.Clear();
         }
     }

@@ -228,7 +228,6 @@ namespace CellexalVR.AnalysisLogic
                 
                 CreateFromCoordinates(names, xcoords, ycoords, zcoords);
 
-                print($"{totalNbrOfCells}, {names.Count}, {CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount}");
                 // If high quality mesh is used. Use LOD groups to swap to low q when further away.
                 // Improves performance a lot when analysing larger graphs.
                 int n = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;

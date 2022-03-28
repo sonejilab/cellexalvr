@@ -46,6 +46,7 @@ namespace CellexalVR.General
         public static UnityEvent GraphsColoredByGene = new UnityEvent();
         public static UnityEvent GraphsColoredByIndex = new UnityEvent();
         public static UnityEvent CorrelatedGenesCalculated = new UnityEvent();
+        public static UnityEvent ColorTextureUpdated = new UnityEvent();
 
         public static UnityEvent LinesBetweenGraphsDrawn = new UnityEvent();
         public static UnityEvent LinesBetweenGraphsCleared = new UnityEvent();

@@ -112,7 +112,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 if (color)
                 {
-                    g.ColorSelectionCtoolor(group, false);
+                    g.ColorSelectionColor(group, false);
                 }
 
                 else

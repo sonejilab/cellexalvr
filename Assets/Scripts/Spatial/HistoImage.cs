@@ -63,6 +63,7 @@ namespace CellexalVR.Spatial
             minValues = new Vector2(int.MaxValue, int.MaxValue);
             image = GetComponent<GraphSlice>().image;
             transform.Rotate(0, 0, -90);
+            CellexalEvents.ColorTextureUpdated.AddListener(UpdateColorTexture);
         }
 
         public void Initialize()
@@ -418,7 +419,7 @@ namespace CellexalVR.Spatial
         private void Update()
         {
             //ImageRayCast();
-            UpdateColorTexture();
+            //UpdateColorTexture();
 
 
         }

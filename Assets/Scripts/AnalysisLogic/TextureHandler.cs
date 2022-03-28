@@ -56,8 +56,7 @@ namespace CellexalVR.AnalysisLogic
             }).Run();
             Color col = SelectionToolCollider.instance.GetCurrentColor();
             col.a = 1f;
-            Color a = Color.black;
-            Transform brain = ReferenceManager.instance.brainModel.transform;
+            Color a = Color.white;
             for (int i = 0; i < mainColorTextureMaps.Count; i++)
             {
                 Texture2D map = mainColorTextureMaps[i];
@@ -67,12 +66,12 @@ namespace CellexalVR.AnalysisLogic
                     map.SetPixel(tuple.Item1, tuple.Item2, col);
                     aMap.SetPixel(tuple.Item1, tuple.Item2, a);
                 }
-                map.Apply();
-                aMap.Apply();
+                map.Apply(false);
+                aMap.Apply(false);
             }
             EntityManager.DestroyEntity(GetEntityQuery(typeof(SelectedPointComponent)));
             CellexalEvents.SelectionStarted.Invoke();
-
+            CellexalEvents.ColorTextureUpdated.Invoke();
             //frameCount++;
         }
 
@@ -84,21 +83,6 @@ namespace CellexalVR.AnalysisLogic
         {
             int i = 0;
             indices.OrderBy(x => x.Item1);
-            //List<Tuple<int, int>> orgPixels = new List<Tuple<int, int>>();
-            //Entities.WithAll<Point>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref Point p) =>
-            //{
-            //    Debug.Log($"{indices[i].Item1}, {p.label}");
-            //    if (i < indices.Count && indices[i].Item1 == p.label)
-            //    {
-            //        orgPixels.Add(new Tuple<int, int>(p.orgXIndex, p.orgYIndex));
-            //        i++;
-            //    }
-            //}).Run();
-
-
-
-
-
             Color col; // SelectionToolCollider.instance.GetCurrentColor();
             col.a = 1f;
             Color a = Color.white;
@@ -116,13 +100,14 @@ namespace CellexalVR.AnalysisLogic
                 map.Apply();
                 amap.Apply();
             }
+            CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
         public void ColorCluster(string cluster, bool toggle)
         {
             List<Vector2Int> indices = PointCloudGenerator.instance.clusters[cluster];
             Color col = toggle ? PointCloudGenerator.instance.colorDict[cluster] : new Color(0.32f, 0.32f, 0.32f);
-            Color a = toggle ? Color.white : Color.white * 0.2f;
+            Color a = toggle ? Color.white : Color.white * 0.3f;
             Texture2D atex = alphaTextureMaps[0];
             Color[] aaray = atex.GetPixels();
             for (int i = 0; i < aaray.Length; i++)
@@ -163,6 +148,7 @@ namespace CellexalVR.AnalysisLogic
                 }
 
             }
+            CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
         public void MakeAllPointsTransparent(bool toggle)
@@ -177,6 +163,7 @@ namespace CellexalVR.AnalysisLogic
             }
             atex.SetPixels(aarray);
             atex.Apply();
+            CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
         public void ColorAllClusters(bool toggle)
@@ -191,6 +178,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 ResetTexture();
             }
+            CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
         public void ColorByExpression(ArrayList expressions)
@@ -207,7 +195,7 @@ namespace CellexalVR.AnalysisLogic
             }
             atex.Apply();
             tex.Apply();
-
+            CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
         public void ResetTexture()
@@ -225,6 +213,7 @@ namespace CellexalVR.AnalysisLogic
             alphaTextureMaps[0].SetPixels(colors);
             mainColorTextureMaps[0].Apply();
             alphaTextureMaps[0].Apply();
+            CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
 

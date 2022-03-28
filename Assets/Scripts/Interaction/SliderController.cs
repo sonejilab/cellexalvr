@@ -43,10 +43,14 @@ namespace CellexalVR.Interaction
             sliderJoint.transform.localPosition = sliderJointPos;
 
             float barScale = type == updateType.ABSOLUTE ? currentFactor : currentFactor - 0.5f;
-            sliderProgressBar.transform.localScale = new Vector3(barScale, 1.1f, 1.1f);
-            sliderProgressBar.transform.localPosition = new Vector3(-0.5f + (barScale / 2f), 0, 0);
+            if (sliderProgressBar)
+            {
+                sliderProgressBar.transform.localScale = new Vector3(barScale, 1.1f, 1.1f);
+                sliderProgressBar.transform.localPosition = new Vector3(-0.5f + (barScale / 2f), 0, 0);
+            }
+            if (valueHeader)
+                valueHeader.text = $"{valuePrefix}: {Mathf.Round((currentFactor) * 100f)}%";
 
-            valueHeader.text = $"{valuePrefix}: {Mathf.Round((currentFactor) * 100f)}%";
 
         }
 
