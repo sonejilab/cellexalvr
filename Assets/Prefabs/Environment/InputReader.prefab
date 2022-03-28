@@ -156,6 +156,7 @@ MonoBehaviour:
   heatmapGenerator: {fileID: 0}
   networkGenerator: {fileID: 0}
   graphGenerator: {fileID: 0}
+  pointCloudGenerator: {fileID: 0}
   legendManager: {fileID: 0}
   inputFolderGenerator: {fileID: 0}
   loaderController: {fileID: 0}

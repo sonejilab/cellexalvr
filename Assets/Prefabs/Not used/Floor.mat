@@ -118,7 +118,8 @@ Material:
     - _GlossyReflections: 0
     - _InnerClipRadius: 1.000062
     - _LaserHitThickness: 0.1
-    - _Metallic: 1
+    - _LineThickness: 0.1
+    - _Metallic: 0.45
     - _Mode: 0
     - _OcclusionStrength: 1
     - _OuterClipRadius: 1.000056
@@ -132,19 +133,21 @@ Material:
     - _ReceiveShadows: 1
     - _SampleGI: 0
     - _Shininess: 0
-    - _Smoothness: 1
+    - _Smoothness: 0
     - _SmoothnessSource: 1
-    - _SmoothnessTextureChannel: 1
+    - _SmoothnessTextureChannel: 0
     - _SpecSource: 0
     - _SpecularHighlights: 0
     - _SrcBlend: 1
     - _Surface: 0
     - _UVSec: 0
-    - _WorkflowMode: 1
+    - _WaveAxis: 1
+    - _WaveToggle: 1
+    - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.04716955, g: 0.04716955, b: 0.04716955, a: 1}
-    - _Color: {r: 0.04716953, g: 0.04716953, b: 0.04716953, a: 1}
+    - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _LaserHitColor: {r: 1, g: 1, b: 1, a: 1}
     - _PulseColor: {r: 0, g: 0.84705883, b: 1, a: 1}
@@ -152,4 +155,6 @@ Material:
     - _ScaleCorrection: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Tint: {r: 0.122641504, g: 0.11512104, b: 0.11512104, a: 1}
+    - _WaveColor: {r: 1, g: 1, b: 1, a: 1}
+    - _WaveCoords: {r: 0.5, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []

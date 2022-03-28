@@ -69,6 +69,9 @@ VisualEffect:
       - m_Value: {x: 0, y: 0, z: 0}
         m_Name: SelectionPosition
         m_Overridden: 0
+      - m_Value: {x: 50, y: 50, z: 50}
+        m_Name: CullingCubeSize
+        m_Overridden: 1
     m_Vector4f:
       m_Array: []
     m_Uint:
@@ -168,6 +171,7 @@ MonoBehaviour:
   pointCloudQuad: {fileID: 8926484042661614526, guid: 9a94ff62c35438f4fb67db9ae0881d43,
     type: 3}
   positionTextureMap: {fileID: 0}
+  orgPositionTextureMap: {fileID: 0}
   colorTextureMap: {fileID: 0}
   alphaTextureMap: {fileID: 0}
   targetPositionTextureMap: {fileID: 0}
