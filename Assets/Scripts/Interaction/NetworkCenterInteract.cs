@@ -30,18 +30,19 @@ namespace CellexalVR.Interaction
         {
             base.OnSelectEntering(args);
             referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
+            //var interactedCollider = args.interactableObject.transform.GetComponent<Collider>();
             // moving many triggers really pushes what unity is capable of
-            foreach (Collider c in GetComponentsInChildren<Collider>())
-            {
-                if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
-                {
-                    c.enabled = false;
-                }
-                //else if (c.gameObject.name == "Ring")
-                //{
-                //    ((MeshCollider)c).convex = true;
-                //}
-            }
+            //foreach (Collider c in GetComponentsInChildren<Collider>())
+            //{
+            //    if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network") && c != interactedCollider)
+            //    {
+            //        c.enabled = false;
+            //    }
+            //else if (c.gameObject.name == "Ring")
+            //{
+            //    ((MeshCollider)c).convex = true;
+            //}
+            //}
         }
 
 
@@ -73,18 +74,18 @@ namespace CellexalVR.Interaction
             NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
             referenceManager.multiuserMessageSender.SendMessageNetworkCenterUngrabbed(center.Handler.name, center.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
-            foreach (Collider c in GetComponentsInChildren<Collider>())
-            {
-                if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
-                {
-                    c.enabled = true;
-                }
-                //else if (c.gameObject.name == "Ring")
-                //{
-                //    ((MeshCollider)c).convex = false;
-                //}
+            //foreach (Collider c in GetComponentsInChildren<Collider>())
+            //{
+            //    if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
+            //    {
+            //        c.enabled = true;
+            //    }
+            //    //else if (c.gameObject.name == "Ring")
+            //    //{
+            //    //    ((MeshCollider)c).convex = false;
+            //    //}
 
-            }
+            //}
 
         }
 

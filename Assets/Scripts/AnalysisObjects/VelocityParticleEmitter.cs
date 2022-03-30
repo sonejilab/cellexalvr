@@ -46,7 +46,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
         private float particleSize;
-        
+
 
         [HideInInspector]
         public float ParticleSize

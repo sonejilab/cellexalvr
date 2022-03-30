@@ -123,7 +123,8 @@ namespace CellexalVR.Interaction
             Physics.Raycast(origin.position, origin.forward, out hit, 10, layerMaskEnv);
             if (hit.collider &&
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Normal ||
-                controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
+                controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard ||
+                controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
 
             {
                 // if we hit a button in the environment (keyboard or env button)
@@ -138,7 +139,6 @@ namespace CellexalVR.Interaction
                 //referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
                 MultiUserToggle(true);
                 ToggleLaser(true);
-                // OpenXR
                 //referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                 Vector3 hitPoint;
                 if (!hit.collider)

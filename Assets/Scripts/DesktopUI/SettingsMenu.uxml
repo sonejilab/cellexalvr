@@ -1,4 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Toggle label="test test" style="height: 22px; width: 313px;" />
-    <ui:Toggle label="test test" style="height: 32px; width: 313px; position: absolute; top: 226px; left: 364px;" />
-</ui:UXML>

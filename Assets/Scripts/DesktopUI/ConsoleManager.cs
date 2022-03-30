@@ -553,6 +553,14 @@ namespace CellexalVR.DesktopUI
             StartCoroutine(RunCommandFileCoroutine(filename));
         }
 
+        //public void SaveGraphsAsFBX()
+        //{
+        //    foreach (CellexalVR.AnalysisObjects.Graph graph in referenceManager.graphManager.Graphs)
+        //    {
+        //        graph.GetComponent<UnityEngine.Formats.Fbx.Exporter>
+        //    }
+        //}
+
         /// <summary>
         /// Helper coroutine to run multiple commands. See <see cref="ConsoleManager.RunCommandFile(string)"/>.
         /// </summary>
@@ -625,5 +633,6 @@ namespace CellexalVR.DesktopUI
             Folder = folder;
             Aliases = aliases;
         }
+
     }
 }

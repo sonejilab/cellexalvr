@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
 using System.IO;
+using UnityEngine.EventSystems;
 
 namespace CellexalVR.DesktopUI
 {
@@ -227,11 +228,6 @@ namespace CellexalVR.DesktopUI
                     colorPicker.gameObject.SetActive(false);
                 }
             }
-            if (Input.GetMouseButtonDown(0))
-            {
-                //UnityEngine.Input.mou
-            }
-
         }
 
         /// <summary>

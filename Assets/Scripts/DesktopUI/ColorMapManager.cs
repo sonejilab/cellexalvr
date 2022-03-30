@@ -69,19 +69,25 @@ namespace CellexalVR.DesktopUI
             settingsMenu.referenceManager.graphGenerator.CreateShaderColors();
         }
 
-        public void GenerateRandomColors(int n = 20)
+        public void GenerateRandomColors(int n = -1)
         {
+            if (n == -1)
+            {
+                if (nrGroupsInput.text == "")
+                {
+                    n = 20;
+                }
+                else
+                {
+                    n = int.Parse(nrGroupsInput.text);
+                }
+            }
             DoGenerateRandomColors(n);
             settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRandomColors(n);
         }
 
-        public void DoGenerateRandomColors(int n, bool multiuserUpdate = false)
+        public void DoGenerateRandomColors(int n)
         {
-            if (nrGroupsInput.text != "" && !multiuserUpdate)
-            {
-                n = int.Parse(nrGroupsInput.text);
-            }
-
             if (n > 254)
             {
                 n = 254;
@@ -103,19 +109,25 @@ namespace CellexalVR.DesktopUI
             settingsMenu.UpdateSelectionToolColors();
         }
 
-        public void GenerateRainbowColors(int n = 20)
+        public void GenerateRainbowColors(int n = -1)
         {
+            if (n == -1)
+            {
+                if (nrGroupsInput.text == "")
+                {
+                    n = 20;
+                }
+                else
+                {
+                    n = int.Parse(nrGroupsInput.text);
+                }
+            }
             DoGenerateRainbowColors(n);
             settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRainbowColors(n);
         }
 
-        public void DoGenerateRainbowColors(int n, bool multiuserUpdate = false)
+        public void DoGenerateRainbowColors(int n)
         {
-            if (nrGroupsInput.text != "" && !multiuserUpdate)
-            {
-                n = int.Parse(nrGroupsInput.text);
-            }
-
             if (n > 254)
             {
                 n = 254;
@@ -127,7 +139,7 @@ namespace CellexalVR.DesktopUI
             }
 
             settingsMenu.selectionColorButtons.Clear();
-            for (float j = 0f; j < 1.0f; j += 1.0f / (float) n)
+            for (float j = 0f; j < 1.0f; j += 1.0f / (float)n)
             {
                 Color col = Color.HSVToRGB(j, 0.8f, 0.8f);
                 settingsMenu.AddSelectionColor(col, false);

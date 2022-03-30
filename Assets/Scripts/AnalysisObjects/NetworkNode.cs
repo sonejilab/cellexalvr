@@ -43,12 +43,12 @@ namespace CellexalVR.AnalysisObjects
         private Vector3 largerScale;
         private bool controllerInside;
         // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         private CellManager cellManager;
         // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.InputDevice device;
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private bool edgesAdded;
         private float lineWidth;
         private string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
@@ -104,7 +104,9 @@ namespace CellexalVR.AnalysisObjects
         private void OnTriggerEnter(Collider other)
         {
             bool active = Center.Enlarged;
-            bool touched = other.gameObject.name.Equals(laserCollider) || (other.gameObject.CompareTag("GameController"));
+            //bool touched = other.gameObject.name.Equals(laserCollider) || (other.gameObject.CompareTag("GameController"));
+            bool touched = other.gameObject.CompareTag("Controller");
+            //print(touched);
             if (active && touched && !Center.controllerInsideSomeNode)
             {
                 Center.ToggleNodeColliders(false, gameObject.name);
@@ -138,7 +140,8 @@ namespace CellexalVR.AnalysisObjects
 
         private void OnTriggerExit(Collider other)
         {
-            bool touched = other.gameObject.name.Equals(laserCollider) || (other.gameObject.CompareTag("GameController"));
+            //bool touched = other.gameObject.name.Equals(laserCollider) || (other.gameObject.CompareTag("GameController"));
+            bool touched = other.gameObject.CompareTag("Controller");
             if (touched)
             {
                 Center.ToggleNodeColliders(true, gameObject.name);

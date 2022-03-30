@@ -69,13 +69,12 @@ namespace CellexalVR.Interaction
 
                 //Grabbing the first h5reader since we dont know the path
                 results = referenceManager.inputReader.h5readers.First().Value.index2genename;
-
             }
             else if (ScarfManager.scarfObject != null)
             {
                 results = ScarfManager.scarfObject.feature_names.ToArray();
             }
-            else if (File.Exists($"{CellexalUser.UserSpecificFolder}/{CellexalUser.DataSourceFolder}/database.sqlite"))
+            else if (File.Exists($"Data/{CellexalUser.DataSourceFolder}/database.sqlite"))
             {
                 SQLiter.SQLite database = referenceManager.database;
                 //yield return new WaitForSeconds(2);

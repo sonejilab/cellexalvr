@@ -27,7 +27,7 @@ namespace CellexalVR.Interaction
         protected override void OnSelectEntering(SelectEnterEventArgs args)
         {
             base.OnSelectEntering(args);
-            if (base.interactorsSelecting.Count == 2)
+            if (scaleGrab && base.interactorsSelecting.Count == 2)
             {
                 oldTrackposition = base.trackPosition;
                 base.trackPosition = false;
@@ -62,7 +62,7 @@ namespace CellexalVR.Interaction
 
         protected override void OnSelectExiting(SelectExitEventArgs args)
         {
-            if (base.interactorsSelecting.Count == 2)
+            if (scaleGrab && base.interactorsSelecting.Count == 2)
             {
                 base.trackPosition = oldTrackposition;
                 base.trackRotation = true;

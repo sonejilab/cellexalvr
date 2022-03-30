@@ -39,9 +39,15 @@ namespace CellexalVR.AnalysisLogic
 
         private string particleSystemGameObjectName = "Velocity Particle System";
 
+        private void Awake()
+        {
+            CellexalEvents.ConfigLoaded.AddListener(GenerateAverageVelocityMaterials);
+        }
+
         private void Start()
         {
             ActiveGraphs = new List<Graph>();
+            referenceManager.velocitySubMenu.averageVelocityResolutionText.text = "Resolution: " + averageVelocityResolution;
         }
 
         private void OnValidate()

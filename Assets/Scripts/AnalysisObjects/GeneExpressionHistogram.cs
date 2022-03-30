@@ -126,7 +126,7 @@ namespace CellexalVR.AnalysisObjects
                 }
                 else
                 {
-                    yAxisLabel = "Log(Number of cells)";
+                    yAxisLabel = "Log(Number of cells + 1)";
                 }
 
                 int[] sortedHeightsInt = new int[heightsInt.Length];
@@ -152,7 +152,7 @@ namespace CellexalVR.AnalysisObjects
                         }
                         else
                         {
-                            barHeights.Add(Mathf.Log(heightsInt[i]));
+                            barHeights.Add(Mathf.Log(heightsInt[i] + 1));
                         }
                     }
 
@@ -508,7 +508,14 @@ namespace CellexalVR.AnalysisObjects
             }
             else
             {
-                highlightAreaInfoText.text = "x: " + minX + "\ny: " + data.heightsInt[minX];
+                if (DesiredYAxisMode == YAxisMode.Linear)
+                {
+                    highlightAreaInfoText.text = "x: " + minX + "\ny: " + data.heightsInt[minX];
+                }
+                else
+                {
+                    highlightAreaInfoText.text = "x: " + minX + "\ny: " + Math.Log(data.heightsInt[minX] + 1);
+                }
             }
         }
 

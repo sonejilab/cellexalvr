@@ -438,7 +438,7 @@ namespace CellexalVR.Interaction
         public void HandleBoxSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
         {
             // since the groupings have irregular widths we need to iterate over the list of widths
-            float boxX = heatmap.layout.heatmapX;
+            float boxX = heatmap.layout.heatmapX; 
             float boxWidth = 0;
             for (int i = 0; i < heatmap.groupWidths.Count; ++i)
             {

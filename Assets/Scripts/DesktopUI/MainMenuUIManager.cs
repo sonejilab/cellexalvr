@@ -21,8 +21,8 @@ namespace CellexalVR.DesktopUI
 
         private void OnEnable()
         {
-            var root = GetComponent<UIDocument>().rootVisualElement; 
-            
+            var root = GetComponent<UIDocument>().rootVisualElement;
+
             usernameInputField = root.Q<TextField>("user-name");
             preProcessButton = root.Q<Button>("pre-process-button");
             singleUserButton = root.Q<Button>("single-user-button");

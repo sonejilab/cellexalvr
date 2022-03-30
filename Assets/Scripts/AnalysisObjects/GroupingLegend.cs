@@ -260,6 +260,7 @@ namespace CellexalVR.AnalysisObjects
             if (foundEntry)
             {
                 foundEntry.numberOfCells += numberOfCellsToAdd;
+                activeCells += numberOfCellsToAdd;
                 if (foundEntry.numberOfCells == 0)
                 {
                     RemoveEntry(groupName);
@@ -275,7 +276,6 @@ namespace CellexalVR.AnalysisObjects
                 //}
             }
 
-            activeCells += numberOfCellsToAdd;
         }
 
         /// <summary>
