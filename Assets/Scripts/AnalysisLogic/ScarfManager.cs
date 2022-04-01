@@ -16,6 +16,7 @@ using UnityEngine.UIElements;
 using CellexalVR.DesktopUI;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -66,6 +67,18 @@ namespace CellexalVR.AnalysisLogic
             instance = this;
 
             //InitServer();
+        }
+
+        private void Update()
+        {
+            if (Keyboard.current.hKey.wasPressedThisFrame)
+            {
+                StartCoroutine(GetCellValues("RNA_leiden_cluster", "clusters"));
+            }
+            if (Keyboard.current.jKey.wasPressedThisFrame)
+            {
+                StartCoroutine(GetCellValues("CD14", "gene"));
+            }
         }
 
         public void InitServer()
@@ -307,6 +320,39 @@ namespace CellexalVR.AnalysisLogic
             progress++;
         }
 
+        private IEnumerator GetCellValues(string key, string type)
+        {
+            string reqURL = $"{url}get_cell_values/{key}";
+            print(reqURL);
+            UnityWebRequest req = UnityWebRequest.Get(reqURL);
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
+            {
+                print(req.error);
+                yield break;
+            }
+
+            string response = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
+            JObject jObject = JObject.Parse(response);
+            List<float> x = jObject[$"values"]
+                .Children()
+                .Select(v => v.Value<float>())
+                .ToList();
+
+            switch (type)
+            {
+                case "clusters":
+                    ReferenceManager.instance.cellManager.ColorAllClusters(x.ToArray());
+                    break;
+                case "gene":
+                    ReferenceManager.instance.cellManager.ColorByGene(x.ToArray());
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public void CloseServer()
         {
             StartCoroutine(CloseServerCoroutine());
@@ -333,8 +379,6 @@ namespace CellexalVR.AnalysisLogic
         {
             StartCoroutine(CreateGraph(dataset, key));
         }
-
-
 
         private IEnumerator CreateGraph(string dataset, string key)
         {
@@ -376,135 +420,9 @@ namespace CellexalVR.AnalysisLogic
 
             CellexalEvents.GraphsLoaded.Invoke();
 
-            //    Graph combGraph = ReferenceManager.instance.graphGenerator.CreateGraph(GraphGenerator.GraphType.MDS);
-            //    combGraph.GraphName = dataset + "_" + key;
-            //    ReferenceManager.instance.graphManager.originalGraphs.Add(combGraph);
-            //    ReferenceManager.instance.graphManager.Graphs.Add(combGraph);
-            //    ReferenceManager.instance.inputReader.mdsReader.CreateFromCoordinates(x, y, z);
-            //    StartCoroutine(ReferenceManager.instance.graphGenerator.SliceClusteringLOD(1));
-            //    while (ReferenceManager.instance.graphGenerator.isCreating)
-            //        yield return null;
 
         }
 
-        public static void ColorByCellStat(string statName)
-        {
-            if (scarfObject == null || ReferenceManager.instance.graphGenerator.isCreating) return;
-            if (!cellStats.ContainsKey(statName))
-            {
-                CellexalLog.Log($"Could not find {statName} in scarf object");
-                return;
-            }
-
-            ArrayList expressions = new ArrayList();
-            float highestVal = cellStats[statName].Max();
-            float minVal = cellStats[statName].Min();
-
-            highestVal *= 1.0001f;
-            float binSize = (highestVal - minVal) / CellexalConfig.Config.GraphNumberOfExpressionColors;
-            for (int i = 0; i < cellStats[statName].Count; i++)
-            {
-                float val = cellStats[statName][i];
-                if (val == 0f) continue;
-                int colInd = (int)((val - minVal) / binSize);
-                CellExpressionPair pair = new CellExpressionPair(i.ToString(), val, colInd);
-                expressions.Add(pair);
-            }
-
-            ReferenceManager.instance.graphManager.ColorAllGraphsByGeneExpression(statName, expressions);
-        }
-
-        public static ArrayList GetFeatureValues(string name)
-        {
-            return null;
-            //if (scarfObject == null || ReferenceManager.instance.graphGenerator.isCreating) return null;
-            //ArrayList result = new ArrayList();
-            //var stopWatch = new Stopwatch();
-            //stopWatch.Start();
-            //HttpWebRequest request = CreateGetRequest("/get_feature_values");
-            //HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-            //HttpStatusCode status = response.StatusCode;
-            //if (status == HttpStatusCode.OK)
-            //{
-            //    CellexalLog.Log($"{response.StatusDescription}");
-            //    StreamReader reader = new StreamReader(response.GetResponseStream());
-            //    string jsonResponse = reader.ReadToEnd();
-            //    var resp = JsonConvert.DeserializeObject<Dictionary<string, List<float>>>(jsonResponse);
-            //    var values = resp[name];
-            //    List<CellExpressionPair> expressions = new List<CellExpressionPair>();
-
-            //    float highestVal = values.Max();
-            //    float minVal = values.Min(); //scarfObject.cellStats["percentRibo"].Min();
-            //    float binSize = (highestVal - minVal) / CellexalConfig.Config.GraphNumberOfExpressionColors;
-            //    for (int i = 0; i < values.Count; i++)
-            //    {
-            //        float val = values[i];
-            //        if (val == 0f) continue;
-            //        int colInd = (int) ((val - minVal) / binSize);
-            //        CellExpressionPair pair = new CellExpressionPair(i.ToString(), val, colInd);
-            //        expressions.Add(pair);
-            //    }
-
-            // ### Equal number of cells in bin ##
-            // float maxVal = values[0];
-            // float minVal = values[values.Count - 1];
-            //
-            // float binSize = (float) values.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
-            // for (int i = 0; i < values.Count; i++)
-            // {
-            //     float val = values[i];
-            //     CellExpressionPair pair = new CellExpressionPair(i.ToString(), val, -1);
-            //     expressions.Add(pair);
-            // }
-            //
-            // expressions.Sort();
-            // for (int j = 0; j < expressions.Count; j++)
-            // {
-            //     expressions[j].Color = (int) (j / binSize);
-            // }
-
-            //result.AddRange(expressions);
-            //stopWatch.Stop();
-            //print(stopWatch.Elapsed.TotalSeconds);
-            //reader.Close();
-            //}
-
-            //return result;
-        }
-
-
-        [ItemCanBeNull]
-        public static Dictionary<string, List<Tuple<string, float>>> GetFeatureValues(List<string> genes, List<string> cellIds)
-        {
-            return null;
-            //    if (scarfObject == null || ReferenceManager.instance.graphGenerator.isCreating) return null;
-            //    Dictionary<string, List<Tuple<string, float>>> result = new Dictionary<string, List<Tuple<string, float>>>();
-            //    var stopWatch = new Stopwatch();
-            //    stopWatch.Start();
-            //    HttpWebRequest request = CreateGetRequest("/get_feature_values");
-            //    HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-            //    HttpStatusCode status = response.StatusCode;
-            //    if (status == HttpStatusCode.OK)
-            //    {
-            //        CellexalLog.Log($"{response.StatusDescription}");
-            //        StreamReader reader = new StreamReader(response.GetResponseStream());
-            //        string jsonResponse = reader.ReadToEnd();
-            //        var resp = JsonConvert.DeserializeObject<Dictionary<string, List<float>>>(jsonResponse);
-            //        // var selectedValues = new Dictionary<string, List<Tuple<int, float>>>();
-            //        foreach (string gene in genes)
-            //        {
-            //            result[gene] = new List<Tuple<string, float>>();
-            //            foreach (string i in cellIds)
-            //            {
-            //                float value = resp[gene][int.Parse(i)];
-            //                if (value == 0f) continue;
-            //                result[gene].Add(new Tuple<string, float>(i, value));
-            //            }
-            //        }
-            //    }
-
-            //    return result;
-        }
     }
 }
 

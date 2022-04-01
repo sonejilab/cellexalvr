@@ -30,7 +30,7 @@ namespace CellexalVR.Menu.Buttons.Facs
 
         public override void Click()
         {
-            ScarfManager.ColorByCellStat(statName);
+            //ScarfManager.ColorByCellStat(statName);
             TurnOff();
             // referenceManager.multiuserMessageSender.SendMessageColorByIndex(indexName);
         }

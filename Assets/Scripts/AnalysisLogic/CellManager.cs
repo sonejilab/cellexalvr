@@ -635,6 +635,39 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
+        public void ColorAllClusters(float[] clusters)
+        {
+            for (int i = 0; i < clusters.Length; i++)
+            {
+                Cell c = cells[i.ToString()];
+                c.ColorByCluster((int)(clusters[i]), true);
+            }
+        }
+
+        public void ColorByGene(float[] values)
+        {
+            LowestExpression = float.MaxValue;
+            HighestExpression = float.MinValue;
+            foreach (float val in values)
+            {
+                if (val < LowestExpression)
+                    LowestExpression = val;
+                if (val > HighestExpression)
+                    HighestExpression = val;
+            }
+            if (LowestExpression == HighestExpression)
+                HighestExpression += 1f;
+
+            HighestExpression *= 1.0001f;
+            float binSize = (HighestExpression - LowestExpression) / CellexalConfig.Config.GraphNumberOfExpressionColors;
+            for (int i = 0; i < values.Length; i++)
+            {
+                Cell c = cells[i.ToString()];
+                float value = values[i];
+                c.ColorByGeneExpression((int)((value - LowestExpression) / binSize));
+            }
+        }
+
         /// <summary>
         /// Adds the currently selected attributes as a selection.
         /// </summary>

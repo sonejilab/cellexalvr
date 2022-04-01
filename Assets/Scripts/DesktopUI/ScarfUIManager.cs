@@ -219,10 +219,10 @@ namespace CellexalVR.DesktopUI
 
             else
             {
+                print("dir not valid paths " + path[0]);
                 // directory not valid.
                 return;
             }
-
             StartCoroutine(ScarfManager.instance.StageDataCoroutine(dataLabelTextField.value, convertRunning, convertDone));
         }
 
