@@ -311,8 +311,8 @@ Shader "Custom/CombinedGraphpoint"
 
                    if (expressionColorData.g > 0.7 && expressionColorData.g < 0.9) //(colorTexUV.x == 254.0/255.0)
                    {
-                       color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 15 * color.rgb);         // Ambient term. Only do this in Forward Base. It only needs calculating once.
-                       color.rgb += (color.rgb * _LightColor0.rgb * diff) * (atten * 2); // Diffuse and specular.
+                      /* color.rgb = (UNITY_LIGHTMODEL_AMBIENT.rgb * 15 * color.rgb); */        // Ambient term. Only do this in Forward Base. It only needs calculating once.
+                       color.rgb += (color.rgb * _LightColor0.rgb * diff) * (atten); // Diffuse and specular.
                        color.a = _Transparancy;
                    }
                    

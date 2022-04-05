@@ -382,7 +382,6 @@ namespace CellexalVR.AnalysisLogic
             database.InitDatabase(fullPath + "\\database.sqlite");
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
-
             if (mdsFiles.Length == 0)
             {
                 CellexalError.SpawnError("Empty dataset",

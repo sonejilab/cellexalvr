@@ -44,7 +44,7 @@ namespace CellexalVR.AnalysisLogic
 
         public Dictionary<string, GameObject> convexHulls = new Dictionary<string, GameObject>();
 
-
+        public List<string> cellNames = new List<string>();
         private SQLite database;
         private ActionBasedController rightController;
         private PreviousSearchesList previousSearchesList;
@@ -826,6 +826,35 @@ namespace CellexalVR.AnalysisLogic
 
             CellexalEvents.GraphsColoredByIndex.Invoke();
             CellexalEvents.CommandFinished.Invoke(true);
+        }
+
+        [ConsoleCommand("cellManager", aliases: new string[] { "colorclusters", "cc" })]
+        public void ColorClusters(string path)
+        {
+            if (!File.Exists(path))
+            {
+                CellexalLog.Log("Could not find file:" + path);
+                return;
+            }
+
+            int numPointsAdded = 0;
+            using (StreamReader streamReader = new StreamReader(path))
+            {
+                string header = streamReader.ReadLine();
+                while (!streamReader.EndOfStream)
+                {
+                    string line = streamReader.ReadLine();
+                    string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                    Cell cell = GetCell(words[0]);
+                    cell.ColorByCluster(int.Parse(words[1]), true);
+                    numPointsAdded++;
+                }
+            }
+
+            CellexalEvents.CommandFinished.Invoke(true);
+            CellexalEvents.SelectedFromFile.Invoke();
+            File.Delete(path);
+            PythonInterpreter.WriteToOutput($"Colored {numPointsAdded} graph points according to cluster...");
         }
 
         public void ColorByNumericalAttribute(string name)

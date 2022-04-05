@@ -8,6 +8,9 @@ using CellexalVR.AnalysisLogic;
 using CellexalVR.DesktopUI;
 using CellexalVR.Spatial;
 using CellexalVR.AnalysisLogic;
+using SQLiter;
+using System.IO;
+using System.Diagnostics;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -33,6 +36,7 @@ namespace CellexalVR.AnalysisObjects
         private CellManager cellManager;
         private List<NetworkHandler> networks = new List<NetworkHandler>();
         private bool axesVisible;
+        private ArrayList expressionValues;
 
         /// <summary>
         /// The different methods for coloring graphs by gene expression. The different options are:
@@ -226,6 +230,116 @@ namespace CellexalVR.AnalysisObjects
             }
             CellexalEvents.CommandFinished.Invoke(true);
         }
+
+        [ConsoleCommand("graphManager", aliases: "colorfeature")]
+        public void ColorGraphsByFeature(string featureName)
+        {
+            StartCoroutine(ColorGraphsByFeatureCoroutine(featureName));
+        }
+
+        private IEnumerator ColorGraphsByFeatureCoroutine(string featureName)
+        {
+            string filePath = featureName + ".mtx";
+            // string geneName = filePath.Replace(".txt", "");
+
+            yield return StartCoroutine(ReadExpressions(filePath));
+            
+
+            ColorAllGraphsByGeneExpression(featureName, expressionValues);
+            PythonInterpreter.WriteToOutput(
+                $"Colored {expressionValues.Count} cells according to the expression of {featureName}");
+        }
+
+        private IEnumerator ReadExpressions(string filePath)
+        {
+            const float maximumDeltaTime = 0.05f; // 20 fps
+            int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
+            expressionValues = new ArrayList();
+            GeneExpressionColoringMethods coloringMethod = GeneExpressionColoringMethods.EqualExpressionRanges;
+            float LowestExpression = float.MaxValue;
+            float HighestExpression = float.MinValue;
+            Stopwatch stopwatch = new Stopwatch();
+            if (coloringMethod == GraphManager.GeneExpressionColoringMethods.EqualExpressionRanges)
+            {
+                stopwatch.Start();
+                using (StreamReader streamReader = new StreamReader(filePath))
+                {
+                    string line = streamReader.ReadLine();
+                    while (line.Contains("%"))
+                    {
+                        // skip header lines of mtx file.
+                        line = streamReader.ReadLine();
+                    }
+
+                    // string header = streamReader.ReadLine();
+                    // string info = streamReader.ReadLine();
+                    int i = 0;
+                    while (!streamReader.EndOfStream)
+                    {
+                        int itemsThisFrame = 0;
+                        for (int j = 0; j < maximumItemsPerFrame && !streamReader.EndOfStream; ++j)
+                        {
+                            string[] words = streamReader.ReadLine().Split(null);
+                            string cellName = cellManager.cellNames[int.Parse(words[0]) - 1]; // if using R then indexing needs offset by 1.
+                            float expr = float.Parse(words[2]);
+
+
+                            if (expr > HighestExpression)
+                            {
+                                HighestExpression = expr;
+                            }
+
+                            if (expr < LowestExpression)
+                            {
+                                LowestExpression = expr;
+                            }
+
+                            itemsThisFrame++;
+                            expressionValues.Add(new CellExpressionPair(cellName, expr, -1));
+                        }
+
+                        i += itemsThisFrame;
+
+                        yield return null;
+                        float lastFrame = Time.deltaTime;
+                        if (lastFrame < maximumDeltaTime)
+                        {
+                            // we had some time over last frame
+                            maximumItemsPerFrame += CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
+                        }
+                        else if (lastFrame > maximumDeltaTime && maximumItemsPerFrame >
+                            CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement * 2)
+                        {
+                            // we took too much time last frame
+                            maximumItemsPerFrame -= CellexalConfig.Config.GraphLoadingCellsPerFrameIncrement;
+                        }
+                    }
+
+                    if (HighestExpression == LowestExpression)
+                    {
+                        HighestExpression += 1;
+                    }
+
+                    // increase highest expresion slightly so the actually highest expressed cell get in the correct group
+                    HighestExpression *= 1.0001f;
+                    float binSize = (HighestExpression - LowestExpression) /
+                                    CellexalConfig.Config.GraphNumberOfExpressionColors;
+
+                    foreach (CellExpressionPair pair in expressionValues)
+                    {
+                        pair.Color = (int)((pair.Expression - LowestExpression) / binSize);
+                    }
+
+                    stopwatch.Stop();
+                    print($"Colored in {stopwatch.Elapsed} seconds, {i} items total.");
+                }
+            }
+            else
+            {
+
+            }
+        }
+
 
         /// <summary>
         /// Color all graphs with the expression of some gene.

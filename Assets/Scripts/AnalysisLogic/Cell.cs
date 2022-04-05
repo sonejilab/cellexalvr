@@ -66,6 +66,22 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
+        public void ColorByCluster(int cluster, bool color)
+        {
+            foreach (Graph.GraphPoint g in GraphPoints)
+            {
+                if (color)
+                {
+                    g.ColorSelectionColor(cluster, false);
+                }
+
+                else
+                {
+                    g.ResetColor();
+                }
+            }
+        }
+
         /// <summary>
         /// Colors all graphpoints that represents this cell if this cell is of an attribute.
         /// </summary>

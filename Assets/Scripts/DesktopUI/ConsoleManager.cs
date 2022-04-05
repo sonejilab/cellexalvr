@@ -245,7 +245,7 @@ namespace CellexalVR.DesktopUI
             string accessFieldName = accessors[method];
 
             // get the object that the method should run in
-            var access = referenceManager.GetType().GetField(accessFieldName).GetValue(referenceManager);
+            var access = ReferenceManager.instance.GetType().GetField(accessFieldName).GetValue(referenceManager);
 
             ParameterInfo[] parameterInfo = method.GetParameters();
             // check the number of parameters

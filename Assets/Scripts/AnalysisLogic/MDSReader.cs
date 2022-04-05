@@ -141,6 +141,7 @@ namespace CellexalVR.AnalysisLogic
                         }
 
                         string cellName = words[0];
+                        referenceManager.cellManager.cellNames.Add(cellName);
                         float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
@@ -175,6 +176,7 @@ namespace CellexalVR.AnalysisLogic
                             //}
 
                             string cellname = words[0];
+                            referenceManager.cellManager.cellNames.Add(cellname);
                             float x = float.Parse(words[1],
                                 System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                             float y = float.Parse(words[2],

@@ -138,6 +138,7 @@ namespace CellexalVR.General
         public Floor floor;
         public PDFViewer.PDFMesh pdfMesh;
         public AllenReferenceBrain brainModel;
+        public GraphLoader graphLoader;
 
         //h5reader annotator
         public H5ReaderAnnotatorScriptManager h5ReaderAnnotatorScriptManager;
