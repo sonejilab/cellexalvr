@@ -51,10 +51,12 @@ namespace CellexalVR.AnalysisLogic
 
         public static ScarfObject scarfObject;
         public static Dictionary<string, List<float>> cellStats;
+        public bool scarfActive;
 
         private int progress = 0;
         private int firstLineLength;
         public string[] consoleLines = new string[5] { "\n", "\n ", "\n ", "\n ", "\n " };
+
 
         private static int numOutputLines = 0;
         public static StringBuilder procOutput = null;
@@ -320,6 +322,11 @@ namespace CellexalVR.AnalysisLogic
             progress++;
         }
 
+        public void ColorGraph(string featureName, string type)
+        {
+            StartCoroutine(GetCellValues(featureName, type));
+        }
+
         private IEnumerator GetCellValues(string key, string type)
         {
             string reqURL = $"{url}get_cell_values/{key}";
@@ -371,6 +378,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             print("Server shutdown");
+            progress = 0;
         }
 
 
@@ -382,7 +390,6 @@ namespace CellexalVR.AnalysisLogic
 
         private IEnumerator CreateGraph(string dataset, string key)
         {
-
             string reqURL = $"{url}get_coords/{dataset}/{key}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
             yield return req.SendWebRequest();
@@ -420,7 +427,7 @@ namespace CellexalVR.AnalysisLogic
 
             CellexalEvents.GraphsLoaded.Invoke();
 
-
+            scarfActive = true;
         }
 
     }

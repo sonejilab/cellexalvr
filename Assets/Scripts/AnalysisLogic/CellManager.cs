@@ -241,7 +241,14 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("cellManager", aliases: new string[] { "colorbygene", "cbg" })]
         public void ColorGraphsByGene(string geneName)
         {
-            ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+            if (ScarfManager.instance.scarfActive)
+            {
+                ScarfManager.instance.ColorGraph(geneName, "gene");
+            }
+            else
+            {
+                ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
+            }
         }
 
         /// <summary>
@@ -646,10 +653,25 @@ namespace CellexalVR.AnalysisLogic
 
         public void ColorByGene(float[] values)
         {
+            for (int i = 0; i < values.Length; i++)
+            {
+                //print($"{i}, {values[i]}");
+            }
+            Dictionary<int, float> valuesNoZeroes = new Dictionary<int, float>();
+            ArrayList expressions = new ArrayList();
             LowestExpression = float.MaxValue;
             HighestExpression = float.MinValue;
-            foreach (float val in values)
+            for (int i = 0; i < values.Length; i++)
             {
+                float val = values[i];
+                if (val > 0)
+                {
+                    valuesNoZeroes[i] = val;
+                    CellExpressionPair pair = new CellExpressionPair(i.ToString(), val, -1);
+                    expressions.Add(pair);
+                }
+                else
+                    continue;
                 if (val < LowestExpression)
                     LowestExpression = val;
                 if (val > HighestExpression)
@@ -660,12 +682,12 @@ namespace CellexalVR.AnalysisLogic
 
             HighestExpression *= 1.0001f;
             float binSize = (HighestExpression - LowestExpression) / CellexalConfig.Config.GraphNumberOfExpressionColors;
-            for (int i = 0; i < values.Length; i++)
+
+            foreach (CellExpressionPair pair in expressions)
             {
-                Cell c = cells[i.ToString()];
-                float value = values[i];
-                c.ColorByGeneExpression((int)((value - LowestExpression) / binSize));
+                pair.Color = (int)((pair.Expression - LowestExpression) / binSize);
             }
+            ReferenceManager.instance.graphManager.ColorAllGraphsByGeneExpression("CD14", expressions);
         }
 
         /// <summary>

@@ -45,7 +45,6 @@ namespace CellexalVR.DesktopUI
         {
             var root = GetComponent<UIDocument>().rootVisualElement;
 
-
             userNameField = root.Q<TextField>("user-name");
             roomNameField = root.Q<TextField>("room-name");
             passwordField = root.Q<TextField>("password");
