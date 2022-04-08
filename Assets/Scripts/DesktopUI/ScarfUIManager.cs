@@ -75,7 +75,6 @@ namespace CellexalVR.DesktopUI
         private void OnEnable()
         {
             var root = GetComponent<UIDocument>().rootVisualElement;
-
             openFileWindowButton = root.Q<Button>("choose-file-button");
             openDirWindowButton = root.Q<Button>("choose-dir-button");
             convertButton = root.Q<Button>("convert-button");
@@ -139,13 +138,16 @@ namespace CellexalVR.DesktopUI
 
             CellexalEvents.ScarfUMAPFinished.AddListener(() => loadButton.style.display = DisplayStyle.Flex);
 
-            ScarfManager.instance.InitServer();
+            //ScarfManager.instance.InitServer();
         }
 
 
         private void Start()
         {
             instance = this;
+
+            CellexalEvents.ZarrConversionComplete.AddListener(OnConversionComplete);
+            CellexalEvents.DataStaged.AddListener(OnDataStaged);
         }
 
         private void Update()
@@ -186,7 +188,7 @@ namespace CellexalVR.DesktopUI
                 }
                 AnimateProgressBar(currentProgress);
             }
-            
+
         }
 
         private void OnOpenFileWindowButtonPressed()
@@ -205,37 +207,38 @@ namespace CellexalVR.DesktopUI
             {
                 zarrDataTextField.value = path[0].Replace('\\', '/');
             }
-            if (Directory.Exists($"{zarrDataTextField.value}/cellData"))
-            {
-                string[] parts = path[0].Split('\\');
-                string lastPart = parts[parts.Length - 1];
-                dataLabelTextField.value = lastPart;
-                fileDone.RemoveFromClassList("inactive");
-                dirDone.RemoveFromClassList("inactive");
-                openFileWindowButton.AddToClassList("inactive");
-                openDirWindowButton.AddToClassList("inactive");
-                convertButton.AddToClassList("inactive");
-            }
+            string[] parts = path[0].Split('\\');
+            string lastPart = parts[parts.Length - 1];
+            dataLabelTextField.value = lastPart;
+            fileDone.RemoveFromClassList("inactive");
+            dirDone.RemoveFromClassList("inactive");
+            openFileWindowButton.AddToClassList("inactive");
+            openDirWindowButton.AddToClassList("inactive");
+            convertButton.AddToClassList("inactive");
 
-            else
-            {
-                print("dir not valid paths " + path[0]);
-                // directory not valid.
-                return;
-            }
-            StartCoroutine(ScarfManager.instance.StageDataCoroutine(dataLabelTextField.value, convertRunning, convertDone));
+            // if running locally check if path exists.
+            //if (Directory.Exists($"{zarrDataTextField.value}/cellData"))
+            //{
+            //}
+            //else
+            //{
+            //    print("dir not valid paths " + path[0]);
+            //    // directory not valid.
+            //    return;
+            //}
+            StartCoroutine(ScarfManager.instance.StageDataCoroutine(dataLabelTextField.value));
         }
 
 
         private void OnConvertButtonPressed()
         {
             progressBarContainer.RemoveFromClassList("inactive");
-            if (!File.Exists($"{rawDataTextField.value.FixFilePath()}"))
-            {
-                fileMessageLabel.text = "Could not find file...";
-                fileMessageLabel.style.display = DisplayStyle.Flex;
-                return;
-            }
+            //if (!File.Exists($"{rawDataTextField.value.FixFilePath()}"))
+            //{
+            //    fileMessageLabel.text = "Could not find file...";
+            //    fileMessageLabel.style.display = DisplayStyle.Flex;
+            //    return;
+            //}
             openFileWindowButton.AddToClassList("inactive");
             fileMessageLabel.style.display = DisplayStyle.None;
 
@@ -253,7 +256,20 @@ namespace CellexalVR.DesktopUI
             string[] parts = rawDataTextField.value.Split('/');
             string lastPart = parts[parts.Length - 1];
 
-            StartCoroutine(ScarfManager.instance.ConvertToZarrCoroutine(dataLabelTextField.value, lastPart, convertRunning, convertDone));
+            convertRunning.RemoveFromClassList("inactive");
+            StartCoroutine(ScarfManager.instance.ConvertToZarrCoroutine(dataLabelTextField.value, lastPart));
+        }
+
+        private void OnConversionComplete()
+        {
+            convertRunning.AddToClassList("inactive");
+            convertDone.RemoveFromClassList("inactive");
+            ToggleProgressBar(false);
+        }
+
+        private void OnDataStaged()
+        {
+
         }
 
         private void AnimateUIRotation(VisualElement el)

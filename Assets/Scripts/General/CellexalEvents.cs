@@ -87,6 +87,10 @@ namespace CellexalVR.General
         public static UnityEvent LoadingImages = new UnityEvent();
         public static UnityEvent ImagesLoaded = new UnityEvent();
 
+        // Scarf Events
+        public static UnityEvent ZarrConversionComplete = new UnityEvent();
+        public static UnityEvent DataStaged = new UnityEvent();
+        public static UnityEvent DataLoaded = new UnityEvent();
 
 
         public class CommandFinishedEvent : UnityEvent<bool> { }

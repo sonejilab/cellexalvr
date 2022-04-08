@@ -57,7 +57,7 @@ namespace CellexalVR.Interaction
 
         private IEnumerator InitCoroutine()
         {
-            string[] results;
+            string[] results = new string[0];
             int longestNameLength = 0;
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -70,9 +70,14 @@ namespace CellexalVR.Interaction
                 //Grabbing the first h5reader since we dont know the path
                 results = referenceManager.inputReader.h5readers.First().Value.index2genename;
             }
-            else if (ScarfManager.scarfObject != null)
+            else if (ScarfManager.instance.scarfActive)
             {
-                results = ScarfManager.scarfObject.feature_names.ToArray();
+                StartCoroutine(ScarfManager.instance.GetFeatureNames());
+                while (ScarfManager.instance.reqPending)
+                    yield return null;
+
+                results = ScarfManager.instance.geneNames;
+                //results = ScarfManager.scarfObject.feature_names.ToArray();
             }
             else if (File.Exists($"Data/{CellexalUser.DataSourceFolder}/database.sqlite"))
             {
@@ -90,19 +95,19 @@ namespace CellexalVR.Interaction
                 }
                 //summertwerk
                 results = (string[])database._result.ToArray(typeof(string));
-                for (int i = 0; i < results.Length; ++i)
-                {
-                    string name = (string)results[i];
-                    if (name.Length > longestNameLength)
-                    {
-                        longestNameLength = name.Length;
-                    }
-                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(name, Definitions.Measurement.GENE));
-                }
             }
 
+            for (int i = 0; i < results.Length; ++i)
+            {
+                string name = (string)results[i];
+                if (name.Length > longestNameLength)
+                {
+                    longestNameLength = name.Length;
+                }
+                namesOfThings.Add(new Tuple<string, Definitions.Measurement>(name, Definitions.Measurement.GENE));
+            }
             // TODO: Make color by attr work from keyboard(?)
-            string[] attributes = referenceManager.cellManager.Attributes.ToArray();
+            string[] attributes = ReferenceManager.instance.cellManager.Attributes?.ToArray();
             try
             {
                 foreach (string attribute in attributes)

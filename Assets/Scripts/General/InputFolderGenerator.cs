@@ -3,6 +3,9 @@ using System.IO;
 using System;
 using CellexalVR.SceneObjects;
 using TMPro;
+using System.Collections.Generic;
+using CellexalVR.AnalysisLogic;
+using System.Collections;
 
 namespace CellexalVR.General
 {
@@ -16,6 +19,8 @@ namespace CellexalVR.General
         public ReferenceManager referenceManager;
 
         private int nfolder = 0;
+        private List<string> directories = new List<string>();
+        private string dataDirectory;
 
         // 6 is the number of boxes on each "floor"
         private Vector3[] folderBaseCoords = new Vector3[6];
@@ -44,7 +49,7 @@ namespace CellexalVR.General
                 folderBaseCoords[i] = new Vector3(folderBaseCoords[i - j].x, 0, -folderBaseCoords[i - j].z);
             }
 
-            GenerateFolders();
+            GetDirectories();
 
             CellexalEvents.GraphsLoaded.AddListener(referenceManager.loaderController.DestroyFolderColliders);
             CellexalEvents.GraphsLoaded.AddListener(referenceManager.loaderController.DestroyCells);
@@ -56,28 +61,46 @@ namespace CellexalVR.General
         /// Generates the boxes that represent folders.
         /// </summary>
         /// <param name="filter">String filter to search for specific data folder directory.</param>
-        public void GenerateFolders(string filter = "")
+        public void GetDirectories()
         {
             DestroyFolders();
 
-            string dataDirectory;
-            string[] directories;
+            StartCoroutine(GetDirectoriesCoroutine());
+
+
+
+            
+            // GeneratePreviousSessionFolders(filter);
+        }
+
+        private IEnumerator GetDirectoriesCoroutine()
+        {
             if (CrossSceneInformation.Tutorial)
             {
                 referenceManager.tutorialManager.gameObject.SetActive(true);
                 dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
-                directories = Directory.GetDirectories(dataDirectory, "Mouse_HSPC");
+                directories.AddRange(Directory.GetDirectories(dataDirectory, "Mouse_HSPC"));
             }
             else
             {
                 referenceManager.tutorialManager.gameObject.SetActive(false);
+                StartCoroutine(ScarfManager.instance.GetDatasetsCoroutine());
+                while (ScarfManager.instance.reqPending)
+                    yield return null;
+
+                directories.AddRange(ScarfManager.instance.datasets);
                 dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
-                directories = Directory.GetDirectories(dataDirectory);
+                directories.AddRange(Directory.GetDirectories(dataDirectory));
             }
 
-            if (directories.Length == 0)
+            GenerateFolders();
+        }
+
+        public void GenerateFolders(string filter = "")
+        {
+            if (directories.Count == 0)
             {
-                if (directories.Length == 0)
+                if (directories.Count == 0)
                 {
                     CellexalError.SpawnError(new Vector3(0, 1, 0), "Error in data folder",
                         "Error in data folder\nNo datasets found.\nMake sure you have placed your dataset(s) in the correct folder. They should be in serperate folders inside the \'Data\' folder, located where you installed CellexalVR.");
@@ -122,8 +145,6 @@ namespace CellexalVR.General
                     newFolder.gameObject.name = croppedDirectoryName + "_box";
                 }
             }
-            
-            // GeneratePreviousSessionFolders(filter);
         }
 
 

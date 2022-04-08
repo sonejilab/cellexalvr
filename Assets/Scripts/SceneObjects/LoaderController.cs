@@ -316,7 +316,7 @@ namespace CellexalVR.SceneObjects
             }
 
             ResetLoaderBooleans();
-            inputFolderGenerator.GenerateFolders();
+            inputFolderGenerator.GetDirectories();
             referenceManager.inputFolderGenerator.gameObject.SetActive(true);
             keyboard.SetActive(true);
             helpVideoObj.SetActive(true);

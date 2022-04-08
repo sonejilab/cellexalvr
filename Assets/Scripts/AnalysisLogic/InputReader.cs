@@ -102,6 +102,13 @@ namespace CellexalVR.AnalysisLogic
             ReadFolder(path);
         }
 
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readscarffolder", "rscf" })]
+        public void ReadScarfFolderConsole(string path)
+        {
+            //referenceManager.multiuserMessageSender.SendMessageReadScarfFolder(path);
+            ScarfManager.instance.LoadPreprocessedData(path);
+        }
+
         [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readprevioussession", "rps" })]
         public void ReadPreviousSessionConsole(string path, string fromPreviousSession = "")
         {

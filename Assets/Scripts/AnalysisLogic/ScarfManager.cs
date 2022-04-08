@@ -47,11 +47,15 @@ namespace CellexalVR.AnalysisLogic
         public static ScarfManager instance;
 
         // private static string url = "https://scarfweb.xyz";
-        private static readonly string url = "http://127.0.0.1:9977/";
+        //private static readonly string url = "http://127.0.0.1:9977/";
+        private static readonly string url = "http://192.168.0.16:8090/";
 
         public static ScarfObject scarfObject;
-        public static Dictionary<string, List<float>> cellStats;
+        //public static Dictionary<string, List<float>> cellStats;
+        public string[] datasets;
+        public string[] geneNames;
         public bool scarfActive;
+        public bool reqPending;
 
         private int progress = 0;
         private int firstLineLength;
@@ -75,12 +79,28 @@ namespace CellexalVR.AnalysisLogic
         {
             if (Keyboard.current.hKey.wasPressedThisFrame)
             {
-                StartCoroutine(GetCellValues("RNA_leiden_cluster", "clusters"));
+                //StartCoroutine(GetCellValues("RNA_leiden_cluster", "clusters"));
+                StartCoroutine(GetFeatureNames());
             }
             if (Keyboard.current.jKey.wasPressedThisFrame)
             {
                 StartCoroutine(GetCellValues("CD14", "gene"));
             }
+            if (Keyboard.current.lKey.wasPressedThisFrame)
+            {
+                LoadPreprocessedData("qwe");
+            }
+        }
+
+        public void LoadPreprocessedData(string label, string layoutKey = "RNA_UMAP")
+        {
+            StartCoroutine(LoadPreprocessedDataCouroutine(label, layoutKey));
+        }
+
+        private IEnumerator LoadPreprocessedDataCouroutine(string label, string layoutKey)
+        {
+            yield return StartCoroutine(StageDataCoroutine(label));
+            yield return StartCoroutine(CreateGraph(label, layoutKey));
         }
 
         public void InitServer()
@@ -200,13 +220,33 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        public IEnumerator ConvertToZarrCoroutine(string dataLabel, string rawData, VisualElement running, VisualElement done)
+        public IEnumerator GetDatasetsCoroutine()
+        {
+            reqPending = true;
+            string reqURL = $"{url}get_datasets";
+            UnityWebRequest req = UnityWebRequest.Get(reqURL);
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
+            {
+                print(req.error);
+                yield break;
+            }
+            string response = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
+            JObject jObject = JObject.Parse(response);
+            List<string> x = jObject[$"values"]
+                .Children()
+                .Select(v => v.Value<string>())
+                .ToList();
+
+            datasets = x.ToArray();
+            reqPending = false;
+        }
+
+        public IEnumerator ConvertToZarrCoroutine(string dataLabel, string rawData)
         {
             string reqURL = $"{url}convert_to_zarr/{dataLabel}/{rawData}";
-            print(reqURL);
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
             ScarfUIManager.instance.ToggleProgressBar(true);
-            running.RemoveFromClassList("inactive");
             yield return req.SendWebRequest();
 
             if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
@@ -215,11 +255,13 @@ namespace CellexalVR.AnalysisLogic
                 yield break;
             }
 
-            yield return StartCoroutine(StageDataCoroutine(dataLabel, running, done));
+            CellexalEvents.ZarrConversionComplete.Invoke();
+
+            yield return StartCoroutine(StageDataCoroutine(dataLabel));
 
         }
 
-        public IEnumerator StageDataCoroutine(string dataLabel, VisualElement running, VisualElement done)
+        public IEnumerator StageDataCoroutine(string dataLabel)
         {
             string reqURL = $"{url}stage_data/{dataLabel}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
@@ -231,9 +273,8 @@ namespace CellexalVR.AnalysisLogic
                 print(req.error);
                 yield break;
             }
-            running.AddToClassList("inactive");
-            done.RemoveFromClassList("inactive");
-            ScarfUIManager.instance.ToggleProgressBar(false);
+
+            CellexalEvents.DataStaged.Invoke();
             progress++;
         }
 
@@ -305,7 +346,7 @@ namespace CellexalVR.AnalysisLogic
             running.RemoveFromClassList("inactive");
             while (progress < 3) yield return null;
             ScarfUIManager.instance.ToggleProgressBar(true);
-            string reqURL = $"{url}run_umap/{nEpochs}";
+            string reqURL = $"{url}run_umap/{nEpochs}/";
 
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
             yield return req.SendWebRequest();
@@ -327,10 +368,33 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(GetCellValues(featureName, type));
         }
 
-        private IEnumerator GetCellValues(string key, string type)
+        public IEnumerator GetFeatureNames()
+        {
+            string reqURL = $"{url}get_gene_names";
+            UnityWebRequest req = UnityWebRequest.Get(reqURL);
+            reqPending = true;
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
+            {
+                print(req.error);
+                yield break;
+            }
+
+            string response = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
+            JObject jObject = JObject.Parse(response);
+            List<string> x = jObject[$"values"]
+                .Children()
+                .Select(v => v.Value<string>())
+                .ToList();
+
+            geneNames = x.ToArray();
+            reqPending = false;
+        }
+
+        public IEnumerator GetCellValues(string key, string type)
         {
             string reqURL = $"{url}get_cell_values/{key}";
-            print(reqURL);
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
             yield return req.SendWebRequest();
 
@@ -350,7 +414,7 @@ namespace CellexalVR.AnalysisLogic
             switch (type)
             {
                 case "clusters":
-                    ReferenceManager.instance.cellManager.ColorAllClusters(x.ToArray());
+                    ReferenceManager.instance.cellManager.ColorAllClusters(x.ToArray(), true);
                     break;
                 case "gene":
                     ReferenceManager.instance.cellManager.ColorByGene(x.ToArray());
@@ -359,6 +423,30 @@ namespace CellexalVR.AnalysisLogic
                     break;
             }
         }
+        
+        private IEnumerator RunMarkerSearch()
+        {
+            string reqURL = $"{url}run_marker_search/RNA_leiden_cluster/0.25";
+            UnityWebRequest req = UnityWebRequest.Get(reqURL);
+
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
+            {
+                print(req.error);
+                yield break;
+            }
+
+
+        }
+
+        //private IEnumerator RegisterSelection()
+        //{
+        //    string reqURL = $"{url}consolidate_groups";
+
+        //    string postData = 
+        //    UnityWebRequest req = UnityWebRequest.Post(reqURL, postData);
+        //}
 
         public void CloseServer()
         {
@@ -425,9 +513,9 @@ namespace CellexalVR.AnalysisLogic
             while (ReferenceManager.instance.graphGenerator.isCreating)
                 yield return null;
 
+            scarfActive = true;
             CellexalEvents.GraphsLoaded.Invoke();
 
-            scarfActive = true;
         }
 
     }

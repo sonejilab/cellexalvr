@@ -642,12 +642,24 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
-        public void ColorAllClusters(float[] clusters)
+        public void ColorAllClusters(float[] cellClusters, bool color)
         {
-            for (int i = 0; i < clusters.Length; i++)
+            int cluster;
+            for (int i = 0; i < cellClusters.Length; i++)
             {
+                cluster = (int)cellClusters[i];
                 Cell c = cells[i.ToString()];
-                c.ColorByCluster((int)(clusters[i]), true);
+                if (color && !selectionList.ContainsKey(c.GraphPoints[0]))
+                {
+                    selectionList.Add(c.GraphPoints[0], cluster);
+                }
+
+                if (!color)
+                {
+                    selectionList.Remove(c.GraphPoints[0]);
+                }
+                c.ColorByCluster(cluster, true);
+
             }
         }
 

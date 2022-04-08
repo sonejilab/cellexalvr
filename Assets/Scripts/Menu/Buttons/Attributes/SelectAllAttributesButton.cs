@@ -28,8 +28,15 @@ namespace CellexalVR.Menu.Buttons.Attributes
 
         public override void Click()
         {
-            StartCoroutine(attributeSubMenu.SelectAllAttributesCoroutine(toggle));
-            toggle = !toggle;
+            if (ScarfManager.instance.scarfActive)
+            {
+                StartCoroutine(ScarfManager.instance.GetCellValues("RNA_leiden_cluster", "clusters"));
+            }
+            else
+            {
+                StartCoroutine(attributeSubMenu.SelectAllAttributesCoroutine(toggle));
+                toggle = !toggle;
+            }
         }
 
         private void TurnOn()

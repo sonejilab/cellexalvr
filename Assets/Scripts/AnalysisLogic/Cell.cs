@@ -92,6 +92,7 @@ namespace CellexalVR.AnalysisLogic
         {
             foreach (Graph.GraphPoint g in GraphPoints)
             {
+
                 if (color)
                 {
                     g.ColorSelectionColor(cluster, false);
