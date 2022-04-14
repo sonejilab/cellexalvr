@@ -47,13 +47,16 @@ namespace CellexalVR.AnalysisLogic
         public static ScarfManager instance;
 
         // private static string url = "https://scarfweb.xyz";
-        //private static readonly string url = "http://127.0.0.1:9977/";
-        private static readonly string url = "http://192.168.0.16:8090/";
+        private static readonly string url = "http://127.0.0.1:9977/";
+        //private static readonly string url = "http://192.168.0.16:8090/";
 
         public static ScarfObject scarfObject;
         //public static Dictionary<string, List<float>> cellStats;
         public string[] datasets;
         public string[] geneNames;
+        public string[] markers;
+        public float[] cellValues;
+
         public bool scarfActive;
         public bool reqPending;
 
@@ -84,7 +87,7 @@ namespace CellexalVR.AnalysisLogic
             }
             if (Keyboard.current.jKey.wasPressedThisFrame)
             {
-                StartCoroutine(GetCellValues("CD14", "gene"));
+                //StartCoroutine(GetCellValues("CD14", "gene"));
             }
             if (Keyboard.current.lKey.wasPressedThisFrame)
             {
@@ -363,11 +366,6 @@ namespace CellexalVR.AnalysisLogic
             progress++;
         }
 
-        public void ColorGraph(string featureName, string type)
-        {
-            StartCoroutine(GetCellValues(featureName, type));
-        }
-
         public IEnumerator GetFeatureNames()
         {
             string reqURL = $"{url}get_gene_names";
@@ -392,9 +390,9 @@ namespace CellexalVR.AnalysisLogic
             reqPending = false;
         }
 
-        public IEnumerator GetCellValues(string key, string type)
+        public IEnumerator GetCellValues(string valueKey)
         {
-            string reqURL = $"{url}get_cell_values/{key}";
+            string reqURL = $"{url}get_cell_values/{valueKey}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
             yield return req.SendWebRequest();
 
@@ -406,27 +404,40 @@ namespace CellexalVR.AnalysisLogic
 
             string response = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
             JObject jObject = JObject.Parse(response);
-            List<float> x = jObject[$"values"]
+            cellValues = jObject[$"values"]
                 .Children()
                 .Select(v => v.Value<float>())
-                .ToList();
+                .ToArray();
+        }
 
-            switch (type)
+        public IEnumerator ColorByClusters(string clusterName)
+        {
+            yield return GetCellValues(clusterName);
+            ReferenceManager.instance.cellManager.ColorAllClusters(cellValues.ToArray(), true);
+        }
+        public IEnumerator ColorByGene(string geneName)
+        {
+            yield return GetCellValues(geneName);
+            ReferenceManager.instance.cellManager.ColorByGene(cellValues.ToArray());
+        }
+
+        public IEnumerator RunMarkerSearch(string groupKey, float threshold)
+        {
+            string reqURL = $"{url}run_marker_search/{groupKey}/{threshold}";
+            UnityWebRequest req = UnityWebRequest.Get(reqURL);
+
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
             {
-                case "clusters":
-                    ReferenceManager.instance.cellManager.ColorAllClusters(x.ToArray(), true);
-                    break;
-                case "gene":
-                    ReferenceManager.instance.cellManager.ColorByGene(x.ToArray());
-                    break;
-                default:
-                    break;
+                print(req.error);
+                yield break;
             }
         }
-        
-        private IEnumerator RunMarkerSearch()
+
+        public IEnumerator GetMarkers(string groupKey)
         {
-            string reqURL = $"{url}run_marker_search/RNA_leiden_cluster/0.25";
+            string reqURL = $"{url}get_markers/{groupKey}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
 
             yield return req.SendWebRequest();
@@ -437,6 +448,12 @@ namespace CellexalVR.AnalysisLogic
                 yield break;
             }
 
+            string response = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
+            JObject jObject = JObject.Parse(response);
+            markers = jObject[$"values"]
+                .Children()
+                .Select(v => v.Value<string>())
+                .ToArray();
 
         }
 

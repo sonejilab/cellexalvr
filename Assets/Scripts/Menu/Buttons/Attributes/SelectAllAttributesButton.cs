@@ -30,7 +30,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         {
             if (ScarfManager.instance.scarfActive)
             {
-                StartCoroutine(ScarfManager.instance.GetCellValues("RNA_leiden_cluster", "clusters"));
+                StartCoroutine(ScarfManager.instance.GetCellValues("RNA_leiden_cluster"));
             }
             else
             {

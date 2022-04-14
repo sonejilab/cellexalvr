@@ -243,7 +243,7 @@ namespace CellexalVR.AnalysisLogic
         {
             if (ScarfManager.instance.scarfActive)
             {
-                ScarfManager.instance.ColorGraph(geneName, "gene");
+                StartCoroutine(ScarfManager.instance.ColorByGene(geneName));
             }
             else
             {

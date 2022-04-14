@@ -42,7 +42,7 @@ namespace CellexalVR.AnalysisLogic
         private List<Heatmap> heatmapList = new List<Heatmap>();
         private string statsMethod;
         private System.Drawing.Font geneFont;
-        private int nrOfGenes = 250;
+        private int nrOfGenes = 65;
         private int numHeatmapTextures;
         private int textureWidth;
 
@@ -242,11 +242,8 @@ namespace CellexalVR.AnalysisLogic
         private IEnumerator GenerateHeatmapRoutine(string heatmapName)
         {
             GeneratingHeatmaps = true;
-            // Show floor pulse
             referenceManager.floor.StartPulse();
-
-            // Check if more than one cell is selected
-            if (ScarfManager.scarfObject == null)
+            if (!ScarfManager.instance.scarfActive)
             {
                 while (selectionManager.RObjectUpdating)
                 {
@@ -272,7 +269,7 @@ namespace CellexalVR.AnalysisLogic
             string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
             string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
 
-            if (ScarfManager.scarfObject == null)
+            if (!ScarfManager.instance.scarfActive)
             {
                 string function = "make.cellexalvr.heatmap.list";
                 string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
@@ -321,6 +318,11 @@ namespace CellexalVR.AnalysisLogic
                 {
                     yield return null;
                 }
+            }
+            else
+            {
+                //yield return ScarfManager.instance.RunMarkerSearch("RNA_leiden_cluster", 0.25f);
+                yield return ScarfManager.instance.GetMarkers("RNA_leiden_cluster");
             }
             // stopwatch.Stop();
             // CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
@@ -421,7 +423,7 @@ namespace CellexalVR.AnalysisLogic
                 heatmap.layout.attributeWidth * cellWidth, heatmap.layout.attributeWidth));
             if (heatmap.genes == null || heatmap.genes.Length == 0)
             {
-                if (ScarfManager.scarfObject == null)
+                if (!ScarfManager.instance.scarfActive)
                 {
                     if (!File.Exists(filepath))
                     {
@@ -453,20 +455,7 @@ namespace CellexalVR.AnalysisLogic
                 }
                 else
                 {
-                    heatmap.genes = ScarfManager.scarfObject.feature_names.GetRange(50, 50).ToArray();
-                    heatmap.genes = new string[12];
-                    heatmap.genes[0] = "CXCL8";
-                    heatmap.genes[1] = "MS4A1";
-                    heatmap.genes[2] = "MARC1";
-                    heatmap.genes[3] = "NOG";
-                    heatmap.genes[4] = "IGHD";
-                    heatmap.genes[5] = "ENHO";
-                    heatmap.genes[6] = "PPBP";
-                    heatmap.genes[7] = "ALDH1A1";
-                    heatmap.genes[8] = "PID1";
-                    heatmap.genes[9] = "CYP1B1";
-                    heatmap.genes[10] = "NRG1";
-                    heatmap.genes[11] = "ZDHHC1";
+                    heatmap.genes = ScarfManager.instance.markers;
                 }
             }
 
@@ -547,7 +536,8 @@ namespace CellexalVR.AnalysisLogic
 
             ArrayList res = new ArrayList();
             Dictionary<string, string> geneIds = new Dictionary<string, string>();
-            if (ScarfManager.scarfObject == null)
+            geneIds = new Dictionary<string, string>(res.Count);
+            if (!ScarfManager.instance.scarfActive)
             {
                 SQLiter.SQLite db = heatmap.gameObject.AddComponent<SQLiter.SQLite>();
                 db.referenceManager = referenceManager;
@@ -577,7 +567,6 @@ namespace CellexalVR.AnalysisLogic
                 }
 
                 res = db._result;
-                geneIds = new Dictionary<string, string>(res.Count);
                 foreach (Tuple<string, string> t in res)
                 {
                     // keys are names, values are ids
@@ -597,6 +586,46 @@ namespace CellexalVR.AnalysisLogic
 
                 res = db._result;
             }
+            else
+            {
+                float tolerance = 0.001f;
+                int lowestGeneExpressionIndex = 0;
+                int highestGeneExpressionIndex = 1;
+                for (int i = 0; i < heatmap.genes.Length; i++)
+                {
+                    string gene = heatmap.genes[i];
+                    string geneID = gene; // i.ToString();
+                    geneIds[gene] = geneID;
+                    yield return ScarfManager.instance.GetCellValues(gene);
+                    float[] values = ScarfManager.instance.cellValues;
+                    float min = float.PositiveInfinity;
+                    float max = 0f;
+                    res.Add(new Tuple<string, float>(geneID, min));
+                    res.Add(new Tuple<string, float>(geneID, max));
+                    lowestGeneExpressionIndex = res.Count - 2;
+                    highestGeneExpressionIndex = lowestGeneExpressionIndex + 1;
+                    for (int j = 0; j < values.Length; j++)
+                    {
+                        float v = values[j];
+                        if (v - tolerance < 0)
+                        {
+                            min = 0;
+                            continue;
+                        }
+                        if (v < min)
+                        {
+                            min = v;
+                        }
+                        else if (v > max)
+                        {
+                            max = v;
+                        }
+                        res.Add(new Tuple<string, float>(j.ToString(), v));
+                    }
+                    res[lowestGeneExpressionIndex] = new Tuple<string, float>(geneID, min);
+                    res[highestGeneExpressionIndex] = new Tuple<string, float>(geneID, max);
+                }
+            }
 
             Dictionary<string, int> genePositions = new Dictionary<string, int>(heatmap.genes.Length);
             for (int i = 0; i < heatmap.genes.Length; ++i)
@@ -606,7 +635,6 @@ namespace CellexalVR.AnalysisLogic
             }
 
             Dictionary<string, int> cellsPosition = new Dictionary<string, int>(heatmap.cells.Length);
-
             for (int i = 0; i < heatmap.cells.Length; ++i)
             {
                 cellsPosition[heatmap.cells[i].Label] = i;
@@ -628,11 +656,8 @@ namespace CellexalVR.AnalysisLogic
             //    thread = new Thread(() => CreateHeatmapPNGScarf(heatmap, result, genePositions, cellsPosition, heatmapFilePath));
             //    thread.Start();
             //}
-
             thread = new Thread(() => CreateHeatmapPNG(heatmap, res, genePositions, cellsPosition, geneIds, heatmapFilePath));
             thread.Start();
-
-
             while (thread.IsAlive)
             {
                 yield return null;
@@ -765,21 +790,39 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 1; i < result.Count;)
             {
                 // new gene
-                string genename = ((Tuple<string, float>)result[i]).Item1;
+                string geneName = ""; 
+                try
+                {
+                    geneName = ((Tuple<string, float>)result[i]).Item1;
+                }
+                catch (Exception ex)
+                {
+                    print($"could not cast to tuple: {result[i]}");
+                }
+                
 
-                ycoord = heatmap.layout.heatmapY + genePositions[genename] * ycoordInc;
+                ycoord = heatmap.layout.heatmapY + genePositions[geneName] * ycoordInc;
                 // the arraylist should contain the gene id and that gene's highest expression before all the expressions
                 i += 1;
                 expressions.Clear();
                 while (i < result.Count)
                 {
                     tuple = (Tuple<string, float>)result[i];
+                    try
+                    {
+                        tuple = ((Tuple<string, float>)result[i]);
+                    }
+                    catch (Exception ex)
+                    {
+                        print($"could not cast to tuple: {result[i]}");
+                    }
                     i++;
                     if (geneIds.ContainsKey(tuple.Item1))
+                    {
                         break;
+                    }
                     expressions.Add(tuple);
                 }
-
                 expressions.Sort((Tuple<string, float> t1, Tuple<string, float> t2) => t1.Item2.CompareTo(t2.Item2));
                 float binsize = (float)expressions.Count / (CellexalConfig.Config.NumberOfHeatmapColors - 1);
                 int expressionIndex = 0;
@@ -792,7 +835,6 @@ namespace CellexalVR.AnalysisLogic
                         expressions[expressionIndex] = new Tuple<string, float>(expressions[expressionIndex].Item1, j);
                     }
                 }
-
                 for (int j = 0; j < expressions.Count; ++j)
                 {
                     string cellName = expressions[j].Item1;
