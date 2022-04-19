@@ -16,6 +16,13 @@ namespace CellexalVR.General
         public Material material;
         public int verticalSplit = 1;
         public int horizontalSplit = 1;
+        public enum NodeMode
+        {
+            Curved,
+            Sperhical,
+            Straight
+        }
+        public NodeMode currentNodeMode;
         private MeshFilter filter;
 
         // private Mesh mesh;
@@ -96,7 +103,7 @@ namespace CellexalVR.General
             // Generate(); if generating a cube use this one.
         }
 
-        public virtual void GenerateNodes(float r = 1.0f, string type = "spherical")
+        public virtual void GenerateNodes(float r = 1.0f)
         {
             if (r == 0) r = 1;
             foreach (GameObject bn in meshNodes)
@@ -110,15 +117,15 @@ namespace CellexalVR.General
             //xSize = 40;
             //ySize = 10;
             //GenerateCurvedNodes(r, curvature);
-            if (type.Equals("spherical"))
+            if (currentNodeMode == NodeMode.Sperhical)
             {
                 GenerateSphericalNodes();
             }
-            else if (type == "straight")
+            else if (currentNodeMode == NodeMode.Straight)
             {
                 GenerateStraightNodes();
             }
-            else if (type == "curved")
+            else if (currentNodeMode == NodeMode.Curved)
             {
                 GenerateCurvedNodes();
             }
@@ -153,6 +160,12 @@ namespace CellexalVR.General
 
         protected virtual void GenerateCurvedNodes(float r = 1.0f)
         {
+            foreach (GameObject bn in meshNodes)
+            {
+                DestroyImmediate(bn);
+            }
+            meshNodes.Clear();
+            meshNodePositions.Clear();
             float yPos = 0f;
             for (int y = 0; y < ySize; y++)
             {
@@ -209,7 +222,7 @@ namespace CellexalVR.General
             }
         }
 
-        private void LateUpdate()
+        protected virtual void LateUpdate()
         {
             //if (GetComponentInChildren<MeshDeformer>() == null) return;
             tempPositions = new Vector3[splitMeshes.Count];
@@ -226,21 +239,18 @@ namespace CellexalVR.General
             if (radiusLastFrame != radius)
             {
                 GenerateNodes();
-                GenerateMeshes();
                 radiusLastFrame = radius;
             }
 
             else if (curvatureYLastFrame != curvatureY)
             {
                 GenerateNodes();
-                GenerateMeshes();
                 curvatureYLastFrame = curvatureY;
             }
 
             else if (curvatureXLastFrame != curvatureX)
             {
-                GenerateNodes(curvatureX);
-                GenerateMeshes();
+                GenerateNodes();
                 curvatureXLastFrame = curvatureX;
             }
 
@@ -313,16 +323,13 @@ namespace CellexalVR.General
                         j * ySize / horizontalSplit, (j + 1) * ySize / horizontalSplit);
                     MeshFilter mf = GetComponent<MeshFilter>();
                     Renderer renderer = GetComponent<MeshRenderer>();
-                    if (mf != null)
+                    if (mf == null)
                     {
-                        mf.mesh = mesh;
-                    }
-                    else
-                    {
-                        GetComponentInChildren<MeshFilter>().mesh = mesh;
+                        mf = GetComponentInChildren<MeshFilter>();
                         renderer = GetComponentInChildren<MeshRenderer>();
                     }
                     transform.localScale = scale;
+                    mf.mesh = mesh;
                     renderer.material = material;
                     //renderer.material.SetFloat("_XGridSize", xSize - 1);
                     //renderer.material.SetFloat("_YGridSize", ySize - 1);

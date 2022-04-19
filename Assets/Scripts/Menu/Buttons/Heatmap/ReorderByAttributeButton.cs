@@ -10,9 +10,9 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         private CellexalVR.AnalysisObjects.Heatmap heatmap;
         private CellexalVR.AnalysisLogic.HeatmapGenerator heatmapGenerator;
 
-        protected override string Description =>
-            !heatmap.orderedByAttribute ? "Reorder heatmap so attribute bar is sorted in each group"
-                : "Switch back to original ordering";
+        protected override string Description => "";
+            //!heatmap.orderedByAttribute ? "Reorder heatmap so attribute bar is sorted in each group"
+            //    : "Switch back to original ordering";
 
         protected override void Awake()
         {

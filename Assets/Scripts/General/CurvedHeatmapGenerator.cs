@@ -8,15 +8,17 @@ namespace CellexalVR.General
 {
     public class CurvedHeatmapGenerator : CurvedMeshGenerator
     {
+        public static CurvedHeatmapGenerator instance;
         public GameObject leftSidePrefab;
+        public List<Texture2D> texture2Ds = new List<Texture2D>();
+        public Texture2D geneListTexture;
+        public Material geneListMat;
 
-        private List<Texture2D> textures;
-        private Texture2D geneListTexture;
-        private Material material;
+        private GameObject meshObject;
 
         private void Start()
         {
-
+            instance = this;
         }
 
         private void Update()
@@ -28,22 +30,38 @@ namespace CellexalVR.General
         {
             
         }
-        
-        public void GenerateCurvedHeatmapMesh()
+
+        public override void GenerateNodes(float r = 1.0f)
         {
-            foreach (MeshRenderer mr in GetComponentsInChildren<MeshRenderer>())
+            StartCoroutine(GenerateCurvedHeatmap());
+        }
+
+        public IEnumerator GenerateCurvedHeatmap()
+        {
+            if (meshObject != null)
             {
-                DestroyImmediate(mr.gameObject);
+                Destroy(meshObject);
             }
-            GameObject meshObject = new GameObject();
+            yield return null;
+            meshObject = new GameObject();
             meshObject.transform.parent = transform;
             meshObject.transform.localScale = Vector3.one;
             meshObject.name = "CurvedHeatmap";
             meshObject.AddComponent<MeshFilter>();
-            meshObject.AddComponent<MeshRenderer>();
+            MeshRenderer renderer = meshObject.AddComponent<MeshRenderer>();
+            renderer.material.SetTexture("_MainTex", texture2Ds[0]);
+            renderer.material.SetTexture("_MainTex2", texture2Ds[1]);
+            currentNodeMode = NodeMode.Curved;
+            GenerateCurvedNodes();
+            GenerateMeshes();
+            CreateSides();
 
-            GenerateNodes(type: "curved");
 
+            //return meshObject;
+        }
+
+        private void CreateSides()
+        {
             var leftSide = Instantiate(leftSidePrefab, meshObject.transform);
             Vector3 pos = meshNodePositions[0];
             pos.y = 0f;
@@ -58,15 +76,19 @@ namespace CellexalVR.General
             var rightSide = GameObject.CreatePrimitive(PrimitiveType.Quad);
             rightSide.name = "GeneList";
             rightSide.transform.parent = meshObject.transform;
-            rightSide.transform.localScale = new Vector3(0.08f, 0.95f, 1);
+            rightSide.transform.localScale = new Vector3(0.2f, 0.95f, 1);
             pos = meshNodePositions[meshNodePositions.Count - 1];
             pos.y = 0f;
             rightSide.transform.localPosition = pos;
             rightSide.transform.LookAt(2 * rightSide.transform.position - transform.position);
-            rightSide.transform.position += rightSide.transform.right * 0.04f;
+            rightSide.transform.position += rightSide.transform.right * 0.1f;
             pos = rightSide.transform.localPosition;
             pos.y = 0.471f;
             rightSide.transform.localPosition = pos;
+
+            MeshRenderer rMeshRend = rightSide.GetComponent<MeshRenderer>();
+            rMeshRend.material = geneListMat;
+            rMeshRend.material.SetTexture("_MainTex", geneListTexture);
         }
     }
 }
@@ -89,7 +111,7 @@ public class CurvedHeatmapGeneratorEditor : Editor
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Generate Meshes"))
         {
-            myTarget.GenerateCurvedHeatmapMesh();
+            myTarget.GenerateCurvedHeatmap();
         }
         GUILayout.EndHorizontal();
 

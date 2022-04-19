@@ -423,6 +423,7 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator RunMarkerSearch(string groupKey, float threshold)
         {
+            reqPending = true;
             string reqURL = $"{url}run_marker_search/{groupKey}/{threshold}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
 
@@ -433,6 +434,7 @@ namespace CellexalVR.AnalysisLogic
                 print(req.error);
                 yield break;
             }
+            reqPending = false;
         }
 
         public IEnumerator GetMarkers(string groupKey)

@@ -685,18 +685,33 @@ namespace CellexalVR.AnalysisLogic
             }
 
             yield return null;
-
+            Texture2D[] textures = new Texture2D[heatmap.layout.textureGraphics.Count];
             for (int i = 0; i < heatmap.layout.textureGraphics.Count; ++i)
             {
-                Texture2D texture = Instantiate(heatmapTexture) as Texture2D;
+                //Texture2D texture = Instantiate(heatmapTexture) as Texture2D;
+                Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, true);
                 yield return null;
                 texture.LoadImage(File.ReadAllBytes(heatmapFilePath + "_" + i + ".png"));
+                texture.filterMode = FilterMode.Point;
+                //texture.SetPixels(texture.GetPixels(0, 0, texture.width, texture.height));
+                textures[i] = texture;
                 yield return null;
                 GameObject newTextureGameObject = Instantiate(heatmapTexturePrefab);
                 textureGameObjects.Add(newTextureGameObject);
                 newTextureGameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
                 newTextureGameObject.transform.parent = heatmap.transform;
                 yield return null;
+            }
+
+            if (CurvedHeatmapGenerator.instance != null)
+            {
+                CurvedHeatmapGenerator.instance.geneListTexture = textures[textures.Length - 1];
+                for (int i = 1; i < textures.Length - 1; ++i)
+                {
+                    CurvedHeatmapGenerator.instance.texture2Ds.Add(textures[i]);
+                }
+                StartCoroutine(CurvedHeatmapGenerator.instance.GenerateCurvedHeatmap());
+
             }
 
             // position left and right side textures
@@ -790,7 +805,7 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 1; i < result.Count;)
             {
                 // new gene
-                string geneName = ""; 
+                string geneName = "";
                 try
                 {
                     geneName = ((Tuple<string, float>)result[i]).Item1;
@@ -799,7 +814,7 @@ namespace CellexalVR.AnalysisLogic
                 {
                     print($"could not cast to tuple: {result[i]}");
                 }
-                
+
 
                 ycoord = heatmap.layout.heatmapY + genePositions[geneName] * ycoordInc;
                 // the arraylist should contain the gene id and that gene's highest expression before all the expressions
