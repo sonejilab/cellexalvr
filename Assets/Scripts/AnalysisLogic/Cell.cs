@@ -104,23 +104,6 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        public void ColorByCluster(int cluster, bool color)
-        {
-            foreach (Graph.GraphPoint g in GraphPoints)
-            {
-
-                if (color)
-                {
-                    g.ColorSelectionColor(cluster, false);
-                }
-
-                else
-                {
-                    g.ResetColor();
-                }
-            }
-        }
-
         public void ColorByAttribute(string attributeType, int group, bool color)
         {
             if (!Attributes.ContainsKey(attributeType.ToLower())) return;

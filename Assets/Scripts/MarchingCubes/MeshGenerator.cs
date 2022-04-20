@@ -14,6 +14,8 @@ using CellexalVR.Interaction;
 using DG.Tweening;
 using CellexalVR.General;
 using UnityEngine.InputSystem;
+using System.Threading.Tasks;
+using CellexalVR.AnalysisObjects;
 
 namespace CellexalVR.Spatial
 {
@@ -71,6 +73,30 @@ namespace CellexalVR.Spatial
         {
             UpdateMesh(removeOutliers);
         }
+        public async Task<Transform> GenerateGraphMesh(Graph graph)
+        {
+            ChunkManager chunkManager = Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
+            chunkManager.transform.localScale = Vector3.one * 1.55f;
+            int i = 0;
+            List<Graph.GraphPoint> points = graph.points.Values.ToList();
+            foreach (Graph.GraphPoint point in points)
+            {
+                Vector3 pos = point.Position;
+                int x = (int)(pos.x * 20f) + 10;
+                int y = (int)(pos.y * 20f) + 10;
+                int z = (int)(pos.z * 20f) + 10;
+                chunkManager.SetDensity(x, y, z, 1, false);
+                i++;
+                if (i % 1000 == 0) await Task.Yield();
+            }
+            while (creatingMesh) await Task.Yield();
+            chunkManager.SmoothMesh();
+            meshCreated = true;
+            chunkManager.ToggleSurfaceLevelandUpdateCubes(0, chunkManager.chunks, Color.white);
+            return chunkManager.transform;
+        }
+
+
 
         private void UpdateMesh(bool removeOutliers)
         {

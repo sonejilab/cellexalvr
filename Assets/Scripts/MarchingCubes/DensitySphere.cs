@@ -3,7 +3,7 @@ using CellexalVR.MarchingCubes;
 using CellexalVR.AnalysisLogic;
 using UnityEngine;
 
-namespace MarchingCubes
+namespace CellexalVR.MarchingCubes
 {
     public class DensitySphere : MonoBehaviour
     {

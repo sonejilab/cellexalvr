@@ -179,12 +179,6 @@ namespace CellexalVR.Interaction
 
         private void OnEnable()
         {
-
-
-        }
-
-        private void OnEnable()
-        {
             multiuserMessageSender = ReferenceManager.instance.multiuserMessageSender;
             selectionManager = ReferenceManager.instance.selectionManager;
             graphManager = ReferenceManager.instance.graphManager;

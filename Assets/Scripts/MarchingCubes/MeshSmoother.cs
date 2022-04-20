@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace MarchingCubes
+namespace CellexalVR.MarchingCubes
 {
     public class MeshSmoother
     {
