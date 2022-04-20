@@ -17,7 +17,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
 
         public override void Click()
         {
-            //MeshGenerator.instance.GenerateMeshes();
+            MeshGenerator.instance.SmoothenMeshes();
         }
     }
 }

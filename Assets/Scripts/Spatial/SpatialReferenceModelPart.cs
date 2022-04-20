@@ -47,6 +47,7 @@ namespace CellexalVR.Spatial
             }
         }
 
+#if UNITY_EDITOR
         /// <summary>
         /// Split part into separate meshes based on connectivity. This enables the right and left part to be moved separately. 
         /// Many of the allen reference brain meshes are mirrored right to left which makes this a usable feature.
@@ -97,6 +98,7 @@ namespace CellexalVR.Spatial
             Destroy(child.gameObject);
 
         }
+#endif
 
         public void Spread()
         {

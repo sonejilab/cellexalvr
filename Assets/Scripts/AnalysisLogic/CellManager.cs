@@ -578,7 +578,7 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().ColorCluster(attributeType, color);
+            //World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().ColorCluster(attributeType, color);
 
             CellexalLog.Log("Colored graphs by " + attributeType);
             RScriptRunner.WriteToServer("# colored graphs by " + attributeType);

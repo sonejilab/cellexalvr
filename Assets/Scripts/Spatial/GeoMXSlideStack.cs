@@ -88,7 +88,8 @@ namespace CellexalVR.Spatial
                             GeoMXAOISlide aoi = Instantiate(GeoMXImageHandler.instance.aoiPrefab, transform);
                             aoi.imageHandler = GeoMXImageHandler.instance;
                             Texture2D aoiTexture = DownloadHandlerTexture.GetContent(uwr);
-                            aoi.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", aoiTexture);
+                            aoi.SetLowQ(aoiTexture);
+                            //aoi.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", aoiTexture);
                             float ratio = (float)aoiTexture.width / (float)aoiTexture.height;
                             aoi.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
                             aoi.originalScale = aoi.transform.localScale;
@@ -97,6 +98,7 @@ namespace CellexalVR.Spatial
                             aoi.index = i;
                             aoi.displayName = aoiIDs[i];
                             aoi.type = 2;
+                            aoi.aoiID = aoiIDs[i];
                         }
                     }
                 }

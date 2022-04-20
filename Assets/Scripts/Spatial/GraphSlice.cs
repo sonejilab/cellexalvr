@@ -15,6 +15,7 @@ using UnityEngine.VFX;
 using DG.Tweening;
 using UnityEngine.Pool;
 using UnityEngine.InputSystem;
+using CellexalVR.Menu.Buttons;
 
 namespace CellexalVR.Spatial
 {
@@ -180,7 +181,7 @@ namespace CellexalVR.Spatial
         {
             //StartCoroutine(MoveToGraphCoroutine());
             transform.parent = parentPC.transform;
-            transform.DOLocalMove(originalPos, 0.8f).SetEase(Ease.InOutSine);
+            transform.DOLocalMove(Vector3.zero, 0.8f).SetEase(Ease.InOutSine);
             transform.DOLocalRotate(Vector3.zero, 0.8f).SetEase(Ease.InOutSine).OnComplete(() => gameObject.SetActive(false));
         }
 
@@ -304,6 +305,10 @@ namespace CellexalVR.Spatial
 
         public void ActivateSlices(bool toggle)
         {
+            foreach (CellexalButton b in GetComponentsInChildren<CellexalButton>(true))
+            {
+                b.controllerInside = false;
+            }
             gameObject.SetActive(!toggle);
             GetComponent<BoxCollider>().enabled = !toggle;
             foreach (GraphSlice gs in childSlices)
@@ -316,6 +321,10 @@ namespace CellexalVR.Spatial
 
                 else
                 {
+                    if (gs.childSlices.Count > 0)
+                    {
+                        gs.ActivateSlices(false);
+                    }
                     gs.slicerBox.Active = false;
                     gs.MoveToGraph();
                 }

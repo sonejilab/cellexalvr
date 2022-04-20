@@ -329,6 +329,11 @@ namespace CellexalVR.AnalysisLogic
         //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path, Dictionary<string, string> h5config = null, string fromPreviousSession = "")
         {
+            if (path.Contains("_pc"))
+            {
+                StartCoroutine(ReadBigFolder(path));
+                return;
+            }
             currentPath = path;
             string workingDirectory = Directory.GetCurrentDirectory();
             string fullPath = workingDirectory + "\\Data\\" + path;

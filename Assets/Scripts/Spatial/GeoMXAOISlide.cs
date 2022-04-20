@@ -29,7 +29,7 @@ namespace CellexalVR.Spatial
         }
         public override void SelectCells(int group)
         {
-            int cellID = imageHandler.GetCellFromAoiID(aoiID).id;
+            int cellID = GeoMXImageHandler.instance.GetCellFromAoiID(aoiID).id;
             var graph = ReferenceManager.instance.graphManager.Graphs[0];
             var gPoint = graph.FindGraphPoint(cellID.ToString());
             ReferenceManager.instance.selectionManager.AddGraphpointToSelection(gPoint, group, false);

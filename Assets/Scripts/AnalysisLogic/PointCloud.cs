@@ -258,7 +258,11 @@ namespace AnalysisLogic
         public IEnumerator CreatePositionTextureMap(List<Point> points, PointCloud parentPC)
         {
             pointCount = points.Count;
-            vfx.visualEffectAsset = pointCount < 500000 ? pointCloudQuad : pointCloudHighCap;
+            if (pointCount > 500000)
+            {
+                vfx.visualEffectAsset = pointCloudHighCap;
+                vfx.SetFloat("Size", 0.003f);
+            }
             vfx.SetInt("SpawnRate", pointCount);
             int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
             int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
@@ -310,7 +314,7 @@ namespace AnalysisLogic
                         label = p.label,
                         offset = pos,
                         parentID = pcID,
-                        orgParentID = parentPC.pcID,
+                        orgParentID = p.orgParentID,
                         entity = p.entity
                     };
                     entityManager.SetComponentData(p.entity, newP);
@@ -336,7 +340,12 @@ namespace AnalysisLogic
         {
             pointCount = pointPositions.Count;
             if (vfx == null) vfx = GetComponent<VisualEffect>();
-            vfx.visualEffectAsset = pointCount < 500000 ? pointCloudQuad : pointCloudHighCap;  //
+            //vfx.visualEffectAsset = pointCount < 500000 ? pointCloudQuad : pointCloudHighCap;  //
+            if (pointCount > 500000)
+            {
+                vfx.visualEffectAsset = pointCloudHighCap;
+                vfx.SetFloat("Size", 0.003f);
+            }
             vfx.SetInt("SpawnRate", pointCount);
             int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
             int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;

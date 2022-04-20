@@ -75,8 +75,6 @@ namespace CellexalVR.AnalysisLogic
         private float3 diffCoordValues;
         private Dictionary<string, float3> points = new Dictionary<string, float3>();
         private int graphNr;
-        private Random random;
-        private float spawnTimer;
         private EntityManager entityManager;
         private EntityArchetype entityArchetype;
         private QuadrantSystem quadrantSystem;
@@ -90,6 +88,7 @@ namespace CellexalVR.AnalysisLogic
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             quadrantSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>();
             CreateParentArchetype();
+            CellexalEvents.GraphsUnloaded.AddListener(Reset);
         }
 
         private void Update()
@@ -101,6 +100,15 @@ namespace CellexalVR.AnalysisLogic
                 positionMap.SetPixels(colors);
                 positionMap.Apply(false);
             }
+        }
+
+        private void Reset()
+        {
+            foreach (PointCloud pc in pointClouds)
+            {
+                Destroy(pc.gameObject);
+            }
+            pointClouds.Clear();
         }
 
         public PointCloud CreateNewPointCloud(bool spatial = false)
@@ -151,11 +159,11 @@ namespace CellexalVR.AnalysisLogic
             PointCloud pc;
             if (spatial)
             {
-                pc = Instantiate(spatialPointCloudPrefab, oldPc.transform.position, quaternion.identity);
+                pc = Instantiate(spatialPointCloudPrefab, oldPc.transform.position, oldPc.transform.rotation);
             }
             else
             {
-                pc = Instantiate(pointCloudPrefab, oldPc.transform.position, quaternion.identity);
+                pc = Instantiate(pointCloudPrefab, oldPc.transform.position, oldPc.transform.rotation);
             }
             quadrantSystem.graphParentTransforms.Add(pc.transform);
             quadrantSystem.graphParentTransforms[nrOfGraphs] = pc.transform;
@@ -187,6 +195,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 instance.creatingGraph = true;
                 slice = newSlices[i];
+                slice.parentPC = oldPc.GetComponent<PointCloud>();
                 yield return SpawnPoints(slice.pointCloud, parentSlice.pointCloud, slice.points);
                 slice.gameObject.SetActive(true);
                 slice.UpdateColorTexture();

@@ -121,7 +121,7 @@ public class PointCloudSettings : MonoBehaviour
         }
     }
 }
-
+#if UNITY_EDITOR
 [CustomEditor(typeof(PointCloudSettings))]
 public class PointCloudSettingsEditor : Editor
 {
@@ -150,3 +150,4 @@ public class PointCloudSettingsEditor : Editor
         }
     }
 }
+#endif

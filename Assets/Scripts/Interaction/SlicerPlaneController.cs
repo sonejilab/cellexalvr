@@ -15,7 +15,7 @@ namespace CellexalVR.Interaction
         [SerializeField] private float maxPos;
         [SerializeField] private GameObject slicePlane;
         [SerializeField] private OffsetGrab interactable;
-        private XRBaseInteractor interactor;
+        private IXRSelectInteractor interactor;
         private bool shouldGetHandPosition;
         private float currentValue;
         private Material mat;
@@ -49,7 +49,7 @@ namespace CellexalVR.Interaction
 
         private void OnGrabbed(SelectEnterEventArgs args)
         {
-            interactor = args.interactor;
+            interactor = args.interactorObject;
             shouldGetHandPosition = true;
         }
 
@@ -70,7 +70,7 @@ namespace CellexalVR.Interaction
                     Mathf.Clamp(handPosInLocalSpace.y, minPos, maxPos),
                     Mathf.Clamp(handPosInLocalSpace.z, minPos, maxPos)
                 );
-                joint.localRotation = interactable.transform.localRotation;
+                joint.rotation = interactable.transform.rotation;
             }
         }
 

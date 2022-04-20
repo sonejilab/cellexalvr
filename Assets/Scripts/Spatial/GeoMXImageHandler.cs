@@ -87,6 +87,7 @@ namespace CellexalVR.Spatial
             CellexalEvents.GraphsLoaded.AddListener(ReadData);
             CellexalEvents.SelectionConfirmed.AddListener(SpawnROIFromSelection);
             CellexalEvents.GraphsReset.AddListener(Reset);
+            CellexalEvents.GraphsUnloaded.AddListener(ResetFolders);
         }
 
         private void OnDisable()
@@ -164,7 +165,8 @@ namespace CellexalVR.Spatial
             string[] aoiIDs = slide.aoiIDs;
             foreach (string aoiID in aoiIDs)
             {
-                Destroy(aoiSlides[aoiID].gameObject);
+                if (aoiSlides[aoiID].gameObject != null)
+                    Destroy(aoiSlides[aoiID].gameObject);
             }
             if (moveBack)
             {
@@ -448,6 +450,27 @@ namespace CellexalVR.Spatial
             slideScroller.currentScanIDs = scanSlides.Keys.ToArray();
             slideScroller.currentSlide[0] = 0;
             slideScroller.currentType = 0;
+        }
+
+        private void ResetFolders()
+        {
+            ClearSlideStacks();
+            foreach (GeoMXScanSlide scan in scanSlides.Values)
+            {
+                Destroy(scan.gameObject);
+            }
+            foreach (GeoMXROISlide roi in roiSlides.Values)
+            {
+                Destroy(roi.gameObject);
+            }
+            foreach (GeoMXAOISlide aoi in aoiSlides.Values)
+            {
+                Destroy(aoi.gameObject);
+            }
+            scanSlides.Clear();
+            roiSlides.Clear();
+            aoiSlides.Clear();
+            gameObject.SetActive(false);
         }
 
         private void ClearSlideStacks()

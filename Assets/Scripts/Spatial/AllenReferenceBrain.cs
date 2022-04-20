@@ -108,10 +108,10 @@ namespace CellexalVR.Spatial
             //{
             //    Spread();
             //}
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                StartCoroutine(SplitMeshes());
-            }
+            //if (Input.GetKeyDown(KeyCode.J))
+            //{
+            //    StartCoroutine(SplitMeshes());
+            //}
             if ((int)(Time.realtimeSinceStartup) % 2 == 0)
             {
                 CheckForController();
@@ -307,7 +307,7 @@ namespace CellexalVR.Spatial
 
         }
 
-
+#if UNITY_EDITOR
         private IEnumerator SplitMeshes()
         {
             // 567, 824
@@ -325,7 +325,7 @@ namespace CellexalVR.Spatial
             }
 
         }
-
+#endif
         private bool BrainMeshButtonAdded(string n)
         {
             foreach (BrainPartButton bpb in brainPartButtons)

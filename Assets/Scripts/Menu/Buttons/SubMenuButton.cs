@@ -59,7 +59,6 @@ namespace CellexalVR.Menu.Buttons
             {
                 subMenu.SetMenuActive(true);
             }
-
             descriptionText.text = "";
         }
 

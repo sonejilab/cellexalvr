@@ -107,7 +107,7 @@ namespace CellexalVR.AnalysisLogic
         {
             List<Vector2Int> indices = PointCloudGenerator.instance.clusters[cluster];
             Color col = toggle ? PointCloudGenerator.instance.colorDict[cluster] : new Color(0.32f, 0.32f, 0.32f);
-            Color a = toggle ? Color.white : Color.white * 0.3f;
+            Color a = toggle ? Color.white : Color.white * 0.4f;
             Texture2D atex = alphaTextureMaps[0];
             Color[] aaray = atex.GetPixels();
             for (int i = 0; i < aaray.Length; i++)
@@ -153,7 +153,7 @@ namespace CellexalVR.AnalysisLogic
 
         public void MakeAllPointsTransparent(bool toggle)
         {
-            Color a = toggle ? Color.white * 0.05f : Color.white * 0.8f;
+            Color a = toggle ? Color.white * 0.4f : Color.white * 0.8f;
             Texture2D atex = alphaTextureMaps[0];
             Color[] aarray = atex.GetPixels();
             for (int i = 0; i < aarray.Length; i++)
@@ -191,7 +191,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 Vector2Int coords = textureCoordDict[pair.Cell];
                 tex.SetPixel(coords.x, coords.y, ReferenceManager.instance.graphGenerator.geneExpressionColors[pair.Color + 1]);
-                atex.SetPixel(coords.x, coords.y, Color.white * 0.1f + (a * (pair.Color + 1)));
+                atex.SetPixel(coords.x, coords.y, Color.white * 0.2f + (a * (pair.Color + 1)));
             }
             atex.Apply();
             tex.Apply();
@@ -203,7 +203,7 @@ namespace CellexalVR.AnalysisLogic
             Color[] colors = new Color[mainColorTextureMaps[0].width * mainColorTextureMaps[0].height];
             Color[] alphas = new Color[mainColorTextureMaps[0].width * mainColorTextureMaps[0].height];
             Color a = new Color(0.55f, 0f, 0);
-            Color c = Color.white * 0.32f;
+            Color c = Color.white * 0.4f;
             for (int i = 0; i < colors.Length; i++)
             {
                 colors[i] = c;

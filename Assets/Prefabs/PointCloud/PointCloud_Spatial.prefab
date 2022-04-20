@@ -275,6 +275,7 @@ MonoBehaviour:
   controllerInsideSomeBox: 0
   sliceCoords: {x: 0, y: 0, z: 0}
   spatialGraph: {fileID: 0}
+  parentPC: {fileID: 0}
   parentSlice: {fileID: 0}
   childSlices: []
   pointCloud: {fileID: 1416619197411787972}
@@ -983,6 +984,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3077718414677664128, guid: 2349d5bd2b451f84a82a956f0e2bc5a1,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3594453958880288456, guid: 2349d5bd2b451f84a82a956f0e2bc5a1,
         type: 3}
       propertyPath: referenceManager
@@ -1053,7 +1059,8 @@ PrefabInstance:
       propertyPath: referenceManager
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6667140487193697507, guid: 2349d5bd2b451f84a82a956f0e2bc5a1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 2349d5bd2b451f84a82a956f0e2bc5a1, type: 3}
 --- !u!1 &3386389859001952017 stripped
 GameObject:

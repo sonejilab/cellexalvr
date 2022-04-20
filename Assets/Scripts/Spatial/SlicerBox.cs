@@ -166,7 +166,6 @@ namespace CellexalVR.Spatial
 
         public void BoxAnimation(int axis, int toggle)
         {
-            print($"box anim {axis}, {toggle}");
             Material mat = box.GetComponent<Renderer>().material;
             mat.SetInt("_WaveToggle", toggle);
             mat.SetInt("_WaveAxis", axis);

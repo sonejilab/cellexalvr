@@ -39,7 +39,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
 
         private SliceMode currentMode;
         public SliceAxis currentAxis;
-        private SlicerBox slicerBox;
+        [HideInInspector] public SlicerBox slicerBox;
         private SliceGraphButton sliceGraphButton;
 
         private void Start()

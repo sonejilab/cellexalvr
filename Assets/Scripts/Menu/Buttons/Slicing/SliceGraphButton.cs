@@ -20,7 +20,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
         
         public override void Click()
         {
-            if (!GetComponentInParent<PointCloud>().gameObject.activeSelf)
+            if (!slicingMenu.GetComponentInParent<PointCloud>(true).gameObject.activeSelf)
             {
                 controllerInside = false;
                 return;
