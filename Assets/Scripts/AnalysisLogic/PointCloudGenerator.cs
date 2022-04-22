@@ -91,16 +91,6 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.GraphsUnloaded.AddListener(Reset);
         }
 
-        private void Update()
-        {
-            if (Keyboard.current.lKey.wasPressedThisFrame)
-            {
-                Texture2D positionMap = pointClouds[0].positionTextureMap;
-                Color[] colors = new Color[positionMap.width * positionMap.height];
-                positionMap.SetPixels(colors);
-                positionMap.Apply(false);
-            }
-        }
 
         private void Reset()
         {

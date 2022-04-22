@@ -62,7 +62,7 @@ namespace CellexalVR.Spatial
                 idToModelDictionary[int.Parse(model.gameObject.name)] = model.GetComponent<SpatialReferenceModelPart>();
             }
 
-            string filePath = "structure_info.csv";
+            string filePath = "Assets/StreamingAssets/structure_info.csv";
 
             //Create instance of material for each color.
 

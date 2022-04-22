@@ -250,7 +250,7 @@ MonoBehaviour:
     type: 3}
   graphpointStandardQSmallSzMesh: {fileID: 4300000, guid: 8d99fbc90bf15b44497b960148f91ffa,
     type: 3}
-  graphpointStandardQLargeSzMesh: {fileID: 4300000, guid: e0821cc340676184193823b9964458c8,
+  graphpointStandardQLargeSzMesh: {fileID: 4300000, guid: 31f5fbd3c3942d748ad28b8941a11185,
     type: 3}
   graphpointLowQStandardSzMesh: {fileID: -5495902117074765545, guid: a13b39b558070b64380f898f09f918f8,
     type: 3}
@@ -1470,6 +1470,12 @@ PrefabInstance:
       propertyPath: referenceManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2789558776159019505, guid: 9c800878c52ccc94196080a9929d9da0,
+        type: 3}
+      propertyPath: actionReference
+      value: 
+      objectReference: {fileID: -2258996918771001736, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
     - target: {fileID: 2840207807988252874, guid: 9c800878c52ccc94196080a9929d9da0,
         type: 3}
       propertyPath: referenceManager
@@ -3068,7 +3074,7 @@ PrefabInstance:
     - target: {fileID: 7839131245906517515, guid: 9c800878c52ccc94196080a9929d9da0,
         type: 3}
       propertyPath: m_Name
-      value: PointCloudGenerator (1)
+      value: PointCloudGenerator
       objectReference: {fileID: 0}
     - target: {fileID: 7866169166434034340, guid: 9c800878c52ccc94196080a9929d9da0,
         type: 3}
@@ -3300,6 +3306,18 @@ PrefabInstance:
       propertyPath: referenceManager
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8500395693183303079, guid: 9c800878c52ccc94196080a9929d9da0,
+        type: 3}
+      propertyPath: pointCloudPrefab
+      value: 
+      objectReference: {fileID: 1416619197411787972, guid: 0888b3d3cab73a242bf0e0ae033a3a0d,
+        type: 3}
+    - target: {fileID: 8500395693183303079, guid: 9c800878c52ccc94196080a9929d9da0,
+        type: 3}
+      propertyPath: spatialPointCloudPrefab
+      value: 
+      objectReference: {fileID: 1416619197411787972, guid: ab3b9433df9a7ca4794ba0478f3e1a62,
+        type: 3}
     - target: {fileID: 8506135175024459554, guid: 9c800878c52ccc94196080a9929d9da0,
         type: 3}
       propertyPath: referenceManager
