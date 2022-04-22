@@ -200,22 +200,33 @@ namespace CellexalVR.MarchingCubes
 
         }
 
-        public IEnumerator ToggleSurfaceLevelandUpdateCubes(float i, ChunkScript[,,] chunks, Color color)
+        public void ToggleSurfaceLevelandUpdateCubes(float i, ChunkScript[,,] chunks, Color color)
         {
             //surfaceLevel += i;
             //surfaceLevel = Mathf.Clamp01(surfaceLevel);
-            int chunksThisFrame = 0;
+            //int chunksThisFrame = 0;
             foreach (ChunkScript c in chunks)
             {
                 //StartCoroutine(c.UpdateVertices());
+                //c.AddVerticesToMesh();
+                //c.updateVertices();
+                //c.updateTriangles();
+                //MeshFilter mf = c.GetComponent<MeshFilter>();
+                //color.a = 1;
+                //c.GetComponent<Renderer>().material.color = color;
+                //mf.mesh.RecalculateBounds();
+                //mf.mesh.RecalculateNormals();
+                //if (++chunksThisFrame % 2 == 0) yield return null;
+                c.AddVerticesToMesh();
                 c.updateVertices();
                 c.updateTriangles();
                 MeshFilter mf = c.GetComponent<MeshFilter>();
-                color.a = 1;
-                c.GetComponent<Renderer>().material.color = color;
+                //color.a = 1;
+                //c.GetComponent<Renderer>().material.color = color;
                 mf.mesh.RecalculateBounds();
                 mf.mesh.RecalculateNormals();
-                if (++chunksThisFrame % 2 == 0) yield return null;
+                float scale = 1f / transform.localScale.x;
+                c.transform.localPosition = Vector3.one * -0.5f * scale;
             }
 
             if (!smoothened)

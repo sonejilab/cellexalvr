@@ -51,7 +51,6 @@ namespace CellexalVR.Menu.Buttons.Attributes
 
         public override void Click()
         {
-            print($"click {CurrentMode}");
             if (CurrentMode == Mode.SINGLE)
             {
                 cellManager.ColorByAttribute(Attribute, !colored, colIndex:colIndex);
