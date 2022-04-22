@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5027946518189758784}
-  - component: {fileID: 5027946518189758791}
+  - component: {fileID: 8830613657511756310}
   m_Layer: 0
   m_Name: MeshGenerator
   m_TagString: Untagged
@@ -27,11 +27,12 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5027946518189758791
+--- !u!114 &8830613657511756310
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -40,12 +41,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5027946518189758790}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8bc74a9563a7304c9ac133192095822, type: 3}
+  m_Script: {fileID: 11500000, guid: 51a1798a7a325564a85cd5740bbdb64b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generateMeshes: 1
+  generateMeshes: 0
   chunkManagerPrefab: {fileID: 4866979709267056668, guid: 42bb42301be5d3c48a3924c4f686c7f4,
     type: 3}
+  contourParent: {fileID: 0}
   size: 32
   res: 1
   creatingMesh: 0
