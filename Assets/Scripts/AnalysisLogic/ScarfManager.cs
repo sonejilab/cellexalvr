@@ -232,6 +232,7 @@ namespace CellexalVR.AnalysisLogic
             if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
             {
                 print(req.error);
+                reqPending = false;
                 yield break;
             }
             string response = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
@@ -376,6 +377,7 @@ namespace CellexalVR.AnalysisLogic
             if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
             {
                 print(req.error);
+                reqPending = false;
                 yield break;
             }
 
@@ -432,6 +434,7 @@ namespace CellexalVR.AnalysisLogic
             if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
             {
                 print(req.error);
+                reqPending = false;
                 yield break;
             }
             reqPending = false;

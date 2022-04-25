@@ -63,10 +63,10 @@ namespace CellexalVR.Spatial
             //    GenerateMeshes();
             //}
 
-            if (Keyboard.current.jKey.wasPressedThisFrame)
-            {
-                SpreadOutParts();
-            }
+            //if (Keyboard.current.jKey.wasPressedThisFrame)
+            //{
+            //    SpreadOutParts();
+            //}
         }
 
         public void GenerateMeshes(bool removeOutliers = true)
@@ -291,7 +291,7 @@ namespace CellexalVR.Spatial
 
             centroid /= chunkManager.positions.Count;
             centroids[key] = centroid;
-            StartCoroutine(chunkManager.ToggleSurfaceLevelandUpdateCubes(0, chunkManager.chunks, color));
+            chunkManager.ToggleSurfaceLevelandUpdateCubes(0, chunkManager.chunks, color);
             //creatingMesh = true;
             while (creatingMesh) yield return null;
             chunkManager.SmoothMesh();
