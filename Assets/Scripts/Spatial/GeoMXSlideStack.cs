@@ -29,7 +29,7 @@ namespace CellexalVR.Spatial
         private int currentSlideCount = 0;
         private List<GeoMXAOISlide> aoiSlides = new List<GeoMXAOISlide>();
 
-        public void AddSlide(GeoMXROISlide slide)
+        public void AddSlide(GeoMXAOISlide slide)
         {
             slides.Add(slide);
             if (count > 0)

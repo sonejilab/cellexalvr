@@ -97,7 +97,7 @@ namespace CellexalVR.Menu
 
         private void OnTouchPadClick(InputAction.CallbackContext context)
         {
-            Vector2 pos = context.action.ReadValue<Vector2>();
+            Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
             HandleTouchPadClick(pos);
         }
 

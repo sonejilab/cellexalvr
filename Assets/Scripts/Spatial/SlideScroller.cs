@@ -25,12 +25,36 @@ namespace CellexalVR.Spatial
         [HideInInspector] public string[] currentIDs;
         [HideInInspector] public Dictionary<string, GeoMXSlide> currentSlides;
         [HideInInspector] public int currentType;
-
+        private bool _requireToggleToClick;
+        public bool RequireToggleToClick
+        {
+            get { return _requireToggleToClick; }
+            set
+            {
+                if (_requireToggleToClick == value)
+                {
+                    return;
+                }
+                _requireToggleToClick = value;
+                if (value)
+                {
+                    touchPadClick.action.performed += OnTouchPadClick;
+                    touchPadPos.action.performed -= OnTouchPadClick;
+                }
+                else
+                {
+                    touchPadClick.action.performed -= OnTouchPadClick;
+                    touchPadPos.action.performed += OnTouchPadClick;
+                }
+            }
+        }
 
         private void Start()
         {
             imageHandler = GetComponent<GeoMXImageHandler>();
-            touchPadClick.action.performed += OnTouchPadClick;
+            _requireToggleToClick = false;
+            touchPadPos.action.performed += OnTouchPadClick;
+            CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
 
         private void OnTouchPadClick(InputAction.CallbackContext context)
@@ -39,7 +63,7 @@ namespace CellexalVR.Spatial
                 return;
             Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
             Transform rLaser = ReferenceManager.instance.rightLaser.transform;
-            Physics.Raycast(rLaser.position, rLaser.forward, out RaycastHit hit);
+            Physics.Raycast(rLaser.position, rLaser.forward, out RaycastHit hit, 1 << LayerMask.NameToLayer("EnvironmentButtonLayer"));
             if (!hit.collider || !hit.collider.GetComponent<GeoMXSlide>())
                 return;
             GeoMXSlideStack stack = hit.collider.transform.GetComponentInParent<GeoMXSlideStack>();

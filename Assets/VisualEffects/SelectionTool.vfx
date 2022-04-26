@@ -20,7 +20,7 @@ MonoBehaviour:
     x: 280
     y: -190
     width: 1085
-    height: 2681
+    height: 2661
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -544,7 +544,7 @@ MonoBehaviour:
   stripCapacity: 16
   particlePerStripCount: 16
   needsComputeBounds: 0
-  boundsSettingMode: 1
+  boundsMode: 1
   m_Space: 0
 --- !u!114 &8926484042661614569
 MonoBehaviour:
@@ -3097,7 +3097,8 @@ MonoBehaviour:
     - outputSlot: {fileID: 8926484042661614756}
       inputSlot: {fileID: 8926484042661614641}
     position: {x: 279.88327, y: 2208.1094}
-    expandedSlots: []
+    expandedSlots:
+    - {fileID: 8926484042661614756}
     expanded: 1
 --- !u!114 &8926484042661614756
 MonoBehaviour:

@@ -413,14 +413,14 @@ namespace CellexalVR.Filters
 
             foreach (string a in cellManager.FacsRanges.Keys)
             {
-                print($"in manager {fac}, {a} {a.Equals(fac)}, {a.Equals(fac, StringComparison.OrdinalIgnoreCase)}");
+                //print($"in manager {fac}, {a} {a.Equals(fac)}, {a.Equals(fac, StringComparison.OrdinalIgnoreCase)}");
 
             }
             foreach (string facs in facsList)
             {
                 if (!cellManager.FacsRanges.ContainsKey(facs))
                 {
-                    print("invalid FACS");
+                    //print("invalid FACS");
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Facs " + facs + " not found";
                     currentFilter = null;
@@ -438,10 +438,10 @@ namespace CellexalVR.Filters
             }
             foreach (string attribute in attributes)
             {
-                print($"filter {attribute}");
+                //print($"filter {attribute}");
                 if (!cellManager.Attributes.Contains(attribute, StringComparer.CurrentCultureIgnoreCase))
                 {
-                    print("invalid");
+                    //print("invalid");
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Attribute " + attribute + " not found";
                     currentFilter = null;
