@@ -70,7 +70,6 @@ namespace Assets.Scripts.Interaction
         private void OnTeleportActivate(InputAction.CallbackContext context)
         {
             Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
-            print($"tele activate {pos.y}");
             if (pos.y < 0.65f)
                 return;
             rayInteractor.enabled = true;
@@ -79,7 +78,6 @@ namespace Assets.Scripts.Interaction
 
         private void OnTeleportDeactivate(InputAction.CallbackContext context)
         {
-            print($"tele deactivate");
             Teleport();
             endPoint.SetActive(false);
             rayInteractor.enabled = false;

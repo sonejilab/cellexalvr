@@ -24,7 +24,7 @@ namespace CellexalVR.Spatial
         [HideInInspector] public string[] currentAOIIDs;
         [HideInInspector] public string[] currentIDs;
         [HideInInspector] public Dictionary<string, GeoMXSlide> currentSlides;
-        [HideInInspector] public int currentType;
+        [HideInInspector] public int currentType; // 0: scan, 1: roi, 2: aoi
         private bool _requireToggleToClick;
         public bool RequireToggleToClick
         {
@@ -49,11 +49,11 @@ namespace CellexalVR.Spatial
             }
         }
 
-        private void Start()
+        private void Awake()
         {
             imageHandler = GetComponent<GeoMXImageHandler>();
-            _requireToggleToClick = false;
-            touchPadPos.action.performed += OnTouchPadClick;
+            //_requireToggleToClick = false;
+            //touchPadPos.action.performed += OnTouchPadClick;
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
 
@@ -61,6 +61,7 @@ namespace CellexalVR.Spatial
         {
             if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
                 return;
+
             Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
             Transform rLaser = ReferenceManager.instance.rightLaser.transform;
             Physics.Raycast(rLaser.position, rLaser.forward, out RaycastHit hit, 1 << LayerMask.NameToLayer("EnvironmentButtonLayer"));

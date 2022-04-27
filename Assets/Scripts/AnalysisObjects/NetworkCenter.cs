@@ -181,7 +181,7 @@ namespace CellexalVR.AnalysisObjects
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("GameController"))/*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
+            if (other.gameObject.CompareTag("Smaller Controller Collider"))/*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
             {
                 controllerInside = true;
                 numColliders++;
@@ -190,7 +190,7 @@ namespace CellexalVR.AnalysisObjects
 
         void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("GameController"))/*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
+            if (other.gameObject.CompareTag("Smaller Controller Collider"))/*other.transform.parent != null && other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
             {
                 numColliders--;
             }

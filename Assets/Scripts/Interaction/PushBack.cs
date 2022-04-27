@@ -64,6 +64,13 @@ namespace CellexalVR.Interaction
             }
         }
 
+        private void Awake()
+        {
+            //_requireToggleToClick = false;
+            //touchPadPos.action.performed += OnTouchPadClick;
+            CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
+        }
+
         private void Start()
         {
             if (CrossSceneInformation.Ghost || CrossSceneInformation.Spectator)
@@ -73,17 +80,11 @@ namespace CellexalVR.Interaction
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer")
                 | 1 << LayerMask.NameToLayer("EnvironmentButtonLayer") | 1 << LayerMask.NameToLayer("Ignore Raycast");
-
-            _requireToggleToClick = false;
-            touchPadPos.action.performed += OnTouchPadClick;
-            CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
-
-
         }
 
         private void Update()
         {
-            if (!_requireToggleToClick)
+            if (!_requireToggleToClick || touchPadClick.action.ReadValue<float>() > 0)
             {
                 Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
                 if (pos.y > 0.5f)

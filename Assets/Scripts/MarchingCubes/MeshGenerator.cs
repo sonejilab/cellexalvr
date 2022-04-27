@@ -73,7 +73,7 @@ namespace CellexalVR.Spatial
         {
             UpdateMesh(removeOutliers);
         }
-        public async Task<Transform> GenerateGraphMesh(Graph graph)
+        public async Task<ChunkManager> GenerateGraphMesh(Graph graph)
         {
             ChunkManager chunkManager = Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
             chunkManager.transform.localScale = Vector3.one * 1.55f;
@@ -93,7 +93,7 @@ namespace CellexalVR.Spatial
             chunkManager.SmoothMesh();
             meshCreated = true;
             chunkManager.ToggleSurfaceLevelandUpdateCubes(0, chunkManager.chunks, Color.white);
-            return chunkManager.transform;
+            return chunkManager;
         }
 
 

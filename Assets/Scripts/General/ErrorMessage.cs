@@ -107,7 +107,7 @@ namespace CellexalVR.General
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("GameController"))
+            if (other.gameObject.CompareTag("Smaller Controller Collider"))
             {
                 controllerInside = true;
             }
@@ -115,7 +115,7 @@ namespace CellexalVR.General
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("GameController"))
+            if (other.gameObject.CompareTag("Smaller Controller Collider"))
             {
                 controllerInside = false;
             }

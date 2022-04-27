@@ -48,7 +48,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("GameController"))
+            if (other.CompareTag("Smaller Controller Collider"))
             {
                 parent.UnhighlightAllPorts();
                 SetHighlighted(true);
@@ -57,7 +57,7 @@ namespace CellexalVR.Filters
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("GameController"))
+            if (other.CompareTag("Smaller Controller Collider"))
             {
                 SetHighlighted(false);
             }

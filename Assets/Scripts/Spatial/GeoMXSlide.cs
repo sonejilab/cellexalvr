@@ -37,12 +37,12 @@ namespace CellexalVR.Spatial
         protected virtual void Update()
         {
             float dist = Vector3.Distance(transform.position, ReferenceManager.instance.headset.transform.position);
-            if (!highQActive && dist < 0.5f)
+            if (!highQActive && dist < 0.75f)
             {
                 ToggleQuality(true);
                 highQActive = true;
             }
-            else if (highQActive && dist >= 0.5f)
+            else if (highQActive && dist >= 0.75f)
             {
                 ToggleQuality(false);
                 highQActive = false;
@@ -117,7 +117,7 @@ namespace CellexalVR.Spatial
             Vector3 targetPos;
             reattachButton.SetActive(false);
             detached = false;
-            if (group > 0)
+            if (group >= 0)
             {
                 transform.parent = imageHandler.stacks[group].transform;
                 targetPos = Vector3.zero;

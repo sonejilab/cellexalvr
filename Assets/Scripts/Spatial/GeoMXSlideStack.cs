@@ -49,10 +49,10 @@ namespace CellexalVR.Spatial
 
         public void Scroll(int val)
         {
-            if (aoiSlides.Count > 0)
-            {
-                currentSlide.Select();
-            }
+            //if (aoiSlides.Count > 0)
+            //{
+            //    currentSlide.Select();
+            //}
             currentSlide.Move(new Vector3(0, -1, 0));
             currentSlide.Fade(false);
             currentSlideCount = SlideScroller.mod(currentSlideCount + val, count);

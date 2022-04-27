@@ -9,6 +9,7 @@ namespace CellexalVR.Spatial
     public class GeoMXAOISlide : GeoMXSlide
     {
         public string aoiID;
+        public string scanID;
 
         protected override void Start()
         {

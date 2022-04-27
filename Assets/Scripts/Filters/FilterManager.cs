@@ -25,10 +25,6 @@ namespace CellexalVR.Filters
         public TextMeshPro filterPreviewText;
         public Filter currentFilter;
 
-        // Open XR 
-        //private SteamVR_Controller.Device device;
-        private UnityEngine.XR.InputDevice device;
-        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         private List<Tuple<Graph.GraphPoint, int>> queuedCells = new List<Tuple<Graph.GraphPoint, int>>(256);
         private List<Tuple<Graph.GraphPoint, int>> cellsToEvaluate = new List<Tuple<Graph.GraphPoint, int>>(256);
         private bool loadingFilter = false;
@@ -49,7 +45,6 @@ namespace CellexalVR.Filters
             GeneExprs = new Dictionary<Tuple<string, string>, float>(new TupleComparer());
             previewWire = Instantiate(wirePrefab, this.transform);
             previewWire.SetActive(false);
-            rightController = referenceManager.rightController;
             CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }

@@ -44,7 +44,6 @@ namespace CellexalVR.General
         {
             graphManager = referenceManager.graphManager;
             selectionManager = referenceManager.selectionManager;
-
         }
 
         private void OnTriggerClick()
@@ -58,7 +57,7 @@ namespace CellexalVR.General
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
             //annotationSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             annotationSphere = Instantiate(placeAnnotationPrefab);
-            annotationSphere.transform.parent = referenceManager.rightController.transform;
+            annotationSphere.transform.parent = ReferenceManager.instance.rightController.transform;
             annotationSphere.transform.localRotation = Quaternion.identity;
             //annotationSphere.transform.localScale = Vector3.one * 0.01f;
             annotationSphere.transform.localPosition = new Vector3(0, 0, 0.07f);
@@ -67,7 +66,8 @@ namespace CellexalVR.General
 
         private void ManualAddAnnotation(string s)
         {
-            var col = referenceManager.rightController.GetComponent<Collider>();
+            //var col = ReferenceManager.instance.rightController.GetComponent<Collider>();
+            var col = annotationSphere.GetComponent<Collider>();
             Vector3 colCenter = col.bounds.center;
             Vector3 colExtents = col.bounds.extents;
             foreach (var graph in graphManager.Graphs)
@@ -77,6 +77,7 @@ namespace CellexalVR.General
                 if (closestPoints.Count > 0)
                 {
                     gp = closestPoints[0];
+                    print(gp.Group);
                     if (gp.Group == -1) return;
                     Cell[] cellsToAnnotate = referenceManager.cellManager.GetCells(gp.Group);
                     referenceManager.annotationManager.AddAnnotation(s,

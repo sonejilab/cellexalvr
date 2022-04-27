@@ -88,54 +88,5 @@ namespace CellexalVR.Interaction
             //}
 
         }
-
-        //public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
-        //{
-        //    referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
-        //    NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
-        //    Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-        //    referenceManager.multiuserMessageSender.SendMessageNetworkCenterUngrabbed(center.Handler.name, center.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
-        //    if (grabbingObjects.Count == 0)
-        //    {
-        //        foreach (Collider c in GetComponentsInChildren<Collider>())
-        //        {
-        //            if (c.gameObject.name != "Ring" && !c.gameObject.name.Contains("Enlarged_Network"))
-        //            {
-        //                c.enabled = true;
-        //            }
-        //            //else if (c.gameObject.name == "Ring")
-        //            //{
-        //            //    ((MeshCollider)c).convex = false;
-        //            //}
-
-        //        }
-        //    }
-        //    base.OnInteractableObjectUngrabbed(e);
-        //}
-
-
-        //private void OnTriggerEnter(Collider other)
-        //{
-        //    if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
-        //        || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
-        //    {
-        //        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
-        //        {
-        //            CellexalEvents.ObjectGrabbed.Invoke();
-        //        }
-        //    }
-        //}
-
-        //private void OnTriggerExit(Collider other)
-        //{
-        //    if (referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers
-        //        || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Keyboard)
-        //    {
-        //        if (other.gameObject.name.Equals("ControllerCollider(Clone)"))
-        //        {
-        //            CellexalEvents.ObjectUngrabbed.Invoke();
-        //        }
-        //    }
-        //}
     }
 }

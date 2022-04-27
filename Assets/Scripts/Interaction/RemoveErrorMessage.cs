@@ -41,7 +41,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("GameController"))
+            if (other.gameObject.CompareTag("Smaller Controller Collider"))
             {
                 controllerInside = true;
                 GetComponent<Renderer>().material.color = Color.red;
@@ -50,7 +50,7 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.CompareTag("GameController"))
+            if (other.gameObject.CompareTag("Smaller Controller Collider"))
             {
                 controllerInside = false;
                 GetComponent<Renderer>().material.color = Color.white;
