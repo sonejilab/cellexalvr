@@ -313,6 +313,17 @@ namespace CellexalVR.AnalysisLogic
             scaledCoordinates.Clear();
         }
 
+        public PointCloud FindPointCloud(string pcName)
+        {
+            for (int i = 0; i < pointClouds.Count; i++)
+            {
+                PointCloud pc = pointClouds[i];
+                if (pcName.Equals(pc.gameObject.name))
+                    return pc;
+            }
+            return null; 
+        }
+
 
         private void WriteToFile(string fPath)
         {

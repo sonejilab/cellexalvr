@@ -13,7 +13,7 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
-        private List<Cell> cells;
+        private Cell[] cells;
 
         private LineRenderer line;
         private TextMeshPro textMesh;
@@ -26,10 +26,9 @@ namespace CellexalVR.Interaction
             infoPanel = GetComponentInChildren<GraphInfoPanelRotator>();
         }
 
-        public void SetCells(List<Cell> cells, Vector3 spawnPosition)
+        public void SetCells(int group, Vector3 spawnPosition)
         {
-            this.cells = new List<Cell>(cells);
-
+            this.cells = ReferenceManager.instance.cellManager.GetCells(group);
             if (line == null)
             {
                 line = GetComponentInChildren<LineRenderer>();
@@ -38,10 +37,6 @@ namespace CellexalVR.Interaction
             {
                 textMesh = GetComponentInChildren<TextMeshPro>();
             }
-            Graph graph = GetComponentInParent<Graph>();
-            //Graph.GraphPoint gp = graph.FindGraphPoint(cells[0].Label);
-            //Vector3 position = position;
-            //referenceManager.selectionManager.AddGraphpointToSelection(gp);
             transform.localPosition = spawnPosition;
             Vector3 dir = (Vector3.zero - transform.localPosition).normalized;
             line.SetPosition(0, Vector3.zero);
@@ -52,7 +47,7 @@ namespace CellexalVR.Interaction
 
         public void Highlight(string toggle)
         {
-            referenceManager.cellManager.HighlightCells(cells.ToArray(), toggle.Equals("on"));
+            referenceManager.cellManager.HighlightCells(cells, toggle.Equals("on"));
         }
     }
 }

@@ -54,7 +54,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             if (CurrentMode == Mode.SINGLE)
             {
                 cellManager.ColorByAttribute(Attribute, !colored, colIndex:colIndex);
-                referenceManager.multiuserMessageSender.SendMessageColorByAttribute(Attribute, !colored);
+                ReferenceManager.instance.multiuserMessageSender.SendMessageColorByAttribute(Attribute, !colored);
 
                 colored = !colored;
                 ToggleOutline(colored);
@@ -83,6 +83,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             }
             else if (CurrentMode == Mode.BIG_FOLDER)
             {
+                ReferenceManager.instance.multiuserMessageSender.SendMessageColorByAttributePointCloud(Attribute, !colored);
                 World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().ColorCluster(Attribute, !colored);
                 colored = !colored;
                 ToggleOutline(colored);

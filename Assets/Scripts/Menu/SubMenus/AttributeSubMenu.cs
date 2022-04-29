@@ -167,6 +167,7 @@ namespace CellexalVR.Menu.SubMenus
         {
             if (PointCloudGenerator.instance.pointCount > 0)
             {
+                ReferenceManager.instance.multiuserMessageSender.SendMessageToggleAllAttributesPointCloud(toggle);
                 TextureHandler.instance.ColorAllClusters(toggle);
                 foreach (ColorByAttributeButton b in GetComponentsInChildren<ColorByAttributeButton>())
                 {

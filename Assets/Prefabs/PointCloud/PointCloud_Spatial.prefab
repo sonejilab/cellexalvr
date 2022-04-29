@@ -115,6 +115,7 @@ GameObject:
   - component: {fileID: 2405365623031056180}
   - component: {fileID: 2539850239923332680}
   - component: {fileID: 2063216241321153027}
+  - component: {fileID: 3838600011430942258}
   m_Layer: 8
   m_Name: PointCloud_Spatial
   m_TagString: Untagged
@@ -481,7 +482,22 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
   referenceManager: {fileID: 0}
+--- !u!114 &3838600011430942258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7148217975500203127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c17dc86c6940f1c42805cacf3a636dbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doScale: 0
 --- !u!1 &8995815695299228253
 GameObject:
   m_ObjectHideFlags: 0

@@ -71,7 +71,7 @@ namespace CellexalVR.AnalysisLogic
 
         private void Start()
         {
-            XRSettings.eyeTextureResolutionScale = 1.5f;
+            //XRSettings.eyeTextureResolutionScale = 1.5f;
             // QualitySettings.vSyncCount = 0;
             h5readers = new Dictionary<string, H5Reader>();
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
@@ -106,14 +106,6 @@ namespace CellexalVR.AnalysisLogic
         {
             referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
             ReadFolder(path);
-        }
-
-        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readbigfolder", "rbf" })]
-        public void ReadBigFolderConsole(string path)
-        {
-            referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
-            StartCoroutine(ReadBigFolder(path));
-            // ReadFolder(path);
         }
 
         [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readscarffolder", "rscf" })]
@@ -159,169 +151,6 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        private IEnumerator ReadBigFolder(string path)
-        {
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            if (!referenceManager.loaderController.loaderMovedDown)
-            {
-                referenceManager.loaderController.loaderMovedDown = true;
-                referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
-            }
-
-
-            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
-            string workingDirectory = Directory.GetCurrentDirectory();
-            string fullPath = workingDirectory + "\\Data\\" + path;
-            CellexalUser.DataSourceFolder = path;
-            database.InitDatabase(fullPath + "\\database.sqlite");
-
-            string[] files = Directory.GetFiles(fullPath, "*.mds");
-            PointCloudGenerator.instance.mdsFileCount = files.Length;
-            // string mdsFile = files[0];
-            foreach (string mdsFile in files)
-            {
-                bool spatial = mdsFile.Contains("spatial");
-                PointCloud pc = PointCloudGenerator.instance.CreateNewPointCloud(spatial);
-                string[] regexResult = Regex.Split(mdsFile, @"[\\/]");
-                string graphFileName = regexResult[regexResult.Length - 1];
-                //pc.gameObject.name = graphFileName.Substring(0, graphFileName.Length - 4);
-                pc.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
-                pc.originalName = pc.GraphName;
-                float x;
-                float y;
-                float z;
-                using (StreamReader streamReader = new StreamReader(mdsFile))
-                {
-                    streamReader.ReadLine();
-
-                    int i = 0;
-                    while (!streamReader.EndOfStream)
-                    {
-                        if (i % 10000 == 0) yield return null;
-                        string[] words = streamReader.ReadLine().Split(separators);
-                        string cellName;
-                        // reading 2d graph or img pixel coordinates for spatial slice.
-                        if (words.Length == 2)
-                        {
-                            cellName = i.ToString();
-                            x = (float.Parse(words[0]));
-                            y = (float.Parse(words[1]));
-                            z = 0f;
-                        }
-                        else
-                        {
-                            //cellName = i.ToString();
-                            cellName = words[0];
-
-                            x = (float.Parse(words[1]));
-                            y = (float.Parse(words[2]));
-                            z = float.Parse(words[3]);
-                        }
-                        PointCloudGenerator.instance.AddGraphPoint(cellName, x, y, z);
-                        int textureX = i % PointCloudGenerator.textureWidth;
-                        int textureY = (i / PointCloudGenerator.textureWidth);
-                        TextureHandler.instance.textureCoordDict[cellName] = new Vector2Int(textureX, textureY);
-                        PointCloudGenerator.instance.indToLabelDict[i] = cellName;
-                        i++;
-                    }
-                }
-                PointCloudGenerator.instance.SpawnPoints(pc);
-                GC.Collect();
-            }
-
-            if (files.Length > 1)
-            {
-                PointCloud pc1 = PointCloudGenerator.instance.pointClouds[0];
-                PointCloud pc2 = PointCloudGenerator.instance.pointClouds[1];
-                pc1.SetTargetTexture(pc2.positionTextureMap.GetPixels());
-                pc2.SetTargetTexture(pc1.positionTextureMap.GetPixels());
-                //pc1.morphTexture = pc2.positionTextureMap;
-                //pc2.morphTexture = pc1.positionTextureMap;
-                //pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc2.positionTextureMap);
-                //pc2.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
-                //pc1.otherName = pc2.GraphName;
-                //pc2.otherName = pc1.GraphName;
-                //pc1.originalName = pc1.GraphName;
-                //pc2.otherName = pc1.GraphName;
-                //pc2.originalName = pc2.GraphName;
-            }
-
-            attributeReader = gameObject.AddComponent<AttributeReader>();
-            attributeReader.referenceManager = referenceManager;
-            StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
-            while (!attributeFileRead)
-                yield return null;
-            referenceManager.attributeSubMenu.SwitchButtonStates(true);
-            ReadFacsFiles(path);
-            ReadFilterFiles(CellexalUser.UserSpecificFolder);
-            StartCoroutine(PointCloudGenerator.instance.ReadMetaData(fullPath));
-            while (PointCloudGenerator.instance.readingFile)
-                yield return null;
-            StartCoroutine(PointCloudGenerator.instance.CreateColorTextureMap());
-
-            while (PointCloudGenerator.instance.creatingGraph)
-                yield return null;
-
-            PointCloud parentPC = PointCloudGenerator.instance.pointClouds[0];
-
-            files = Directory.GetFiles(fullPath, "*coords.csv");
-            string[] imageFiles = Directory.GetFiles(fullPath, "*.png");
-            for (int i = 0; i < files.Length; i++)
-            {
-                int lineCount = 0;
-                string imageFile = imageFiles[i];
-                byte[] imageData = File.ReadAllBytes(imageFile);
-                Texture2D texture = new Texture2D(2, 2);
-                texture.LoadImage(imageData);
-                string[] names = files[i].Split(Path.DirectorySeparatorChar);
-                string n = names[names.Length - 1].Split('.')[0];
-                HistoImage hi = PointCloudGenerator.instance.CreateNewHistoImage(parentPC);
-                hi.sliceNr = int.Parse(Regex.Match(n, @"\d+").Value);
-                hi.gameObject.name = n;
-                hi.texture = texture;
-                hi.transform.position = new Vector3(0f, 1f, (float)i / 5f);
-                using (StreamReader sr = new StreamReader(files[i]))
-                {
-                    string header = sr.ReadLine();
-                    while (!sr.EndOfStream)
-                    {
-                        string line = sr.ReadLine();
-                        string[] words = line.Split(',');
-                        string cellName = words[0];
-                        float.TryParse(words[1], out float x);
-                        float.TryParse(words[2], out float y);
-                        int xCoord = (int)x;
-                        int yCoord = (int)y;
-                        PointCloudGenerator.instance.AddGraphPoint(cellName, x, y);
-                        if (lineCount % 100 == 0) yield return null;
-                        int textureX = lineCount % PointCloudGenerator.textureWidth;
-                        int textureY = (lineCount / PointCloudGenerator.textureWidth);
-                        hi.textureCoords[cellName] = new Vector2Int(textureX, textureY);
-                        //TextureHandler.instance.textureCoordDict[cellName] = new Vector2Int(textureX, textureY);
-                        lineCount++;
-                    }
-                }
-                //hi.Initialize();
-                MeshRenderer mr = hi.image.GetComponent<MeshRenderer>();
-                mr.material.mainTexture = texture;
-                mr.material.SetTexture("_EmissionMap", texture);
-                PointCloudGenerator.instance.SpawnPoints(hi, parentPC);
-                HistoImageHandler.instance.images.Add(hi);
-                string c = hi.sliceNr.ToString();
-                var carr = c.ToCharArray();
-                string id = n.Split(carr)[0];
-                if (!HistoImageHandler.instance.imageDict.ContainsKey(id))
-                {
-                    HistoImageHandler.instance.imageDict.Add(id, new List<HistoImage>());
-                }
-                HistoImageHandler.instance.imageDict[id].Add(hi);
-
-            }
-
-            CellexalEvents.GraphsLoaded.Invoke();
-        }
-
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
@@ -329,11 +158,10 @@ namespace CellexalVR.AnalysisLogic
         //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path, Dictionary<string, string> h5config = null, string fromPreviousSession = "")
         {
-            if (path.Contains("_pc"))
-            {
-                StartCoroutine(ReadBigFolder(path));
-                return;
-            }
+            StartCoroutine(ReadFolderCoroutine(path, h5config, fromPreviousSession));
+        }
+        private IEnumerator ReadFolderCoroutine(string path, Dictionary<string, string> h5config = null, string fromPreviousSession = "")
+        {
             currentPath = path;
             string workingDirectory = Directory.GetCurrentDirectory();
             string fullPath = workingDirectory + "\\Data\\" + path;
@@ -345,6 +173,13 @@ namespace CellexalVR.AnalysisLogic
                     File.Delete(workingDirectory + "\\Output\\r_log.txt");
                 }
             }
+
+            if (!referenceManager.loaderController.loaderMovedDown)
+            {
+                referenceManager.loaderController.loaderMovedDown = true;
+                referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
+            }
+
 
             UpdateSelectionToolHandler();
             attributeFileRead = false;
@@ -371,13 +206,13 @@ namespace CellexalVR.AnalysisLogic
             }
 
             //summertwerk
-            bool h5 = Directory.EnumerateFiles("Data\\" + path, "*.h5ad").Any();
-            bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
-            if (h5 || loom)
-            {
-                ReadFileH5(path, h5config);
-                return;
-            }
+            //bool h5 = Directory.EnumerateFiles("Data\\" + path, "*.h5ad").Any();
+            //bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
+            //if (h5 || loom)
+            //{
+            //    ReadFileH5(path, h5config);
+            //    return;
+            //}
 
             database.InitDatabase(fullPath + "\\database.sqlite");
             string[] mdsFiles = Directory.GetFiles(fullPath,
@@ -398,10 +233,26 @@ namespace CellexalVR.AnalysisLogic
 
             CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
             mdsReader.referenceManager = referenceManager;
-            StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
-            StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
-
+            if (path.Contains("_pc"))
+            {
+                yield return StartCoroutine(mdsReader.ReadBigFolder(path));
+            }
+            else
+            {
+                yield return StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
+            }
+            yield return StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
             graphGenerator.isCreating = true;
+            attributeReader = gameObject.AddComponent<AttributeReader>();
+            attributeReader.referenceManager = referenceManager;
+            StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
+            while (!attributeFileRead)
+                yield return null;
+            ReadFacsFiles(fullPath);
+            ReadNumericalData(fullPath);
+            ReadFilterFiles(CellexalUser.UserSpecificFolder);
+
+
             referenceManager.configManager.ReadConfigFiles(fullPath);
             // multiple_exp if (currentPath.Length > 0)
             // multiple_exp {
@@ -414,6 +265,8 @@ namespace CellexalVR.AnalysisLogic
             {
                 referenceManager.configManager.MultiUserSynchronise();
             }
+
+            CellexalEvents.GraphsLoaded.Invoke();
         }
 
         private void UpdateSelectionToolHandler()
@@ -832,30 +685,33 @@ namespace CellexalVR.AnalysisLogic
 
             FileStream fileStream = new FileStream(path, FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
-            List<Cell> cellsToAnnotate = new List<Cell>();
+            List<string> cellsToAnnotate = new List<string>();
             Graph graph = referenceManager.graphManager.Graphs[0];
             int numPointsAdded = 0;
             string line = streamReader.ReadLine();
             string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-            string firstCellName = words[0];
-            cellsToAnnotate.Add(referenceManager.cellManager.GetCell(firstCellName));
+            string cellName = words[0];
+            cellsToAnnotate.Add(cellName);
             string annotation = words[1];
+            int group = 0;
             while (!streamReader.EndOfStream)
             {
                 line = streamReader.ReadLine();
                 words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 if (words[1] != annotation)
                 {
-                    referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, graph.FindGraphPoint(cellsToAnnotate[0].Label).Position, path);
+                    referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate.ToArray(), cellsToAnnotate[0], group, path);
                     cellsToAnnotate.Clear();
                     annotation = words[1];
+                    group++;
                 }
-
-                cellsToAnnotate.Add(referenceManager.cellManager.GetCell(words[0]));
+                cellName = words[0]; 
+                cellsToAnnotate.Add(cellName);
+                referenceManager.selectionManager.AddGraphpointToSelection(graph.FindGraphPoint(cellName), group, false);
                 numPointsAdded++;
             }
 
-            referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate, graph.FindGraphPoint(cellsToAnnotate[0].Label).Position, path);
+            referenceManager.annotationManager.AddAnnotation(annotation, cellsToAnnotate.ToArray(), cellsToAnnotate[0], group, path);
             cellsToAnnotate.Clear();
             CellexalLog.Log($"Added {numPointsAdded} points to annotation");
             CellexalEvents.CommandFinished.Invoke(true);
@@ -875,7 +731,7 @@ namespace CellexalVR.AnalysisLogic
         {
             //string dataFolder = CellexalUser.UserSpecificFolder;
             List<Graph.GraphPoint> selection = new List<Graph.GraphPoint>();
-            List<Tuple<int, int>> indices = new List<Tuple<int, int>>();
+            List<Vector2Int> indices = new List<Vector2Int>();
             if (!File.Exists(path))
             {
                 CellexalLog.Log("Could not find file:" + path);
@@ -919,7 +775,7 @@ namespace CellexalVR.AnalysisLogic
 
                 if (PointCloudGenerator.instance.pointClouds.Count > 0)
                 {
-                    Tuple<int, int> tuple = new Tuple<int, int>(int.Parse(words[0]), int.Parse(words[2]));
+                    Vector2Int tuple = new Vector2Int(int.Parse(words[0]), int.Parse(words[2]));
                     indices.Add(tuple);
                 }
                 else
@@ -935,7 +791,7 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            TextureHandler.instance.SelectFromFile(indices);
+            TextureHandler.instance.AddPointsToSelection(indices);
             CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
             CellexalEvents.CommandFinished.Invoke(true);
             CellexalEvents.SelectedFromFile.Invoke();

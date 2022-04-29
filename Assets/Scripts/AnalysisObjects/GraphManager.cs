@@ -461,10 +461,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 g.ClearTopExprCircles();
                 g.ResetColors();
-                foreach (GraphInfoPanelRotator panel in g.annotationsParent.GetComponentsInChildren<GraphInfoPanelRotator>())
-                {
-                    Destroy(panel.gameObject);
-                }
             }
             if (TextureHandler.instance.textureCoordDict.Count > 0)
             {

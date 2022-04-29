@@ -77,12 +77,9 @@ namespace CellexalVR.General
                 if (closestPoints.Count > 0)
                 {
                     gp = closestPoints[0];
-                    print(gp.Group);
                     if (gp.Group == -1) return;
-                    Cell[] cellsToAnnotate = referenceManager.cellManager.GetCells(gp.Group);
-                    referenceManager.annotationManager.AddAnnotation(s,
-                                        cellsToAnnotate.ToList(),
-                                        graph.transform.InverseTransformPoint(annotationSphere.transform.position));
+                    ReferenceManager.instance.multiuserMessageSender.SendMessageAddAnnotation(s, gp.Group, gp.Label);
+                    ReferenceManager.instance.annotationManager.AddAnnotation(s, gp.Group, gp.Label);
                     CellexalEvents.RightTriggerClick.RemoveListener(OnTriggerClick);
                     Destroy(annotationSphere);
                 }
@@ -125,11 +122,17 @@ namespace CellexalVR.General
         /// </summary>
         /// <param name="annotation">The text that will be shown above the cells and later written to file.</param>
         /// <param name="index">The index of the selection group.</param>
-        public void AddAnnotation(string annotation, int index)
+        public void AddAnnotation(string annotation, int index, string gpLabel)
         {
-            Cell[] cellsToAnnotate = referenceManager.cellManager.GetCells(index);
+            var cellsToAnnotate = referenceManager.cellManager.GetCells(index).Select(c => c.Label).ToArray();
             selectionManager.RecolorSelectionPoints();
-            AddAnnotation(annotation, cellsToAnnotate.ToList(), graphManager.Graphs[0].FindGraphPoint(cellsToAnnotate[0].Label).Position);
+            AddAnnotation(annotation, cellsToAnnotate, gpLabel, index);
+        }
+
+        public void AddAnnotation(string annotation, string[] cellsToAnnotate, int index, string gpLabel)
+        {
+            selectionManager.RecolorSelectionPoints();
+            AddAnnotation(annotation, cellsToAnnotate, gpLabel, index);
         }
 
         /// <summary>
@@ -137,29 +140,25 @@ namespace CellexalVR.General
         /// </summary>
         /// <param name="annotation">The annotation string.</param>
         /// <param name="pointsToAnnotate">The points to annotate.</param>
-        public void AddAnnotation(string annotation, List<Cell> cellsToAnnotate, Vector3 spawnPosition, string path = "")
+        public void AddAnnotation(string annotation, string[] cellsToAnnotate, string gpLabelToSpawnAt, int group, string path = "")
         {
-            foreach (Cell cell in cellsToAnnotate)
+            foreach (string cellName in cellsToAnnotate)
             {
                 if (!annotatedPoints.ContainsKey(annotation))
                     annotatedPoints[annotation] = new List<string>();
-                annotatedPoints[annotation].Add(cell.Label);
-                //selectionManager.AddGraphpointToSelection(graphManager.Graphs[0].FindGraphPoint(cell.Label));
+                annotatedPoints[annotation].Add(cellName);
             }
-
             List<GameObject> annotationTexts = new List<GameObject>();
-
             foreach (Graph graph in graphManager.Graphs)
             {
                 GameObject annotationText = Instantiate(annotationTextPrefab, graph.annotationsParent.transform);
                 AnnotationTextPanel textPanel = annotationText.GetComponent<AnnotationTextPanel>();
                 textPanel.referenceManager = referenceManager;
-                textPanel.SetCells(cellsToAnnotate, spawnPosition);
+                textPanel.SetCells(group, graph.FindGraphPoint(gpLabelToSpawnAt).Position);
                 annotationText.gameObject.name = annotation;
                 annotationText.GetComponentInChildren<TextMeshPro>().text = annotation;
                 annotationTexts.Add(annotationText);
             }
-
             if (annotationDictionary.ContainsKey(annotation))
             {
                 foreach (GameObject obj in annotationTexts)

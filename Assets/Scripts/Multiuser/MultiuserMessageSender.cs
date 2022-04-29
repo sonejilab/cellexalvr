@@ -7,6 +7,7 @@ using CellexalVR.Interaction;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Runtime.Remoting.Messaging;
+using System;
 
 namespace CellexalVR.Multiuser
 {
@@ -334,6 +335,19 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
             coordinator.photonView.RPC("RecieveMessageColorByAttribute", PhotonTargets.Others, attributeType, colored);
+        }   
+        
+        public void SendMessageColorByAttributePointCloud(string attributeType, bool colored)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
+            coordinator.photonView.RPC("RecieveMessageColorByAttributePointCloud", PhotonTargets.Others, attributeType, colored);
+        }
+        public void SendMessageToggleAllAttributesPointCloud(bool colored)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to color graphs by attribute " + colored);
+            coordinator.photonView.RPC("RecieveMessageToggleAllAttributesPointCloud", PhotonTargets.Others, colored);
         }
 
         public void SendMessageColorByIndex(string indexName)
@@ -419,11 +433,11 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageSearchLockToggled", PhotonTargets.Others, index);
         }
 
-        public void SendMessageAddAnnotation(string annotation, int index)
+        public void SendMessageAddAnnotation(string annotation, int index, string gpLabel)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to add annotation: " + annotation);
-            coordinator.photonView.RPC("RecieveMessageAddAnnotation", PhotonTargets.Others, annotation, index);
+            coordinator.photonView.RPC("RecieveMessageAddAnnotation", PhotonTargets.Others, annotation, index, gpLabel);
         }
 
         public void SendMessageExportAnnotations()
@@ -477,6 +491,12 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageAddSelect", PhotonTargets.Others, graphName, label, newGroup,
                 color.r, color.g, color.b);
+        }
+
+        public void SendMessageSelectedAddPointCloud(int[] indices, int[] groups)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageAddSelectPointCloud", PhotonTargets.Others, indices, groups);
         }
 
         public void SendMessageCubeColoured(string graphName, string label, int newGroup, Color color)
