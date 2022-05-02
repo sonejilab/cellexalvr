@@ -52,8 +52,6 @@ namespace CellexalVR.Spatial
         private void Awake()
         {
             imageHandler = GetComponent<GeoMXImageHandler>();
-            //_requireToggleToClick = false;
-            //touchPadPos.action.performed += OnTouchPadClick;
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
 
@@ -72,19 +70,23 @@ namespace CellexalVR.Spatial
             {
                 if (stack)
                 {
-                    ScrollStack(1, stack);
+                    ScrollStack(1, stack.Group);
+                    ReferenceManager.instance.multiuserMessageSender.SendMessageScrollStack(1, stack.Group);
                     return;
                 }
                 Scroll(1);
+                ReferenceManager.instance.multiuserMessageSender.SendMessageScroll(1);
             }
             else if (pos.x < -0.5f)
             {
                 if (stack)
                 {
-                    ScrollStack(-1, stack);
+                    ScrollStack(-1, stack.Group);
+                    ReferenceManager.instance.multiuserMessageSender.SendMessageScrollStack(-1, stack.Group);
                     return;
                 }
                 Scroll(-1);
+                ReferenceManager.instance.multiuserMessageSender.SendMessageScroll(-1);
             }
         }
 
@@ -170,8 +172,9 @@ namespace CellexalVR.Spatial
             }
         }
 
-        public void ScrollStack(int val, GeoMXSlideStack stack)
+        public void ScrollStack(int val, int group)
         {
+            GeoMXSlideStack stack = imageHandler.stacks[group];
             stack.Scroll(val);
         }
 

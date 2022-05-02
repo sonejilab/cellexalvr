@@ -3,6 +3,7 @@ using System.Collections;
 using CellexalVR.Menu.Buttons;
 using TMPro;
 using CellexalVR.Spatial;
+using CellexalVR.General;
 
 public class LoadReferenceModelMeshButton : CellexalButton
 {
@@ -24,6 +25,7 @@ public class LoadReferenceModelMeshButton : CellexalButton
     public override void Click()
     {
         AllenReferenceBrain.instance.SpawnModel(modelName);
+        ReferenceManager.instance.multiuserMessageSender.SendMessageSpawnModel(modelName);
     }
 
 }

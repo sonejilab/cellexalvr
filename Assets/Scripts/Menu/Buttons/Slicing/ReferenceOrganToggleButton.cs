@@ -45,9 +45,12 @@ namespace CellexalVR.Menu.Buttons.Slicing
             //referenceOrgan.GetComponent<InteractableObjectBasic>().isGrabbable = !currentState;
             referenceOrgan.GetComponent<BoxCollider>().enabled = !currentState;
             referenceOrgan.GetComponent<AllenReferenceBrain>().ActivateKeyboard(true);
-
-
             StartCoroutine(MoveContent(currentState ? -1.8f : 0f));
+        }
+
+        protected override void MultiUserSynchronise()
+        {
+            ReferenceManager.instance.multiuserMessageSender.SendMessageReferenceOrganToggle(currentState, graphSlice.pointCloud.pcID);
         }
 
         private IEnumerator MoveContent(float zCoord)

@@ -18,6 +18,7 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using CellexalVR.Menu.Buttons.Selection;
 using AnalysisLogic;
+using Unity.Entities;
 
 namespace CellexalVR.Multiuser
 {
@@ -1689,6 +1690,70 @@ namespace CellexalVR.Multiuser
         }
 
         #endregion
+
+        #region Images
+        
+        [PunRPC]
+        public void RecieveMessageScroll(int dir)
+        {
+            GeoMXImageHandler.instance.slideScroller.Scroll(dir);
+        }
+
+        [PunRPC]
+        public void RecieveMessageScrollStack(int dir, int group)
+        {
+            GeoMXImageHandler.instance.slideScroller.ScrollStack(dir, group);
+        }
+
+        #endregion
+
+        #region Spatial
+        [PunRPC]
+        public void RecieveMessageSliceGraphAutomatic(int pcID, int axis, int nrOfSlices)
+        {
+            GraphSlice slice = PointCloudGenerator.instance.pointClouds[pcID].GetComponent<GraphSlice>();
+            StartCoroutine(slice.SliceAxis(axis, World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SliceGraphSystem>().GetPoints(pcID), nrOfSlices));
+        }
+
+        [PunRPC]
+        public void RecieveMessageSliceGraphManual(int pcID, Vector3 planeNormal, Vector3 planePos)
+        {
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SliceGraphSystem>().Slice(pcID, planeNormal, planePos);
+        }
+
+        [PunRPC]
+        public void RecieveMessageSliceGraphFromSelection(int pcID)
+        {
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SliceGraphSystem>().SliceFromSelection(pcID);
+        }
+
+        [PunRPC]
+        public void RecieveMessageSpawnModel(string modelName)
+        {
+            AllenReferenceBrain.instance.SpawnModel(modelName);
+        } 
+        
+        [PunRPC]
+        public void RecieveMessageToggleReferenceOrgan(bool toggle, int pcID)
+        {
+            GraphSlice slice = PointCloudGenerator.instance.pointClouds[pcID].GetComponent<GraphSlice>();
+            slice.slicerBox.ToggleReferenceOrgan(toggle);
+        }
+
+        [PunRPC]
+        public void RecieveMessageUpdateCullingBox(int pcID, Vector3 pos1, Vector3 pos2)
+        {
+            GraphSlice slice = PointCloudGenerator.instance.pointClouds[pcID].GetComponent<GraphSlice>();
+            slice.slicerBox.UpdateCullingBox(pos1, pos2);
+        }
+        [PunRPC]
+        public void RecieveMessageSpreadMeshes()
+        {
+            AllenReferenceBrain.instance.Spread();
+        }
+
+        #endregion
+
 
         #endregion
     }

@@ -18,9 +18,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
         public ChangeNrOfSlicesButton addSliceButton;
         public ChangeNrOfSlicesButton subtractSliceButton;
         public int nrOfSlices;
-        public GameObject movableContent;
-        public GameObject movableContent2;
-        public GameObject movableContent3;
+        public GameObject movableContent_meshCulling;
 
         public enum SliceMode
         {
@@ -65,7 +63,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
                         manualModeButton.CurrentState = !toggle;
                         fromSelectionModeButton.CurrentState = !toggle;
                     }
-                    movableContent.transform.DOLocalMoveZ(toggle ? -5.3f : -1.3f, 0.5f).SetEase(Ease.InOutSine);
+                    movableContent_meshCulling.transform.DOLocalMoveZ(toggle ? -5.3f : -1.3f, 0.5f).SetEase(Ease.InOutSine);
                     //StartCoroutine(MoveContent(toggle ? -5.3f : -1.3f));
                     automaticModeMenu.SetActive(toggle);
                     break;
@@ -89,7 +87,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
             }
             if (!(manualModeButton.CurrentState || autoModeButton.CurrentState))
             {
-                movableContent.transform.DOLocalMoveZ(-1.3f, 0.5f).SetEase(Ease.InOutSine);
+                movableContent_meshCulling.transform.DOLocalMoveZ(-1.3f, 0.5f).SetEase(Ease.InOutSine);
                 //StartCoroutine(MoveContent(-1.3f));
             }
         }

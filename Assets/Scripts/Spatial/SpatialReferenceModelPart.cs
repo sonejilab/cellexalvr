@@ -117,13 +117,13 @@ namespace CellexalVR.Spatial
             {
                 if (spread)
                 {
-                    targetPos = mc.transform.position + (mc.bounds.center - center).normalized * 0.5f;
+                    targetPos = mc.transform.position + (mc.bounds.center - center).normalized * 0.75f;
                 }
                 else
                 {
                     targetPos = transform.GetChild(0).transform.TransformPoint(Vector3.zero);
                 }
-                mc.transform.DOMove(targetPos, 0.8f).SetEase(Ease.InOutSine);
+                mc.transform.DOMove(targetPos, 0.6f).SetEase(Ease.InOutSine);
             }
             //for (int i = 0; i < mrs.Length; i++)
             //{

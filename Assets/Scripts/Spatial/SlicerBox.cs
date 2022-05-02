@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 using DG.Tweening;
 using UnityEngine.InputSystem;
+using CellexalVR.General;
 
 namespace CellexalVR.Spatial
 {
@@ -91,6 +92,7 @@ namespace CellexalVR.Spatial
             toggleSlicingMenuButton = GetComponentInChildren<ToggleSlicingMenuButton>(true);
             vfx = GetComponentInParent<VisualEffect>();
             Active = false;
+            cullingWalls.All(x => x.transform.hasChanged = false);
         }
 
         //private void OnValidate()
@@ -102,41 +104,11 @@ namespace CellexalVR.Spatial
 
         private void Update()
         {
-            //if (Keyboard.current.nKey.wasPressedThisFrame)
-            //{
-            //    SliceGraphManual();
-            //}
-            //if (Keyboard.current.mKey.wasPressedThisFrame)
-            //{
-            //    SliceGraphAutomatic(2, 20);
-            //}
-
-            //if (Keyboard.current.bKey.wasPressedThisFrame)
-            //{
-            //    SliceGraphFromSelection();
-            //}
-
-            if (Keyboard.current.qKey.wasPressedThisFrame)
+            if (cullingWalls.Any(x => x.transform.hasChanged))
             {
-                SingleSliceViewMode(0);
-                SliceBySliceAnimation();
+                UpdateCullingBox();
+                cullingWalls.All(x => x.transform.hasChanged = false);
             }
-            if (Keyboard.current.wKey.wasPressedThisFrame)
-            {
-                SingleSliceViewMode(1);
-                SliceBySliceAnimation();
-            }
-            if (Keyboard.current.rKey.wasPressedThisFrame)
-            {
-                SingleSliceViewMode(2);
-                SliceBySliceAnimation();
-            }
-            if (Keyboard.current.tKey.wasPressedThisFrame)
-            {
-                SingleSliceViewMode();
-            }
-            UpdateCullingBox();
-
         }
 
         public void UpdateCullingBox()
@@ -162,6 +134,13 @@ namespace CellexalVR.Spatial
 
             vfx.SetVector3("CullingCubePos", cullPos1);
             vfx.SetVector3("CullingCube2Pos", cullPos2);
+            ReferenceManager.instance.multiuserMessageSender.SendMessageUpdateCullingBox(pointCloud.pcID, cullPos1, cullPos2);
+        }
+
+        public void UpdateCullingBox(Vector3 pos1, Vector3 pos2)
+        {
+            vfx.SetVector3("CullingCubePos", pos1);
+            vfx.SetVector3("CullingCube2Pos", pos2);
         }
 
         public void BoxAnimation(int axis, int toggle)
@@ -228,13 +207,13 @@ namespace CellexalVR.Spatial
 
         public void SliceGraphManual()
         {
-            //StartCoroutine(SliceAnimation());
             Material mat = blade.GetComponent<Renderer>().material;
             DOVirtual.Float(0f, 0.49f, 0.5f, v =>
             {
                 mat.SetFloat("_SliceOffset", v);
             }).SetEase(Ease.InOutCubic).SetLoops(2, LoopType.Yoyo);
             sliceGraphSystem.Slice(pointCloud.pcID, plane.transform.forward, plane.transform.position);
+            ReferenceManager.instance.multiuserMessageSender.SendMessageSliceGraphManual(pointCloud.pcID, plane.transform.forward, plane.transform.position);
         }
 
         public void SliceGraphFromSelection()
@@ -246,6 +225,7 @@ namespace CellexalVR.Spatial
             }).SetEase(Ease.InOutCubic).SetLoops(2, LoopType.Yoyo);
             sliceGraphSystem.SliceFromSelection(pointCloud.pcID);
             BoxAnimation(2, 1);
+            ReferenceManager.instance.multiuserMessageSender.SendMessageSliceGraphFromSelection(pointCloud.pcID);
         }
 
         public void SliceGraphAutomatic(int axis, int nrOfSlices)
@@ -253,6 +233,7 @@ namespace CellexalVR.Spatial
             //StartCoroutine(SliceAnimation());
             BoxAnimation(axis, 1);
             StartCoroutine(graphSlice.SliceAxis(axis, sliceGraphSystem.GetPoints(pointCloud.pcID), nrOfSlices));
+            ReferenceManager.instance.multiuserMessageSender.SendMessageSliceGraphAutomatic(pointCloud.pcID, axis, nrOfSlices);
         }
 
         public void MorphToOtherGraph()
@@ -261,6 +242,11 @@ namespace CellexalVR.Spatial
             //pointCloud.targetPositionTextureMap = PointCloudGenerator.instance.pointClouds[index].positionTextureMap;
             pointCloud.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pointCloud.targetPositionTextureMap);
             pointCloud.Morph();
+        }
+
+        public void ToggleReferenceOrgan(bool toggle)
+        {
+            GetComponentInChildren<ReferenceOrganToggleButton>().CurrentState = toggle;
         }
 
         public void ToggleManualSlicer(bool toggle)

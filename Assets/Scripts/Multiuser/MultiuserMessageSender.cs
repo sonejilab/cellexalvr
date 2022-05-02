@@ -1137,6 +1137,68 @@ namespace CellexalVR.Multiuser
 
         #endregion
 
+        #region Images
+
+        public void SendMessageScroll(int dir)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageScroll", PhotonTargets.Others, dir);
+        }
+
+        public void SendMessageScrollStack(int dir, int group)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageScrollStack", PhotonTargets.Others, dir, group);
+        }
+
+        #endregion
+
+        #region Spatial
+
+        public void SendMessageSliceGraphAutomatic(int pcID, int axis, int nrOfSlices)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSliceGraphAutomatic", PhotonTargets.Others, pcID, axis, nrOfSlices);
+        }
+
+        public void SendMessageSliceGraphManual(int pcID, Vector3 planeNormal, Vector3 planePos)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSliceGraphManual", PhotonTargets.Others, pcID, planeNormal, planePos);
+        }
+
+        public void SendMessageSliceGraphFromSelection(int pcID)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSliceGraphFromSelection", PhotonTargets.Others, pcID);
+        }
+
+        public void SendMessageSpawnModel(string modelName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSpawnModel", PhotonTargets.Others, modelName);
+        }
+
+        public void SendMessageReferenceOrganToggle(bool toggle, int pcID)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageReferenceOrganToggle", PhotonTargets.Others, toggle);
+        }
+        
+        public void SendMessageUpdateCullingBox(int pcID, Vector3 pos1, Vector3 pos2)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageUpdateCullingBox", PhotonTargets.Others, pcID, pos1, pos2);
+        }
+
+        public void SendMessageSpreadMeshes()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSpreadMeshes", PhotonTargets.Others);
+        }
+
+        #endregion
+
         #endregion
 
         /// <summary>

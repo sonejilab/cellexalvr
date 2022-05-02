@@ -1,5 +1,6 @@
 ﻿using AnalysisLogic;
 using CellexalVR.AnalysisLogic;
+using CellexalVR.General;
 using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.Slicing
@@ -26,7 +27,6 @@ namespace CellexalVR.Menu.Buttons.Slicing
                 return;
             }
             slicingMenu.SliceGraph();
-            // TODO: Add multi-user functionality.
         }
     }
 }

@@ -2,6 +2,7 @@
 using CellexalVR.Spatial;
 using UnityEngine;
 using System.Collections;
+using CellexalVR.General;
 
 namespace CellexalVR.Menu.Buttons.Slicing
 {
@@ -17,6 +18,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
         public override void Click()
         {
             AllenReferenceBrain.instance.Spread();
+            ReferenceManager.instance.multiuserMessageSender.SendMessageSpreadMeshes();
         }
     }
 }
