@@ -47,7 +47,7 @@ namespace CellexalVR.Spatial
             if (block)
                 return;
             Transform rLaser = ReferenceManager.instance.rightLaser.transform;
-            Physics.Raycast(rLaser.position, rLaser.forward, out RaycastHit hit);
+            Physics.Raycast(rLaser.position, rLaser.forward, out RaycastHit hit, 10, 1 << LayerMask.NameToLayer("EnvironmentButtonLayer"));
             if (hit.collider)
             {
                 GeoMXSlide slide = hit.collider.GetComponent<GeoMXSlide>();

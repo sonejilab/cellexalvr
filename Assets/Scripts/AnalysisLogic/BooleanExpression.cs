@@ -952,7 +952,7 @@ namespace CellexalVR.AnalysisLogic
                     {
                         if (tuple.Item1 == this.facs)
                         {
-                            value = (value / 100f) * tuple.Item3;
+                            value = tuple.Item2 + (value / 100f) * (tuple.Item3 - tuple.Item2);
                             percent = false;
                             return;
                         }

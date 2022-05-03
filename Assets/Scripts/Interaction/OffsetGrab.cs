@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
@@ -15,6 +16,9 @@ namespace CellexalVR.Interaction
 
         private IXRSelectInteractor savedInteractor;
         private bool oldTrackposition;
+
+        [SerializeField] private InputActionAsset actionAsset;
+        [SerializeField] private InputActionReference action;
 
 
         protected override void OnSelectEntered(SelectEnterEventArgs args)

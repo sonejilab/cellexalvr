@@ -17,6 +17,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using CellexalVR.Menu.Buttons.Selection;
+using AnalysisLogic;
+using Unity.Entities;
 
 namespace CellexalVR.Multiuser
 {
@@ -376,6 +378,29 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
+        public void RecieveMessageColorByAttributePointCloud(string attributeType, bool toggle)
+        {
+            CellexalLog.Log("Recieved message to " + (toggle ? "toggle" : "untoggle") + " all point clouds by attribute " +
+                            attributeType);
+            TextureHandler.instance.ColorCluster(attributeType, toggle);
+            var attributeButton = referenceManager.attributeSubMenu.FindButton(attributeType);
+            attributeButton.ToggleOutline(toggle);
+            attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;
+        }
+
+        [PunRPC]
+        public void RecieveMessageToggleAllAttributesPointCloud(bool toggle)
+        {
+            CellexalLog.Log("Recieved message to " + (toggle ? "toggle" : "untoggle") + " all clusters in point clouds");
+            TextureHandler.instance.ColorAllClusters(toggle);
+            foreach (ColorByAttributeButton attributeButton in ReferenceManager.instance.attributeSubMenu.GetComponentsInChildren<ColorByAttributeButton>())
+            {
+                attributeButton.ToggleOutline(toggle);
+                attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;
+            }
+        }
+
+        [PunRPC]
         public void RecieveMessageColorByIndex(string indexName)
         {
             CellexalLog.Log("Recieved message to color all graphs by index " + indexName);
@@ -470,10 +495,10 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
-        public void RecieveMessageAddAnnotation(string annotation, int index)
+        public void RecieveMessageAddAnnotation(string annotation, int index, string gpLabel)
         {
             CellexalLog.Log("Recieved message to add annotation: " + annotation);
-            referenceManager.annotationManager.AddAnnotation(annotation, index);
+            referenceManager.annotationManager.AddAnnotation(annotation, index, gpLabel);
         }
 
         [PunRPC]
@@ -531,6 +556,17 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageAddSelect(string graphName, string label, int newGroup, float r, float g, float b)
         {
             referenceManager.selectionManager.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b));
+        }
+
+        [PunRPC]
+        public void RecieveMessageAddSelect(int[] indices, int[] groups)
+        {
+            List<Vector2Int> tupleList = new List<Vector2Int>();
+            for (int i = 0; i < indices.Length; i++)
+            {
+                tupleList.Add(new Vector2Int(indices[i], groups[i]));
+            }
+            TextureHandler.instance.AddPointsToSelection(tupleList);
         }
 
         [PunRPC]
@@ -672,8 +708,22 @@ namespace CellexalVR.Multiuser
                     CellexalLog.Log("Could not move graph - Error: " + e);
                 }
             }
-        }
+            else
+            {
+                PointCloud pc = PointCloudGenerator.instance.FindPointCloud(moveGraphName);
+                try
+                {
+                    pc.transform.position = new Vector3(posX, posY, posZ);
+                    pc.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+                    pc.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+                }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not move point cloud - Error: " + e);
+                }
 
+            }
+        }
         [PunRPC]
         public void RecieveMessageGraphUngrabbed(string graphName,
             float posX, float posY, float posZ,
@@ -1640,6 +1690,70 @@ namespace CellexalVR.Multiuser
         }
 
         #endregion
+
+        #region Images
+        
+        [PunRPC]
+        public void RecieveMessageScroll(int dir)
+        {
+            GeoMXImageHandler.instance.slideScroller.Scroll(dir);
+        }
+
+        [PunRPC]
+        public void RecieveMessageScrollStack(int dir, int group)
+        {
+            GeoMXImageHandler.instance.slideScroller.ScrollStack(dir, group);
+        }
+
+        #endregion
+
+        #region Spatial
+        [PunRPC]
+        public void RecieveMessageSliceGraphAutomatic(int pcID, int axis, int nrOfSlices)
+        {
+            GraphSlice slice = PointCloudGenerator.instance.pointClouds[pcID].GetComponent<GraphSlice>();
+            StartCoroutine(slice.SliceAxis(axis, World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SliceGraphSystem>().GetPoints(pcID), nrOfSlices));
+        }
+
+        [PunRPC]
+        public void RecieveMessageSliceGraphManual(int pcID, Vector3 planeNormal, Vector3 planePos)
+        {
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SliceGraphSystem>().Slice(pcID, planeNormal, planePos);
+        }
+
+        [PunRPC]
+        public void RecieveMessageSliceGraphFromSelection(int pcID)
+        {
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SliceGraphSystem>().SliceFromSelection(pcID);
+        }
+
+        [PunRPC]
+        public void RecieveMessageSpawnModel(string modelName)
+        {
+            AllenReferenceBrain.instance.SpawnModel(modelName);
+        } 
+        
+        [PunRPC]
+        public void RecieveMessageToggleReferenceOrgan(bool toggle, int pcID)
+        {
+            GraphSlice slice = PointCloudGenerator.instance.pointClouds[pcID].GetComponent<GraphSlice>();
+            slice.slicerBox.ToggleReferenceOrgan(toggle);
+        }
+
+        [PunRPC]
+        public void RecieveMessageUpdateCullingBox(int pcID, Vector3 pos1, Vector3 pos2)
+        {
+            GraphSlice slice = PointCloudGenerator.instance.pointClouds[pcID].GetComponent<GraphSlice>();
+            slice.slicerBox.UpdateCullingBox(pos1, pos2);
+        }
+        [PunRPC]
+        public void RecieveMessageSpreadMeshes()
+        {
+            AllenReferenceBrain.instance.Spread();
+        }
+
+        #endregion
+
 
         #endregion
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CellexalVR.General;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -51,6 +52,7 @@ namespace CellexalVR.Menu.Buttons
         public override void Click()
         {
             StartCoroutine(SlideToNewState());
+            MultiUserSynchronise();
         }
 
         private IEnumerator SlideToNewState()
@@ -71,6 +73,8 @@ namespace CellexalVR.Menu.Buttons
             UpdateColors();
             ActionsAfterSliding();
         }
+
+        protected virtual void MultiUserSynchronise() {}
 
         /// <summary>
         /// Actions to be performed once animation is complete.

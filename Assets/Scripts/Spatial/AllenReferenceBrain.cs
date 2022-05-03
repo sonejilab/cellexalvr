@@ -104,31 +104,10 @@ namespace CellexalVR.Spatial
 
         private void Update()
         {
-            //if (Input.GetKeyDown(KeyCode.Y))
-            //{
-            //    Spread();
-            //}
-            //if (Input.GetKeyDown(KeyCode.J))
-            //{
-            //    StartCoroutine(SplitMeshes());
-            //}
             if ((int)(Time.realtimeSinceStartup) % 2 == 0)
             {
                 CheckForController();
             }
-            //if (Keyboard.current.gKey.wasPressedThisFrame)
-            //{
-            //    StartCoroutine(PopulateMeshes());
-            //}
-
-            //if (Player.instance.rightHand == null) return;
-            //if (controllerAction.GetStateDown(Player.instance.rightHand.handType))
-            //{
-            //    if (controllerInside)
-            //    {
-            //        keyboard.gameObject.SetActive(!keyboard.gameObject.activeSelf);
-            //    }
-            //}
         }
 
         private void CheckForController()
@@ -235,7 +214,6 @@ namespace CellexalVR.Spatial
         {
             suggestionOffset = Mathf.Max(0, Mathf.Min(suggestionOffset + dir, names.Keys.Count - 1));
             UpdateSuggestions(keyboard.output.text, suggestionOffset);
-            print($"dir {dir}, {suggestionOffset}");
         }
 
 

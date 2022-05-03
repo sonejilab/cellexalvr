@@ -7,6 +7,7 @@ using CellexalVR.Interaction;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Runtime.Remoting.Messaging;
+using System;
 
 namespace CellexalVR.Multiuser
 {
@@ -334,6 +335,19 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
             coordinator.photonView.RPC("RecieveMessageColorByAttribute", PhotonTargets.Others, attributeType, colored);
+        }   
+        
+        public void SendMessageColorByAttributePointCloud(string attributeType, bool colored)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
+            coordinator.photonView.RPC("RecieveMessageColorByAttributePointCloud", PhotonTargets.Others, attributeType, colored);
+        }
+        public void SendMessageToggleAllAttributesPointCloud(bool colored)
+        {
+            if (!multiplayer) return;
+            CellexalLog.Log("Informing clients to color graphs by attribute " + colored);
+            coordinator.photonView.RPC("RecieveMessageToggleAllAttributesPointCloud", PhotonTargets.Others, colored);
         }
 
         public void SendMessageColorByIndex(string indexName)
@@ -419,11 +433,11 @@ namespace CellexalVR.Multiuser
             coordinator.photonView.RPC("RecieveMessageSearchLockToggled", PhotonTargets.Others, index);
         }
 
-        public void SendMessageAddAnnotation(string annotation, int index)
+        public void SendMessageAddAnnotation(string annotation, int index, string gpLabel)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to add annotation: " + annotation);
-            coordinator.photonView.RPC("RecieveMessageAddAnnotation", PhotonTargets.Others, annotation, index);
+            coordinator.photonView.RPC("RecieveMessageAddAnnotation", PhotonTargets.Others, annotation, index, gpLabel);
         }
 
         public void SendMessageExportAnnotations()
@@ -477,6 +491,12 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageAddSelect", PhotonTargets.Others, graphName, label, newGroup,
                 color.r, color.g, color.b);
+        }
+
+        public void SendMessageSelectedAddPointCloud(int[] indices, int[] groups)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageAddSelectPointCloud", PhotonTargets.Others, indices, groups);
         }
 
         public void SendMessageCubeColoured(string graphName, string label, int newGroup, Color color)
@@ -1113,6 +1133,68 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageBrowserEnter", PhotonTargets.Others);
+        }
+
+        #endregion
+
+        #region Images
+
+        public void SendMessageScroll(int dir)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageScroll", PhotonTargets.Others, dir);
+        }
+
+        public void SendMessageScrollStack(int dir, int group)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageScrollStack", PhotonTargets.Others, dir, group);
+        }
+
+        #endregion
+
+        #region Spatial
+
+        public void SendMessageSliceGraphAutomatic(int pcID, int axis, int nrOfSlices)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSliceGraphAutomatic", PhotonTargets.Others, pcID, axis, nrOfSlices);
+        }
+
+        public void SendMessageSliceGraphManual(int pcID, Vector3 planeNormal, Vector3 planePos)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSliceGraphManual", PhotonTargets.Others, pcID, planeNormal, planePos);
+        }
+
+        public void SendMessageSliceGraphFromSelection(int pcID)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSliceGraphFromSelection", PhotonTargets.Others, pcID);
+        }
+
+        public void SendMessageSpawnModel(string modelName)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSpawnModel", PhotonTargets.Others, modelName);
+        }
+
+        public void SendMessageReferenceOrganToggle(bool toggle, int pcID)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageReferenceOrganToggle", PhotonTargets.Others, toggle);
+        }
+        
+        public void SendMessageUpdateCullingBox(int pcID, Vector3 pos1, Vector3 pos2)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageUpdateCullingBox", PhotonTargets.Others, pcID, pos1, pos2);
+        }
+
+        public void SendMessageSpreadMeshes()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSpreadMeshes", PhotonTargets.Others);
         }
 
         #endregion

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Spatial;
@@ -33,14 +34,7 @@ namespace CellexalVR.AnalysisLogic
         public IEnumerator ReadMDSFiles(string path, string[] mdsFiles,
             GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
-            if (!referenceManager.loaderController.loaderMovedDown)
-            {
-                referenceManager.loaderController.loaderMovedDown = true;
-                referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
-            }
-
             nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
-
             //int statusId = status.AddStatus("Reading folder " + path);
             //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
             //int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
@@ -61,21 +55,11 @@ namespace CellexalVR.AnalysisLogic
                     yield return null;
                 }
 
-                // // TODO: Make a more robust way of deciding if it should be loaded as a spatial graph.
-                // if (file.Contains("slice"))
-                // {
-                //     StartCoroutine(ReadSpatialMDSFiles(file));
-                //     referenceManager.graphGenerator.isCreating = true;
-                //     continue;
-                // }
-
                 Graph combGraph = referenceManager.graphGenerator.CreateGraph(type);
-                // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = false;
                 // file will be the full file name e.g C:\...\graph1.mds
                 // good programming habits have left us with a nice mix of forward and backward slashes
                 string[] regexResult = Regex.Split(file, @"[\\/]");
                 string graphFileName = regexResult[regexResult.Length - 1];
-                //combGraph.DirectoryName = regexResult[regexResult.Length - 2];
                 referenceManager.graphManager.Graphs.Add(combGraph);
                 switch (type)
                 {
@@ -114,10 +98,6 @@ namespace CellexalVR.AnalysisLogic
                 List<float> zcoords = new List<float>();
                 using (StreamReader mdsStreamReader = new StreamReader(file))
                 {
-                    //List<string> cellnames = new List<string>();
-                    //List<float> xcoords = new List<float>();s
-                    //List<float> ycoords = new List<float>();
-                    //List<float> zcoords = new List<float>();
                     // first line is (if correct format) a header and the first word is cell_id (the name of the first column).
                     // If wrong and does not contain header read first line as a cell.
                     string header = mdsStreamReader.ReadLine();
@@ -145,8 +125,6 @@ namespace CellexalVR.AnalysisLogic
                         float x = float.Parse(words[1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float y = float.Parse(words[2], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                         float z = float.Parse(words[3], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                        // Cell cell = referenceManager.cellManager.AddCell(cellName);
-                        // referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
                         names.Add(cellName);
                         xcoords.Add(x);
                         ycoords.Add(y);
@@ -163,7 +141,6 @@ namespace CellexalVR.AnalysisLogic
                         //  status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
                         //  statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
                         //  statusDisplayFar.UpdateStatus(statusIdFar, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
-                        //print(maximumItemsPerFrame);
 
 
                         for (int j = 0; j < maximumItemsPerFrame && !mdsStreamReader.EndOfStream; ++j)
@@ -257,18 +234,145 @@ namespace CellexalVR.AnalysisLogic
                 //statusDisplayHUD.RemoveStatus(statusIdHUD);
                 //statusDisplayFar.RemoveStatus(statusIdFar);
             }
+        }
 
-            if (type.Equals(GraphGenerator.GraphType.MDS))
+        public IEnumerator ReadBigFolder(string path)
+        {
+            string workingDirectory = Directory.GetCurrentDirectory();
+            string fullPath = workingDirectory + "\\Data\\" + path;
+            string[] files = Directory.GetFiles(fullPath, "*.mds");
+            PointCloudGenerator.instance.mdsFileCount = files.Length;
+            // string mdsFile = files[0];
+            foreach (string mdsFile in files)
             {
-                referenceManager.inputReader.attributeReader =
-                    referenceManager.inputReader.gameObject.AddComponent<AttributeReader>();
-                referenceManager.inputReader.attributeReader.referenceManager = referenceManager;
-                StartCoroutine(referenceManager.inputReader.attributeReader.ReadAttributeFilesCoroutine(path));
-                while (!referenceManager.inputReader.attributeFileRead)
-                    yield return null;
-                referenceManager.inputReader.ReadFacsFiles(path);
-                referenceManager.inputReader.ReadNumericalData(path);
-                referenceManager.inputReader.ReadFilterFiles(CellexalUser.UserSpecificFolder);
+                bool spatial = mdsFile.Contains("spatial");
+                PointCloud pc = PointCloudGenerator.instance.CreateNewPointCloud(spatial);
+                string[] regexResult = Regex.Split(mdsFile, @"[\\/]");
+                string graphFileName = regexResult[regexResult.Length - 1];
+                //pc.gameObject.name = graphFileName.Substring(0, graphFileName.Length - 4);
+                pc.GraphName = graphFileName.Substring(0, graphFileName.Length - 4);
+                pc.originalName = pc.GraphName;
+                float x;
+                float y;
+                float z;
+                using (StreamReader streamReader = new StreamReader(mdsFile))
+                {
+                    streamReader.ReadLine();
+
+                    int i = 0;
+                    while (!streamReader.EndOfStream)
+                    {
+                        if (i % 10000 == 0) yield return null;
+                        string[] words = streamReader.ReadLine().Split(separators);
+                        string cellName;
+                        // reading 2d graph or img pixel coordinates for spatial slice.
+                        if (words.Length == 2)
+                        {
+                            cellName = i.ToString();
+                            x = (float.Parse(words[0]));
+                            y = (float.Parse(words[1]));
+                            z = 0f;
+                        }
+                        else
+                        {
+                            //cellName = i.ToString();
+                            cellName = words[0];
+
+                            x = (float.Parse(words[1]));
+                            y = (float.Parse(words[2]));
+                            z = float.Parse(words[3]);
+                        }
+                        PointCloudGenerator.instance.AddGraphPoint(cellName, x, y, z);
+                        int textureX = i % PointCloudGenerator.textureWidth;
+                        int textureY = (i / PointCloudGenerator.textureWidth);
+                        TextureHandler.instance.textureCoordDict[cellName] = new Vector2Int(textureX, textureY);
+                        PointCloudGenerator.instance.indToLabelDict[i] = cellName;
+                        i++;
+                    }
+                }
+                PointCloudGenerator.instance.SpawnPoints(pc);
+                GC.Collect();
+            }
+
+            if (files.Length > 1)
+            {
+                PointCloud pc1 = PointCloudGenerator.instance.pointClouds[0];
+                PointCloud pc2 = PointCloudGenerator.instance.pointClouds[1];
+                pc1.SetTargetTexture(pc2.positionTextureMap.GetPixels());
+                pc2.SetTargetTexture(pc1.positionTextureMap.GetPixels());
+                //pc1.morphTexture = pc2.positionTextureMap;
+                //pc2.morphTexture = pc1.positionTextureMap;
+                //pc1.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc2.positionTextureMap);
+                //pc2.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pc1.positionTextureMap);
+                //pc1.otherName = pc2.GraphName;
+                //pc2.otherName = pc1.GraphName;
+                //pc1.originalName = pc1.GraphName;
+                //pc2.otherName = pc1.GraphName;
+                //pc2.originalName = pc2.GraphName;
+            }
+
+            StartCoroutine(PointCloudGenerator.instance.ReadMetaData(fullPath));
+            while (PointCloudGenerator.instance.readingFile)
+                yield return null;
+            StartCoroutine(PointCloudGenerator.instance.CreateColorTextureMap());
+
+            while (PointCloudGenerator.instance.creatingGraph)
+                yield return null;
+
+            PointCloud parentPC = PointCloudGenerator.instance.pointClouds[0];
+
+            files = Directory.GetFiles(fullPath, "*coords.csv");
+            string[] imageFiles = Directory.GetFiles(fullPath, "*.png");
+            for (int i = 0; i < files.Length; i++)
+            {
+                int lineCount = 0;
+                string imageFile = imageFiles[i];
+                byte[] imageData = File.ReadAllBytes(imageFile);
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(imageData);
+                string[] names = files[i].Split(Path.DirectorySeparatorChar);
+                string n = names[names.Length - 1].Split('.')[0];
+                HistoImage hi = PointCloudGenerator.instance.CreateNewHistoImage(parentPC);
+                hi.sliceNr = int.Parse(Regex.Match(n, @"\d+").Value);
+                hi.gameObject.name = n;
+                hi.texture = texture;
+                hi.transform.position = new Vector3(0f, 1f, (float)i / 5f);
+                using (StreamReader sr = new StreamReader(files[i]))
+                {
+                    string header = sr.ReadLine();
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine();
+                        string[] words = line.Split(',');
+                        string cellName = words[0];
+                        float.TryParse(words[1], out float x);
+                        float.TryParse(words[2], out float y);
+                        int xCoord = (int)x;
+                        int yCoord = (int)y;
+                        PointCloudGenerator.instance.AddGraphPoint(cellName, x, y);
+                        if (lineCount % 100 == 0) yield return null;
+                        int textureX = lineCount % PointCloudGenerator.textureWidth;
+                        int textureY = (lineCount / PointCloudGenerator.textureWidth);
+                        hi.textureCoords[cellName] = new Vector2Int(textureX, textureY);
+                        //TextureHandler.instance.textureCoordDict[cellName] = new Vector2Int(textureX, textureY);
+                        lineCount++;
+                    }
+                }
+                //hi.Initialize();
+                MeshRenderer mr = hi.image.GetComponent<MeshRenderer>();
+                mr.material.mainTexture = texture;
+                mr.material.SetTexture("_EmissionMap", texture);
+                PointCloudGenerator.instance.SpawnPoints(hi, parentPC);
+                HistoImageHandler.instance.images.Add(hi);
+                string c = hi.sliceNr.ToString();
+                var carr = c.ToCharArray();
+                string id = n.Split(carr)[0];
+                if (!HistoImageHandler.instance.imageDict.ContainsKey(id))
+                {
+                    HistoImageHandler.instance.imageDict.Add(id, new List<HistoImage>());
+                }
+                HistoImageHandler.instance.imageDict[id].Add(hi);
+
             }
 
             CellexalEvents.GraphsLoaded.Invoke();

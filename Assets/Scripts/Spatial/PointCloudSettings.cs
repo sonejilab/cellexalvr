@@ -60,7 +60,7 @@ public class PointCloudSettings : MonoBehaviour
     private void Start()
     {
         CellexalEvents.GraphsLoaded.AddListener(PopulateList);
-        actionReference.action.performed += OnActionClick;
+        //actionReference.action.performed += OnActionClick;
     }
 
     private void PopulateList()

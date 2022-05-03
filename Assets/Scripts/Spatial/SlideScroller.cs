@@ -24,22 +24,45 @@ namespace CellexalVR.Spatial
         [HideInInspector] public string[] currentAOIIDs;
         [HideInInspector] public string[] currentIDs;
         [HideInInspector] public Dictionary<string, GeoMXSlide> currentSlides;
-        [HideInInspector] public int currentType;
+        [HideInInspector] public int currentType; // 0: scan, 1: roi, 2: aoi
+        private bool _requireToggleToClick;
+        public bool RequireToggleToClick
+        {
+            get { return _requireToggleToClick; }
+            set
+            {
+                if (_requireToggleToClick == value)
+                {
+                    return;
+                }
+                _requireToggleToClick = value;
+                if (value)
+                {
+                    touchPadClick.action.performed += OnTouchPadClick;
+                    touchPadPos.action.performed -= OnTouchPadClick;
+                }
+                else
+                {
+                    touchPadClick.action.performed -= OnTouchPadClick;
+                    touchPadPos.action.performed += OnTouchPadClick;
+                }
+            }
+        }
 
-
-        private void Start()
+        private void Awake()
         {
             imageHandler = GetComponent<GeoMXImageHandler>();
-            touchPadClick.action.performed += OnTouchPadClick;
+            CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
 
         private void OnTouchPadClick(InputAction.CallbackContext context)
         {
             if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
                 return;
+
             Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
             Transform rLaser = ReferenceManager.instance.rightLaser.transform;
-            Physics.Raycast(rLaser.position, rLaser.forward, out RaycastHit hit);
+            Physics.Raycast(rLaser.position, rLaser.forward, out RaycastHit hit, 1 << LayerMask.NameToLayer("EnvironmentButtonLayer"));
             if (!hit.collider || !hit.collider.GetComponent<GeoMXSlide>())
                 return;
             GeoMXSlideStack stack = hit.collider.transform.GetComponentInParent<GeoMXSlideStack>();
@@ -47,19 +70,23 @@ namespace CellexalVR.Spatial
             {
                 if (stack)
                 {
-                    ScrollStack(1, stack);
+                    ScrollStack(1, stack.Group);
+                    ReferenceManager.instance.multiuserMessageSender.SendMessageScrollStack(1, stack.Group);
                     return;
                 }
                 Scroll(1);
+                ReferenceManager.instance.multiuserMessageSender.SendMessageScroll(1);
             }
             else if (pos.x < -0.5f)
             {
                 if (stack)
                 {
-                    ScrollStack(-1, stack);
+                    ScrollStack(-1, stack.Group);
+                    ReferenceManager.instance.multiuserMessageSender.SendMessageScrollStack(-1, stack.Group);
                     return;
                 }
                 Scroll(-1);
+                ReferenceManager.instance.multiuserMessageSender.SendMessageScroll(-1);
             }
         }
 
@@ -145,8 +172,9 @@ namespace CellexalVR.Spatial
             }
         }
 
-        public void ScrollStack(int val, GeoMXSlideStack stack)
+        public void ScrollStack(int val, int group)
         {
+            GeoMXSlideStack stack = imageHandler.stacks[group];
             stack.Scroll(val);
         }
 

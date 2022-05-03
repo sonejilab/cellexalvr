@@ -3076,6 +3076,8 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &7053287461562398463
 GameObject:
   m_ObjectHideFlags: 0
@@ -4389,6 +4391,8 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &7053287462306340509
 GameObject:
   m_ObjectHideFlags: 0
@@ -4582,6 +4586,8 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &7053287462308606798
 GameObject:
   m_ObjectHideFlags: 0
@@ -5333,6 +5339,8 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &7053287462532083096
 GameObject:
   m_ObjectHideFlags: 0
@@ -5527,6 +5535,8 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &7053287462636912616
 GameObject:
   m_ObjectHideFlags: 0
@@ -5943,6 +5953,8 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &7053287463113790623
 GameObject:
   m_ObjectHideFlags: 0
@@ -6347,6 +6359,8 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &7053287463171733507
 GameObject:
   m_ObjectHideFlags: 0
@@ -6539,6 +6553,8 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &7053287463188883415
 GameObject:
   m_ObjectHideFlags: 0
@@ -7518,6 +7534,8 @@ MonoBehaviour:
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
   scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &7053287463324530896
 GameObject:
   m_ObjectHideFlags: 0

@@ -169,6 +169,7 @@ namespace CellexalVR.Interaction
             {
                 UpdateColors();
             }
+            CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
 
             CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
@@ -183,9 +184,6 @@ namespace CellexalVR.Interaction
             selectionManager = ReferenceManager.instance.selectionManager;
             graphManager = ReferenceManager.instance.graphManager;
             UpdateShapeIcons();
-
-            _requireToggleToClick = false;
-            touchPadPos.action.performed += OnTouchPadClick;
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
 
             CurrentColorIndex = 0;

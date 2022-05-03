@@ -421,7 +421,7 @@ namespace CellexalVR.General
             mesh.triangles = triangles;
             mesh.RecalculateBounds();
             mesh.RecalculateNormals();
-            
+
             //Vector3[] normals = mesh.normals;
             //for (int n = 0; n < normals.Length; n++)
             //{
@@ -449,6 +449,7 @@ namespace CellexalVR.General
         }
     }
 
+
 #if UNITY_EDITOR
     [CustomEditor(typeof(CurvedMeshGenerator))]
     public class CurvedMeshGeneratorEditor : Editor
@@ -473,6 +474,7 @@ namespace CellexalVR.General
 
             DrawDefaultInspector();
         }
+
     }
-}
 #endif
+}

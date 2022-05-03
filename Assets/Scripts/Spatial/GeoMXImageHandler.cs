@@ -429,7 +429,7 @@ namespace CellexalVR.Spatial
             }
             List<GraphPoint> gps = ReferenceManager.instance.selectionManager.GetLastSelection();
 
-            StartCoroutine(SpawnROIImagesFromGraphPoints(gps));
+            StartCoroutine(SpawnAOIImagesFromGraphPoints(gps));
             return;
 
         }
@@ -484,7 +484,7 @@ namespace CellexalVR.Spatial
             aoiSlides.Clear();
         }
 
-        public IEnumerator SpawnROIImagesFromGraphPoints(List<GraphPoint> gps)
+        public IEnumerator SpawnAOIImagesFromGraphPoints(List<GraphPoint> gps)
         {
             foreach (GeoMXScanSlide scan in scanSlides.Values)
             {
@@ -494,10 +494,18 @@ namespace CellexalVR.Spatial
             {
                 Destroy(roi.gameObject);
             }
+            foreach (GeoMXAOISlide aoi in aoiSlides.Values)
+            {
+                if (aoi)
+                {
+                    Destroy(aoi.gameObject);
+                }
+            }
             roiSlides.Clear();
+            aoiSlides.Clear();
             CellexalEvents.LoadingImages.Invoke();
             HashSet<string> uniqueImages = new HashSet<string>();
-            List<string> roiIDs = new List<string>();
+            List<string> aoiIDs = new List<string>();
             int[] groups = gps.Select(x => x.Group).Distinct().ToArray();
             ClearSlideStacks();
             int n = 0;
@@ -513,7 +521,7 @@ namespace CellexalVR.Spatial
             foreach (GraphPoint gp in gps)
             {
                 GeoMxCell geoMXCell = _cells[int.Parse(gp.Label)];
-                string path = $"{imagePath}\\{geoMXCell.ScanImageID}\\_lowq_{geoMXCell.ROIImageID} - Segments.png";
+                string path = $"{imagePath}\\{geoMXCell.ScanImageID}\\_lowq_{geoMXCell.AOIImageID}.png";
                 if (!File.Exists(path))
                 {
                     print($"Could not find image {path}");
@@ -534,40 +542,42 @@ namespace CellexalVR.Spatial
                     }
                     else
                     {
-                        GeoMXROISlide roi = Instantiate(roiPrefab, stacks[gp.Group].transform);
-                        roi.group = gp.Group;
-                        roi.scanID = geoMXCell.ScanImageID;
-                        roi.roiID = geoMXCell.ROIImageID;
-                        roiIDs.Add(roi.roiID);
-                        roi.aoiIDs = roiDict[roi.roiID].ToArray();
-                        roi.imageHandler = this;
-                        Texture2D roiTexture = DownloadHandlerTexture.GetContent(uwr);
-                        roi.SetLowQ(roiTexture);
+                        GeoMXAOISlide aoi = Instantiate(aoiPrefab, stacks[gp.Group].transform);
+                        aoi.group = gp.Group;
+                        aoiIDs.Add(geoMXCell.AOIImageID);
+                        aoi.aoiID = geoMXCell.AOIImageID;
+                        aoi.scanID = geoMXCell.ScanImageID;
+                        //aoi.roiID = geoMXCell.ROIImageID;
+                        //aoi.aoiIDs = roiDict[aoi.roiID].ToArray();
+                        aoi.imageHandler = this;
+                        Texture2D aoiTexture = DownloadHandlerTexture.GetContent(uwr);
+                        aoi.SetLowQ(aoiTexture);
                         //roi.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", roiTexture);
-                        float ratio = (float)roiTexture.width / (float)roiTexture.height;
-                        roi.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
-                        roi.originalScale = roi.transform.localScale;
-                        roiSlides[geoMXCell.ROIImageID] = roi;
-                        stacks[gp.Group].AddSlide(roi);
-                        roi.type = 1;
+                        float ratio = (float)aoiTexture.width / (float)aoiTexture.height;
+                        aoi.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
+                        aoi.originalScale = aoi.transform.localScale;
+                        aoiSlides[geoMXCell.AOIImageID] = aoi;
+                        stacks[gp.Group].AddSlide(aoi);
+                        aoi.index = i;
+                        aoi.type = 2;
                         uniqueImages.Add(path);
                     }
                     i++;
                 }
             }
-            slideScroller.currentSlides = roiSlides;
-            slideScroller.currentSlide[1] = 0;
-            slideScroller.currentType = 1;
-            slideScroller.currentIDs = roiIDs.ToArray();
-            slideScroller.currentROIIDs = roiIDs.ToArray();
+            slideScroller.currentSlides = aoiSlides;
+            slideScroller.currentSlide[2] = 0;
+            slideScroller.currentType = 2;
+            slideScroller.currentAOIIDs = aoiIDs.ToArray();
+            //slideScroller.currentROIIDs = roiIDs.ToArray();
             CellexalEvents.ImagesLoaded.Invoke();
 
 
             int j = 0;
-            for (int k = 0; k < roiIDs.Count; k++)
+            for (int k = 0; k < aoiIDs.Count; k++)
             {
-                GeoMXROISlide roi = roiSlides[roiIDs[k]].GetComponent<GeoMXROISlide>();
-                string path = $"{imagePath}\\{roi.scanID}\\{roiIDs[k]} - Segments.png";
+                GeoMXAOISlide aoi = aoiSlides[aoiIDs[k]].GetComponent<GeoMXAOISlide>();
+                string path = $"{imagePath}\\{aoi.scanID}\\{aoi.aoiID}.png";
                 if (File.Exists(path))
                 {
                     using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture($"file://{path}"))
@@ -581,7 +591,7 @@ namespace CellexalVR.Spatial
                         else
                         {
                             Texture2D roiTexture = DownloadHandlerTexture.GetContent(uwr);
-                            roi.SetHighQ(roiTexture);
+                            aoi.SetHighQ(roiTexture);
                         }
                     }
                 }

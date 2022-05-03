@@ -31,6 +31,7 @@ namespace AnalysisLogic
         [SerializeField] private SlicerBox slicerBoxPrefab;
 
         private Dictionary<string, Color> clusterCentroids = new Dictionary<string, Color>();
+        private OffsetGrab interactable => GetComponent<OffsetGrab>();
 
         public GameObject sliceImage;
         public VisualEffectAsset pointCloudHighCap;
@@ -125,6 +126,12 @@ namespace AnalysisLogic
             if (Keyboard.current.yKey.wasPressedThisFrame)
             {
                 SpreadOutClusters();
+            }
+
+            if (interactable.isSelected)
+            {
+                ReferenceManager.instance.multiuserMessageSender.SendMessageMoveGraph(originalName,
+                    transform.position, transform.rotation, transform.localScale);
             }
 
 

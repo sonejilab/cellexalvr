@@ -2,6 +2,7 @@
 using CellexalVR.General;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Spatial;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.Interaction
 {
@@ -11,8 +12,11 @@ namespace CellexalVR.Interaction
     public class PushBack : MonoBehaviour
     {
         //// Open XR 
-		//public SteamVR_TrackedObject rightController;;
-		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        //public SteamVR_TrackedObject rightController;;
+        [SerializeField] private InputActionAsset actionAsset;
+        [SerializeField] private InputActionReference touchPadPos;
+        [SerializeField] private InputActionReference touchPadClick;
+
         public float distanceMultiplier = 0.1f;
         public float scaleMultiplier = 0.4f;
         public float maxScale;
@@ -28,6 +32,29 @@ namespace CellexalVR.Interaction
         private bool pull;
         private int maxDist = 10;
         private int layerMask;
+        private bool _requireToggleToClick;
+        public bool RequireToggleToClick
+        {
+            get { return _requireToggleToClick; }
+            set
+            {
+                if (_requireToggleToClick == value)
+                {
+                    return;
+                }
+                _requireToggleToClick = value;
+                if (value)
+                {
+                    touchPadClick.action.performed += OnTouchPadClick;
+                    touchPadPos.action.performed -= OnTouchPadClick;
+                }
+                else
+                {
+                    touchPadClick.action.performed -= OnTouchPadClick;
+                    touchPadPos.action.performed += OnTouchPadClick;
+                }
+            }
+        }
 
         private void OnValidate()
         {
@@ -35,6 +62,13 @@ namespace CellexalVR.Interaction
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
+        }
+
+        private void Awake()
+        {
+            //_requireToggleToClick = false;
+            //touchPadPos.action.performed += OnTouchPadClick;
+            CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
 
         private void Start()
@@ -48,12 +82,42 @@ namespace CellexalVR.Interaction
                 | 1 << LayerMask.NameToLayer("EnvironmentButtonLayer") | 1 << LayerMask.NameToLayer("Ignore Raycast");
         }
 
+        private void Update()
+        {
+            if (!_requireToggleToClick || touchPadClick.action.ReadValue<float>() > 0)
+            {
+                Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
+                if (pos.y > 0.5f)
+                {
+                    Push();
+                }
+                else if (pos.y < -0.5f)
+                {
+                    Pull();
+                }
+            }
+        }
+
+        private void OnTouchPadClick(InputAction.CallbackContext context)
+        {
+            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+                return;
+            Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
+            if (pos.y > 0.5f)
+            {
+                Push();
+            }
+            else if (pos.y < -0.5f)
+            {
+                Pull();
+            }
+        }
+
         /// <summary>
         /// Pulls an object closer to the user.
         /// </summary>
         public void Pull()
         {
-            print("pull");
             raycastingSource = transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist + 5, layerMask);
             if (!hit.collider) return;
@@ -95,7 +159,7 @@ namespace CellexalVR.Interaction
             {
                 hit.transform.LookAt(raycastingSource.transform);
                 hit.transform.Rotate(0, 180, 0);
-                referenceManager.multiuserMessageSender.SendMessageMoveLegend( hit.transform.position, hit.transform.rotation, hit.transform.localScale);
+                referenceManager.multiuserMessageSender.SendMessageMoveLegend(hit.transform.position, hit.transform.rotation, hit.transform.localScale);
             }
         }
 
@@ -104,7 +168,6 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void Push()
         {
-            print("push");
             raycastingSource = transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, maxDist, layerMask);
             if (!hit.collider) return;
@@ -139,7 +202,7 @@ namespace CellexalVR.Interaction
             {
                 hit.transform.LookAt(raycastingSource.transform);
                 hit.transform.Rotate(0, 180, 0);
-                referenceManager.multiuserMessageSender.SendMessageMoveLegend( hit.transform.position, hit.transform.rotation, hit.transform.localScale);
+                referenceManager.multiuserMessageSender.SendMessageMoveLegend(hit.transform.position, hit.transform.rotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<Heatmap>())
             {

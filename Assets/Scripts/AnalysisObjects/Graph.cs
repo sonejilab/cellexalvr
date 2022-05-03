@@ -1001,7 +1001,8 @@ namespace CellexalVR.AnalysisObjects
             }
 
             var skeleton = await MeshGenerator.instance.GenerateGraphMesh(this);
-            skeleton.parent = convexHull.transform;
+            skeleton.SmoothMesh();
+            skeleton.transform.parent = convexHull.transform;
             //var nodes = octreeRoot.GetSkeletonNodesRecursive(octreeRoot, null, 0, 4);
             //int posCount = nodes.Count;
             //nodes.OrderBy(v => v.center.x).ToList();

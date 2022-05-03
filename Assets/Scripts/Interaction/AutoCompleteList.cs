@@ -184,7 +184,7 @@ namespace CellexalVR.Interaction
             //root.TreeInfo(ref numChildren, ref numLeaves, 0, ref depth);
             //float avgChildren = numChildren / ((float)namesOfThings.Count - numLeaves);
             //print(avgChildren + " " + depth);
-            referenceManager.filterNameKeyboardAutoCompleteList.SetBKTree(root);
+            ReferenceManager.instance.filterNameKeyboardAutoCompleteList.SetBKTree(root);
             stopwatch.Stop();
             CellexalLog.Log(string.Format("Successfully built autocomplete list bk-tree in {0}", stopwatch.Elapsed.ToString()));
         }

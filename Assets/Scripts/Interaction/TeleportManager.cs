@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
+using CellexalVR.General;
 
 namespace Assets.Scripts.Interaction
 {
@@ -12,39 +13,67 @@ namespace Assets.Scripts.Interaction
         [SerializeField] private TeleportationProvider provider;
         [SerializeField] private GameObject endPoint;
         [SerializeField] private InputActionReference touchPadPos;
+        [SerializeField] private InputActionReference touchPadClick;
 
         private InputAction _thumbstick;
 
-        private void Start()
+        private bool _requireToggleToClick;
+        public bool RequireToggleToClick
+        {
+            get { return _requireToggleToClick; }
+            set
+            {
+                if (_requireToggleToClick == value)
+                {
+                    return;
+                }
+                _requireToggleToClick = value;
+                if (value)
+                {
+                    touchPadClick.action.performed += OnTeleportActivate;
+                    touchPadClick.action.canceled += OnTeleportDeactivate;
+                    touchPadPos.action.performed -= OnTeleportActivate;
+                    touchPadPos.action.canceled -= OnTeleportDeactivate;
+                }
+                else
+                {
+                    touchPadClick.action.performed -= OnTeleportActivate;
+                    touchPadPos.action.performed += OnTeleportActivate;
+                    touchPadPos.action.canceled += OnTeleportDeactivate;
+                }
+            }
+        }
+
+        private void Awake()
         {
             rayInteractor.enabled = false;
-
-            var activate = actionAsset.FindActionMap("XRI LeftHand").FindAction("TouchPadClick");
-            activate.Enable();
-            activate.performed += OnTeleportActivate;
-
-            activate.canceled += OnTeleportDeactivate;
-
-            //var touchPadPos = actionAsset.FindActionMap("XRI LeftHand").FindAction("TouchPadPos");
-            //var deactivate = actionAsset.FindActionMap("XRI LeftHand").FindAction("Teleport Mode Activate");
-            //activate.Enable();
-            //activate.performed += OnTeleportActivate;
-
+            //_requireToggleToClick = false;
+            //touchPadPos.action.performed += OnTeleportActivate;
+            //touchPadPos.action.canceled += OnTeleportDeactivate;
+            //touchPadClick.action.performed += OnTeleportActivate;
+            //touchPadClick.action.canceled += OnTeleportDeactivate;
+            CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
+
         private void Update()
         {
-
-
+            if (!_requireToggleToClick)
+            {
+                Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
+                if (pos.y < 0.65f)
+                    return;
+                rayInteractor.enabled = true;
+                endPoint.SetActive(true);
+            }
         }
 
         private void OnTeleportActivate(InputAction.CallbackContext context)
         {
             Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
-            if (touchPadPos.action.ReadValue<Vector2>().y < 0.5f)
+            if (pos.y < 0.65f)
                 return;
             rayInteractor.enabled = true;
             endPoint.SetActive(true);
-            
         }
 
         private void OnTeleportDeactivate(InputAction.CallbackContext context)

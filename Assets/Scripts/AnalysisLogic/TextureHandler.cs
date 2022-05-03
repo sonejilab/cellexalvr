@@ -49,11 +49,16 @@ namespace CellexalVR.AnalysisLogic
             //{
             //frameCount = 0;
             List<Tuple<int, int>> orgPixels = new List<Tuple<int, int>>();
+            List<int> indices = new List<int>();
+            List<int> groups = new List<int>();
             Entities.WithAll<SelectedPointComponent>().WithoutBurst().ForEach((Entity e, int entityInQueryIndex, ref SelectedPointComponent sp) =>
             {
                 orgPixels.Add(new Tuple<int, int>(sp.orgXIndex, sp.orgYIndex));
+                indices.Add(sp.label);
+                groups.Add(sp.group);
                 sps[sp.label] = sp.group;
             }).Run();
+            ReferenceManager.instance.multiuserMessageSender.SendMessageSelectedAddPointCloud(indices.ToArray(), groups.ToArray());
             Color col = SelectionToolCollider.instance.GetCurrentColor();
             col.a = 1f;
             Color a = Color.white;
@@ -75,14 +80,10 @@ namespace CellexalVR.AnalysisLogic
             //frameCount++;
         }
 
-
-
-
-
-        public void SelectFromFile(List<Tuple<int, int>> indices)
+        public void AddPointsToSelection(List<Vector2Int> indGroupTuple, bool select = false)
         {
             int i = 0;
-            indices.OrderBy(x => x.Item1);
+            indGroupTuple.OrderBy(x => x.x);
             Color col; // SelectionToolCollider.instance.GetCurrentColor();
             col.a = 1f;
             Color a = Color.white;
@@ -90,10 +91,12 @@ namespace CellexalVR.AnalysisLogic
             {
                 Texture2D map = mainColorTextureMaps[j];
                 Texture2D amap = alphaTextureMaps[j];
-                foreach (Tuple<int, int> tuple in indices)
+                foreach (Vector2Int tup in indGroupTuple)
                 {
-                    col = SelectionToolCollider.instance.Colors[tuple.Item2];
-                    Vector2Int xy = textureCoordDict[PointCloudGenerator.instance.indToLabelDict[tuple.Item1]];
+                    if (select)
+                        sps[tup.x] = tup.y;
+                    col = SelectionToolCollider.instance.Colors[tup.y];
+                    Vector2Int xy = textureCoordDict[PointCloudGenerator.instance.indToLabelDict[tup.x]];
                     map.SetPixel(xy.x, xy.y, col);
                     amap.SetPixel(xy.x, xy.y, a);
                 }

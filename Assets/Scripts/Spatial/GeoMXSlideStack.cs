@@ -29,7 +29,7 @@ namespace CellexalVR.Spatial
         private int currentSlideCount = 0;
         private List<GeoMXAOISlide> aoiSlides = new List<GeoMXAOISlide>();
 
-        public void AddSlide(GeoMXROISlide slide)
+        public void AddSlide(GeoMXAOISlide slide)
         {
             slides.Add(slide);
             if (count > 0)
@@ -49,10 +49,10 @@ namespace CellexalVR.Spatial
 
         public void Scroll(int val)
         {
-            if (aoiSlides.Count > 0)
-            {
-                currentSlide.Select();
-            }
+            //if (aoiSlides.Count > 0)
+            //{
+            //    currentSlide.Select();
+            //}
             currentSlide.Move(new Vector3(0, -1, 0));
             currentSlide.Fade(false);
             currentSlideCount = SlideScroller.mod(currentSlideCount + val, count);
