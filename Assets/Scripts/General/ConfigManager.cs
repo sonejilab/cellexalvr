@@ -23,6 +23,7 @@ namespace CellexalVR.General
         public string ConfigDir { get; set; }
         public string RscriptexePath { get; set; }
         public bool RequireTouchpadClickToInteract { get; set; }
+        public string ControllerModel { get; set; }
         public int GraphLoadingCellsPerFrameStartCount { get; set; }
         public int GraphLoadingCellsPerFrameIncrement { get; set; }
         public int GraphClustersPerFrameStartCount { get; set; }
@@ -76,6 +77,7 @@ namespace CellexalVR.General
                 RscriptexePath = c.RscriptexePath;
             }
             RequireTouchpadClickToInteract = c.RequireTouchpadClickToInteract;
+            ControllerModel = c.ControllerModel;
             GraphLoadingCellsPerFrameStartCount = c.GraphLoadingCellsPerFrameStartCount;
             GraphLoadingCellsPerFrameIncrement = c.GraphLoadingCellsPerFrameIncrement;
             GraphClustersPerFrameStartCount = c.GraphClustersPerFrameStartCount;
@@ -381,6 +383,7 @@ namespace CellexalVR.General
             Config config = DeserializeConfig(data);
             // Only change the parts that need to be.
             CellexalConfig.Config.RequireTouchpadClickToInteract = config.RequireTouchpadClickToInteract;
+            CellexalConfig.Config.ControllerModel = config.ControllerModel;
             CellexalConfig.Config.SelectionToolColors = config.SelectionToolColors;
             CellexalConfig.Config.GraphDefaultColor = config.GraphDefaultColor;
             CellexalConfig.Config.GraphZeroExpressionColor = config.GraphZeroExpressionColor;

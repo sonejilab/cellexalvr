@@ -39,7 +39,7 @@ namespace CellexalVR.General
             folderBaseCoords = new Vector3[6];
             for (int i = 0; i < 3; ++i)
             {
-                folderBaseCoords[i] = new Vector3((float) Math.Cos(folderAngle), 0, (float) Math.Sin(folderAngle));
+                folderBaseCoords[i] = new Vector3((float)Math.Cos(folderAngle), 0, (float)Math.Sin(folderAngle));
                 folderAngle -= (Math.PI * .9d) / 6d;
             }
 
@@ -69,7 +69,7 @@ namespace CellexalVR.General
 
 
 
-            
+
             // GeneratePreviousSessionFolders(filter);
         }
 
@@ -84,10 +84,13 @@ namespace CellexalVR.General
             else
             {
                 referenceManager.tutorialManager.gameObject.SetActive(false);
-                StartCoroutine(ScarfManager.instance.GetDatasetsCoroutine());
-                while (ScarfManager.instance.reqPending)
-                    yield return null;
-
+                // TODO: Scarf implementation
+                if (ScarfManager.instance.scarfActive)
+                {
+                    StartCoroutine(ScarfManager.instance.GetDatasetsCoroutine());
+                    while (ScarfManager.instance.reqPending)
+                        yield return null;
+                }
                 directories.AddRange(ScarfManager.instance.datasets);
                 dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
                 directories.AddRange(Directory.GetDirectories(dataDirectory));
@@ -168,7 +171,7 @@ namespace CellexalVR.General
                 int fromIndex = pathLastPart.IndexOfAny("0123456789".ToCharArray());
                 int toIndex = pathLastPart.LastIndexOfAny("0123456789".ToCharArray()) + 1;
                 string sessionTimestamp = pathLastPart.Substring(fromIndex, toIndex - fromIndex);
-                
+
                 string fullName = dataFolderPart + sessionTimestamp;
 
                 if (fullName.ToLower().Contains(filter))

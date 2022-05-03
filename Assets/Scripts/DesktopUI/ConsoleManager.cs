@@ -22,6 +22,7 @@ namespace CellexalVR.DesktopUI
         public GameObject consoleGameObject;
         public TMPro.TMP_InputField inputField;
         public TMPro.TMP_InputField outputField;
+        public ScrollRectWithoutDragging outputScrollRect;
         public TMPro.TMP_Text suggestionField;
         private bool consoleActive = false;
         private Dictionary<MethodInfo, string> accessors = new Dictionary<MethodInfo, string>();
@@ -205,6 +206,7 @@ namespace CellexalVR.DesktopUI
             if (outputField.textComponent.textInfo == null) return;
             outputField.MoveTextEnd(false);
             outputField.textComponent.ForceMeshUpdate();
+            outputScrollRect.Rebuild(CanvasUpdate.Layout);
             //Canvas.ForceUpdateCanvases();
 
             ClearAndHideSuggestions();
