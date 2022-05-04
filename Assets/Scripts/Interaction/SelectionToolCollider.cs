@@ -373,7 +373,7 @@ namespace CellexalVR.Interaction
             //radialMenu.buttons[3].color = Colors[buttonIndexRight];
             selectedColor = Colors[currentColorIndex];
             //selectionToolColliders[currentMeshIndex].GetComponent<Renderer>().material.color = Colors[currentColorIndex];
-            ReferenceManager.instance.controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
+            ReferenceManager.instance.controllerModelSwitcher.SwitchSelectionToolColor(Colors[currentColorIndex]);
 
         }
 
@@ -389,11 +389,11 @@ namespace CellexalVR.Interaction
                 // controllerModelSwitcher.SwitchControllerModelColor(Colors[currentColorIndex]);
                 if (CurrentColorIndex > Colors.Length)
                 {
-                    ReferenceManager.instance.controllerModelSwitcher.SwitchControllerModelColor(Color.white);
+                    ReferenceManager.instance.controllerModelSwitcher.SwitchSelectionToolColor(Color.white);
                 }
                 else
                 {
-                    ReferenceManager.instance.controllerModelSwitcher.SwitchControllerModelColor(Colors[CurrentColorIndex]);
+                    ReferenceManager.instance.controllerModelSwitcher.SwitchSelectionToolColor(Colors[CurrentColorIndex]);
                 }
             }
             //particles.gameObject.SetActive(enabled && particles != null);

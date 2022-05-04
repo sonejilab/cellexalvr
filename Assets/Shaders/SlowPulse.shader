@@ -3,7 +3,7 @@
     Properties
     {
         _PulseGradient("Pulse Gradient", 2D) = "white" {}
-        _MainColor("Main Color", Color) = (0, 0, 0, 1)
+        _Color("Main Color", Color) = (0, 0, 0, 1)
         _TimeScaleFactor("Time Scale Factor", float) = 1
         _CoordinateFactor("Coordinate Factor", float) = 1
         _PulseLength("Pulse Length", float) = 10
@@ -38,7 +38,7 @@
             };
 
             sampler2D _PulseGradient;
-            fixed4 _MainColor;
+            fixed4 _Color;
             float _TimeScaleFactor;
             float _CoordinateFactor;
             float _PulseLength;
@@ -57,7 +57,7 @@
                 float coordinateFactor = IN.uv.x * _CoordinateFactor;
                 float pulseIntensity = clamp(sin(timeFactor + coordinateFactor) * (_PulseLength + 1) - _PulseLength, 0, 1);
                 fixed4 pulseColor = tex2D(_PulseGradient, fixed2(0, frac(IN.uv.y+ _Time.y/8)));
-                fixed4 color = lerp(_MainColor, pulseColor, pulseIntensity);
+                fixed4 color = lerp(_Color, pulseColor, pulseIntensity);
                 return color;
             }
 

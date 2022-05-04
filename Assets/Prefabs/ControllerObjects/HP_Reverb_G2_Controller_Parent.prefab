@@ -1166,6 +1166,7 @@ GameObject:
   - component: {fileID: 5711089822494018038}
   - component: {fileID: 5405987124860351505}
   - component: {fileID: 3957991976238078431}
+  - component: {fileID: 4289418238786974704}
   m_Layer: 0
   m_Name: Grip button.001
   m_TagString: Untagged
@@ -1238,6 +1239,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4289418238786974704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3361250940902388945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 1, b: 0, a: 1}
 --- !u!1 &3387158977637123100
 GameObject:
   m_ObjectHideFlags: 0
@@ -2774,6 +2788,7 @@ GameObject:
   - component: {fileID: 8133808766647405658}
   - component: {fileID: 884993197932678871}
   - component: {fileID: 4286890105210128484}
+  - component: {fileID: 1809227169395267261}
   m_Layer: 0
   m_Name: Joystick.001
   m_TagString: Untagged
@@ -2846,6 +2861,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1809227169395267261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6525606032920318928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &6545723739975512588
 GameObject:
   m_ObjectHideFlags: 0
@@ -2857,6 +2885,7 @@ GameObject:
   - component: {fileID: 8737710156317491575}
   - component: {fileID: 5655068262719807515}
   - component: {fileID: 7255581924155941877}
+  - component: {fileID: 1405617277568615139}
   m_Layer: 0
   m_Name: Grip button
   m_TagString: Untagged
@@ -2929,6 +2958,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1405617277568615139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6545723739975512588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 1, b: 0, a: 1}
 --- !u!1 &6625514765324648529
 GameObject:
   m_ObjectHideFlags: 0
@@ -4019,6 +4061,7 @@ GameObject:
   - component: {fileID: 8621924050415016224}
   - component: {fileID: 7640454129576650959}
   - component: {fileID: 5400785287406404189}
+  - component: {fileID: 2976025194826930544}
   m_Layer: 0
   m_Name: Trigger button
   m_TagString: Untagged
@@ -4091,6 +4134,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2976025194826930544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8794858078676683232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &8921963991529746496
 GameObject:
   m_ObjectHideFlags: 0
@@ -4268,6 +4324,7 @@ GameObject:
   - component: {fileID: 1487603765581615025}
   - component: {fileID: 4188718163244445950}
   - component: {fileID: 828742694089932411}
+  - component: {fileID: 4150672806756787895}
   m_Layer: 0
   m_Name: Joystick
   m_TagString: Untagged
@@ -4340,6 +4397,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4150672806756787895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9056480564611967421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &9114677379959548773
 GameObject:
   m_ObjectHideFlags: 0
@@ -4351,6 +4421,7 @@ GameObject:
   - component: {fileID: 6732313053018690380}
   - component: {fileID: 8851447141332502627}
   - component: {fileID: 1471012337327980157}
+  - component: {fileID: 3209751015146580706}
   m_Layer: 0
   m_Name: Trigger button.001
   m_TagString: Untagged
@@ -4423,3 +4494,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3209751015146580706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9114677379959548773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 0, b: 0, a: 1}

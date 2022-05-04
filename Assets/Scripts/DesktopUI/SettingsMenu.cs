@@ -29,6 +29,7 @@ namespace CellexalVR.DesktopUI
         [Header("Hardware")]
         public Toggle requireTouchpadToClickToggle;
         public TMPro.TMP_Dropdown controllerModelDropdown;
+        public TMPro.TMP_Dropdown controllerColorModeDropdown;
         [Header("Heatmap")] public TMPro.TMP_Dropdown heatmapColormapDropdown;
         public ColorPickerButton heatmapHighExpression;
         public ColorPickerButton heatmapMidExpression;
@@ -374,6 +375,13 @@ namespace CellexalVR.DesktopUI
             unsavedChanges = true;
             ControllerBrand brand = controllerModelDropdown.options[controllerModelDropdown.value].text.ToBrand();
             referenceManager.controllerModelSwitcher.SwitchControllerBaseModel(brand);
+        }
+
+        public void SetControllerColors()
+        {
+            unsavedChanges = true;
+            ControllerColorMode mode = controllerColorModeDropdown.options[controllerColorModeDropdown.value].text.ToControllerColorMode();
+            referenceManager.controllerModelSwitcher.SwitchControllerModelColor(mode);
         }
 
         public void SetNumberOfHeatmapColors()

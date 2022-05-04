@@ -1,4 +1,8 @@
+using Assets.Scripts.General;
 using CellexalVR.General;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR;
@@ -28,6 +32,10 @@ namespace CellexalVR.Interaction
         // for example: the user has activated the selection tool, so DesiredModel = SelectionTool and actualModel = SelectionTool
         // the user then moves the controller into the menu. DesiredModel is still SelectionTool, but actualModel will now be Menu
         public Model ActualModel;
+        public enum ControllerColorMode { StaticColors, AnimatedPulse }
+        public ControllerColorMode colorMode;
+        public Material defaultStaticMaterial;
+        public Material animatedPulseMaterial;
 
         //private SelectionToolHandler selectionToolHandler;
         private SelectionToolCollider selectionToolCollider;
@@ -45,6 +53,7 @@ namespace CellexalVR.Interaction
         private XRRayInteractor rightLaser;
         private XRRayInteractor leftLaser;
         private int selectionToolMeshIndex = 0;
+        private Dictionary<Color, Material> staticMaterialsCache;
         // The help tool is a bit of an exception, it can be active while another tool is also active, like the keyboard.
         // Otherwise you can't point the helptool towards the keyboard.
         public bool HelpToolShouldStayActivated { get; set; }
@@ -70,6 +79,8 @@ namespace CellexalVR.Interaction
             laserPointerController = referenceManager.laserPointerController;
             rightLaser = referenceManager.rightLaser;
             leftLaser = referenceManager.leftLaser;
+            staticMaterialsCache = new Dictionary<Color, Material>();
+            staticMaterialsCache[animatedPulseMaterial.color] = animatedPulseMaterial;
 
             InputDevices.deviceConnected += OnDeviceConnected;
             InputDevices.deviceDisconnected += OnDeviceDisconnected;
@@ -100,7 +111,7 @@ namespace CellexalVR.Interaction
 
                 case ControllerBrand.Set_Automatically:
                 default:
-                    var allDevices = new System.Collections.Generic.List<UnityEngine.XR.InputDevice>();
+                    var allDevices = new List<UnityEngine.XR.InputDevice>();
                     InputDevices.GetDevices(allDevices);
                     var firstController = allDevices.Find((device) => (device.characteristics & InputDeviceCharacteristics.Controller) != 0);
                     baseModelToSwitchTo = TryGuessControllerModel(firstController);
@@ -144,6 +155,14 @@ namespace CellexalVR.Interaction
                 rightControllerScript.model = Instantiate(rightControllerScript.modelPrefab, rightControllerScript.modelParent);
                 rightControllerScript.enabled = true;
             }
+
+            StartCoroutine(WaitOneFrameAndRun(() => SwitchControllerModelColor(colorMode)));
+        }
+
+        private System.Collections.IEnumerator WaitOneFrameAndRun(Action func)
+        {
+            yield return null;
+            func();
         }
 
         /// <summary>
@@ -453,7 +472,7 @@ namespace CellexalVR.Interaction
         /// Used by the selectiontoolhandler. Changes the current model's color.
         /// </summary>
         /// <param name="color"> The new color. </param>
-        public void SwitchControllerModelColor(Color color)
+        public void SwitchSelectionToolColor(Color color)
         {
             desiredColor = color;
 
@@ -471,9 +490,84 @@ namespace CellexalVR.Interaction
                 ActivateDesiredTool();
             }
         }
+
+        /// <summary>
+        /// Changes the colors of the decals on the controllers.
+        /// </summary>
+        /// <param name="mode">The new mode </param>
+        /// <exception cref="ArgumentException"></exception>
+        public void SwitchControllerModelColor(ControllerColorMode mode)
+        {
+            colorMode = mode;
+            // find all decal gameobjects
+            Transform leftDecals = leftControllerScript.modelParent.Find("Left(Clone)/Decals");
+            Transform rightDecals = rightControllerScript.modelParent.Find("Right(Clone)/Decals");
+            // concatenate the lists and remove the parents, they don't have renderers
+            if (!leftDecals)
+            {
+                leftDecals = leftControllerScript.modelParent;
+            }
+
+            if (!rightDecals)
+            {
+                rightDecals = rightControllerScript.modelParent;
+            }
+
+            IEnumerable<Transform> allDecals = leftDecals.GetComponentsInChildren<Transform>()
+                    .Concat(rightDecals.GetComponentsInChildren<Transform>())
+                    .Where((Transform t) => t != rightDecals && t != leftDecals);
+
+            switch (mode)
+            {
+                case ControllerColorMode.StaticColors:
+                    foreach (Transform t in allDecals)
+                    {
+                        ColorPreset colorPreset = t.GetComponent<ColorPreset>();
+                        if (colorPreset)
+                        {
+                            if (staticMaterialsCache.ContainsKey(colorPreset.color))
+                            {
+                                t.GetComponent<Renderer>().material = staticMaterialsCache[colorPreset.color];
+                            }
+                            else
+                            {
+                                Material newMaterial = new Material(defaultStaticMaterial)
+                                {
+                                    color = colorPreset.color
+                                };
+                                staticMaterialsCache[colorPreset.color] = newMaterial;
+                                t.GetComponent<Renderer>().material = newMaterial;
+                            }
+                        }
+                        else
+                        {
+                            t.GetComponent<Renderer>().material = defaultStaticMaterial;
+                        }
+                    }
+                    break;
+                case ControllerColorMode.AnimatedPulse:
+                    foreach (Transform t in allDecals)
+                    {
+                        t.GetComponent<Renderer>().material = animatedPulseMaterial;
+                    }
+                    break;
+
+                default:
+                    throw new ArgumentException($"Unknown color mode: {mode}");
+            }
+        }
     }
+    /// <summary>
+    /// Extensions methods for <see cref="ControllerModelSwitcher.ControllerBrand"/>.
+    /// </summary>
     public static class ControllerBrandExtensions
     {
+        /// <summary>
+        /// Converts a <see cref="ControllerModelSwitcher.ControllerBrand"/> into a human friendly string.
+        /// </summary>
+        /// <param name="brand">The <see cref="ControllerModelSwitcher.ControllerBrand"/> to convert.</param>
+        /// <returns>The resulting string.</returns>
+        /// <exception cref="System.ArgumentException">Thrown if <see cref="ControllerModelSwitcher.ControllerBrand"/> is not in the range of defined values.</exception>
         public static string ToFriendlyString(this ControllerModelSwitcher.ControllerBrand brand)
         {
             switch (brand)
@@ -491,6 +585,12 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Converts a string into a <see cref="ControllerModelSwitcher.ControllerBrand"/>.
+        /// </summary>
+        /// <param name="s">The string to convert.</param>
+        /// <returns>The corresponding <see cref="ControllerModelSwitcher.ControllerBrand"/>, if conversion was possible.</returns>
+        /// <exception cref="ArgumentException">Thrown if the string could not be recognised as a <see cref="ControllerModelSwitcher.ControllerBrand"/>.</exception>
         public static ControllerModelSwitcher.ControllerBrand ToBrand(this string s)
         {
             switch (s)
@@ -504,7 +604,32 @@ namespace CellexalVR.Interaction
                 case "Valve Index":
                     return ControllerModelSwitcher.ControllerBrand.Valve_Index;
                 default:
-                    throw new System.ArgumentException($"{s} is not a valid controller brand.");
+                    throw new ArgumentException($"{s} is not a valid controller brand.");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Extensions methods for <see cref="ControllerModelSwitcher.ControllerColorMode"/>.
+    /// </summary>
+    public static class ControllerColorModeExtensions
+    {
+        /// <summary>
+        /// Converts a string into a <see cref="ControllerModelSwitcher.ControllerColorMode"/>.
+        /// </summary>
+        /// <param name="s">The string to convert.</param>
+        /// <returns>The corresponding <see cref="ControllerModelSwitcher.ControllerColorMode"/>, if conversion was possible.</returns>
+        /// <exception cref="ArgumentException">Thrown if the string could not be recognised as a <see cref="ControllerModelSwitcher.ControllerColorMode"/>.</exception>
+        public static ControllerModelSwitcher.ControllerColorMode ToControllerColorMode(this string s)
+        {
+            switch (s)
+            {
+                case "Static Colors":
+                    return ControllerModelSwitcher.ControllerColorMode.StaticColors;
+                case "Animated Pulse":
+                    return ControllerModelSwitcher.ControllerColorMode.AnimatedPulse;
+                default:
+                    throw new ArgumentException($"{s} is not a valid controller color mode");
             }
         }
     }

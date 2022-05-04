@@ -260,6 +260,7 @@ GameObject:
   - component: {fileID: 5929526952037486888}
   - component: {fileID: 4631612911916727518}
   - component: {fileID: 4551168335210442114}
+  - component: {fileID: 9138399422272596813}
   m_Layer: 0
   m_Name: trigger_decal
   m_TagString: Untagged
@@ -332,6 +333,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &9138399422272596813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207127897679119941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &441700725900292845
 GameObject:
   m_ObjectHideFlags: 0
@@ -509,6 +523,7 @@ GameObject:
   - component: {fileID: 6098851080033798254}
   - component: {fileID: 9115090722301463353}
   - component: {fileID: 1843449754904259564}
+  - component: {fileID: 3945383244044946891}
   m_Layer: 0
   m_Name: touchpad_decal
   m_TagString: Untagged
@@ -581,6 +596,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3945383244044946891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 805818932549280032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &1868393448458015735
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,7 +619,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7765669110620422883}
   m_Layer: 0
-  m_Name: Decal
+  m_Name: Decals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1664,6 +1692,7 @@ GameObject:
   - component: {fileID: 6712626899031957890}
   - component: {fileID: 8149049928205156695}
   - component: {fileID: 7995826120491616531}
+  - component: {fileID: 8048321892989464331}
   m_Layer: 0
   m_Name: trigger_decal
   m_TagString: Untagged
@@ -1736,6 +1765,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8048321892989464331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3956588779124527150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &4155721430097810754
 GameObject:
   m_ObjectHideFlags: 0
@@ -2079,6 +2121,7 @@ GameObject:
   - component: {fileID: 9114996908526724607}
   - component: {fileID: 5970061842825892114}
   - component: {fileID: 4875280404755721018}
+  - component: {fileID: 5763469154055839820}
   m_Layer: 0
   m_Name: touchpad_cross_decal
   m_TagString: Untagged
@@ -2151,6 +2194,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5763469154055839820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4944262435556640093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 0.0141509175, a: 1}
 --- !u!1 &5281843655776306929
 GameObject:
   m_ObjectHideFlags: 0
@@ -2278,6 +2334,7 @@ GameObject:
   - component: {fileID: 7283119842417037823}
   - component: {fileID: 2290098390470392962}
   - component: {fileID: 7285700036691001154}
+  - component: {fileID: 4526003168632171028}
   m_Layer: 0
   m_Name: touchpad_decal
   m_TagString: Untagged
@@ -2350,6 +2407,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4526003168632171028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5496359047623303695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 0.0141509175, a: 1}
 --- !u!1 &5622086376040063365
 GameObject:
   m_ObjectHideFlags: 0
@@ -2361,6 +2431,7 @@ GameObject:
   - component: {fileID: 7837091996194390496}
   - component: {fileID: 4220313221713411101}
   - component: {fileID: 3361990732646531766}
+  - component: {fileID: 1061067324588343730}
   m_Layer: 0
   m_Name: touchpad_cross_decal
   m_TagString: Untagged
@@ -2433,6 +2504,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1061067324588343730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5622086376040063365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &5640816046327387665
 GameObject:
   m_ObjectHideFlags: 0
@@ -2884,7 +2968,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7564630720148073056}
   m_Layer: 0
-  m_Name: Decal
+  m_Name: Decals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2928,6 +3012,7 @@ GameObject:
   - component: {fileID: 1743439262723216083}
   - component: {fileID: 4892780513296747546}
   - component: {fileID: 3685256537843866816}
+  - component: {fileID: 4195857462756993490}
   m_Layer: 0
   m_Name: left_grip_button_decal
   m_TagString: Untagged
@@ -3000,6 +3085,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4195857462756993490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7993927527926551633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 1, b: 0, a: 1}
 --- !u!1 &8090111332915626182
 GameObject:
   m_ObjectHideFlags: 0
@@ -3094,6 +3192,7 @@ GameObject:
   - component: {fileID: 2463525140743274781}
   - component: {fileID: 8666338012055372147}
   - component: {fileID: 6561064952951279621}
+  - component: {fileID: 7214417077238928360}
   m_Layer: 0
   m_Name: left_grip_button_decal
   m_TagString: Untagged
@@ -3166,6 +3265,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7214417077238928360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8887237400758735155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 1, b: 0, a: 1}
 --- !u!1 &9123731340730144648
 GameObject:
   m_ObjectHideFlags: 0

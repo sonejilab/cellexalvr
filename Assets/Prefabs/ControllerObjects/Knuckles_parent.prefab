@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2390590516141968734}
   - component: {fileID: 2692383479411570563}
   - component: {fileID: 3511448235635045732}
+  - component: {fileID: 4549903566808086814}
   m_Layer: 0
   m_Name: r_touchpad_decal
   m_TagString: Untagged
@@ -83,6 +84,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4549903566808086814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429745113605243496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &484234464669335795
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,6 +191,7 @@ GameObject:
   - component: {fileID: 5741004061474132739}
   - component: {fileID: 5080270483184135254}
   - component: {fileID: 4706576407091345490}
+  - component: {fileID: 7672934130204535858}
   m_Layer: 0
   m_Name: r_touchpad_decal
   m_TagString: Untagged
@@ -249,6 +264,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7672934130204535858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522515428780410729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &609315101025417227
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,6 +480,7 @@ GameObject:
   - component: {fileID: 2638180987670821763}
   - component: {fileID: 6549931766145025775}
   - component: {fileID: 4746720300666049965}
+  - component: {fileID: 7429821276128289953}
   m_Layer: 0
   m_Name: r_trigger_decal
   m_TagString: Untagged
@@ -524,6 +553,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7429821276128289953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406463615201109544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1595053394230585001
 GameObject:
   m_ObjectHideFlags: 0
@@ -900,6 +942,7 @@ GameObject:
   - component: {fileID: 8257515575793989328}
   - component: {fileID: 98033493643434031}
   - component: {fileID: 6312154892526873595}
+  - component: {fileID: 8030505381872020193}
   m_Layer: 0
   m_Name: r_grip_decal
   m_TagString: Untagged
@@ -972,6 +1015,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8030505381872020193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2373684061766660318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 1, b: 0, a: 1}
 --- !u!1 &2626384617868650979
 GameObject:
   m_ObjectHideFlags: 0
@@ -1806,6 +1862,7 @@ GameObject:
   - component: {fileID: 2458477557635232926}
   - component: {fileID: 8192202243319666053}
   - component: {fileID: 3303999109676205135}
+  - component: {fileID: 4644054564529625800}
   m_Layer: 0
   m_Name: r_trigger_decal
   m_TagString: Untagged
@@ -1878,6 +1935,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4644054564529625800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6331231177460148254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &7149394742445715001
 GameObject:
   m_ObjectHideFlags: 0
@@ -2503,6 +2573,7 @@ GameObject:
   - component: {fileID: 1351441717129572249}
   - component: {fileID: 3895371393105485428}
   - component: {fileID: 2509676802489008165}
+  - component: {fileID: 62021626638265379}
   m_Layer: 0
   m_Name: r_grip_decal
   m_TagString: Untagged
@@ -2575,3 +2646,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &62021626638265379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9053075473087581500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fb3e3452ebf14bb885ec4c70a56e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  color: {r: 1, g: 1, b: 0, a: 1}
