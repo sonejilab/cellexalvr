@@ -53,7 +53,7 @@ namespace CellexalVR.Multiuser
 
             if (leftControllerPos == null)
             {
-                leftControllerPos = referenceManager.leftController.transform;
+                leftControllerPos = ReferenceManager.instance.leftController.transform;
 
             }
 

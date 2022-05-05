@@ -45,7 +45,7 @@ namespace CellexalVR.Multiuser
 
             if (rightControllerPos == null)
             {
-                rightControllerPos = GameObject.Find("Controller (right)")?.GetComponent<Transform>();
+                rightControllerPos = ReferenceManager.instance.rightController.transform;
                 return;
             }
             if (!target)
