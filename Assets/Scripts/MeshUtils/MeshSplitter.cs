@@ -72,18 +72,18 @@ namespace CellexalVR.MeshUtils
                     part2Triangles.Add(part1Triangles[i + 2]);
 
 
-                    //if (!part2Vertices.Contains(part1Vertices[part1Triangles[i]]))
-                    //{
-                    //    part2Vertices.Add(part1Vertices[part1Triangles[i]]);
-                    //}
-                    //if (!part2Vertices.Contains(part1Vertices[part1Triangles[i + 1]]))
-                    //{
-                    //    part2Vertices.Add(part1Vertices[part1Triangles[i + 1]]);
-                    //}
-                    //if (!part2Vertices.Contains(part1Vertices[part1Triangles[i + 2]]))
-                    //{
-                    //    part2Vertices.Add(part1Vertices[part1Triangles[i + 2]]);
-                    //}
+                    if (!part2Vertices.Contains(part1Vertices[part1Triangles[i]]))
+                    {
+                        part2Vertices.Add(part1Vertices[part1Triangles[i]]);
+                    }
+                    if (!part2Vertices.Contains(part1Vertices[part1Triangles[i + 1]]))
+                    {
+                        part2Vertices.Add(part1Vertices[part1Triangles[i + 1]]);
+                    }
+                    if (!part2Vertices.Contains(part1Vertices[part1Triangles[i + 2]]))
+                    {
+                        part2Vertices.Add(part1Vertices[part1Triangles[i + 2]]);
+                    }
 
                     //part1Triangles.RemoveAt(i);
                     //part1Triangles.RemoveAt(i + 1);
@@ -106,7 +106,19 @@ namespace CellexalVR.MeshUtils
             if (part1Triangles.Count > 10 && part2Triangles.Count > 10)
             {
                 Mesh newMesh = new Mesh();
-                newMesh.vertices = part1Vertices.ToArray();
+
+                for (int i = 0; i < part2Triangles.Count; i++)
+                {
+                    part1Triangles.Remove(part2Triangles[i]);
+                }
+
+                for (int i = 0; i < part2Vertices.Count; i++)
+                {
+                    print($"remove vertex {i}");
+                    part1Vertices.Remove(part2Vertices[i]);
+                }
+
+                newMesh.vertices = part2Vertices.ToArray();
                 newMesh.triangles = part2Triangles.ToArray();
 
                 newMesh.RecalculateBounds();

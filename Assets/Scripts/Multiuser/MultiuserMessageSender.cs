@@ -335,8 +335,8 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
             coordinator.photonView.RPC("RecieveMessageColorByAttribute", PhotonTargets.Others, attributeType, colored);
-        }   
-        
+        }
+
         public void SendMessageColorByAttributePointCloud(string attributeType, bool colored)
         {
             if (!multiplayer) return;
@@ -708,6 +708,11 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageToggleInfoPanels", PhotonTargets.Others);
+        }
+        public void SendMessageSpreadPoints(int pcID, bool spread)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSpreadPoints", PhotonTargets.Others, pcID, spread);
         }
 
         #endregion
@@ -1182,9 +1187,9 @@ namespace CellexalVR.Multiuser
         public void SendMessageReferenceOrganToggle(bool toggle, int pcID)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageReferenceOrganToggle", PhotonTargets.Others, toggle);
+            coordinator.photonView.RPC("RecieveMessageReferenceOrganToggle", PhotonTargets.Others, pcID, toggle);
         }
-        
+
         public void SendMessageUpdateCullingBox(int pcID, Vector3 pos1, Vector3 pos2)
         {
             if (!multiplayer) return;
@@ -1195,6 +1200,12 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageSpreadMeshes", PhotonTargets.Others);
+        }
+
+        public void SendMessageGenerateMeshes()
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageGenerateMeshes", PhotonTargets.Others);
         }
 
         #endregion

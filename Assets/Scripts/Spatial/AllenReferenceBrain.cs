@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using CellexalVR.DesktopUI;
+using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Spatial;
 using UnityEditor;
@@ -20,6 +21,8 @@ namespace CellexalVR.Spatial
 
         public GameObject rootModel;
         public GameObject models;
+
+        public GameObject plane;
         public Dictionary<int, SpatialReferenceModelPart> idToModelDictionary = new Dictionary<int, SpatialReferenceModelPart>();
         public Dictionary<string, string> acronyms = new Dictionary<string, string>();
         public Dictionary<string, int> names = new Dictionary<string, int>();
@@ -40,6 +43,7 @@ namespace CellexalVR.Spatial
         private bool controllerInside;
         private int suggestionOffset = 0;
         private string currentFilter;
+
 
 
         private void Awake()
@@ -98,8 +102,18 @@ namespace CellexalVR.Spatial
             //idToModelDictionary[997].color = Color.white / 10f;
             SpawnModel("root");
             UpdateSuggestions();
+            CellexalEvents.GraphsLoaded.AddListener(ParentBrain);
             gameObject.SetActive(false);
             keyboard.gameObject.SetActive(false);
+        }
+
+        private void ParentBrain()
+        {
+            gameObject.SetActive(true);
+            transform.parent = GameObject.Find("slice_coords_spatial").transform;
+            transform.localPosition = Vector3.one * -0.5f;
+            transform.localScale = Vector3.one;
+            transform.localRotation = Quaternion.identity;
         }
 
         private void Update()
@@ -285,25 +299,7 @@ namespace CellexalVR.Spatial
 
         }
 
-#if UNITY_EDITOR
-        private IEnumerator SplitMeshes()
-        {
-            // 567, 824
-            //SpatialReferenceModelPart part = idToModelDictionary[46];
-            List<SpatialReferenceModelPart> parts = new List<SpatialReferenceModelPart> { idToModelDictionary[567], idToModelDictionary[824] };
-            //List<SpatialReferenceModelPart> parts = idToModelDictionary.Values.ToList();
-            int i = 1;
-            foreach (SpatialReferenceModelPart part in parts)
-            {
-                part.gameObject.SetActive(true);
-                part.SplitMesh();
-                yield return new WaitForSeconds(0.1f);
-                part.gameObject.SetActive(false);
-                i++;
-            }
 
-        }
-#endif
         private bool BrainMeshButtonAdded(string n)
         {
             foreach (BrainPartButton bpb in brainPartButtons)
@@ -332,6 +328,32 @@ namespace CellexalVR.Spatial
             }
 
         }
+#if UNITY_EDITOR
+        private IEnumerator SplitMeshesCoroutine()
+        {
+            // 567, 824
+            //SpatialReferenceModelPart part = idToModelDictionary[46];
+            List<SpatialReferenceModelPart> parts = new List<SpatialReferenceModelPart> { idToModelDictionary[44] };
+            //List<SpatialReferenceModelPart> parts = idToModelDictionary.Values.ToList();
+            int i = 1;
+            foreach (SpatialReferenceModelPart part in parts)
+            {
+                part.gameObject.SetActive(true);
+                part.SplitMesh();
+                yield return new WaitForSeconds(0.1f);
+                part.gameObject.SetActive(false);
+                i++;
+            }
 
+        }
+
+        public void SplitMeshes()
+        {
+            StartCoroutine(SplitMeshesCoroutine());
+        }
+
+
+#endif
     }
+
 }

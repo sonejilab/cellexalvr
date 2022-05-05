@@ -121,6 +121,7 @@ namespace CellexalVR.Spatial
                 if (currentDistance > startDistance + 0.4f && currentTime < timeThreshold)
                 {
                     pointCloud.SpreadOutPoints();
+                    ReferenceManager.instance.multiuserMessageSender.SendMessageSpreadPoints(pointCloud.pcID, true);
                     //pointCloud.SpreadOutClusters();
                     bothClick = false;
                     currentDistance = 0;
@@ -129,6 +130,7 @@ namespace CellexalVR.Spatial
                 else if (currentDistance < startDistance - 0.4f && currentTime < timeThreshold)
                 {
                     pointCloud.SpreadOutPoints(false);
+                    ReferenceManager.instance.multiuserMessageSender.SendMessageSpreadPoints(pointCloud.pcID, false);
                     //pointCloud.SpreadOutClusters();
                     bothClick = false;
                     currentDistance = 0;

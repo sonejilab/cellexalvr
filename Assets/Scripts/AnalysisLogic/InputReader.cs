@@ -705,7 +705,7 @@ namespace CellexalVR.AnalysisLogic
                     annotation = words[1];
                     group++;
                 }
-                cellName = words[0]; 
+                cellName = words[0];
                 cellsToAnnotate.Add(cellName);
                 referenceManager.selectionManager.AddGraphpointToSelection(graph.FindGraphPoint(cellName), group, false);
                 numPointsAdded++;
@@ -775,8 +775,9 @@ namespace CellexalVR.AnalysisLogic
 
                 if (PointCloudGenerator.instance.pointClouds.Count > 0)
                 {
-                    Vector2Int tuple = new Vector2Int(int.Parse(words[0]), int.Parse(words[2]));
+                    Vector2Int tuple = new Vector2Int(int.Parse(words[0]), int.Parse(words[3]));
                     indices.Add(tuple);
+                    numPointsAdded++;
                 }
                 else
                 {

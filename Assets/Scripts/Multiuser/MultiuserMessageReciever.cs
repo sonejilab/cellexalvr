@@ -903,6 +903,14 @@ namespace CellexalVR.Multiuser
         {
             referenceManager.graphManager.ToggleInfoPanels();
         }
+
+        [PunRPC]
+        public void RecieveMessageSpreadPoints(int pcID, bool spread)
+        {
+            PointCloud pc = PointCloudGenerator.instance.pointClouds[pcID];
+            pc.SpreadOutPoints(spread);
+        }
+
         #endregion
 
         #region Heatmaps
@@ -1734,7 +1742,7 @@ namespace CellexalVR.Multiuser
         } 
         
         [PunRPC]
-        public void RecieveMessageToggleReferenceOrgan(bool toggle, int pcID)
+        public void RecieveMessageToggleReferenceOrgan(int pcID, bool toggle)
         {
             GraphSlice slice = PointCloudGenerator.instance.pointClouds[pcID].GetComponent<GraphSlice>();
             slice.slicerBox.ToggleReferenceOrgan(toggle);
@@ -1750,6 +1758,12 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageSpreadMeshes()
         {
             AllenReferenceBrain.instance.Spread();
+        }
+
+        [PunRPC]
+        public void RecieveMessageGenerateMeshes()
+        {
+            MeshGenerator.instance.GenerateMeshes();
         }
 
         #endregion
