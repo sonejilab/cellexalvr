@@ -5,6 +5,8 @@ using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
 using System.IO;
 using UnityEngine.EventSystems;
+using static CellexalVR.Interaction.ControllerModelSwitcher;
+using CellexalVR.Interaction;
 
 namespace CellexalVR.DesktopUI
 {
@@ -26,6 +28,8 @@ namespace CellexalVR.DesktopUI
         public TMPro.TMP_Text usernameText;
         [Header("Hardware")]
         public Toggle requireTouchpadToClickToggle;
+        public TMPro.TMP_Dropdown controllerModelDropdown;
+        public TMPro.TMP_Dropdown controllerColorModeDropdown;
         [Header("Heatmap")] public TMPro.TMP_Dropdown heatmapColormapDropdown;
         public ColorPickerButton heatmapHighExpression;
         public ColorPickerButton heatmapMidExpression;
@@ -106,7 +110,17 @@ namespace CellexalVR.DesktopUI
             CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
             CellexalEvents.ScarfObjectLoaded.AddListener(OnGraphsLoaded);
 
+
             colorPicker = referenceManager.colorPicker;
+
+            var controllerModels = new List<TMPro.TMP_Dropdown.OptionData>();
+            foreach (ControllerBrand brand in System.Enum.GetValues(typeof(ControllerBrand)))
+            {
+                controllerModels.Add(new TMPro.TMP_Dropdown.OptionData(brand.ToFriendlyString()));
+            }
+
+            controllerModelDropdown.options = controllerModels;
+
             var skyboxOptions = new List<TMPro.TMP_Dropdown.OptionData>();
             foreach (Material mat in skyboxes)
             {
@@ -354,6 +368,20 @@ namespace CellexalVR.DesktopUI
             unsavedChanges = true;
             referenceManager.menuRotator.RequireToggleToClick = requireTouchpadToClickToggle.isOn;
             CellexalConfig.Config.RequireTouchpadClickToInteract = requireTouchpadToClickToggle.isOn;
+        }
+
+        public void SetControllerModel()
+        {
+            unsavedChanges = true;
+            ControllerBrand brand = controllerModelDropdown.options[controllerModelDropdown.value].text.ToBrand();
+            referenceManager.controllerModelSwitcher.SwitchControllerBaseModel(brand);
+        }
+
+        public void SetControllerColors()
+        {
+            unsavedChanges = true;
+            ControllerColorMode mode = controllerColorModeDropdown.options[controllerColorModeDropdown.value].text.ToControllerColorMode();
+            referenceManager.controllerModelSwitcher.SwitchControllerModelColor(mode);
         }
 
         public void SetNumberOfHeatmapColors()
