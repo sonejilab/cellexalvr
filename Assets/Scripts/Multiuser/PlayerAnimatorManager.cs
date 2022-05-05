@@ -27,7 +27,7 @@ namespace CellexalVR.Multiuser
         void Start()
         {
             if (CrossSceneInformation.Spectator) return;
-            cameraPos = GameObject.Find("Camera (eye)").GetComponent<Transform>();
+            cameraPos = ReferenceManager.instance.headset.transform;
             target = GetComponent<Transform>();
             menu = GameObject.Find("Main Menu").GetComponent<Transform>();
 
@@ -53,10 +53,10 @@ namespace CellexalVR.Multiuser
                 return;
             }
 
-			if (cameraPos == null) {
-				cameraPos = GameObject.Find ("Camera (eye)").GetComponent<Transform> ();
-
-			}
+            if (cameraPos == null)
+            {
+                cameraPos = ReferenceManager.instance.headset.transform;
+            }
 
             target.position = cameraPos.position;
             target.rotation = cameraPos.rotation;

@@ -86,6 +86,8 @@ namespace CellexalVR.Interaction
         {
             if (!_requireToggleToClick || touchPadClick.action.ReadValue<float>() > 0)
             {
+                if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+                    return;
                 Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
                 if (pos.y > 0.5f)
                 {
@@ -100,7 +102,7 @@ namespace CellexalVR.Interaction
 
         private void OnTouchPadClick(InputAction.CallbackContext context)
         {
-            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.TwoLasers)
                 return;
             Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
             if (pos.y > 0.5f)

@@ -21,8 +21,6 @@ namespace CellexalVR.Spatial
 
         public GameObject rootModel;
         public GameObject models;
-
-        public GameObject plane;
         public Dictionary<int, SpatialReferenceModelPart> idToModelDictionary = new Dictionary<int, SpatialReferenceModelPart>();
         public Dictionary<string, string> acronyms = new Dictionary<string, string>();
         public Dictionary<string, int> names = new Dictionary<string, int>();

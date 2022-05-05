@@ -71,7 +71,7 @@ namespace CellexalVR.AnalysisLogic
         private static Process p;
         private Task readTask;
 
-        private void Start()
+        private void Awake()
         {
             instance = this;
 

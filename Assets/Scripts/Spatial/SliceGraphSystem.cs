@@ -35,9 +35,6 @@ namespace CellexalVR.Spatial
         private QuadrantSystem quadrantSystem;
         private EntityQuery query;
         private GameObject slicer;
-        private List<Point> sortedPointsX;
-        private List<Point> sortedPointsY;
-        private List<Point> sortedPointsZ;
         private int graphToSliceID;
         private Transform graphToSlice;
 

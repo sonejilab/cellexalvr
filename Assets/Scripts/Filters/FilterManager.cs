@@ -404,18 +404,12 @@ namespace CellexalVR.Filters
             // check that facs exists
             CellManager cellManager = referenceManager.cellManager;
             List<string> facsList = filter.GetFacs();
-            string fac = facsList[0];
 
-            foreach (string a in cellManager.FacsRanges.Keys)
+            for (int i = 0; i < facsList.Count; i++) // string facs in facsList)
             {
-                //print($"in manager {fac}, {a} {a.Equals(fac)}, {a.Equals(fac, StringComparison.OrdinalIgnoreCase)}");
-
-            }
-            foreach (string facs in facsList)
-            {
+                string facs = facsList[i];
                 if (!cellManager.FacsRanges.ContainsKey(facs))
                 {
-                    //print("invalid FACS");
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Facs " + facs + " not found";
                     currentFilter = null;
@@ -425,12 +419,6 @@ namespace CellexalVR.Filters
 
             // check attributes
             List<string> attributes = filter.GetAttributes();
-            string attr = attributes[0];
-            foreach (string a in cellManager.Attributes)
-            {
-                print($"in manager {a} {a.Equals(attr)}, {a.Equals(attr, StringComparison.OrdinalIgnoreCase)}");
-                
-            }
             foreach (string attribute in attributes)
             {
                 //print($"filter {attribute}");
@@ -446,10 +434,6 @@ namespace CellexalVR.Filters
 
             // check numerical attributes
             List<string> numericalAttributes = filter.GetNumericalAttributes();
-            foreach (string numAttr in numericalAttributes)
-            {
-                print($"num attr : {numAttr}");
-            }
             foreach (string attribute in numericalAttributes)
             {
                 if (!cellManager.NumericalAttributes.Contains(attribute, StringComparer.OrdinalIgnoreCase))

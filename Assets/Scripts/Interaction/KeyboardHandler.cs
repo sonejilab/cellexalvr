@@ -392,7 +392,7 @@ namespace CellexalVR.Interaction
 
             if (invoke && OnEnter != null)
             {
-                OnEnter.Invoke(Text());
+                OnEnter.Invoke(output.text);
             }
 
 

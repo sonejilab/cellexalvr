@@ -76,6 +76,8 @@ namespace CellexalVR.General
         private GameObject _MeshGenerator;
         public GameObject BrainParent;
         private GameObject _BrainParent;
+        public GameObject PrefabEntities;
+        private GameObject _PrefabEntities;
 
         private List<GameObject> instances;
         private IEnumerator buildSceneEnumerator;
@@ -151,6 +153,7 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _ScarfManager, ScarfManager);
             InstantiateSceneAsset(ref _MeshGenerator, MeshGenerator);
             InstantiateSceneAsset(ref _BrainParent, BrainParent);
+            InstantiateSceneAsset(ref _PrefabEntities, PrefabEntities);
             //InstantiateSceneAsset(ref _Teleporting, Teleporting);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);

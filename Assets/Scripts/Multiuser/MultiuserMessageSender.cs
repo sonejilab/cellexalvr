@@ -50,10 +50,16 @@ namespace CellexalVR.Multiuser
         private void Start()
         {
             //waitingCanvas = referenceManager.screenCanvas.gameObject;
+            //StartCoroutine(Init());
+        }
+        
+        public IEnumerator Init()
+        {
+            while (!PhotonNetwork.connected)
+                yield return null;
+
             spectatorRig = referenceManager.spectatorRig;
             VRRig = referenceManager.VRRig;
-
-            if (!PhotonNetwork.connected) return;
             if (playerPrefab == null)
             {
                 Debug.LogError(
@@ -62,7 +68,6 @@ namespace CellexalVR.Multiuser
             }
             else
             {
-                Debug.Log("We are Instantiating LocalPlayer from " + SceneManager.GetActiveScene().name);
                 // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
                 if (PlayerManager.LocalPlayerInstance == null)
                 {
@@ -92,9 +97,11 @@ namespace CellexalVR.Multiuser
 
                     else if (!CrossSceneInformation.Spectator)
                     {
-                        Destroy(spectatorRig);
+                        //Destroy(spectatorRig);
+                        spectatorRig.SetActive(false);
                         player = PhotonNetwork.Instantiate(playerPrefab.name, new Vector3(0f, 5f, 0f),
                             Quaternion.identity, 0);
+                        ReferenceManager.instance.spectatorRig.GetComponent<SpectatorController>().MirrorVRView();
                     }
 
                     player.gameObject.name = PhotonNetwork.playerName + player.GetPhotonView().ownerId;
@@ -121,6 +128,7 @@ namespace CellexalVR.Multiuser
                     Debug.Log("Ignoring scene load for " + SceneManager.GetActiveScene().name);
                 }
             }
+
         }
 
         private void Update()
@@ -1275,8 +1283,8 @@ namespace CellexalVR.Multiuser
         private IEnumerator FindServerCoordinator()
         {
             yield return new WaitForSeconds(2f);
-            if ((coordinator = GameObject.Find("MultiuserMessageReciever(Clone)")
-                .GetComponent<MultiuserMessageReciever>()) == null)
+            coordinator = GameObject.Find("MultiuserMessageReciever(Clone)")?.GetComponent<MultiuserMessageReciever>();
+            if (!coordinator)
             {
                 StartCoroutine(FindServerCoordinator());
             }

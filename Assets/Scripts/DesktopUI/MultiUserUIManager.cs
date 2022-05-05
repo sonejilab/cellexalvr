@@ -27,6 +27,8 @@ namespace CellexalVR.DesktopUI
         private string errorDialog;
         private float timeToClearDialog;
 
+        private bool connectFailed = false;
+
         public string ErrorDialog
         {
             get { return this.errorDialog; }
@@ -90,8 +92,8 @@ namespace CellexalVR.DesktopUI
 
                 //if (this.connectFailed)
                 //{
-                //    GUILayout.Label("Connection failed. Check setup and use Setup Wizard to fix configuration.");
-                //    GUILayout.Label(String.Format("Server: {0}", new object[] { PhotonNetwork.ServerAddress }));
+                //    ErrorDialog = "Connection failed. Check setup and use Setup Wizard to fix configuration.";
+                //    ErrorDialog = $"Server: {new object[] { PhotonNetwork.ServerAddress }}";
                 //    GUILayout.Label("AppId: " + PhotonNetwork.PhotonServerSettings.AppID.Substring(0, 8) + "****"); // only show/log first 8 characters. never log the full AppId.
 
                 //    if (GUILayout.Button("Try Again", GUILayout.Width(100)))
@@ -100,7 +102,6 @@ namespace CellexalVR.DesktopUI
                 //        PhotonNetwork.ConnectUsingSettings("0.9");
                 //    }
                 //}
-
                 return;
             }
         }
@@ -194,6 +195,9 @@ namespace CellexalVR.DesktopUI
         public void OnJoinedRoom()
         {
             Debug.Log("OnJoinedRoom");
+
+            StartCoroutine(ReferenceManager.instance.multiuserMessageSender.Init());
+            gameObject.SetActive(false);
         }
 
         public void OnPhotonCreateRoomFailed()
@@ -230,6 +234,8 @@ namespace CellexalVR.DesktopUI
         {
             Debug.Log("As OnConnectedToMaster() got called, the PhotonServerSetting.AutoJoinLobby must be off. Joining lobby by calling PhotonNetwork.JoinLobby().");
             PhotonNetwork.JoinLobby();
+
+            StartCoroutine(ReferenceManager.instance.multiuserMessageSender.Init());
         }
 
 
