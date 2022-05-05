@@ -46,6 +46,7 @@ namespace CellexalVR.Interaction
         {
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
             referenceManager.multiuserMessageSender.SendMessageGraphUngrabbed(gameObject.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
+            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
             base.OnSelectExiting(args);
         }
     }

@@ -1237,10 +1237,10 @@ namespace CellexalVR.Multiuser
             //LoadArena();
             StartCoroutine(FindClientCoordinator());
             StartCoroutine(FindPlayer());
-            if (coordinator != null)
-            {
-                waitingCanvas.SetActive(false);
-            }
+            //if (coordinator != null)
+            //{
+            //    waitingCanvas.SetActive(false);
+            //}
         }
 
         public override void OnJoinedRoom()
@@ -1274,10 +1274,10 @@ namespace CellexalVR.Multiuser
             {
                 StartCoroutine(FindClientCoordinator());
             }
-            else
-            {
-                waitingCanvas.SetActive(false);
-            }
+            //else
+            //{
+            //    waitingCanvas.SetActive(false);
+            //}
         }
 
         private IEnumerator FindServerCoordinator()

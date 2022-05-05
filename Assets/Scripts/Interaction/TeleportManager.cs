@@ -47,7 +47,7 @@ namespace Assets.Scripts.Interaction
         private void Awake()
         {
             rayInteractor.enabled = false;
-            //_requireToggleToClick = false;
+            _requireToggleToClick = false;
             //touchPadPos.action.performed += OnTeleportActivate;
             //touchPadPos.action.canceled += OnTeleportDeactivate;
             //touchPadClick.action.performed += OnTeleportActivate;

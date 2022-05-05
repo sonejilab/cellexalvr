@@ -81,7 +81,6 @@ namespace CellexalVR.Interaction
             }
             else if (File.Exists($"Data/{CellexalUser.DataSourceFolder}/database.sqlite"))
             {
-                print("init");
                 SQLiter.SQLite database = referenceManager.database;
                 //yield return new WaitForSeconds(2);
                 while (database.QueryRunning)
