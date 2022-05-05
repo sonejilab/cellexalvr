@@ -382,8 +382,6 @@ namespace CellexalVR.General
         {
             Config config = DeserializeConfig(data);
             // Only change the parts that need to be.
-            CellexalConfig.Config.RequireTouchpadClickToInteract = config.RequireTouchpadClickToInteract;
-            CellexalConfig.Config.ControllerModel = config.ControllerModel;
             CellexalConfig.Config.SelectionToolColors = config.SelectionToolColors;
             CellexalConfig.Config.GraphDefaultColor = config.GraphDefaultColor;
             CellexalConfig.Config.GraphZeroExpressionColor = config.GraphZeroExpressionColor;
