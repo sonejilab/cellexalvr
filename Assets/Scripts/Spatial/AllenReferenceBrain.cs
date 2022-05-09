@@ -41,6 +41,7 @@ namespace CellexalVR.Spatial
         private bool controllerInside;
         private int suggestionOffset = 0;
         private string currentFilter;
+        private bool loadBrain = false;
 
 
 
@@ -51,6 +52,11 @@ namespace CellexalVR.Spatial
 
         private void Start()
         {
+            if (!loadBrain)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
             boxCollider = GetComponent<BoxCollider>();
             keyboard = GetComponentInChildren<ReferenceModelKeyboard>(true);
             //Make list of spawned brain models and add meshes for all.
@@ -101,8 +107,6 @@ namespace CellexalVR.Spatial
             SpawnModel("root");
             UpdateSuggestions();
             CellexalEvents.GraphsLoaded.AddListener(ParentBrain);
-            gameObject.SetActive(false);
-            keyboard.gameObject.SetActive(false);
         }
 
         private void ParentBrain()
@@ -112,6 +116,8 @@ namespace CellexalVR.Spatial
             transform.localPosition = Vector3.one * -0.5f;
             transform.localScale = Vector3.one;
             transform.localRotation = Quaternion.identity;
+
+
         }
 
         private void Update()

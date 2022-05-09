@@ -698,7 +698,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
                 GameObject newTextureGameObject = Instantiate(heatmapTexturePrefab);
                 textureGameObjects.Add(newTextureGameObject);
-                newTextureGameObject.GetComponent<Renderer>().material.SetTexture("_MainTex", texture);
+                newTextureGameObject.GetComponent<Renderer>().material.SetTexture("_BaseMap", texture);
                 newTextureGameObject.transform.parent = heatmap.transform;
                 yield return null;
             }

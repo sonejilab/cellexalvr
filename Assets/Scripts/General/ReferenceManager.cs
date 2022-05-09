@@ -288,7 +288,7 @@ namespace CellexalVR.General
             // reportReader = reportManager.GetComponent<ReportReader>();
             floor = GameObject.Find("Floor").GetComponent<Floor>();
             pdfMesh = GameObject.Find("PDFViewer").GetComponentInChildren<PDFMesh>();
-            //brainModel = GameObject.Find("BrainParent").GetComponent<AllenReferenceBrain>();
+            brainModel = GameObject.Find("BrainParent").GetComponent<AllenReferenceBrain>();
 
             geneKeyboard = GameObject.Find("Keyboard Setup").GetComponent<KeyboardHandler>();
             keyboardSwitch = GameObject.Find("Keyboard Setup").GetComponent<KeyboardSwitch>();
