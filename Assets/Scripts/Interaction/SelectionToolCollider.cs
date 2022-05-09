@@ -1,17 +1,12 @@
 using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
-using CellexalVR.Menu.SubMenus;
 using CellexalVR.Multiuser;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using UnityEngine.VFX;
-using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
 {
@@ -24,7 +19,6 @@ namespace CellexalVR.Interaction
 
         [SerializeField] private InputActionAsset inputActionAsset;
         [SerializeField] private InputActionReference touchPadClick;
-        //[SerializeField] private InputActionReference thumbStickClick;
         [SerializeField] private InputActionReference touchPadPos;
         [SerializeField] private VisualEffect vfx;
 
@@ -63,10 +57,10 @@ namespace CellexalVR.Interaction
 
         private int currentMeshIndex;
         private int tempColorIndex;
-        private Color selectedColor;
 
         /// <summary>
-        /// 0: paddle, 1: bludgeon, 2: smaller bludgeon, 4: stick, 5-8: same shapes but removes selected points instead (white color).
+        /// Changes the mesh of the selection tool.
+        /// 0: paddle, 1: bludgeon, 2: smaller bludgeon, 3: stick, 4-7: same shapes but removes selected points instead (white color).
         /// </summary>
         public int CurrentMeshIndex
         {
@@ -114,7 +108,9 @@ namespace CellexalVR.Interaction
         }
 
         private int currentColorIndex;
-
+        /// <summary>
+        /// An index for the <see cref="Colors"/> array. Changes the color of the selection tool mesh.
+        /// </summary>
         public int CurrentColorIndex
         {
             get => currentColorIndex;
@@ -143,7 +139,7 @@ namespace CellexalVR.Interaction
                     Collider collider = selectionToolColliders[i];
                     collider.GetComponent<Renderer>().material.color = col;
                 }
-                
+
                 vfx.SetVector3("ParticleColor", new Vector3(col.r, col.g, col.b));
             }
         }
@@ -169,6 +165,8 @@ namespace CellexalVR.Interaction
             {
                 UpdateColors();
             }
+            _requireToggleToClick = false;
+            touchPadPos.action.performed += OnTouchPadClick;
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
 
             CellexalEvents.ConfigLoaded.AddListener(UpdateColors);
@@ -283,24 +281,6 @@ namespace CellexalVR.Interaction
             }
         }
 
-
-        private void Update()
-        {
-            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
-            {
-
-
-            }
-
-            // Sometimes a bug occurs where particles stays active even when selection tool is off. This ensures particles is off 
-            // if selection tool is inactive.
-            //if (particles && !IsSelectionToolEnabled() && particles.gameObject.activeSelf)
-            //{
-            //    particles.gameObject.SetActive(false);
-            //}
-        }
-
-
         /// <summary>
         /// Updates <see cref="Colors"/> to <see cref="CellexalConfig.Config.SelectionToolColors"/>.
         /// </summary>
@@ -363,18 +343,7 @@ namespace CellexalVR.Interaction
             {
                 CurrentColorIndex--;
             }
-            //int buttonIndexLeft = currentColorIndex == 0 ? Colors.Length - 1 : currentColorIndex - 1;
-            //int buttonIndexRight = currentColorIndex == Colors.Length - 1 ? 0 : currentColorIndex + 1;
-            // VRTK 3.3
-            //radialMenu.RegenerateButtons();
-            // OpenXR Replace VRTK radial menu with something else.
-            //radialMenu.menuButtons[1].GetComponentInChildren<Image>().color = Colors[buttonIndexLeft];
-            //radialMenu.menuButtons[3].GetComponentInChildren<Image>().color = Colors[buttonIndexRight];
-            //radialMenu.buttons[3].color = Colors[buttonIndexRight];
-            selectedColor = Colors[currentColorIndex];
-            //selectionToolColliders[currentMeshIndex].GetComponent<Renderer>().material.color = Colors[currentColorIndex];
             ReferenceManager.instance.controllerModelSwitcher.SwitchSelectionToolColor(Colors[currentColorIndex]);
-
         }
 
         /// <summary>

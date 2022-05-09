@@ -1,7 +1,5 @@
 using CellexalVR.General;
-using CellexalVR.Menu.Buttons;
 using UnityEngine;
-using Valve.VR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
@@ -20,14 +18,6 @@ namespace CellexalVR.Interaction
         private int keyboardLayer;
         [SerializeField] private GameObject rayEndPoint;
 
-        private int layerMaskController;
-
-        //private int layerMaskGraph;
-        //private int layerMaskNetwork;
-        //private int layerMaskOther;
-        private bool keyboardActive;
-        private bool touchingObject;
-        private bool hitLastFrame;
         private ControllerModelSwitcher controllerModelSwitcher;
 
         public ReferenceManager referenceManager;
@@ -56,8 +46,6 @@ namespace CellexalVR.Interaction
             layerMaskMenu = 1 << menuLayer;
             layerMaskEnv = 1 << environmentButtonLayer | 1 << keyboardLayer;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-            //CellexalEvents.ObjectGrabbed.AddListener(() => TouchingObject(true));
-            //CellexalEvents.ObjectUngrabbed.AddListener(() => TouchingObject(false));
             var rightInteractor = referenceManager.rightController.gameObject.GetComponent<XRDirectInteractor>();
             var leftInteractor = referenceManager.leftController.gameObject.GetComponent<XRDirectInteractor>();
             rightInteractor.selectEntered.AddListener(ToggleRightLaserInteractorOff);
@@ -79,22 +67,22 @@ namespace CellexalVR.Interaction
 
         private void ToggleRightLaserInteractorOn(SelectExitEventArgs args)
         {
-            leftLaser.interactionLayerMask = LayerMask.NameToLayer("Everything");
+            leftLaser.interactionLayers = LayerMask.NameToLayer("Everything");
         }
 
         private void ToggleRightLaserInteractorOff(SelectEnterEventArgs args)
         {
-            rightLaser.interactionLayerMask = LayerMask.NameToLayer("Nothing");
+            rightLaser.interactionLayers = LayerMask.NameToLayer("Nothing");
         }
 
         private void ToggleLeftLaserInteractorOn(SelectExitEventArgs args)
         {
-            leftLaser.interactionLayerMask = LayerMask.NameToLayer("Everything");
+            leftLaser.interactionLayers = LayerMask.NameToLayer("Everything");
         }
 
         private void ToggleLeftLaserInteractorOff(SelectEnterEventArgs args)
         {
-            leftLaser.interactionLayerMask = LayerMask.NameToLayer("Nothing");
+            leftLaser.interactionLayers = LayerMask.NameToLayer("Nothing");
         }
 
         private void Update()
@@ -127,19 +115,8 @@ namespace CellexalVR.Interaction
                 controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
 
             {
-                // if we hit a button in the environment (keyboard or env button)
-                //if (controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Keyboard)
-                //{
-                //    controllerModelSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Keyboard);
-                //}
-                //if (controllerModelSwitcher.DesiredModel != controllerModelSwitcher.ActualModel)
-                //{
-                //    controllerModelSwitcher.ActivateDesiredTool();
-                //}
-                //referenceManager.multiuserMessageSender.SendMessageToggleLaser(true);
                 MultiUserToggle(true);
                 ToggleLaser(true);
-                //referenceManager.rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                 Vector3 hitPoint;
                 if (!hit.collider)
                 {
@@ -205,7 +182,6 @@ namespace CellexalVR.Interaction
         {
             if (active == referenceManager.rightLaser.enabled)
                 return;
-            //alwaysActive = active;
             // OpenXR
             referenceManager.rightLaser.enabled = active;
             if (controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.TwoLasers)
@@ -222,7 +198,6 @@ namespace CellexalVR.Interaction
                 referenceManager.leftLaser.enabled = !touch;
             }
 
-            touchingObject = touch;
         }
     }
 }

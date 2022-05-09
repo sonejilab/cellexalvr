@@ -25,7 +25,7 @@ namespace CellexalVR.Interaction
         public GameObject hpReverbControllerPrefab;
         public enum ControllerBrand { Set_Automatically, HTC_Vive, Valve_Index, HP_Reverb };
         public ControllerBrand BaseModel { get; set; }
-        public enum Model { Normal, SelectionTool, Menu, Minimizer, DeleteTool, HelpTool, Keyboard, TwoLasers, DrawTool, WebBrowser };
+        public enum Model { Normal, SelectionTool, Menu, Minimizer, DeleteTool, Keyboard, TwoLasers, DrawTool, WebBrowser };
         // what model we actually want
         public Model DesiredModel { get; set; }
         // what model is actually displayed, useful for when we want to change the model temporarily
@@ -45,18 +45,10 @@ namespace CellexalVR.Interaction
         private KeyboardSwitch keyboard;
         private GameObject webBrowser;
         private MeshFilter rightControllerBodyMeshFilter;
-        private Renderer rightControllerBodyRenderer;
-        private MeshFilter leftControllerBodyMeshFilter;
-        private Renderer leftControllerBodyRenderer;
-        private Color desiredColor;
         private LaserPointerController laserPointerController;
         private XRRayInteractor rightLaser;
         private XRRayInteractor leftLaser;
-        private int selectionToolMeshIndex = 0;
         private Dictionary<Color, Material> staticMaterialsCache;
-        // The help tool is a bit of an exception, it can be active while another tool is also active, like the keyboard.
-        // Otherwise you can't point the helptool towards the keyboard.
-        public bool HelpToolShouldStayActivated { get; set; }
 
         private void OnValidate()
         {
@@ -209,6 +201,10 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Called when a device disconnects.
+        /// </summary>
+        /// <param name="device">The device that disconnected.</param>
         private void OnDeviceDisconnected(UnityEngine.XR.InputDevice device)
         {
             CellexalLog.Log($"Device disconnected. Name: {device.name}, role: {device.characteristics}, manufacturer: {device.manufacturer}");
@@ -225,21 +221,6 @@ namespace CellexalVR.Interaction
                     OnDeviceConnected(device);
                 }
             }
-        }
-
-        public void SetMeshes()
-        {
-            //rightControllerBodyMeshFilter = rightControllerBody.GetComponent<MeshFilter>();
-            ////rightControllerBodyMeshFilter.mesh = normalControllerMesh;
-            //rightControllerBodyRenderer = rightControllerBody.GetComponent<Renderer>();
-            //rightControllerBodyRenderer.sharedMaterial = normalMaterial;
-            //leftControllerBodyMeshFilter = leftControllerBody.GetComponent<MeshFilter>();
-            ////leftControllerBodyMeshFilter.mesh = normalControllerMesh;
-            //leftControllerBodyRenderer = leftControllerBody.GetComponent<Renderer>();
-            //leftControllerBodyRenderer.material = normalMaterial;
-            //meshesSetSuccessful = true;
-            //var leftBody = leftControllerBody.GetComponent<Renderer>();
-            //leftBody.material = leftControllerMaterial;
         }
 
         /// <summary>
@@ -287,56 +268,38 @@ namespace CellexalVR.Interaction
             switch (model)
             {
                 case Model.Normal:
-                case Model.HelpTool:
                 case Model.DrawTool:
                 case Model.DeleteTool:
-                    //rightControllerBodyMeshFilter.mesh = normalControllerMesh;
-                    //rightControllerBodyRenderer.material = normalMaterial;
                     break;
 
                 case Model.Keyboard:
-                    //keyboard.SetKeyboardVisible(true);
-                    //rightLaser.enabled = true;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.WebBrowser:
                     webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
-                    //webBrowser.GetComponent<WebManager>().SetVisible(true);
-                    //rightLaser.enabled = true;
-                    // OpenXR
                     laserPointerController.ToggleLaser(true);
-                    //rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.TwoLasers:
                     laserPointerController.ToggleLaser(true);
-                    //rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
                 case Model.Menu:
-                    //print("switched to menu");
                     drawTool.SetActive(false);
                     deleteTool.SetActive(false);
                     minimizeTool.SetActive(false);
                     minimizeTool.SetActive(false);
                     selectionToolCollider.SetSelectionToolEnabled(false);
-                    //rightLaser.tracerVisibility = VRTK_BasePointerRenderer.VisibilityStates.AlwaysOn;
                     laserPointerController.ToggleLaser(true);
-                    //rightControllerBodyMeshFilter.mesh = normalControllerMesh;
-                    //rightControllerBodyRenderer.sharedMaterial = normalMaterial;
                     break;
 
                 case Model.SelectionTool:
-                    //rightControllerBodyMeshFilter.mesh = normalControllerMesh;
-                    //rightControllerBodyRenderer.sharedMaterial = selectionToolHandlerMaterial;
-                    //rightControllerBodyRenderer.sharedMaterial.color = new Color(desiredColor.r, desiredColor.g, desiredColor.b, 0.5f);
                     break;
 
                 case Model.Minimizer:
-                    //rightControllerBodyMeshFilter.mesh = minimizeMesh;
                     minimizeTool.SetActive(true);
                     break;
 
@@ -348,11 +311,6 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void ActivateDesiredTool()
         {
-            // These models can have the help tool activated, so if we are not switching to one of them, the help tool should go away
-            if (DesiredModel != Model.HelpTool && DesiredModel != Model.Keyboard)
-            {
-                HelpToolShouldStayActivated = false;
-            }
             // Deactivate all tools that should not be active.
             if (DesiredModel != Model.SelectionTool && selectionToolCollider != null)
             {
@@ -365,19 +323,6 @@ namespace CellexalVR.Interaction
             if (DesiredModel != Model.Minimizer && minimizeTool != null)
             {
                 minimizeTool.SetActive(false);
-            }
-            if (DesiredModel != Model.HelpTool && !HelpToolShouldStayActivated)
-            {
-                //helpTool.SetToolActivated(false);
-            }
-            // if we are switching from the keyboard to the help tool, the keyboard should stay activated.
-            if (DesiredModel != Model.Keyboard && DesiredModel != Model.HelpTool)
-            {
-                //laserPointerController.ToggleLaser(false);
-                //leftLaser.enabled = false;
-                //keyboard.SetKeyboardVisible(false);
-                //rightLaser.enabled = false;
-                //referenceManager.multiuserMessageSender.SendMessageActivateKeyboard(false);
             }
             if (DesiredModel != Model.TwoLasers)
             {
@@ -399,18 +344,12 @@ namespace CellexalVR.Interaction
                 case Model.Minimizer:
                     minimizeTool.SetActive(true);
                     break;
-                //case Model.HelpTool:
-                //    helpTool.SetToolActivated(true);
-                //    rightLaser.enabled = true;
-                //    break;
                 case Model.Keyboard:
                     keyboard.SetKeyboardVisible(true);
                     laserPointerController.ToggleLaser(true);
-                    //rightLaser.enabled = true;
                     break;
                 case Model.WebBrowser:
                     webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
-                    //webBrowser.GetComponent<WebManager>().SetVisible(true);
                     laserPointerController.ToggleLaser(true);
                     break;
                 case Model.TwoLasers:
@@ -434,21 +373,10 @@ namespace CellexalVR.Interaction
             selectionToolCollider.SetSelectionToolEnabled(false);
             deleteTool.SetActive(false);
             minimizeTool.SetActive(false);
-            //if (!HelpToolShouldStayActivated)
-            //{
-            //helpTool.SetToolActivated(false);
             DesiredModel = Model.Normal;
-            //}
-            //else
-            //{
-            //    DesiredModel = Model.HelpTool;
-            //}
             laserPointerController.ToggleLaser(false);
-            //leftLaser.enabled = false;
             keyboard.SetKeyboardVisible(false);
-            //referenceManager.multiuserMessageSender.SendMessageActivateKeyboard(false);
             drawTool.SetActive(false);
-            //webBrowser.GetComponent<WebManager>().SetBrowserActive(false);
             webBrowser.GetComponent<WebManager>().SetVisible(false);
             if (inMenu)
             {
@@ -474,12 +402,7 @@ namespace CellexalVR.Interaction
         /// <param name="color"> The new color. </param>
         public void SwitchSelectionToolColor(Color color)
         {
-            desiredColor = color;
 
-            if (ActualModel == Model.SelectionTool)
-            {
-                //rightControllerBodyRenderer.sharedMaterial.color = new Color(desiredColor.r, desiredColor.g, desiredColor.b, 0.5f);
-            }
         }
 
         public void SwitchSelectionToolMesh(bool dir)

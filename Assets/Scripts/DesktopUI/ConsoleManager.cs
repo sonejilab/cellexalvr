@@ -1,14 +1,13 @@
-﻿using System;
-using System.Linq;
+﻿using CellexalVR.General;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using CellexalVR.General;
-using System.IO;
-using TMPro;
 
 namespace CellexalVR.DesktopUI
 {
@@ -85,10 +84,6 @@ namespace CellexalVR.DesktopUI
 
             history.AddFirst("");
             currentHistoryNode = history.First;
-            //float fontMultiplier = Screen.dpi / 100f;
-            //outputField.pointSize *= fontMultiplier;
-            //inputField.pointSize *= fontMultiplier;
-            //inputField.pointSize *= fontMultiplier;
         }
 
         private void Update()
@@ -100,8 +95,6 @@ namespace CellexalVR.DesktopUI
                 {
                     consoleGameObject.SetActive(true);
                     inputField.ActivateInputField();
-                    //inputField.Select();
-                    //StartCoroutine(DeselectInputField());
                 }
                 else
                 {
@@ -207,7 +200,6 @@ namespace CellexalVR.DesktopUI
             outputField.MoveTextEnd(false);
             outputField.textComponent.ForceMeshUpdate();
             outputScrollRect.Rebuild(CanvasUpdate.Layout);
-            //Canvas.ForceUpdateCanvases();
 
             ClearAndHideSuggestions();
         }
@@ -276,7 +268,6 @@ namespace CellexalVR.DesktopUI
                     return;
                 }
             }
-            //CellexalLog.Log("Running command: " + command);
 
             // finally invoke the method
             method.Invoke(access, parameters);
@@ -554,14 +545,6 @@ namespace CellexalVR.DesktopUI
         {
             StartCoroutine(RunCommandFileCoroutine(filename));
         }
-
-        //public void SaveGraphsAsFBX()
-        //{
-        //    foreach (CellexalVR.AnalysisObjects.Graph graph in referenceManager.graphManager.Graphs)
-        //    {
-        //        graph.GetComponent<UnityEngine.Formats.Fbx.Exporter>
-        //    }
-        //}
 
         /// <summary>
         /// Helper coroutine to run multiple commands. See <see cref="ConsoleManager.RunCommandFile(string)"/>.

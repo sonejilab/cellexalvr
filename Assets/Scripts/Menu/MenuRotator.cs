@@ -1,7 +1,7 @@
-using UnityEngine;
-using System.Collections;
-using UnityEngine.InputSystem;
 using CellexalVR.General;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace CellexalVR.Menu
 {
@@ -14,14 +14,11 @@ namespace CellexalVR.Menu
         public Rotation SideFacingPlayer { get; set; }
         public Material menuMaterial;
 
-
         private bool isRotating = false;
-        private Vector3 fromAngle;
         private float rotatedTotal;
 
         [SerializeField] private InputActionAsset actionAsset;
         [SerializeField] private InputActionReference touchPadClick;
-        //[SerializeField] private InputActionReference thumbStickClick;
         [SerializeField] private InputActionReference touchPadPos;
 
         private bool _requireToggleToClick;
@@ -63,16 +60,6 @@ namespace CellexalVR.Menu
             transform.localRotation = Quaternion.Euler(-45f, 0f, 0f);
             SideFacingPlayer = Rotation.Front;
 
-            //var rotateRight = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateRight");
-            //rotateRight.Enable();
-            //rotateRight.performed += OnThumbpadRight;
-
-            //var rotateLeft = actionAsset.FindActionMap("XRI LeftHand").FindAction("RotateLeft");
-            //rotateLeft.Enable();
-            //rotateLeft.performed += OnThumbpadLeft;
-            //touchPadClick.action.performed += OnTouchPadClick;
-            //touchPadPos.action.performed += OnThumbStickClick;
-
         }
 
         public bool AllowRotation { get; set; } = false;
@@ -87,7 +74,7 @@ namespace CellexalVR.Menu
                 foreach (Renderer rend in GetComponentsInChildren<Renderer>())
                 {
                     string[] name = rend.gameObject.name.Split(null);
-                    if (name[name.Length - 1].Equals("Menu") || name[name.Length - 1].Equals("Box"))
+                    if (name[^1].Equals("Menu") || name[^1].Equals("Box"))
                     {
                         rend.material = menuMaterial;
                     }
@@ -98,21 +85,7 @@ namespace CellexalVR.Menu
         private void OnTouchPadClick(InputAction.CallbackContext context)
         {
             Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
-            HandleTouchPadClick(pos);
-        }
 
-        private void HandleTouchPadClick(Vector2 pos)
-        {
-
-            //if (pos.x > 0.5f)
-            //{
-            //    RotateRight(1);
-            //}
-            //else
-            //{
-            //    RotateLeft(1);
-            //}
-            // hp reverb
             // make sure we are in the left or right quarter of the touchpad
             if (System.Math.Abs(pos.y) < System.Math.Abs(pos.x))
             {
@@ -126,16 +99,6 @@ namespace CellexalVR.Menu
                 }
             }
         }
-
-        //private void OnThumbpadRight(InputAction.CallbackContext context)
-        //{
-        //    RotateRight(1);
-        //}
-
-        //private void OnThumbpadLeft(InputAction.CallbackContext context)
-        //{
-        //    RotateLeft(1);
-        //}
 
         /// <summary>
         /// Rotates the menu 90 degrees to the right.
