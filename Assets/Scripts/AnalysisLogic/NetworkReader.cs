@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using CellexalVR.AnalysisLogic;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
-using CellexalVR.Spatial;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
@@ -44,9 +41,6 @@ namespace CellexalVR.AnalysisLogic
             // make sure there is a .cnt file
             if (cntFilePaths.Length == 0)
             {
-                //status.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
-                //statusDisplayHUD.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
-                //statusDisplayFar.ShowStatusForTime("No .cnt file found. This dataset probably does not have a correct database", 10f, UnityEngine.Color.red);
                 CellexalError.SpawnError("Error when generating networks",
                     string.Format(
                         "No .cnt file found at {0}, make sure the network generating r script has executed properly by checking the r_log.txt in the output folder.",

@@ -1,5 +1,4 @@
 ﻿using CellexalVR.AnalysisLogic;
-using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Interaction;
@@ -25,19 +24,8 @@ namespace CellexalVR.AnalysisObjects
         public List<ClickableTextPanel> correlatedPanels;
         public List<ClickableTextPanel> anticorrelatedPanels;
 
-        //private StatusDisplay statusDisplay;
-        //private StatusDisplay statusDisplayHUD;
-        //private StatusDisplay statusDisplayFar;
-        //private SelectionToolHandler selectionToolHandler;
-        private SelectionManager selectionManager;
-
-
         private void Start()
         {
-            //statusDisplay = referenceManager.statusDisplay;
-            //statusDisplayHUD = referenceManager.statusDisplayHUD;
-            //statusDisplayFar = referenceManager.statusDisplayFar;
-            selectionManager = referenceManager.selectionManager;
             SetVisible(false);
             CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         }
@@ -108,13 +96,6 @@ namespace CellexalVR.AnalysisObjects
 
         private IEnumerator CalculateCorrelatedGenesCoroutine(string nodeName, Extensions.Definitions.Measurement type)
         {
-            //var statusId = statusDisplay.AddStatus("Calculating genes correlated to " + nodeName);
-            //var statusIdHUD = statusDisplayHUD.AddStatus("Calculating genes correlated to " + nodeName);
-            //var statusIdFar = statusDisplayFar.AddStatus("Calculating genes correlated to " + nodeName);
-            //string function = "get.genes.cor.to";
-            //string args = "cellexalObj" + ", \"" + nodeName + "\", \"" + outputFile + "\", " + facsTypeArg;
-            //string script = function + "(" + args + ")";
-
             string outputFile = (CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt").UnFixFilePath();
             string facsTypeArg = (type == Extensions.Definitions.Measurement.FACS) ? "TRUE" : "FALSE";
             string args = CellexalUser.UserSpecificFolder + " " + nodeName + " " + outputFile + " " + facsTypeArg;
@@ -154,7 +135,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 CellexalLog.Log("Correlated genes file at " + CellexalLog.FixFilePath(outputFile) + " was not 2 lines long. Actual length: " + lines.Length);
                 yield break;
-                //Debug.LogWarning("Correlated genes file at " + outputFile + " was not 2 lines long. Actual length: " + lines.Length);
             }
 
             string[] correlatedGenes = lines[0].Split(null);
@@ -171,9 +151,6 @@ namespace CellexalVR.AnalysisObjects
             PopulateList(nodeName, type, correlatedGenes, anticorrelatedGenes);
             CellexalEvents.CorrelatedGenesCalculated.Invoke();
             referenceManager.notificationManager.SpawnNotification("Correlated genes calculation finished.");
-            //statusDisplay.RemoveStatus(statusId);
-            //statusDisplayHUD.RemoveStatus(statusIdHUD);
-            //statusDisplayFar.RemoveStatus(statusIdFar);
         }
 
 
@@ -197,9 +174,6 @@ namespace CellexalVR.AnalysisObjects
                     i--;
                 }
             }
-
-
-            //BuildList();
         }
 
         /// <summary>
@@ -246,10 +220,6 @@ namespace CellexalVR.AnalysisObjects
                 prefabInstance.correlatedPanels.Add(correlatedPanel);
                 prefabInstance.anticorrelatedPanels.Add(anticorrelatedPanel);
 
-                // assign meshes
-                //Mesh previousSearchesListNodeMesh = new Mesh();
-                //correlatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
-                //anticorrelatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
                 // assign materials
                 correlatedPanel.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;
                 anticorrelatedPanel.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;

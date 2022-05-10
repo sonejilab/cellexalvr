@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.SceneObjects;
+﻿using CellexalVR.SceneObjects;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using System.Collections;

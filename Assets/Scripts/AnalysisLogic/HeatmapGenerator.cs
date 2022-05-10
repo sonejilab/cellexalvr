@@ -27,17 +27,11 @@ namespace CellexalVR.AnalysisLogic
         public int selectionNr;
         public int heatmapsCreated = 0;
         public bool GeneratingHeatmaps { get; private set; }
-
         public SolidBrush[] expressionColors;
-
-
-        //private GameObject calculatorCluster;
         public SelectionManager selectionManager;
-        private ArrayList data;
+
 
         private Thread t;
-
-        // private SteamVR_Controller.Device device;
         private Vector3 heatmapPosition;
         private List<Heatmap> heatmapList = new List<Heatmap>();
         private string statsMethod;
@@ -94,11 +88,6 @@ namespace CellexalVR.AnalysisLogic
             t = null;
             heatmapPosition = heatmapPrefab.transform.position;
             selectionManager = referenceManager.selectionManager;
-            //status = referenceManager.statusDisplay;
-            //statusDisplayHUD = referenceManager.statusDisplayHUD;
-            //statusDisplayFar = referenceManager.statusDisplayFar;
-            //calculatorCluster = referenceManager.calculatorCluster;
-            //calculatorCluster.SetActive(false);
             GeneratingHeatmaps = false;
             CellexalEvents.ConfigLoaded.AddListener(InitColors);
         }
@@ -113,7 +102,6 @@ namespace CellexalVR.AnalysisLogic
             UnityEngine.Color low = CellexalConfig.Config.HeatmapLowExpressionColor;
             UnityEngine.Color mid = CellexalConfig.Config.HeatmapMidExpressionColor;
             UnityEngine.Color high = CellexalConfig.Config.HeatmapHighExpressionColor;
-            //print(low + " " + mid + " " + high);
 
             int dividerLowMid = numberOfExpressionColors / 2;
             if (dividerLowMid == 0)
@@ -128,7 +116,6 @@ namespace CellexalVR.AnalysisLogic
             float midHighDeltaR = (high.r * high.r - mid.r * mid.r) / dividerMidHigh;
             float midHighDeltaG = (high.g * high.g - mid.g * mid.g) / dividerMidHigh;
             float midHighDeltaB = (high.b * high.b - mid.b * mid.b) / dividerMidHigh;
-            //print(midHighDeltaR + " " + midHighDeltaG + " " + midHighDeltaB);
 
             for (int i = 0; i < numberOfExpressionColors / 2 + 1; ++i)
             {

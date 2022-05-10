@@ -1,16 +1,12 @@
-﻿using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisLogic.H5reader;
+using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.General;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
-using CellexalVR.AnalysisLogic.H5reader;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -29,9 +25,7 @@ namespace CellexalVR.AnalysisLogic
         private float speed = 8f;
         private float threshold = 0f;
         private float particleSize = 0.01f;
-        private const float particleSizeStartValue = 0.01f;
         private bool constantEmitOverTime = true;
-        private bool graphPointsToggled = false;
         private bool useGraphPointColors = false;
         private bool useArrowParticle = true;
         private bool emitAverageVelocity = false;
@@ -107,10 +101,6 @@ namespace CellexalVR.AnalysisLogic
             int lastDotIndex = path.LastIndexOf('.');
             string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
             originalGraph = referenceManager.graphManager.FindGraph(graphName);
-            //print(path);
-            //print(lastSlashIndex);
-            //print(lastDotIndex);
-
             if (subGraphName != string.Empty)
             {
                 graph = referenceManager.graphManager.FindGraph(subGraphName);
@@ -119,9 +109,6 @@ namespace CellexalVR.AnalysisLogic
             {
                 graph = originalGraph;
             }
-
-            //int counter = 0;
-
             Dictionary<Graph.GraphPoint, Vector3> velocities =
                 new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
             using (FileStream stream = new FileStream(path, FileMode.Open))
@@ -197,7 +184,6 @@ namespace CellexalVR.AnalysisLogic
             Graph originalGraph;
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
             int lastDotIndex = path.LastIndexOf('.');
-            //string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
             string graphName = path.ToUpper();
             originalGraph = referenceManager.graphManager.FindGraph(graphName);
 
@@ -209,10 +195,6 @@ namespace CellexalVR.AnalysisLogic
             {
                 graph = originalGraph;
             }
-
-            //print(graphName + " - " + graph.GraphName);
-
-
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
 
             while (h5Reader.busy)
@@ -354,13 +336,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="value"></param>
         public void ChangeParticleSize(float value)
         {
-            // Make lower ranges differ more.
             particleSize = value;
-            // if (value <= particleSizeStartValue / 2)
-            // {
-            //     particleSize /= 2f;
-            // }
-            //
             foreach (Graph g in ActiveGraphs)
             {
                 g.velocityParticleEmitter.ParticleSize = particleSize;

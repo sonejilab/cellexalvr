@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.SceneObjects;
+﻿using CellexalVR.SceneObjects;
 using CellexalVR.Tools;
 using UnityEngine;
 namespace CellexalVR.Menu.Buttons.Tools

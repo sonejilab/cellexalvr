@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using AnalysisLogic;
+﻿using AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Spatial;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
@@ -20,7 +19,7 @@ namespace CellexalVR.AnalysisLogic
     {
         public ReferenceManager referenceManager;
 
-        private readonly char[] separators = new char[] {' ', '\t', ','};
+        private readonly char[] separators = new char[] { ' ', '\t', ',' };
         private int nrOfLODGroups;
 
 
@@ -35,9 +34,6 @@ namespace CellexalVR.AnalysisLogic
             GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
             nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
-            //int statusId = status.AddStatus("Reading folder " + path);
-            //int statusIdHUD = statusDisplayHUD.AddStatus("Reading folder " + path);
-            //int statusIdFar = statusDisplayFar.AddStatus("Reading folder " + path);
             //  Read each .mds file
             //  The file format should be
             //  cell_id  axis_name1   axis_name2   axis_name3
@@ -69,19 +65,19 @@ namespace CellexalVR.AnalysisLogic
                         referenceManager.graphManager.originalGraphs.Add(combGraph);
                         break;
                     case GraphGenerator.GraphType.FACS:
-                    {
-                        string graphName = "";
-                        foreach (string s in referenceManager.newGraphFromMarkers.markers)
                         {
-                            graphName += s + " - ";
-                        }
+                            string graphName = "";
+                            foreach (string s in referenceManager.newGraphFromMarkers.markers)
+                            {
+                                graphName += s + " - ";
+                            }
 
-                        combGraph.GraphNumber = referenceManager.inputReader.facsGraphCounter;
-                        combGraph.GraphName = graphName;
-                        combGraph.tag = "FacsGraph";
-                        referenceManager.graphManager.facsGraphs.Add(combGraph);
-                        break;
-                    }
+                            combGraph.GraphNumber = referenceManager.inputReader.facsGraphCounter;
+                            combGraph.GraphName = graphName;
+                            combGraph.tag = "FacsGraph";
+                            referenceManager.graphManager.facsGraphs.Add(combGraph);
+                            break;
+                        }
                     case GraphGenerator.GraphType.ATTRIBUTE:
                     case GraphGenerator.GraphType.BETWEEN:
                     case GraphGenerator.GraphType.SPATIAL:
@@ -138,20 +134,10 @@ namespace CellexalVR.AnalysisLogic
                     var itemsThisFrame = 0;
                     while (!mdsStreamReader.EndOfStream)
                     {
-                        //  status.UpdateStatus(statusId, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
-                        //  statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
-                        //  statusDisplayFar.UpdateStatus(statusIdFar, "Reading " + graphFileName + " (" + fileIndex + "/" + mdsFiles.Length + ") " + ((float)mdsStreamReader.BaseStream.Position / mdsStreamReader.BaseStream.Length) + "%");
-
-
                         for (int j = 0; j < maximumItemsPerFrame && !mdsStreamReader.EndOfStream; ++j)
                         {
                             string[] words = mdsStreamReader.ReadLine()
                                 .Split(separators, StringSplitOptions.RemoveEmptyEntries);
-                            //if (words.Length != 5 && words.Length != 7)
-                            //{
-                            //    continue;
-                            //}
-
                             string cellname = words[0];
                             referenceManager.cellManager.cellNames.Add(cellname);
                             float x = float.Parse(words[1],
@@ -160,8 +146,6 @@ namespace CellexalVR.AnalysisLogic
                                 System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                             float z = float.Parse(words[3],
                                 System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                            // Cell cell = referenceManager.cellManager.AddCell(cellname);
-                            // referenceManager.graphGenerator.AddGraphPoint(cell, x, y, z);
                             names.Add(cellname);
                             xcoords.Add(x);
                             ycoords.Add(y);
@@ -188,23 +172,15 @@ namespace CellexalVR.AnalysisLogic
                     }
 
                     // tell the graph that the info text is ready to be set
-                    // more_cells newGraph.GetComponent<GraphInteract>().isGrabbable = true;
                     System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
                     stopwatch.Start();
-                    // more_cells newGraph.CreateColliders();
                     stopwatch.Stop();
                     CellexalLog.Log("Created " + combGraph.GetComponents<BoxCollider>().Length + " colliders in " +
                                     stopwatch.Elapsed.ToString() + " for graph " + graphFileName);
-                    //if (doLoad)
-                    //{
-                    //    graphManager.LoadPosition(newGraph, fileIndex);
-                    //}
-                    //mdsFileStream.Close();
+
                     mdsStreamReader.Close();
-                    // if (debug)
-                    //     newGraph.CreateConvexHull();
                 }
-                
+
                 CreateFromCoordinates(names, xcoords, ycoords, zcoords);
 
                 // If high quality mesh is used. Use LOD groups to swap to low q when further away.
@@ -226,13 +202,6 @@ namespace CellexalVR.AnalysisLogic
                 // Add axes in bottom corner of graph and scale points differently
                 combGraph.SetInfoText();
                 referenceManager.graphGenerator.AddAxes(combGraph, axes);
-
-                //status.UpdateStatus(statusId, "Reading index.facs file");
-                //statusDisplayHUD.UpdateStatus(statusIdHUD, "Reading index.facs file");
-                //statusDisplayFar.UpdateStatus(statusIdFar, "Reading index.facs file");
-                //status.RemoveStatus(statusId);
-                //statusDisplayHUD.RemoveStatus(statusIdHUD);
-                //statusDisplayFar.RemoveStatus(statusIdFar);
             }
         }
 
@@ -395,13 +364,13 @@ namespace CellexalVR.AnalysisLogic
 
         public void CreateFromCoordinates(List<float> x, List<float> y)
         {
-             int gpCount = x.Count;
-             for (int i = 0; i < gpCount; i++)
-             {
-                 string cellName = i.ToString();
-                 Cell cell = referenceManager.cellManager.AddCell(cellName);
-                 referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], 0);
-             }           
+            int gpCount = x.Count;
+            for (int i = 0; i < gpCount; i++)
+            {
+                string cellName = i.ToString();
+                Cell cell = referenceManager.cellManager.AddCell(cellName);
+                referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], 0);
+            }
         }
 
         public void CreateFromCoordinates(List<float> x, List<float> y, List<float> z)
@@ -412,12 +381,12 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.loaderController.MoveLoader(new Vector3(0f, -2f, 0f), 2f);
             }
             int gpCount = x.Count;
-             for (int i = 0; i < gpCount; i++)
-             {
-                 string cellName = i.ToString();
-                 Cell cell = referenceManager.cellManager.AddCell(cellName);
-                 referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], z[i]);
-             }           
+            for (int i = 0; i < gpCount; i++)
+            {
+                string cellName = i.ToString();
+                Cell cell = referenceManager.cellManager.AddCell(cellName);
+                referenceManager.graphGenerator.AddGraphPoint(cell, x[i], y[i], z[i]);
+            }
         }
 
         /// <summary>

@@ -1,26 +1,19 @@
-using UnityEngine;
-using System.Collections;
-using System.IO;
-using System.Linq;
-using SQLiter;
-using System.Collections.Generic;
-using System;
-using System.Threading;
-using CellexalVR.Menu.SubMenus;
-using CellexalVR.General;
+using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
-using System.Drawing;
-using System.Diagnostics;
-using CellexalVR.AnalysisLogic.H5reader;
-using CellexalVR.PDFViewer;
-using UnityEngine.XR;
-using AnalysisLogic;
-using CellexalVR.AnalysisLogic;
-using System.Text.RegularExpressions;
-using UnityEngine.VFX;
+using CellexalVR.General;
+using CellexalVR.Menu.SubMenus;
 using CellexalVR.Spatial;
+using SQLiter;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -45,16 +38,10 @@ namespace CellexalVR.AnalysisLogic
         private ColorByIndexMenu indexMenu;
         private GraphFromMarkersMenu createFromMarkerMenu;
         private NetworkReader networkReader;
-        private PDFMesh pdfMesh;
 
         private GameObject headset;
-
-        //private StatusDisplay status;
-        //private StatusDisplay statusDisplayHUD;
-        //private StatusDisplay statusDisplayFar;
         private GraphGenerator graphGenerator;
         private string currentPath;
-        private Bitmap image1;
         public Dictionary<string, H5Reader> h5readers = new Dictionary<string, H5Reader>();
 
         [Tooltip("Automatically loads the Bertie dataset")]
@@ -71,8 +58,6 @@ namespace CellexalVR.AnalysisLogic
 
         private void Start()
         {
-            //XRSettings.eyeTextureResolutionScale = 1.5f;
-            // QualitySettings.vSyncCount = 0;
             h5readers = new Dictionary<string, H5Reader>();
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             cellManager = referenceManager.cellManager;
@@ -89,15 +74,12 @@ namespace CellexalVR.AnalysisLogic
             else
             {
                 headset = referenceManager.headset;
-                // referenceManager.spectatorRig.SetActive(false);
             }
 
             graphGenerator = referenceManager.graphGenerator;
-            pdfMesh = referenceManager.pdfMesh;
             currentPath = "";
             facsGraphCounter = 0;
             RScriptRunner.SetReferenceManager(referenceManager);
-            // CellexalEvents.UsernameChanged.AddListener(LoadPreviousGroupings);
         }
 
 
@@ -111,21 +93,18 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readscarffolder", "rscf" })]
         public void ReadScarfFolderConsole(string path)
         {
-            //referenceManager.multiuserMessageSender.SendMessageReadScarfFolder(path);
             ScarfManager.instance.LoadPreprocessedData(path);
         }
 
         [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readprevioussession", "rps" })]
         public void ReadPreviousSessionConsole(string path, string fromPreviousSession = "")
         {
-            // referenceManager.multiuserMessageSender.SendMessageReadFolder(path);
             ReadFolder(path, null, fromPreviousSession);
         }
 
         /// <summary>
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
-        /// 
         /// <param name="path">path to the file</param>
         private void ReadFileH5(string path, Dictionary<string, string> h5config)
         {
@@ -155,7 +134,6 @@ namespace CellexalVR.AnalysisLogic
         /// Reads one folder of data and creates the graphs described by the data.
         /// </summary>
         /// <param name="path"> The path to the folder. </param>
-        //[ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readfolder", "rf" })]
         public void ReadFolder(string path, Dictionary<string, string> h5config = null, string fromPreviousSession = "")
         {
             StartCoroutine(ReadFolderCoroutine(path, h5config, fromPreviousSession));
@@ -205,15 +183,6 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            //summertwerk
-            //bool h5 = Directory.EnumerateFiles("Data\\" + path, "*.h5ad").Any();
-            //bool loom = Directory.EnumerateFiles("Data\\" + path, "*.loom").Any();
-            //if (h5 || loom)
-            //{
-            //    ReadFileH5(path, h5config);
-            //    return;
-            //}
-
             database.InitDatabase(fullPath + "\\database.sqlite");
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
@@ -223,8 +192,6 @@ namespace CellexalVR.AnalysisLogic
                     "The loaded dataset did not contain any .mds files. Make sure you have placed the dataset files in the correct folder.");
                 throw new System.InvalidOperationException("Empty dataset");
             }
-            // PDF reading (conversion to images) causing program to crash. Unknown problem... 
-            //pdfMesh.ReadPDF(fullPath);
 
             if (path.Contains("geoMX"))
             {
@@ -422,16 +389,6 @@ namespace CellexalVR.AnalysisLogic
                 string cellName = values[0];
                 for (int j = 0; j < values.Length - 1; ++j)
                 {
-                    //float value;
-                    //try
-                    //{
-                    //    value = float.Parse(values[j + 1], System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
-                    //}
-                    //catch (Exception e)
-                    //{
-                    //    print($"could not parse {cellName}, {values[j+1]}, {values[j]}, {values[j + 2]}");
-                    //    value = 0f;
-                    //}
                     float.TryParse(values[j + 1],
                         System.Globalization.NumberStyles.Float,
                         System.Globalization.CultureInfo.InvariantCulture.NumberFormat,
@@ -567,7 +524,6 @@ namespace CellexalVR.AnalysisLogic
             string dataFolder = CellexalUser.UserSpecificFolder;
             string groupingsInfoFile = dataFolder + "\\groupings_info.txt";
             CellexalLog.Log("Started reading the previous groupings files");
-            //print(groupingsInfoFile);
             if (!File.Exists(groupingsInfoFile))
             {
                 CellexalLog.Log(
@@ -664,9 +620,6 @@ namespace CellexalVR.AnalysisLogic
                 streamReader.Close();
                 fileStream.Close();
             }
-
-            // referenceManager.selectionFromPreviousMenu.SelectionFromPreviousButton(graphNames, groupingNames.ToArray(),
-            // cellNames, groups, groupingColors);
             CellexalLog.Log("Successfully read " + groupingNames.Count + " files");
         }
 

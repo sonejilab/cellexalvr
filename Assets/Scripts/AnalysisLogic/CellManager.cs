@@ -84,9 +84,6 @@ namespace CellexalVR.AnalysisLogic
             previousSearchesList = referenceManager.previousSearchesList;
             selectionManager = referenceManager.selectionManager;
             lineBundler = GetComponent<LineBundler>();
-            //statusDisplay = referenceManager.statusDisplay;
-            //statusDisplayHUD = referenceManager.statusDisplayHUD;
-            //statusDisplayFar = referenceManager.statusDisplayFar;
             selectionToolCollider = referenceManager.selectionToolCollider;
             graphManager = referenceManager.graphManager;
             recolored = new Dictionary<Cell, int>();
@@ -221,9 +218,7 @@ namespace CellexalVR.AnalysisLogic
                 for (int i = 0; i < cellnames.Length; ++i)
                 {
                     Cell cell = cells[cellnames[i]];
-                    //cell.SetGroup(groups[i], true);
                     selectionManager.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false);
-                    //graphManager.FindGraphPoint(graphName, cell.Label).SetOutLined(true, groups[i]);
                 }
             }
             else
@@ -231,10 +226,8 @@ namespace CellexalVR.AnalysisLogic
                 for (int i = 0; i < cellnames.Length; ++i)
                 {
                     Cell cell = cells[cellnames[i]];
-                    //cell.SetGroup(groups[i], false);
                     selectionManager.AddGraphpointToSelection(graph.points[cellnames[i]], groups[i], false,
                         groupingColors[groups[i]]);
-                    //graphManager.FindGraphPoint(graphName, cell.Label).SetOutLined(true, groupingColors[groups[i]]);
                 }
             }
         }
@@ -282,8 +275,6 @@ namespace CellexalVR.AnalysisLogic
                 {
                     StartCoroutine(QueryDatabase(geneName, coloringMethod, triggerEvent));
                 }
-
-                //QueryRObject(geneName, coloringMethod, triggerEvent);
             }
             catch (Exception e)
             {
@@ -291,10 +282,6 @@ namespace CellexalVR.AnalysisLogic
                 CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
             }
 
-            //if (!CrossSceneInformation.Spectator && rightController.isActiveAndEnabled)
-            //{
-            //    SteamVR_Controller.Input((int)rightController.index).TriggerHapticPulse(2000);
-            //}
             referenceManager.heatmapGenerator.HighLightGene(geneName);
             referenceManager.networkGenerator.HighLightGene(geneName);
         }
@@ -345,8 +332,6 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             audioSource.Play();
-            // Open XR
-            //SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
             rightController.SendHapticImpulse(0.8f, 0.3f);
             ArrayList expressions = h5Reader._expressionResult;
 
@@ -360,10 +345,6 @@ namespace CellexalVR.AnalysisLogic
             }
 
             graphManager.ColorAllGraphsByGeneExpression(geneName, expressions);
-
-            //float percentInResults = (float)database._result.Count / cells.Values.Count;
-            //statusDisplay.RemoveStatus(coloringInfoStatusId);
-            //coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
 
             if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
             {
@@ -386,7 +367,6 @@ namespace CellexalVR.AnalysisLogic
 
             CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
             stopwatch.Stop();
-            //print("Time : " + stopwatch.Elapsed.ToString());
             CellexalEvents.CommandFinished.Invoke(true);
             print("python3 - anndata.h5py " + stopwatch.ElapsedMilliseconds);
         }
@@ -419,8 +399,6 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             GetComponent<AudioSource>().Play();
-            // Open XR
-            //SteamVR_Controller.Input((int) rightController.index).TriggerHapticPulse(2000);
             rightController.SendHapticImpulse(0.7f, 1f);
             ArrayList expressions = database._result;
 
@@ -435,11 +413,6 @@ namespace CellexalVR.AnalysisLogic
             }
 
             graphManager.ColorAllGraphsByGeneExpression(geneName, expressions);
-
-            //float percentInResults = (float)database._result.Count / cells.Values.Count;
-            //statusDisplay.RemoveStatus(coloringInfoStatusId);
-            //coloringInfoStatusId = statusDisplay.AddStatus(String.Format("Stats for {0}:\nlow: {1:0.####}, high: {2:0.####}, above 0: {3:0.##%}", geneName, database.LowestExpression, database.HighestExpression, percentInResults));
-
             if (!previousSearchesList.Contains(geneName, Definitions.Measurement.GENE, coloringMethod))
             {
                 var removedGene = previousSearchesList.AddEntry(geneName, Definitions.Measurement.GENE, coloringMethod);
@@ -462,7 +435,6 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Colored " + expressions.Count + " points according to the expression of " + geneName);
             RScriptRunner.WriteToServer("# colored graphs by " + geneName);
             stopwatch.Stop();
-            //print("Time : " + stopwatch.Elapsed.ToString());
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
@@ -583,12 +555,6 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Colored graphs by " + attributeType);
             RScriptRunner.WriteToServer("# colored graphs by " + attributeType);
             int numberOfCells = 0;
-            // Dictionary<string, List<Vector3>> pos = new Dictionary<string, List<Vector3>>();
-            // foreach (Graph graph in referenceManager.graphManager.Graphs)
-            // {
-            //     pos[graph.GraphName] = new List<Vector3>();
-            //pos[referenceManager.graphGenerator.CreateSubGraphs]
-            // }
 
             foreach (Cell cell in cells.Values)
             {
@@ -608,15 +574,11 @@ namespace CellexalVR.AnalysisLogic
                         selectionList.Remove(gp);
                     }
 
-                    // foreach (var graphPoint in cell.GraphPoints)
-                    // {
-                    //     pos[graphPoint.parent.GraphName].Add(graphPoint.Position);
-                    // }
+
                 }
             }
 
             int attributeIndex = Attributes.IndexOf(attributeType);
-            // int attributeIndex = referenceManager.cellManager.Attributes.ToArray().IndexOf(attributeType, (s1, s2) => s1.ToLower() == s2.ToLower());
             Color attributeColor =
                 CellexalConfig.Config.SelectionToolColors[
                     attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
@@ -624,17 +586,9 @@ namespace CellexalVR.AnalysisLogic
             if (color)
             {
                 referenceManager.legendManager.attributeLegend.AddEntry(attributeType, numberOfCells, attributeColor);
-                //foreach (Graph graph in graphManager.Graphs)
-                //{
-                //    referenceManager.convexHullGenerator.QuickHull(graph, pos[graph.GraphName], attributeColor, attributeType);
-                //}
             }
             else
             {
-                //foreach (Graph graph in graphManager.Graphs)
-                //{
-                //    Destroy(convexHulls[graph.GraphName + "_" + attributeType]);
-                //}
                 referenceManager.legendManager.attributeLegend.RemoveEntry(attributeType);
             }
 
@@ -646,6 +600,11 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
+        /// <summary>
+        /// Used by <see cref="ScarfManager"/>. Adds or removes cells to the current selection.
+        /// </summary>
+        /// <param name="cellClusters">An array mapping a cellname (index) to a cluster.</param>
+        /// <param name="color">True if the cells in <paramref name="cellClusters"/> should be added to the current the selection, false if they should be removed."/></param>
         public void ColorAllClusters(float[] cellClusters, bool color)
         {
             int cluster;
@@ -667,12 +626,12 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Used be <see cref="ScarfManager"/>. Colors the graphs based off the colors in <paramref name="values"/>. Indices are cellnames
+        /// </summary>
+        /// <param name="values">An array of floats mapping cellnames (indices) to an expression value.</param>
         public void ColorByGene(float[] values)
         {
-            for (int i = 0; i < values.Length; i++)
-            {
-                //print($"{i}, {values[i]}");
-            }
             Dictionary<int, float> valuesNoZeroes = new Dictionary<int, float>();
             ArrayList expressions = new ArrayList();
             LowestExpression = float.MaxValue;

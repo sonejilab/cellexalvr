@@ -6,7 +6,7 @@ using CellexalVR.Filters;
 using CellexalVR.General;
 using UnityEngine;
 
-namespace Assets.Scripts.SceneObjects
+namespace CellexalVR.SceneObjects
 {
     public class CullingCube : MonoBehaviour
     {
