@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.SceneObjects;
+﻿using CellexalVR.SceneObjects;
+
 namespace CellexalVR.Menu.Buttons.Tools
 {
     /// <summary>

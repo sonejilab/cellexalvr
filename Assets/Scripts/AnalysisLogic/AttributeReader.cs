@@ -1,11 +1,10 @@
-﻿using System;
+﻿using CellexalVR.AnalysisLogic.H5reader;
+using CellexalVR.General;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using CellexalVR.General;
 using UnityEngine;
-using CellexalVR.AnalysisLogic.H5reader;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -80,11 +79,6 @@ namespace CellexalVR.AnalysisLogic
             }
 
             referenceManager.settingsMenu.unsavedChanges = false;
-            //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
-            //{
-            //    CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +
-            //        " Consider adding more colours in the settings menu (under Selection Colours)");
-            //}
             stopwatch.Stop();
             referenceManager.inputReader.attributeFileRead = true;
             CellexalLog.Log("h5 read attributes in " + stopwatch.Elapsed.ToString());
@@ -120,15 +114,9 @@ namespace CellexalVR.AnalysisLogic
                     string[] actualAttributeTypes = new string[attributeTypes.Length - 1];
                     for (int i = 1; i < attributeTypes.Length; ++i)
                     {
-                        //if (attributeTypes[i].Length > 10)
-                        //{
-                        //    attributeTypes[i] = attributeTypes[i].Substring(0, 10);
-                        //}
                         actualAttributeTypes[i - 1] = attributeTypes[i];
-                        //print(attributeTypes[i]);
                     }
 
-                    int yieldCount = 0;
                     while (!metaCellStreamReader.EndOfStream)
                     {
                         string line = metaCellStreamReader.ReadLine();
@@ -137,7 +125,7 @@ namespace CellexalVR.AnalysisLogic
 
                         if (line != null)
                         {
-                            string[] words = line.Split(new char[] {'\t'}, StringSplitOptions.RemoveEmptyEntries);
+                            string[] words = line.Split(new char[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
                             string cellName = words[0];
                             for (int j = 1; j < words.Length; ++j)
@@ -147,10 +135,6 @@ namespace CellexalVR.AnalysisLogic
                                         (j - 1) % CellexalConfig.Config.SelectionToolColors.Length);
                             }
                         }
-
-                        //yieldCount++;
-                        //if (yieldCount % 1000 == 0)
-                        //    yield return null;
                     }
 
                     metaCellStreamReader.Close();
@@ -166,12 +150,6 @@ namespace CellexalVR.AnalysisLogic
                     referenceManager.settingsMenu.AddSelectionColors(nrOfAttributes - nrOfSelToolColors);
                     referenceManager.settingsMenu.unsavedChanges = false;
                 }
-
-                //if (cellManager.Attributes.Length > CellexalConfig.Config.SelectionToolColors.Length)
-                //{
-                //    CellexalError.SpawnError("Attributes", "The number of attributes are higher than the number of colours in your config." +
-                //        " Consider adding more colours in the settings menu (under Selection Colours)");
-                //}
             }
 
             stopwatch.Stop();

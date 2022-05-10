@@ -1,10 +1,10 @@
 ﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
+using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons.Facs;
 using System.Collections.Generic;
 using System.IO;
-using CellexalVR.Extensions;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
@@ -63,7 +63,6 @@ namespace CellexalVR.AnalysisLogic
             foreach (AddMarkerButton b in GetComponentsInChildren<AddMarkerButton>())
             {
                 b.ToggleOutline(false);
-                //b.activeOutline.SetActive(false);
             }
 
             if (!referenceManager.sessionHistoryList.Contains(filePath, Definitions.HistoryEvent.FACSGRAPH))
@@ -79,7 +78,6 @@ namespace CellexalVR.AnalysisLogic
         public void DumpSelectionToTextFile(List<Graph.GraphPoint> points, string first_marker,
                                             string second_marker, string third_marker)
         {
-            // print(new System.Diagnostics.StackTrace());
             this.filePath = CellexalUser.UserSpecificFolder + "\\" + first_marker + "_" + second_marker + "_" + third_marker + ".txt";
             HashSet<string> previousLines = new HashSet<string>();
             using (StreamWriter file = new StreamWriter(filePath))

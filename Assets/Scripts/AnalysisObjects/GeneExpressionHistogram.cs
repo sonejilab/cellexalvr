@@ -195,6 +195,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Clears the legend of all current data.
+        /// </summary>
         public void ClearLegend()
         {
             for (int i = 0; i < tabData.Count; ++i)

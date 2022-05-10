@@ -161,6 +161,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Clears the legend of all data.
+        /// </summary>
         public void ClearLegend()
         {
             foreach (List<GroupingLegendEntry> page in entries)

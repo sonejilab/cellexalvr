@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.General;
+﻿using CellexalVR.General;
+using UnityEngine;
 
 namespace CellexalVR.AnalysisObjects
 {

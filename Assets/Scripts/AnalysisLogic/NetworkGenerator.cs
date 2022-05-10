@@ -5,11 +5,8 @@ using CellexalVR.General;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
-using CellexalVR.Menu.Buttons.Networks;
 #if UNITY_EDITOR
-using UnityEditorInternal;
 #endif
 using UnityEngine;
 
@@ -33,18 +30,10 @@ namespace CellexalVR.AnalysisLogic
 
         public Material[] LineMaterials;
 
-        private GameObject calculatorCluster;
-
-        //public SelectionToolHandler selectionToolHandler;
         public SelectionManager selectionManager;
         private InputReader inputReader;
         private GraphManager graphManager;
-
         private GameObject headset;
-
-        //private StatusDisplay status;
-        //private StatusDisplay statusDisplayHUD;
-        //private StatusDisplay statusDisplayFar;
         private Thread t;
 
         private void OnValidate()
@@ -66,11 +55,6 @@ namespace CellexalVR.AnalysisLogic
             inputReader = referenceManager.inputReader;
             graphManager = referenceManager.graphManager;
             headset = referenceManager.headset;
-
-            //status = referenceManager.statusDisplay;
-            //statusDisplayHUD = referenceManager.statusDisplayHUD;
-            //statusDisplayFar = referenceManager.statusDisplayFar;
-            //calculatorCluster = referenceManager.calculatorCluster;
         }
 
         /// <summary>
@@ -176,11 +160,7 @@ namespace CellexalVR.AnalysisLogic
 
         private IEnumerator GenerateNetworksCoroutine(int layoutSeed)
         {
-            //int statusId = status.AddStatus("R script generating networks");
-            //int statusIdHUD = statusDisplayHUD.AddStatus("R script generating networks");
-            //int statusIdFar = statusDisplayFar.AddStatus("R script generating networks");
             GeneratingNetworks = true;
-            //calculatorCluster.SetActive(true);
             referenceManager.floor.StartPulse();
 
             while (selectionManager.RObjectUpdating)
@@ -234,11 +214,6 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
             GeneratingNetworks = false;
             CellexalEvents.ScriptFinished.Invoke();
-            //if (!(referenceManager.heatmapGenerator.GeneratingHeatmaps && File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
-            //{
-            //    referenceManager.floor.StopPulse();
-            //}
-
             inputReader.ReadNetworkFiles(layoutSeed, outputFilePath, groupingFilePath);
         }
 
@@ -278,7 +253,6 @@ namespace CellexalVR.AnalysisLogic
             network.gameObject.name = "NetworkCenter_Group" + /*handler.name + */ group;
             network.selectionNr = selectionNr;
             network.Group = group;
-            //graphManager.AddNetwork(handler);
             networkList.RemoveAll(item => item == null);
             if (!networkList.Contains(handler)) networkList.Add(handler);
             network.LayoutSeed = layoutSeed;

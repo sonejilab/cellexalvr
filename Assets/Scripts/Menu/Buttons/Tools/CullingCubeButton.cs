@@ -1,8 +1,5 @@
-﻿using Assets.Scripts.SceneObjects;
-using CellexalVR.Filters;
+﻿using CellexalVR.Filters;
 using CellexalVR.General;
-using CellexalVR.Tools;
-using System.Collections.Generic;
 using UnityEngine;
 namespace CellexalVR.Menu.Buttons.Tools
 {
@@ -19,7 +16,7 @@ namespace CellexalVR.Menu.Buttons.Tools
 
         protected override string Description
         {
-            get { return remove ?  "Remove Culling Cube" : "Spawn Culling Cube"; }
+            get { return remove ? "Remove Culling Cube" : "Spawn Culling Cube"; }
         }
 
         private void Start()

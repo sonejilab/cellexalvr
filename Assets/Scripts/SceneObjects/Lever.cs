@@ -1,5 +1,4 @@
 ﻿using CellexalVR.General;
-using CellexalVR.Interaction;
 using UnityEngine;
 
 namespace CellexalVR.SceneObjects
@@ -10,12 +9,8 @@ namespace CellexalVR.SceneObjects
         public ReferenceManager referenceManager;
 
         private bool controllerInside = false;
-        // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
-        // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.InputDevice device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        private UnityEngine.XR.InputDevice device;
         private bool animateDown = false;
         private bool animateUp = false;
         private Renderer rend;

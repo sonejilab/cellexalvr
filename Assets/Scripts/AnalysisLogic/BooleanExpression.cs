@@ -177,7 +177,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Combines a list if exrpressions into a single expression. Expressions are assumed to be properly placed in the list. E.g. [GeneExpr, AndExpr, FacsExpr, ...] and so on.
+        /// Combines a list if expressions into a single expression. Expressions are assumed to be properly placed in the list. E.g. [GeneExpr, AndExpr, FacsExpr, ...] and so on.
         /// </summary>
         /// <remarks>
         /// This is probably a very inefficient way of doing this.
@@ -1025,7 +1025,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 // equivalent to:
                 // if (include && attr.contains || !include && !attr.contains)
-                return !(cell.Attributes.ContainsKey(attribute) ^ include);
+                return cell.Attributes.ContainsKey(attribute) == include;
             }
 
             public override void GetGenes(ref List<string> result, bool onlyPercent = false) { }

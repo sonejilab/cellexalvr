@@ -1,17 +1,13 @@
-﻿using Assets.Scripts.SceneObjects;
-using CellexalVR.AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
-using CellexalVR.Filters;
 using CellexalVR.General;
-using CellexalVR.Interaction;
 using CellexalVR.SceneObjects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -27,7 +23,6 @@ namespace CellexalVR.Filters
 
         private List<Tuple<Graph.GraphPoint, int>> queuedCells = new List<Tuple<Graph.GraphPoint, int>>(256);
         private List<Tuple<Graph.GraphPoint, int>> cellsToEvaluate = new List<Tuple<Graph.GraphPoint, int>>(256);
-        private bool loadingFilter = false;
         private Coroutine runningSwapPercentCoroutine;
         private bool evaluating = false;
         private string currentFilterPath;
@@ -80,7 +75,6 @@ namespace CellexalVR.Filters
         [ConsoleCommand("filterManager", folder: "Data\\Mouse_HSPC", aliases: new string[] { "loadfilter", "lf" })]
         public void LoadFilter(string path)
         {
-            loadingFilter = true;
             currentFilterPath = path;
             //path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder + "\\" + path;
             Filter newFilter = new Filter();
@@ -179,7 +173,6 @@ namespace CellexalVR.Filters
             string filterAsText = currentFilter.Expression.ToString();
             filterPreviewText.text = filterAsText;
             referenceManager.multiuserMessageSender.SendMessageSetFilter(filterAsText);
-            loadingFilter = false;
             if (resultBlock.isActiveAndEnabled)
             {
                 resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.FINISHED);
@@ -218,14 +211,8 @@ namespace CellexalVR.Filters
 
         }
 
-        private void LateUpdate()
-        {
-        }
-
         private void OnTriggerClick()
         {
-            // Open XR
-            //device = SteamVR_Controller.Input((int)rightController.index);
             if (!portClickedThisFrame && previouslyClickedPort != null)
             {
                 previewWire.SetActive(false);
@@ -359,7 +346,6 @@ namespace CellexalVR.Filters
                 StopCoroutine(runningSwapPercentCoroutine);
             }
 
-            loadingFilter = true;
             Filter newFilter = resultBlock.ToFilter();
             if (newFilter == null)
             {
@@ -379,6 +365,7 @@ namespace CellexalVR.Filters
         {
             // check that genes exists
             string[] genes = filter.GetGenes().ToArray();
+            // TODO: ask johan
             //Array.ForEach(genes, (s) => s.ToLower());
             //SQLiter.SQLite database = referenceManager.database;
             //while (database.QueryRunning)
@@ -458,7 +445,6 @@ namespace CellexalVR.Filters
             {
                 StopCoroutine(runningSwapPercentCoroutine);
             }
-            loadingFilter = true;
             currentFilter = filter;
             currentFilterGenes = currentFilter.GetGenes(false).ToArray();
             runningSwapPercentCoroutine = StartCoroutine(SwapPercentExpressions());

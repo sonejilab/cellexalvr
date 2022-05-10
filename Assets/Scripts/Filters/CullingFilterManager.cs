@@ -1,11 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.General;
-using System.Collections.Generic;
-using CellexalVR.AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
+using CellexalVR.SceneObjects;
 using System;
-using Assets.Scripts.SceneObjects;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace CellexalVR.Filters
 {

@@ -11,8 +11,6 @@ namespace CellexalVR.SceneObjects
 
         public Material gridMaterial;
 
-        private bool pulseToggle;
-
         // Use this for initialization
         private void Start()
         {
@@ -21,25 +19,9 @@ namespace CellexalVR.SceneObjects
             CellexalEvents.ScarfObjectLoaded.AddListener(StartWave);
             CellexalEvents.GraphsColoredByGene.AddListener(StartWave);
             CellexalEvents.GraphsColoredByIndex.AddListener(StartWave);
-            //CellexalEvents.HeatmapCreated.AddListener(StartWave);
-            //CellexalEvents.NetworkCreated.AddListener(StartWave);
             CellexalEvents.ScriptFinished.AddListener(() => StartCoroutine(ScriptFinished()));
-            //CellexalEvents.ScriptFinished.AddListener(StartWave);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-            //if (Input.GetKeyDown(KeyCode.T))
-            //{
-            //    StartWave();
-            //}
-            //if (Input.GetKeyDown(KeyCode.R))
-            //{
-            //    StartPulse();
-            //}
-
-        }
         /// <summary>
         /// Starts the pulse that goes outwards from the play area.
         /// </summary>
