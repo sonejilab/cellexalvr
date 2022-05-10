@@ -1,5 +1,5 @@
-﻿using System;
-using CellexalVR.AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Filters;
@@ -7,17 +7,15 @@ using CellexalVR.Interaction;
 using CellexalVR.Menu;
 using CellexalVR.Menu.SubMenus;
 using CellexalVR.Multiuser;
+using CellexalVR.PDFViewer;
 using CellexalVR.SceneObjects;
+using CellexalVR.Spatial;
 using CellexalVR.Tools;
 using CellexalVR.Tutorial;
 using SQLiter;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using CellexalVR.AnalysisLogic.H5reader;
-using UnityEngine.Serialization;
-using CellexalVR.PDFViewer;
-using CellexalVR.Spatial;
 
 namespace CellexalVR.General
 {
@@ -30,24 +28,11 @@ namespace CellexalVR.General
 
         #region Controller things
         [Header("Controller things")]
-        // OpenXR
         public ActionBasedController rightController;
         public ActionBasedController leftController;
-        //public SteamVR_TrackedObject rightController;
-        //public SteamVR_TrackedObject leftController;
         public GameObject rightControllerScriptAlias;
         public GameObject leftControllerScriptAlias;
         public ControllerModelSwitcher controllerModelSwitcher;
-        //public GroupInfoDisplay groupInfoDisplay;
-        //public StatusDisplay statusDisplay;
-        //public StatusDisplay statusDisplayHUD;
-        //public StatusDisplay statusDisplayFar;
-        //public GameObject HUD;
-        //public GameObject FarDisplay;
-        //public TextMeshProUGUI HUDFlashInfo;
-        //public TextMeshProUGUI HUDGroupInfo;
-        //public TextMeshProUGUI FarFlashInfo;
-        //public TextMeshProUGUI FarGroupInfo;
         public GameObject headset;
         public BoxCollider controllerMenuCollider;
         public XRRayInteractor rightLaser;
@@ -197,19 +182,10 @@ namespace CellexalVR.General
             Undo.RecordObject(this, "ReferenceManager Auto-populate");
 
             h5ReaderAnnotatorScriptManager = GameObject.Find("H5ReaderTestObjectManager").GetComponent<H5ReaderAnnotatorScriptManager>();
-            //rightController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (right)").GetComponent<SteamVR_TrackedObject>();
-            //leftController = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Controller (left)").GetComponent<SteamVR_TrackedObject>();
             rightController = GameObject.Find("CellexalOpenXRRig/Camera Offset/RightHand Controller").GetComponent<ActionBasedController>();
             leftController = GameObject.Find("CellexalOpenXRRig/Camera Offset/LeftHand Controller").GetComponent<ActionBasedController>();
-            //rightControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/RightControllerScriptAlias");
-            //leftControllerScriptAlias = GameObject.Find("[VRTK_Scripts]/LeftControllerScriptAlias");
             controllerModelSwitcher = leftController.GetComponent<ControllerModelSwitcher>();
-            //TextMeshProUGUI HUDFlashInfo;
-            //TextMeshProUGUI HUDGroupInfo;
-            //TextMeshProUGUI FarFlashInfo;
-            //TextMeshProUGUI FarGroupInfo;
 
-            //headset = GameObject.Find("[VRTK]3.3/SDK setup/[CameraRig]/Camera (head)/Camera (eye)");
             headset = GameObject.Find("CellexalOpenXRRig/Camera Offset/Main Camera");
             controllerMenuCollider = leftController.GetComponent<BoxCollider>();
             laserPointerController = rightController.GetComponent<LaserPointerController>();
@@ -219,10 +195,8 @@ namespace CellexalVR.General
             selectionToolCollider = rightController.GetComponentInChildren<SelectionToolCollider>(true);
             deleteTool = rightController.transform.Find("Delete Tool").gameObject;
             minimizeTool = rightController.GetComponentInChildren<MinimizeTool>(true);
-            //GameObject helpMenu;
             drawTool = rightController.GetComponentInChildren<DrawTool>(true);
             webBrowser = GameObject.Find("WebBrowser");
-            //screenshotCamera = headset.GetComponentInChildren<CaptureScreenshot>(true);
             screenshotCamera = GameObject.Find("SnapShotCam").GetComponent<CaptureScreenshot>();
             teleportLaser = leftController.gameObject;
 
@@ -241,10 +215,6 @@ namespace CellexalVR.General
             rightButtons = GameObject.Find("MenuHolder/Main Menu/Right Buttons");
             backButtons = GameObject.Find("MenuHolder/Main Menu/Back Buttons");
             leftButtons = GameObject.Find("MenuHolder/Main Menu/Left Buttons");
-            //frontDescription = frontButtons.transform.Find("Description Text Front Side").GetComponent<TextMesh>();
-            //rightDescription = rightButtons.transform.Find("Description Text Right Side").GetComponent<TextMesh>();
-            //backDescription = backButtons.transform.Find("Description Text Back Side").GetComponent<TextMesh>();
-            //leftDescription = leftButtons.transform.Find("Description Text Left Side").GetComponent<TextMesh>();
             menuRotator = mainMenu.GetComponent<MenuRotator>();
             minimizedObjectHandler = GameObject.Find("MenuHolder/Main Menu/Jail").GetComponent<MinimizedObjectHandler>();
             menuToggler = leftController.GetComponent<MenuToggler>();
@@ -266,26 +236,21 @@ namespace CellexalVR.General
             loaderController = GameObject.Find("Tron_Loader").GetComponent<LoaderController>();
             GameObject inputreader = GameObject.Find("InputReader");
             configManager = inputreader.GetComponent<ConfigManager>();
-            //GameObject helperCylinder;
             inputReader = inputreader.GetComponent<InputReader>();
             database = GameObject.Find("SQLiter").GetComponent<SQLiter.SQLite>();
             logManager = inputreader.GetComponent<LogManager>();
             multiuserMessageSender = managersParent.GetComponentInChildren<MultiuserMessageSender>();
-            //calculatorCluster = GameObject.Find("Calculator cluster");
             consoleManager = GameObject.Find("Console").GetComponent<ConsoleManager>();
             turnOffThoseLights = GameObject.Find("Light For Testing").GetComponent<TurnOffThoseLights>();
             fpsCounter = GameObject.Find("FPS canvas");
-            //DemoManager demoManager;
             newGraphFromMarkers = createFromMarkerMenu.GetComponent<NewGraphFromMarkers>();
             notificationManager = managersParent.GetComponentInChildren<NotificationManager>();
             tutorialManager = managersParent.GetComponentInChildren<TutorialManager>();
-            // screenCanvas = GameObject.Find("ScreenCanvas").GetComponent<ScreenCanvas>();
             helpVideoManager = leftController.GetComponentInChildren<PlayVideo>(true);
             velocityGenerator = generatorsParent.GetComponentInChildren<VelocityGenerator>(true);
             convexHullGenerator = generatorsParent.GetComponentInChildren<ConvexHullGenerator>(true);
             filterManager = managersParent.GetComponentInChildren<FilterManager>(true);
             reportManager = managersParent.GetComponentInChildren<ReportManager>(true);
-            // reportReader = reportManager.GetComponent<ReportReader>();
             floor = GameObject.Find("Floor").GetComponent<Floor>();
             pdfMesh = GameObject.Find("PDFViewer").GetComponentInChildren<PDFMesh>();
             brainModel = GameObject.Find("BrainParent").GetComponent<AllenReferenceBrain>();

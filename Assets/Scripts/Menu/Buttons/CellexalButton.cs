@@ -1,11 +1,10 @@
-﻿using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
-using CellexalVR.General;
+﻿using CellexalVR.General;
 using CellexalVR.Menu.Buttons.General;
 using CellexalVR.Menu.SubMenus;
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.XR;
-using CellexalVR.Interaction;
+using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Menu.Buttons
 {
@@ -46,9 +45,6 @@ namespace CellexalVR.Menu.Buttons
         [HideInInspector]
         public int popupChoice = 0;
 
-        // OpenXR
-        //protected SteamVR_TrackedObject rightController;
-        //protected SteamVR_Controller.Device device;
         protected ActionBasedController rightController;
         protected InputDevice device;
 
@@ -84,10 +80,8 @@ namespace CellexalVR.Menu.Buttons
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
             rightController = referenceManager.rightController;
-            //device = SteamVR_Controller.Input((int)rightController.index);
             spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             meshRenderer = gameObject.GetComponent<MeshRenderer>();
-            //this.tag = "Menu Controller Collider";
             layerMaskNetwork = LayerMask.NameToLayer("NetworkLayer");
             layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
             layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");

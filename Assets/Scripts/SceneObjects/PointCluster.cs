@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.AnalysisObjects;
-using System.Collections.Generic;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
-using CellexalVR.Interaction;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace CellexalVR.SceneObjects
 {
@@ -28,8 +26,8 @@ namespace CellexalVR.SceneObjects
         private BoxCollider bcFrom, bcMid, bcTo;
         private bool controllerInside;
         // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.InputDevice device;
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private Vector3[] linePosistions;
         private List<LineBetweenTwoPoints> lines = new List<LineBetweenTwoPoints>();
         private bool linesBundled;

@@ -1,12 +1,10 @@
 ﻿using CellexalVR.Interaction;
-using CellexalVR.Menu;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.General
 {
@@ -18,8 +16,6 @@ namespace CellexalVR.General
         private GameObject _InputReader;
         public GameObject CameraRig;
         private GameObject _CameraRig;
-        //public GameObject VRTK;
-        //private GameObject _VRTK;
         public GameObject XRInteractionManager;
         private GameObject _XRInteractionManager;
         public GameObject Managers;
@@ -34,8 +30,6 @@ namespace CellexalVR.General
 
         public GameObject Floor;
         private GameObject _Floor;
-        //public GameObject Calculators;
-        //private GameObject _Calculators;
         public GameObject LightForTesting;
         private GameObject _LightForTesting;
         public GameObject MenuHolder;
@@ -107,10 +101,6 @@ namespace CellexalVR.General
         /// </summary>
         public void BuildScene()
         {
-            //if (Application.isPlaying)
-            //{
-            //    return;
-            //}
             // instantiate missing gameobjects
             buildSceneEnumerator = BuildSceneCoroutine();
             buildSceneEnumerator.MoveNext();
@@ -124,16 +114,12 @@ namespace CellexalVR.General
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Instantiating objects", 0.1f);
             InstantiateSceneAsset(ref _CameraRig, CameraRig);
-            // OpenXR
-            //_CameraRig.GetComponentInChildren<Player>().hands = new Hand[0];
-            //InstantiateSceneAsset(ref _VRTK, VRTK);
             InstantiateSceneAsset(ref _XRInteractionManager, XRInteractionManager);
             InstantiateSceneAsset(ref _Managers, Managers);
             InstantiateSceneAsset(ref _Generators, Generators);
             InstantiateSceneAsset(ref _SQLiter, SQLiter);
             InstantiateSceneAsset(ref _EventSystem, EventSystem);
             InstantiateSceneAsset(ref _Floor, Floor);
-            //InstantiateSceneAsset(ref _Calculators, Calculators);
             InstantiateSceneAsset(ref _LightForTesting, LightForTesting);
             InstantiateSceneAsset(ref _MenuHolder, MenuHolder);
             InstantiateSceneAsset(ref _Loader, Loader);
@@ -154,7 +140,6 @@ namespace CellexalVR.General
             InstantiateSceneAsset(ref _MeshGenerator, MeshGenerator);
             InstantiateSceneAsset(ref _BrainParent, BrainParent);
             InstantiateSceneAsset(ref _PrefabEntities, PrefabEntities);
-            //InstantiateSceneAsset(ref _Teleporting, Teleporting);
             yield return new WaitForSecondsRealtime(0.25f);
             EditorUtility.DisplayProgressBar("Building scene", "Running OnValidate", 0.6f);
 
@@ -268,14 +253,12 @@ namespace CellexalVR.General
         {
             InputReader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/InputReader.prefab");
             CameraRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/CellexalOpenXRRig.prefab");
-            //VRTK = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/[VRTK_Scripts].prefab");
             XRInteractionManager = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/XR Interaction Manager.prefab");
             Managers = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Managers.prefab");
             Generators = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Generators.prefab");
             SQLiter = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SQLiter.prefab");
             EventSystem = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/EventSystem.prefab");
             Floor = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Floor.prefab");
-            //Calculators = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Calculator cluster.prefab");
             LightForTesting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Light For Testing.prefab");
             MenuHolder = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/MenuHolder.prefab");
             Loader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/Tron_Loader.prefab");
@@ -288,7 +271,6 @@ namespace CellexalVR.General
             SpectatorRig = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SpectatorRig.prefab");
             H5Reader = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/H5Reader/H5ReaderTestObjectManager.prefab");
             PDFViewer = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PDFViewer/PDFViewer.prefab");
-            //Teleporting = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Teleport.prefab");
             SnapShotCamera = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Environment/SnapShotCam.prefab");
             ScarfManager = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/ScarfManager.prefab");
             DesktopUI = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/DesktopUI/DesktopUI.prefab");
@@ -352,10 +334,6 @@ namespace CellexalVR.General
                 instance.AutoPopulateGameObjects();
             }
             GUILayout.EndHorizontal();
-            //if (GUILayout.Button("Save all prefabs"))
-            //{
-            //    instance.SaveAllPrefabs();
-            //}
 
             DrawDefaultInspector();
 

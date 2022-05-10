@@ -54,23 +54,5 @@ namespace CellexalVR.Interaction
             flybyMenu.SetSphereGrabbed(false, gameObject, Index, checkpoint);
         }
 
-        // OpenXR
-
-        /// <summary>
-        /// Called through the <see cref="VRTK.VRTK_InteractableObject.InteractableObjectGrabbed"/> event.
-        /// </summary>
-        //private void SphereGrabbed(object sender, InteractableObjectEventArgs e)
-        //{
-        //    flybyMenu.SetSphereGrabbed(true, gameObject, Index, checkpoint);
-        //}
-
-        /// <summary>
-        /// Called through the <see cref="VRTK.VRTK_InteractableObject.InteractableObjectUngrabbed"/> event.
-        /// </summary>
-        //private void SphereUngrabbed(object sender, InteractableObjectEventArgs e)
-        //{
-        //    UpdatePosition();
-        //    flybyMenu.SetSphereGrabbed(false, gameObject, Index, checkpoint);
-        //}
     }
 }
