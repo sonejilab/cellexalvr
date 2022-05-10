@@ -22,6 +22,7 @@ namespace CellexalVR.General
     {
         public string ConfigDir { get; set; }
         public string RscriptexePath { get; set; }
+        public string ScarfscriptPath { get; set; }
         public bool RequireTouchpadClickToInteract { get; set; }
         public string ControllerModel { get; set; }
         public int GraphLoadingCellsPerFrameStartCount { get; set; }
@@ -76,6 +77,7 @@ namespace CellexalVR.General
             {
                 RscriptexePath = c.RscriptexePath;
             }
+            ScarfscriptPath = c.ScarfscriptPath;
             RequireTouchpadClickToInteract = c.RequireTouchpadClickToInteract;
             ControllerModel = c.ControllerModel;
             GraphLoadingCellsPerFrameStartCount = c.GraphLoadingCellsPerFrameStartCount;

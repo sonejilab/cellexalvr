@@ -16,9 +16,9 @@ namespace CellexalVR.DesktopUI
 
         private Label errorDialogField;
 
-        private Toggle vrToggle;
-        private Toggle ghostToggle;
-        private Toggle desktopToggle;
+        private RadioButton vrToggle;
+        private RadioButton ghostToggle;
+        private RadioButton desktopToggle;
 
         private Button backButton;
         private Button createRoomButton;
@@ -52,9 +52,9 @@ namespace CellexalVR.DesktopUI
 
             errorDialogField = root.Q<Label>("error-message");
 
-            vrToggle = root.Q<Toggle>("vr-toggle");
-            ghostToggle = root.Q<Toggle>("ghost-toggle");
-            desktopToggle = root.Q<Toggle>("desktop-toggle");
+            vrToggle = root.Q<RadioButton>("vr-toggle");
+            ghostToggle = root.Q<RadioButton>("ghost-toggle");
+            desktopToggle = root.Q<RadioButton>("desktop-toggle");
 
             backButton = root.Q<Button>("back-button");
             createRoomButton = root.Q<Button>("create-button");
@@ -90,18 +90,18 @@ namespace CellexalVR.DesktopUI
                     ErrorDialog = "Not connected. Check console output. Detailed connection state: " + PhotonNetwork.connectionStateDetailed + " Server: " + PhotonNetwork.ServerAddress;
                 }
 
-                //if (this.connectFailed)
-                //{
-                //    ErrorDialog = "Connection failed. Check setup and use Setup Wizard to fix configuration.";
-                //    ErrorDialog = $"Server: {new object[] { PhotonNetwork.ServerAddress }}";
-                //    GUILayout.Label("AppId: " + PhotonNetwork.PhotonServerSettings.AppID.Substring(0, 8) + "****"); // only show/log first 8 characters. never log the full AppId.
+                if (this.connectFailed)
+                {
+                    ErrorDialog = "Connection failed. Check setup and use Setup Wizard to fix configuration.";
+                    ErrorDialog = $"Server: {new object[] { PhotonNetwork.ServerAddress }}";
+                    //GUILayout.Label("AppId: " + PhotonNetwork.PhotonServerSettings.AppID.Substring(0, 8) + "****"); // only show/log first 8 characters. never log the full AppId.
 
-                //    if (GUILayout.Button("Try Again", GUILayout.Width(100)))
-                //    {
-                //        this.connectFailed = false;
-                //        PhotonNetwork.ConnectUsingSettings("0.9");
-                //    }
-                //}
+                    //if (GUILayout.Button("Try Again", GUILayout.Width(100)))
+                    //{
+                    //    this.connectFailed = false;
+                    //    PhotonNetwork.ConnectUsingSettings("0.9");
+                    //}
+                }
                 return;
             }
         }
@@ -116,8 +116,10 @@ namespace CellexalVR.DesktopUI
             }
         }
 
+
         private void OnToggleMode(string mode)
         {
+            print($"toggle {mode}");
             switch (mode)
             {
                 case "vr":
@@ -175,7 +177,7 @@ namespace CellexalVR.DesktopUI
         {
             string password = passwordField.value;
             string roomAndPass = roomNameField.value + passwordField.value;
-            if (!(vrToggle.value || desktopToggle.value || ghostToggle.value))
+            if (!vrToggle.value && !desktopToggle.value && !ghostToggle.value)
             {
                 ErrorDialog = "Please select a viewing mode.";
                 return false;
@@ -234,8 +236,6 @@ namespace CellexalVR.DesktopUI
         {
             Debug.Log("As OnConnectedToMaster() got called, the PhotonServerSetting.AutoJoinLobby must be off. Joining lobby by calling PhotonNetwork.JoinLobby().");
             PhotonNetwork.JoinLobby();
-
-            StartCoroutine(ReferenceManager.instance.multiuserMessageSender.Init());
         }
 
 

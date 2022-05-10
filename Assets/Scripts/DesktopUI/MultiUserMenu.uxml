@@ -1,36 +1,41 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="mainStyleSheet.uss" />
-    <ui:VisualElement name="screen" style="flex-grow: 1; align-items: center; -unity-font-definition: resource(&apos;FontAssets/DynamicOSFontAssets/GlobalFallback/OSX/Helvetica SDF&apos;); -unity-font: resource(&apos;Fonts &amp; Materials/Oswald-Bold&apos;); color: rgb(255, 255, 255); justify-content: center;">
-        <ui:VisualElement name="container" style="border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-left-color: rgba(89, 89, 89, 0.12); border-right-color: rgba(89, 89, 89, 0.12); border-top-color: rgba(89, 89, 89, 0.12); border-bottom-color: rgba(89, 89, 89, 0.12); background-color: rgba(89, 89, 89, 0); align-items: stretch; justify-content: space-between; padding-left: 14px; padding-right: 14px; padding-top: 14px; padding-bottom: 14px; font-size: 20px; letter-spacing: 6px; -unity-font-style: normal; -unity-text-align: upper-left; -unity-font: url(&apos;/Assets/Samples/UI Builder/1.0.0-preview.17/TanksMainMenu/Editor/Resources/UI Builder/TanksMainMenu/Teko-Regular.ttf&apos;);">
+    <Style src="project://database/Assets/Scripts/DesktopUI/mainStyleSheet.uss?fileID=7433441132597879392&amp;guid=9c1933af9180dd647920416a67c9a28c&amp;type=3#mainStyleSheet" />
+    <ui:VisualElement name="screen" style="flex-grow: 1; align-items: center; -unity-font-definition: resource(&apos;&apos;); -unity-font: resource(&apos;&apos;); color: rgb(255, 255, 255); justify-content: center;">
+        <ui:VisualElement name="container" style="border-top-left-radius: 4px; border-bottom-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-left-color: rgba(89, 89, 89, 0.12); border-right-color: rgba(89, 89, 89, 0.12); border-top-color: rgba(89, 89, 89, 0.12); border-bottom-color: rgba(89, 89, 89, 0.12); background-color: rgba(89, 89, 89, 0); align-items: stretch; justify-content: space-between; padding-left: 14px; padding-right: 14px; padding-top: 14px; padding-bottom: 14px; font-size: 20px; letter-spacing: 6px; -unity-font-style: normal; -unity-text-align: upper-left; -unity-font: url(&apos;/Assets/Samples/UI Builder/1.0.0-preview.17/TanksMainMenu/Editor/Resources/UI Builder/TanksMainMenu/Teko-Regular.ttf&apos;); width: 711px;">
             <ui:VisualElement name="header" style="flex-direction: row; align-items: center; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px;">
-                <ui:Label text="JOIN OR CREATE ROOM" display-tooltip-when-elided="true" name="header" class="main-header subheader" style="-unity-text-align: middle-left;" />
+                <ui:Label text="JOIN OR CREATE ROOM" display-tooltip-when-elided="true" name="header" class="main-header subheader" style="-unity-text-align: middle-left; -unity-font-style: bold; -unity-font: none; -unity-font-definition: url(&apos;project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&amp;guid=129b770ca1ffd9f409ff7a3813fb3b68&amp;type=2#SpaceGrotesk-Regular SDF_fontasset&apos;); letter-spacing: 4px;" />
             </ui:VisualElement>
             <ui:VisualElement style="align-items: stretch; flex-direction: row; justify-content: space-between; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px;">
-                <ui:VisualElement name="inputfields" style="flex-direction: column; align-items: auto; justify-content: space-between;">
-                    <ui:TextField picking-mode="Ignore" value="default_user" text="default_user" name="user-name" class="input-argument" style="-unity-background-image-tint-color: rgb(255, 255, 255); flex-direction: row-reverse;">
-                        <ui:Label text="USER NAME:" display-tooltip-when-elided="true" style="-unity-text-align: middle-left; -unity-font: resource(&apos;Fonts &amp; Materials/Oswald-Bold&apos;);" />
+                <ui:VisualElement name="inputfields" style="flex-direction: column; align-items: auto; justify-content: space-between; -unity-font-definition: url(&apos;project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&amp;guid=129b770ca1ffd9f409ff7a3813fb3b68&amp;type=2#SpaceGrotesk-Regular SDF_fontasset&apos;);">
+                    <ui:TextField picking-mode="Ignore" value="default_user" text="default_user" name="user-name" class="input-argument input-field-label" style="flex-direction: row-reverse; flex-grow: 0; -unity-text-align: middle-left;">
+                        <ui:Label text="USER NAME:" display-tooltip-when-elided="true" style="flex-shrink: 1; flex-grow: 1; align-items: flex-start; flex-direction: column;" />
                     </ui:TextField>
-                    <ui:TextField picking-mode="Ignore" text="default_room" name="room-name" value="default_room" class="input-text-field input-argument">
-                        <ui:Label text="ROOM NAME:" display-tooltip-when-elided="true" />
+                    <ui:TextField picking-mode="Ignore" text="default_room" name="room-name" value="default_room" class="input-text-field input-argument" style="-unity-font-definition: none;">
+                        <ui:Label text="ROOM NAME:" display-tooltip-when-elided="true" class="input-field-label" />
                     </ui:TextField>
                     <ui:TextField picking-mode="Ignore" name="password" mask-character="*" password="true" class="input-text-field input-argument">
-                        <ui:Label text="PASSWORD:" display-tooltip-when-elided="true" />
+                        <ui:Label text="PASSWORD:" display-tooltip-when-elided="true" class="input-field-label" />
                     </ui:TextField>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="modebuttons" style="flex-direction: row-reverse; flex-grow: 0; justify-content: space-between; align-items: center; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;">
+            <ui:VisualElement name="modebuttons" style="flex-direction: row-reverse; flex-grow: 0; justify-content: space-between; align-items: center; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; display: none;">
                 <ui:Toggle name="desktop-toggle" class="mode-toggle" style="justify-content: space-around; align-items: center; flex-direction: row-reverse; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
-                <ui:Label text="DESKTOP MODE:" display-tooltip-when-elided="true" style="-unity-font: resource(&apos;Fonts &amp; Materials/Oswald-Bold&apos;);" />
+                <ui:Label text="DESKTOP MODE:" display-tooltip-when-elided="true" class="input-field-label" />
                 <ui:Toggle name="ghost-toggle" class="mode-toggle" style="align-items: center; justify-content: center;" />
-                <ui:Label text="GHOST MODE:" display-tooltip-when-elided="true" style="-unity-font: resource(&apos;Fonts &amp; Materials/Oswald-Bold&apos;);" />
+                <ui:Label text="GHOST MODE:" display-tooltip-when-elided="true" class="input-field-label" />
                 <ui:Toggle value="true" name="vr-toggle" class="mode-toggle" />
-                <ui:Label text="VR VIEW:" display-tooltip-when-elided="true" style="-unity-font: resource(&apos;Fonts &amp; Materials/Oswald-Bold&apos;);" />
+                <ui:Label text="VR VIEW:" display-tooltip-when-elided="true" class="input-field-label" />
             </ui:VisualElement>
-            <ui:VisualElement name="button-row" style="flex-direction: row; justify-content: space-between; align-items: center; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px;">
-                <ui:Button text="BACK" display-tooltip-when-elided="true" name="back-button" class="button back-button" />
-                <ui:VisualElement name="join-create-buttons" style="flex-direction: row; align-items: stretch;">
-                    <ui:Button text="CREATE ROOM" display-tooltip-when-elided="true" name="create-button" class="button" />
-                    <ui:Button text="JOIN ROOM" display-tooltip-when-elided="true" name="join-button" class="button" />
+            <ui:RadioButtonGroup value="-1" name="mode-toggle" style="align-items: center; justify-content: flex-start; flex-grow: 1; flex-shrink: 0; -unity-text-align: upper-left; margin-right: 0; margin-left: 0; flex-wrap: nowrap; flex-direction: row-reverse;">
+                <ui:RadioButton label="VR MODE" name="vr-toggle" value="true" />
+                <ui:RadioButton label="GHOST MODE" name="ghost-toggle" />
+                <ui:RadioButton label="DESKTOP MODE" name="desktop-toggle" style="align-items: center; justify-content: flex-start;" />
+            </ui:RadioButtonGroup>
+            <ui:VisualElement name="button-row" style="flex-direction: row; justify-content: space-between; align-items: center; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px; -unity-font-definition: url(&apos;project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&amp;guid=129b770ca1ffd9f409ff7a3813fb3b68&amp;type=2#SpaceGrotesk-Regular SDF_fontasset&apos;);">
+                <ui:Button text="BACK" display-tooltip-when-elided="true" name="back-button" class="button back-button" style="-unity-font-definition: url(&apos;project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&amp;guid=129b770ca1ffd9f409ff7a3813fb3b68&amp;type=2#SpaceGrotesk-Regular SDF_fontasset&apos;); -unity-font: none;" />
+                <ui:VisualElement name="join-create-buttons" style="flex-direction: row; align-items: stretch; -unity-font-definition: none; -unity-font: none;">
+                    <ui:Button text="CREATE ROOM" display-tooltip-when-elided="true" name="create-button" class="button" style="-unity-font-definition: url(&apos;project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&amp;guid=129b770ca1ffd9f409ff7a3813fb3b68&amp;type=2#SpaceGrotesk-Regular SDF_fontasset&apos;);" />
+                    <ui:Button text="JOIN ROOM" display-tooltip-when-elided="true" name="join-button" class="button" style="-unity-font-definition: url(&apos;project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&amp;guid=129b770ca1ffd9f409ff7a3813fb3b68&amp;type=2#SpaceGrotesk-Regular SDF_fontasset&apos;);" />
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>

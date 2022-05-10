@@ -7878,6 +7878,9 @@ MonoBehaviour:
   hpReverbControllerPrefab: {fileID: 4254578490054511512, guid: 9ae26b16ff4e6b940b8b82cb720b7b1f,
     type: 3}
   ActualModel: 0
+  colorMode: 0
+  defaultStaticMaterial: {fileID: 0}
+  animatedPulseMaterial: {fileID: 0}
 --- !u!65 &1638506007
 BoxCollider:
   m_ObjectHideFlags: 0

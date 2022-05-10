@@ -62,7 +62,6 @@ namespace CellexalVR.DesktopUI
         public void ShowFileDialog()
         {
             SetRScriptPath(StandaloneFileBrowser.OpenFilePanel("Select File", "", "exe", false));
-            
         }
 
 

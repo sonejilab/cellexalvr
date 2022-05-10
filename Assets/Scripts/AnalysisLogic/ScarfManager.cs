@@ -110,9 +110,6 @@ namespace CellexalVR.AnalysisLogic
         {
             string res = "";
             Thread t = new Thread(() => { res = StartServer(); });
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-            t.Start();
         }
 
         private string StartServer()

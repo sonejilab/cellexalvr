@@ -24,10 +24,11 @@
     flex-wrap: nowrap;
     flex-grow: 0;
     display: flex;
-    -unity-font-definition: resource('FontAssets/DynamicOSFontAssets/GlobalFallback/OSX/Helvetica SDF');
-    -unity-font: resource('Fonts & Materials/Oswald-Bold');
+    -unity-font-definition: resource('');
+    -unity-font: resource('');
     font-size: 17px;
     letter-spacing: 8px;
+    -unity-font-style: normal;
 }
 
 .button-row {
@@ -59,7 +60,10 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     padding-left: 10px;
-    -unity-font: resource('Fonts & Materials/Oswald-Bold');
+    -unity-font: resource('StyleSheets/Samples_UnityDefaultRuntimeTheme');
+    -unity-font-definition: none;
+    -unity-font-style: normal;
+    font-size: 18px;
 }
 
 .button:hover {
@@ -93,14 +97,10 @@
     padding-bottom: 3px;
     flex-grow: 0;
     align-items: stretch;
-}
-
-.input-text-field {
-    flex-direction: row-reverse;
-    -unity-text-align: upper-left;
-    align-items: center;
-    -unity-font: resource('Fonts & Materials/Anton');
-    -unity-font-definition: resource('Fonts & Materials/Anton SDF');
+    -unity-font-definition: none;
+    -unity-font: resource('');
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out-sine;
 }
 
 .input-card:hover {
@@ -109,6 +109,8 @@
     border-right-color: rgb(145, 255, 112);
     border-top-color: rgb(145, 255, 112);
     border-bottom-color: rgb(145, 255, 112);
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out-sine;
 }
 
 .input-card-header-container {
@@ -144,10 +146,10 @@
     margin-bottom: 0;
     color: rgb(0, 220, 255);
     -unity-font-style: normal;
-    -unity-font: resource('Fonts & Materials/Oswald-Bold');
-    -unity-font-definition: resource('FontAssets/DynamicOSFontAssets/GlobalFallback/OSX/Helvetica SDF');
+    -unity-font: resource('');
     font-size: 16px;
     letter-spacing: 6px;
+    -unity-font-definition: url('project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&guid=129b770ca1ffd9f409ff7a3813fb3b68&type=2#SpaceGrotesk-Regular SDF_fontasset');
 }
 
 .inactive {
@@ -193,11 +195,14 @@
 .message-label {
     color: rgb(255, 98, 0);
     display: none;
+    -unity-font-definition: none;
+    -unity-font: url('project://database/Assets/Fonts/SpaceGrotesk-Regular.ttf?fileID=12800000&guid=7bcf7850b816ff0468a71ae45219f924&type=3#SpaceGrotesk-Regular');
+    -unity-font-style: normal;
 }
 
 .header-logo {
     flex-grow: 1;
-    background-image: url('/Assets/Images/Logo/logo_white_outline.png');
+    background-image: url('project://database/Assets/Images/Logo/logo_white_outline.png?fileID=21300000&guid=593ef0f4da314d046afdde5560b4700d&type=3#logo_white_outline');
     align-items: center;
     flex-shrink: 0;
     width: 650px;
@@ -244,6 +249,10 @@
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
+    -unity-font-definition: none;
+    -unity-font: url('project://database/Assets/Fonts/SpaceGrotesk-Regular.ttf?fileID=12800000&guid=7bcf7850b816ff0468a71ae45219f924&type=3#SpaceGrotesk-Regular');
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out-sine;
 }
 
 .image-container {
@@ -271,7 +280,7 @@
     padding-top: 9px;
     padding-bottom: 9px;
     -unity-font-definition: none;
-    -unity-font: resource('Fonts & Materials/Oswald-Bold');
+    -unity-font: resource('');
     font-size: 20px;
     letter-spacing: 0;
     border-left-color: rgb(255, 255, 255);
@@ -279,10 +288,12 @@
     border-top-color: rgb(255, 255, 255);
     border-bottom-color: rgb(255, 255, 255);
     color: rgb(130, 130, 130);
+    transition-duration: 0.25s;
+    transition-timing-function: ease-in-out-sine;
 }
 
 .card-image {
-    background-image: url('/Assets/Images/Logo/scarflogo.png');
+    background-image: url('project://database/Assets/Images/Logo/scarflogo.png?fileID=21300000&guid=185d45fef16de4c429c0ac3640d6602b&type=3#scarflogo');
     flex-grow: 1;
     justify-content: flex-start;
     align-items: stretch;
@@ -295,6 +306,9 @@
 
 .card-image:hover {
     background-color: rgb(255, 255, 255);
+    transition-timing-function: ease-in-out-sine;
+    transition-duration: 0.4s;
+    transition-property: all;
 }
 
 .option-button:hover {
@@ -303,11 +317,15 @@
     border-right-color: rgb(145, 255, 112);
     border-top-color: rgb(145, 255, 112);
     border-bottom-color: rgb(145, 255, 112);
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out-sine;
 }
 
 .option-button:hover .card-image {
     background-color: rgb(255, 255, 255);
     -unity-background-image-tint-color: rgb(255, 255, 255);
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out-sine;
 }
 
 .sponsor-logo {
@@ -358,7 +376,8 @@
     padding-right: 0;
     padding-top: 0;
     padding-bottom: 0;
-    -unity-font: resource('Fonts & Materials/Oswald-Bold');
+    -unity-font: resource('');
+    -unity-font-definition: url('project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&guid=129b770ca1ffd9f409ff7a3813fb3b68&type=2#SpaceGrotesk-Regular SDF_fontasset');
 }
 
 .back-button {
@@ -371,16 +390,75 @@
 .option-button:hover .option-card-label {
     color: rgb(145, 255, 112);
     -unity-font: resource('Fonts & Materials/Oswald-Bold');
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out-sine;
 }
 
 .gear-icon {
     left: -23px;
     top: -23px;
     flex-shrink: 0;
-    background-image: url('/Assets/Images/Icons/gearicon.png');
+    background-image: url('project://database/Assets/Images/Icons/gearicon.png?fileID=2800000&guid=652c347dbc0ab1649929942b1d4322ce&type=3#gearicon');
     flex-grow: 0;
     width: 46px;
     height: 46px;
     display: flex;
     -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.unity-radio-button:checked > .unity-label {
+    color: rgb(0, 255, 32);
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in-out-sine;
+}
+
+.input-field-label {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    flex-direction: row-reverse;
+    -unity-font-definition: url('project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&guid=129b770ca1ffd9f409ff7a3813fb3b68&type=2#SpaceGrotesk-Regular SDF_fontasset');
+    -unity-text-align: middle-left;
+    -unity-font-style: normal;
+    letter-spacing: 4px;
+    -unity-text-outline-width: 0;
+    -unity-text-outline-color: rgba(255, 0, 146, 255);
+    font-size: 24px;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 255);
+    justify-content: flex-start;
+    align-items: center;
+    flex-grow: 0;
+    white-space: normal;
+}
+
+.unity-radio-button > .unity-label {
+    color: rgba(255, 255, 255, 255);
+    -unity-font-definition: url('project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&guid=129b770ca1ffd9f409ff7a3813fb3b68&type=2#SpaceGrotesk-Regular SDF_fontasset');
+    -unity-font-style: normal;
+    font-size: 24px;
+    -unity-text-align: middle-left;
+    flex-direction: row;
+    align-items: center;
+}
+
+.unity-radio-button {
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    -unity-text-align: upper-left;
+    flex-grow: 0;
+    font-size: 10px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.input-text-field {
+    -unity-font-definition: url('project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&guid=129b770ca1ffd9f409ff7a3813fb3b68&type=2#SpaceGrotesk-Regular SDF_fontasset');
+    flex-direction: row-reverse;
+    align-items: center;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 255);
+}
+
+.button {
+    -unity-font-definition: url('project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&guid=129b770ca1ffd9f409ff7a3813fb3b68&type=2#SpaceGrotesk-Regular SDF_fontasset');
+    -unity-font-style: normal;
+    color: rgba(255, 255, 255, 255);
 }
