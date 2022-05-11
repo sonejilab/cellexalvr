@@ -209,7 +209,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
             }
             yield return StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
-            graphGenerator.isCreating = true;
+            //graphGenerator.isCreating = true;
             attributeReader = gameObject.AddComponent<AttributeReader>();
             attributeReader.referenceManager = referenceManager;
             StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7195558450971330201}
   - component: {fileID: 5737714599567699695}
   - component: {fileID: 8329143085269582066}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: HeatmapTexturePrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
