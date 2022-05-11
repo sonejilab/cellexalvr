@@ -68,6 +68,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _PulseGradient:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _RotationTex:
         m_Texture: {fileID: 2800000, guid: 25eb3efef18a39c4c92c86597f56e8bf, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -78,6 +82,7 @@ Material:
     - _Blend: 0
     - _BlendOp: 0
     - _BumpScale: 1
+    - _CoordinateFactor: 6
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -94,6 +99,7 @@ Material:
     - _PulseDuration: 2
     - _PulseFade: 0.25
     - _PulseInnerRadius: 0.03
+    - _PulseLength: 10
     - _PulseMaxRadius: 0.5
     - _PulseOuterRadius: 0.25
     - _PulseRotationSpeed: 100
@@ -107,6 +113,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _TimeScaleFactor: 25
     - _UVSec: 0
     - _WaveDuration: 2
     - _WaveMaxRadius: 1
@@ -119,6 +126,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0.2354416, b: 0.32987696, a: 1}
     - _LaserHitColor: {r: 0.033018887, g: 0.8257702, b: 1, a: 1}
+    - _MainColor: {r: 0, g: 0, b: 0, a: 1}
     - _PulseColor: {r: 0, g: 0.84705883, b: 1, a: 1}
     - _PulseCoords: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _ScaleCorrection: {r: 1, g: 1, b: 1, a: 1}
