@@ -63,7 +63,6 @@ MonoBehaviour:
   - RecieveMessageClearLinesBetweenGps
   - RecieveMessageClearLinesWithColor
   - RecieveMessageColorByAttribute
-  - RecieveMessageColorByAttributePointCloud
   - RecieveMessageColorByIndex
   - RecieveMessageColorGraphsByGene
   - RecieveMessageColoringMethodChanged
@@ -74,7 +73,6 @@ MonoBehaviour:
   - RecieveMessageCreateMarkerGraph
   - RecieveMessageCreateNewHeatmapFromSelection
   - RecieveMessageCubeColoured
-  - RecieveMessageCumulativeRecolorFromSelection
   - RecieveMessageDeactivateSelectedArea
   - RecieveMessageDeleteObject
   - RecieveMessageDisableColliders
@@ -83,7 +81,6 @@ MonoBehaviour:
   - RecieveMessageEnableColliders
   - RecieveMessageEnlargeNetwork
   - RecieveMessageExportAnnotations
-  - RecieveMessageGenerateMeshes
   - RecieveMessageGenerateNetworks
   - RecieveMessageGenerateRainbowColors
   - RecieveMessageGenerateRandomColors
@@ -93,7 +90,6 @@ MonoBehaviour:
   - RecieveMessageGraphUngrabbed
   - RecieveMessageH5Config
   - RecieveMessageHandleBoxSelection
-  - RecieveMessageHandleHistoryPanelClick
   - RecieveMessageHandleHitAttributeBar
   - RecieveMessageHandleHitGenesList
   - RecieveMessageHandleHitGroupingBar
@@ -120,7 +116,6 @@ MonoBehaviour:
   - RecieveMessageMoveNetworkCenter
   - RecieveMessageMoveSelectedArea
   - RecieveMessageMoveSelection
-  - RecieveMessageNetworkArcButtonClicked
   - RecieveMessageNetworkCenterUngrabbed
   - RecieveMessageNetworkUngrabbed
   - RecieveMessageReadFolder
@@ -136,28 +131,19 @@ MonoBehaviour:
   - RecieveMessageResetHeatmapHighlight
   - RecieveMessageResetInfoTexts
   - RecieveMessageResetSelecting
-  - RecieveMessageScroll
-  - RecieveMessageScrollStack
   - RecieveMessageSearchLockToggled
   - RecieveMessageSelectionLegendChangePage
+  - RecieveMessageSetArcsVisible
   - RecieveMessageSetCombinedArcsVisible
   - RecieveMessageSetFilter
   - RecieveMessageShowGraph
   - RecieveMessageShowHeatmap
   - RecieveMessageShowNetwork
-  - RecieveMessageSliceGraphAutomatic
-  - RecieveMessageSliceGraphFromSelection
-  - RecieveMessageSliceGraphManual
-  - RecieveMessageSpawnModel
-  - RecieveMessageSpreadMeshes
-  - RecieveMessageSpreadPoints
   - RecieveMessageStartVelocity
   - RecieveMessageStopVelocity
   - RecieveMessageSwitchMode
   - RecieveMessageSwitchNetworkLayout
   - RecieveMessageSynchConfig
-  - RecieveMessageToggleAllArcs
-  - RecieveMessageToggleAllAttributesPointCloud
   - RecieveMessageToggleAverageVelocity
   - RecieveMessageToggleAxes
   - RecieveMessageToggleBundle
@@ -166,12 +152,14 @@ MonoBehaviour:
   - RecieveMessageToggleInfoPanels
   - RecieveMessageToggleLaser
   - RecieveMessageToggleLegend
-  - RecieveMessageToggleReferenceOrgan
   - RecieveMessageToggleTransparency
   - RecieveMessageUnhighlightNetworkNode
-  - RecieveMessageUpdateCullingBox
-  - ReciveMessageToggleAnnotationFile
-  - ReciveMessageToggleSelectionFile
   - RequestForPickupItems
   - RequestForPickupTimes
+  - RecieveMessageCumulativeRecolorFromSelection
+  - RecieveMessageHandleHistoryPanelClick
+  - RecieveMessageNetworkArcButtonClicked
+  - RecieveMessageToggleAllArcs
+  - ReciveMessageToggleAnnotationFile
+  - ReciveMessageToggleSelectionFile
   DisableAutoOpenWizard: 1
