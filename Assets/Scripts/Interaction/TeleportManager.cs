@@ -48,10 +48,8 @@ namespace Assets.Scripts.Interaction
         {
             rayInteractor.enabled = false;
             _requireToggleToClick = false;
-            //touchPadPos.action.performed += OnTeleportActivate;
-            //touchPadPos.action.canceled += OnTeleportDeactivate;
-            //touchPadClick.action.performed += OnTeleportActivate;
-            //touchPadClick.action.canceled += OnTeleportDeactivate;
+            touchPadPos.action.performed += OnTeleportActivate;
+            touchPadPos.action.canceled += OnTeleportDeactivate;
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
 

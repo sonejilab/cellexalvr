@@ -78,15 +78,16 @@ namespace CellexalVR.Interaction
                 Destroy(this);
             }
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer")
-                | 1 << LayerMask.NameToLayer("EnvironmentButtonLayer") | 1 << LayerMask.NameToLayer("Ignore Raycast");
+            layerMask = ReferenceManager.instance.rightLaser.interactionLayers;
+            //layerMask = 1 << LayerMask.NameToLayer("GraphLayer") | 1 << LayerMask.NameToLayer("NetworkLayer")
+            //    | 1 << LayerMask.NameToLayer("EnvironmentButtonLayer") | 1 << LayerMask.NameToLayer("Ignore Raycast");
         }
 
         private void Update()
         {
             if (!_requireToggleToClick || touchPadClick.action.ReadValue<float>() > 0)
             {
-                if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+                if (!ReferenceManager.instance.rightLaser.enabled)
                     return;
                 Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
                 if (pos.y > 0.5f)
@@ -102,7 +103,7 @@ namespace CellexalVR.Interaction
 
         private void OnTouchPadClick(InputAction.CallbackContext context)
         {
-            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.TwoLasers)
+            if (!ReferenceManager.instance.rightLaser.enabled)
                 return;
             Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
             if (pos.y > 0.5f)
@@ -138,19 +139,21 @@ namespace CellexalVR.Interaction
             Vector3 dir = position - raycastingSource.position;
             dir = -dir.normalized;
             position += dir * distanceMultiplier;
-            hit.transform.position = position;
             if (hit.transform.GetComponent<Graph>())
             {
+                hit.transform.position = position;
                 referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<NetworkHandler>())
             {
                 // hit.transform.LookAt(referenceManager.headset.transform);
                 // hit.transform.Rotate(0, 0, 180);
+                hit.transform.position = position;
                 referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<NetworkCenter>())
             {
+                hit.transform.position = position;
                 NetworkHandler handler = hit.transform.GetComponent<NetworkCenter>().Handler;
                 hit.transform.LookAt(referenceManager.headset.transform);
                 hit.transform.Rotate(0, 0, 180);
@@ -159,9 +162,17 @@ namespace CellexalVR.Interaction
             }
             else if (hit.transform.GetComponent<LegendManager>())
             {
+                hit.transform.position = position;
                 hit.transform.LookAt(raycastingSource.transform);
                 hit.transform.Rotate(0, 180, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveLegend(hit.transform.position, hit.transform.rotation, hit.transform.localScale);
+            }
+            else if (hit.transform.GetComponent<Heatmap>())
+            {
+                hit.transform.position = position;
+                hit.transform.LookAt(referenceManager.headset.transform);
+                hit.transform.Rotate(0, 180, 0);
+                referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
         }
 
@@ -181,19 +192,21 @@ namespace CellexalVR.Interaction
             Vector3 dir = position - raycastingSource.position;
             dir = dir.normalized;
             position += dir * distanceMultiplier;
-            hit.transform.position = position;
             if (hit.transform.GetComponent<Graph>())
             {
+                hit.transform.position = position;
                 referenceManager.multiuserMessageSender.SendMessageMoveGraph(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<NetworkHandler>())
             {
                 // hit.transform.LookAt(referenceManager.headset.transform);
                 // hit.transform.Rotate(0, 0, 180);
+                hit.transform.position = position;
                 referenceManager.multiuserMessageSender.SendMessageMoveNetwork(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<NetworkCenter>())
             {
+                hit.transform.position = position;
                 NetworkHandler handler = hit.transform.GetComponent<NetworkCenter>().Handler;
                 hit.transform.LookAt(referenceManager.headset.transform);
                 hit.transform.Rotate(0, 0, 180);
@@ -202,12 +215,14 @@ namespace CellexalVR.Interaction
             }
             else if (hit.transform.GetComponent<LegendManager>())
             {
+                hit.transform.position = position;
                 hit.transform.LookAt(raycastingSource.transform);
                 hit.transform.Rotate(0, 180, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveLegend(hit.transform.position, hit.transform.rotation, hit.transform.localScale);
             }
             else if (hit.transform.GetComponent<Heatmap>())
             {
+                hit.transform.position = position;
                 hit.transform.LookAt(referenceManager.headset.transform);
                 hit.transform.Rotate(0, 180, 0);
                 referenceManager.multiuserMessageSender.SendMessageMoveHeatmap(hit.transform.gameObject.name, hit.transform.localPosition, hit.transform.localRotation, hit.transform.localScale);

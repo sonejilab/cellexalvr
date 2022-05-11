@@ -54,7 +54,7 @@ namespace CellexalVR.Menu
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
 
-        void Start()
+        private void Start()
         {
             // Reset rotation in case it is changed in the editor.
             transform.localRotation = Quaternion.Euler(-45f, 0f, 0f);

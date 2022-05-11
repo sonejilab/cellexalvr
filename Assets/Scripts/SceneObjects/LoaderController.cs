@@ -148,6 +148,10 @@ namespace CellexalVR.SceneObjects
 
             keyboard.SetActive(false);
             helpVideoObj.SetActive(false);
+            foreach (Collider col in helpVideoObj.GetComponentsInChildren<Collider>())
+            {
+                col.enabled = false;
+            }
             // multiple_exp datasetList.gameObject.SetActive(false);
             DestroyFolderColliders();
             DestroyCells();

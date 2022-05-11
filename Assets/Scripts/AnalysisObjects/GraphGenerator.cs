@@ -842,6 +842,7 @@ namespace CellexalVR.AnalysisObjects
 
             var handle = job.Schedule(nbrOfClusters, 1);
             yield return new WaitWhile(() => !handle.IsCompleted);
+
             handle.Complete();
 
             // instantiate everything
@@ -967,26 +968,9 @@ namespace CellexalVR.AnalysisObjects
             sharedMaterial = newGraph.lodGroupClusters[lodGroup][0].GetComponent<Renderer>().sharedMaterial;
             sharedMaterial.mainTexture = newGraph.textures[lodGroup];
 
-            if (slice != null)
-            {
-                // slice.textureWidths[lodGroup] = nbrOfMaxPointsPerClusters; //16000
-                // slice.textureHeights[lodGroup] = nbrOfClusters; //170000 / 16000;
-                // slice.textures[lodGroup] = texture;
-                // sharedMaterial = slice.lodGroupClusters[lodGroup][0].GetComponent<Renderer>().sharedMaterial;
-                // sharedMaterial.mainTexture = slice.textures[lodGroup];
-            }
-
-            else
-            {
-            }
-
-
             Shader graphpointShader = sharedMaterial.shader;
             sharedMaterial.SetTexture("_GraphpointColorTex", graphPointColors);
 
-            // stopwatch.Stop();
-            // CellexalLog.Log(string.Format("made meshes for {0} in {1}", newGraph.GraphName,
-            //     stopwatch.Elapsed.ToString()));
             isCreating = false;
         }
 

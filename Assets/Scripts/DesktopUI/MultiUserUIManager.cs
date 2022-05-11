@@ -119,7 +119,6 @@ namespace CellexalVR.DesktopUI
 
         private void OnToggleMode(string mode)
         {
-            print($"toggle {mode}");
             switch (mode)
             {
                 case "vr":

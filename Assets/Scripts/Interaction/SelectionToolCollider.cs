@@ -166,6 +166,7 @@ namespace CellexalVR.Interaction
                 UpdateColors();
             }
             _requireToggleToClick = false;
+            touchPadClick.action.performed -= OnTouchPadClick;
             touchPadPos.action.performed += OnTouchPadClick;
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
 
@@ -194,7 +195,6 @@ namespace CellexalVR.Interaction
             if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 vfx.gameObject.SetActive(true);
-                //particles.gameObject.SetActive(true);
                 selectionToolMaterial.SetFloat("_SelectionActive", 1);
                 selActive = true;
             }
