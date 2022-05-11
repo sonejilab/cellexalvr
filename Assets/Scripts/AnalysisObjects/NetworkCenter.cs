@@ -688,9 +688,9 @@ namespace CellexalVR.AnalysisObjects
             rigidbody.drag = 10;
             rigidbody.angularDrag = 15;
             // Open XR
-            var interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
-            interactableObject.referenceManager = referenceManager;
-            interactableObject.enabled = true;
+            //var interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
+            //interactableObject.referenceManager = referenceManager;
+            //interactableObject.enabled = true;
             //interactableObject.isGrabbable = true;
             //interactableObject.isUsable = false;
             //var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();
