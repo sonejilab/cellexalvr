@@ -6482,6 +6482,7 @@ GameObject:
   - component: {fileID: 435732290}
   - component: {fileID: 2913556859822100947}
   - component: {fileID: 1511405162}
+  - component: {fileID: 5654322544240891663}
   m_Layer: 0
   m_Name: Light
   m_TagString: Untagged
@@ -6607,6 +6608,26 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
 --- !u!114 &1511405162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 637675469643489289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+--- !u!114 &5654322544240891663
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7879,8 +7900,10 @@ MonoBehaviour:
     type: 3}
   ActualModel: 0
   colorMode: 0
-  defaultStaticMaterial: {fileID: 0}
-  animatedPulseMaterial: {fileID: 0}
+  defaultStaticMaterial: {fileID: 2100000, guid: cc151daa0e8ba3c48abed9c86b2e090d,
+    type: 2}
+  animatedPulseMaterial: {fileID: 2100000, guid: 1acb6b523c0ab4841ba455c24a8c05d6,
+    type: 2}
 --- !u!65 &1638506007
 BoxCollider:
   m_ObjectHideFlags: 0
