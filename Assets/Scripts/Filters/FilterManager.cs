@@ -365,28 +365,27 @@ namespace CellexalVR.Filters
         {
             // check that genes exists
             string[] genes = filter.GetGenes().ToArray();
-            // TODO: ask johan
-            //Array.ForEach(genes, (s) => s.ToLower());
-            //SQLiter.SQLite database = referenceManager.database;
-            //while (database.QueryRunning)
-            //{
-            //    yield return null;
-            //}
-            //database.QueryGenesIds(genes);
-            //while (database.QueryRunning)
-            //{
-            //    yield return null;
-            //}
-            //foreach (Tuple<string, string> geneId in database._result)
-            //{
-            //    if (!genes.Contains(geneId.Item1.ToLower()))
-            //    {
-            //        resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
-            //        filterPreviewText.text = "FILTER ERROR: Gene " + geneId.Item1 + " not found";
-            //        currentFilter = null;
-            //        yield break;
-            //    }
-            //}
+            Array.ForEach(genes, (s) => s.ToLower());
+            SQLiter.SQLite database = referenceManager.database;
+            while (database.QueryRunning)
+            {
+                yield return null;
+            }
+            database.QueryGenesIds(genes);
+            while (database.QueryRunning)
+            {
+                yield return null;
+            }
+            foreach (Tuple<string, string> geneId in database._result)
+            {
+                if (!genes.Contains(geneId.Item1.ToLower()))
+                {
+                    resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
+                    filterPreviewText.text = "FILTER ERROR: Gene " + geneId.Item1 + " not found";
+                    currentFilter = null;
+                    yield break;
+                }
+            }
 
             // check that facs exists
             CellManager cellManager = referenceManager.cellManager;
@@ -408,10 +407,8 @@ namespace CellexalVR.Filters
             List<string> attributes = filter.GetAttributes();
             foreach (string attribute in attributes)
             {
-                //print($"filter {attribute}");
                 if (!cellManager.Attributes.Contains(attribute, StringComparer.CurrentCultureIgnoreCase))
                 {
-                    //print("invalid");
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Attribute " + attribute + " not found";
                     currentFilter = null;
@@ -425,7 +422,6 @@ namespace CellexalVR.Filters
             {
                 if (!cellManager.NumericalAttributes.Contains(attribute, StringComparer.OrdinalIgnoreCase))
                 {
-                    print($"invalid NUm");
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);
                     filterPreviewText.text = "FILTER ERROR: Attribute " + attribute + " not found";
                     currentFilter = null;
