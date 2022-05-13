@@ -249,8 +249,10 @@ namespace CellexalVR.General
             StreamReader streamReader = new StreamReader(fileStream);
             XmlSerializer serializer = new XmlSerializer(typeof(Config));
             CellexalConfig.savedConfigs[profileName] = (Config)serializer.Deserialize(streamReader);
+            CellexalConfig.Config = CellexalConfig.savedConfigs[profileName];
             streamReader.Close();
             fileStream.Close();
+            CellexalEvents.ConfigLoaded.Invoke();
         }
 
         /// <summary>

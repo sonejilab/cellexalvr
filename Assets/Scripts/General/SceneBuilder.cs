@@ -277,6 +277,7 @@ namespace CellexalVR.General
             GeoMXHandler = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GeoMX/GeoMXHandler.prefab");
             MeshGenerator = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/MarchingCubes/MeshGenerator.prefab");
             BrainParent = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/BrainMeshes/BrainParent.prefab");
+            PrefabEntities = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/PointCloud/PrefabEntities.prefab");
         }
 
         [Obsolete]
