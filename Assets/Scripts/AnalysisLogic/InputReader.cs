@@ -182,11 +182,15 @@ namespace CellexalVR.AnalysisLogic
                     File.Delete(f);
                 }
             }
-
-            database.InitDatabase(fullPath + "\\database.sqlite");
+            string databasePath = fullPath + "\\database.sqlite";
+            if (File.Exists(databasePath))
+            {
+                database.InitDatabase(fullPath + "\\database.sqlite");
+            }
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
-            if (mdsFiles.Length == 0)
+            bool scarfFile = File.Exists(fullPath + "\\.zgroup");
+            if (mdsFiles.Length == 0 && !scarfFile)
             {
                 CellexalError.SpawnError("Empty dataset",
                     "The loaded dataset did not contain any .mds files. Make sure you have placed the dataset files in the correct folder.");
@@ -204,36 +208,35 @@ namespace CellexalVR.AnalysisLogic
             {
                 yield return StartCoroutine(mdsReader.ReadBigFolder(path));
             }
+            else if (File.Exists(fullPath + "\\.zgroup"))
+            {
+                ScarfManager.instance.InitServer();
+                yield return StartCoroutine(ScarfManager.instance.LoadPreprocessedDataCouroutine(path, "RNA_UMAP"));
+            }
             else
             {
                 yield return StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
             }
-            yield return StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
-            //graphGenerator.isCreating = true;
-            attributeReader = gameObject.AddComponent<AttributeReader>();
-            attributeReader.referenceManager = referenceManager;
-            StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
-            while (!attributeFileRead)
-                yield return null;
-            ReadFacsFiles(fullPath);
-            ReadNumericalData(fullPath);
-            ReadFilterFiles(CellexalUser.UserSpecificFolder);
 
-
-            referenceManager.configManager.ReadConfigFiles(fullPath);
-            // multiple_exp if (currentPath.Length > 0)
-            // multiple_exp {
-            // multiple_exp     currentPath += "+" + path;
-            // multiple_exp }
-            //LoadPreviousGroupings();
-            //string[] spatialMds = Directory.GetFiles(fullPath, "*.spatialmds");
-            //StartCoroutine(ReadSpatialMDSFiles(fullPath, spatialMds));
-            if (PhotonNetwork.isMasterClient)
+            if (!ScarfManager.instance.scarfActive)
             {
-                referenceManager.configManager.MultiUserSynchronise();
-            }
+                yield return StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
+                attributeReader = gameObject.AddComponent<AttributeReader>();
+                attributeReader.referenceManager = referenceManager;
+                StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
+                while (!attributeFileRead)
+                    yield return null;
+                ReadFacsFiles(fullPath);
+                ReadNumericalData(fullPath);
+                ReadFilterFiles(CellexalUser.UserSpecificFolder);
+                referenceManager.configManager.ReadConfigFiles(fullPath);
+                if (PhotonNetwork.isMasterClient)
+                {
+                    referenceManager.configManager.MultiUserSynchronise();
+                }
 
-            CellexalEvents.GraphsLoaded.Invoke();
+                CellexalEvents.GraphsLoaded.Invoke();
+            }
         }
 
         private void UpdateSelectionToolHandler()
@@ -745,7 +748,7 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            TextureHandler.instance.AddPointsToSelection(indices);
+            TextureHandler.instance?.AddPointsToSelection(indices);
             CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
             CellexalEvents.CommandFinished.Invoke(true);
             CellexalEvents.SelectedFromFile.Invoke();

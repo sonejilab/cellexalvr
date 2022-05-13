@@ -420,9 +420,9 @@
     -unity-font-style: normal;
     letter-spacing: 4px;
     -unity-text-outline-width: 0;
-    -unity-text-outline-color: rgba(255, 0, 146, 255);
+    -unity-text-outline-color: rgb(255, 0, 146);
     font-size: 24px;
-    text-shadow: 0 0 0 rgba(0, 0, 0, 255);
+    text-shadow: 0 0 0 rgb(0, 0, 0);
     justify-content: flex-start;
     align-items: center;
     flex-grow: 0;
@@ -430,7 +430,7 @@
 }
 
 .unity-radio-button > .unity-label {
-    color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
     -unity-font-definition: url('project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&guid=129b770ca1ffd9f409ff7a3813fb3b68&type=2#SpaceGrotesk-Regular SDF_fontasset');
     -unity-font-style: normal;
     font-size: 24px;
@@ -454,11 +454,12 @@
     flex-direction: row-reverse;
     align-items: center;
     font-size: 16px;
-    color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
 }
 
 .button {
     -unity-font-definition: url('project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&guid=129b770ca1ffd9f409ff7a3813fb3b68&type=2#SpaceGrotesk-Regular SDF_fontasset');
     -unity-font-style: normal;
-    color: rgba(255, 255, 255, 255);
+    color: rgb(255, 255, 255);
+    display: flex;
 }

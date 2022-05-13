@@ -139,7 +139,7 @@ namespace CellexalVR.DesktopUI
 
             CellexalEvents.ScarfUMAPFinished.AddListener(() => loadButton.style.display = DisplayStyle.Flex);
 
-            //ScarfManager.instance.InitServer();
+            ScarfManager.instance.InitServer();
         }
 
 

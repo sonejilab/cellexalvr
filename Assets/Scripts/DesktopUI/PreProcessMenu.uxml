@@ -19,7 +19,7 @@
                                             <ui:Label text="file name: " display-tooltip-when-elided="true" />
                                         </ui:TextField>
                                         <ui:Button text="OPEN" display-tooltip-when-elided="true" name="choose-file-button" class="button" />
-                                        <ui:VisualElement name="file-done" class="inactive done-label" style="background-image: none; flex-grow: 1; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); flex-shrink: 1; align-items: center; justify-content: center;">
+                                        <ui:VisualElement name="file-done" class="inactive done-label button" style="background-image: none; flex-grow: 1; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); flex-shrink: 1; align-items: center; justify-content: center; display: none;">
                                             <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: normal;" />
                                         </ui:VisualElement>
                                     </ui:VisualElement>
@@ -38,7 +38,7 @@
                                         <ui:Label text="data label: " display-tooltip-when-elided="true" />
                                     </ui:TextField>
                                     <ui:Button text="RUN" display-tooltip-when-elided="true" name="convert-button" class="button" />
-                                    <ui:VisualElement name="convert-done" class="inactive done-label" style="background-image: none; flex-grow: 1; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); flex-shrink: 1; align-items: center; justify-content: center;">
+                                    <ui:VisualElement name="convert-done" class="inactive done-label button" style="background-image: none; flex-grow: 1; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); flex-shrink: 1; align-items: center; justify-content: center; display: none;">
                                         <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: normal;" />
                                     </ui:VisualElement>
                                     <ui:VisualElement name="convert-running" class="inactive running-label" style="background-image: none; width: 46px; height: 46px; align-items: center; justify-content: center;">
@@ -58,7 +58,7 @@
                                         <ui:Label text="top_n: " display-tooltip-when-elided="true" />
                                     </ui:TextField>
                                     <ui:Button text="RUN" display-tooltip-when-elided="true" name="hvgs-button" class="button" />
-                                    <ui:VisualElement name="hvgs-done" class="inactive done-label" style="background-image: none; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255);">
+                                    <ui:VisualElement name="hvgs-done" class="inactive done-label button" style="background-image: none; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); display: none;">
                                         <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
                                     </ui:VisualElement>
                                     <ui:VisualElement name="hvgs-running" class="inactive running-label" style="background-image: none; width: 46px; height: 46px;">
@@ -78,7 +78,7 @@
                                         <ui:Label text="feature_key: " display-tooltip-when-elided="true" />
                                     </ui:TextField>
                                     <ui:Button text="RUN" display-tooltip-when-elided="true" name="graph-button" class="button" />
-                                    <ui:VisualElement name="graph-done" class="inactive done-label" style="background-image: none; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255);">
+                                    <ui:VisualElement name="graph-done" class="inactive done-label button" style="background-image: none; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); display: none;">
                                         <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
                                     </ui:VisualElement>
                                     <ui:VisualElement name="graph-running" class="inactive running-label" style="background-image: none; width: 46px; height: 46px;">
@@ -98,7 +98,7 @@
                                         <ui:Label text="n_epochs: " display-tooltip-when-elided="true" />
                                     </ui:TextField>
                                     <ui:Button text="RUN" display-tooltip-when-elided="true" name="umap-button" class="button" />
-                                    <ui:VisualElement name="umap-done" class="inactive done-label">
+                                    <ui:VisualElement name="umap-done" class="inactive done-label button" style="display: none;">
                                         <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: bold; -unity-text-align: upper-left;" />
                                     </ui:VisualElement>
                                     <ui:VisualElement name="umap-running" class="inactive running-label">
@@ -118,7 +118,7 @@
                                         <ui:Label text="resolution: " display-tooltip-when-elided="true" />
                                     </ui:TextField>
                                     <ui:Button text="RUN" display-tooltip-when-elided="true" name="clustering-button" class="button" />
-                                    <ui:VisualElement name="clustering-done" class="inactive done-label" style="background-image: none; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255);">
+                                    <ui:VisualElement name="clustering-done" class="inactive done-label button" style="background-image: none; -unity-font-style: normal; -unity-background-image-tint-color: rgb(255, 255, 255); display: none;">
                                         <ui:Label text="OK" display-tooltip-when-elided="true" style="-unity-font-style: bold;" />
                                     </ui:VisualElement>
                                     <ui:VisualElement name="clustering-running" class="inactive running-label" style="background-image: none; width: 46px; height: 46px;">
@@ -166,7 +166,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="output-container" style="width: 856px; height: 120px;">
-                <ui:Label display-tooltip-when-elided="true" name="output-label" style="color: rgb(71, 255, 0);" />
+                <ui:Label display-tooltip-when-elided="true" name="output-label" style="color: rgb(71, 255, 0); -unity-font-definition: url(&apos;project://database/Assets/Fonts/SpaceGrotesk-Regular%20SDF_fontasset.asset?fileID=11400000&amp;guid=129b770ca1ffd9f409ff7a3813fb3b68&amp;type=2#SpaceGrotesk-Regular SDF_fontasset&apos;);" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:ScrollView>

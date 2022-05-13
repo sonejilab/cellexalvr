@@ -5,7 +5,7 @@ Shader "Custom/MenuCube"
 		_Color("Color", Color) = (1,1,1,1)
 		_FrontColor("Color", Color) = (1,1,1,1)
 		_MainTex("Albedo (RGB)", 2D) = "white" {}
-		_Position("Position", float) = 1.0
+		_Position("Position", Vector) = (1,0,0)
 	}
 
 		SubShader
@@ -24,7 +24,7 @@ Shader "Custom/MenuCube"
 		sampler2D _MainTex;
 		float4 _Color;
 		float4 _FrontColor;
-		float _Position;
+		float3 _Position;
 
 		struct appdata
 		{
@@ -52,12 +52,14 @@ Shader "Custom/MenuCube"
 
 		fixed4 frag(v2f o) : SV_TARGET
 		{
-			float time = sin(_Time.y * 2);
+			float3 pos = float3(cos(_Time.y * 2), sin(_Time.y * 2), 0);
+			//pos = float2(0, 0);
 			fixed4 texCol = tex2D(_MainTex, o.uv);
 			fixed4 mainCol = texCol *_Color;
 			fixed4 pulseCol = texCol * _FrontColor;
-			float dist = abs(o.localPosition.y - time);
-			fixed4 col = lerp(mainCol, pulseCol, (1-dist));
+			float dist = length(o.localPosition - pos);
+
+			fixed4 col = lerp(mainCol, pulseCol, 1.5 - (dist));
 			return col;
 		}
 

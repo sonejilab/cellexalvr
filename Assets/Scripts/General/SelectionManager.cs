@@ -304,7 +304,7 @@ namespace CellexalVR.General
             //}
             if (newNode)
             {
-                //multiuserMessageSender.SendMessageSelectedAdd(graphPoint.GraphName, graphPoint.Label);
+                multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, color);
                 if (selectedCells.Count == 0)
                 {
                     CellexalEvents.SelectionStarted.Invoke();
@@ -588,7 +588,7 @@ namespace CellexalVR.General
         public void ConfirmSelectionConsole()
         {
             if (PointCloudGenerator.instance.pointClouds.Count > 0)
-            { 
+            {
                 ConfirmSelectionForBigFolder();
             }
             else
@@ -604,7 +604,7 @@ namespace CellexalVR.General
                 graph.octreeRoot.Group = -1;
             }
 
-            if (selectedCells.Count == 0)                                       
+            if (selectedCells.Count == 0)
             {
                 print("empty selection confirmed");
             }

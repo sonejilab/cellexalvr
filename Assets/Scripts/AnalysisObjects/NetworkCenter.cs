@@ -687,20 +687,6 @@ namespace CellexalVR.AnalysisObjects
             rigidbody.isKinematic = false;
             rigidbody.drag = 10;
             rigidbody.angularDrag = 15;
-            // Open XR
-            //var interactableObject = gameObject.AddComponent<NetworkCenterInteract>();
-            //interactableObject.referenceManager = referenceManager;
-            //interactableObject.enabled = true;
-            //interactableObject.isGrabbable = true;
-            //interactableObject.isUsable = false;
-            //var grabAttach = gameObject.AddComponent<VRTK_FixedJointGrabAttach>();
-            //var scalescript = gameObject.AddComponent<VRTK_AxisScaleGrabAction>();
-            //scalescript.uniformScaling = true;
-            //interactableObject.grabAttachMechanicScript = grabAttach;
-            //interactableObject.secondaryGrabActionScript = scalescript;
-
-            //grabAttach.precisionGrab = true;
-            //grabAttach.breakForce = float.PositiveInfinity;
 
             // save the old variables
             oldParent = transform.parent;
@@ -810,15 +796,9 @@ namespace CellexalVR.AnalysisObjects
             transform.rotation = oldRotation;
             transform.localScale = oldScale;
             // this network will now be part of the convex hull which already has a rigidbody and these scripts
-            Destroy(gameObject.GetComponent<NetworkCenterInteract>());
-            // Open XR
-            //Destroy(gameObject.GetComponent<VRTK_AxisScaleGrabAction>());
-            //Destroy(gameObject.GetComponent<VRTK_InteractableObject>());
-            Destroy(gameObject.GetComponent<Rigidbody>());
+            //Destroy(gameObject.GetComponent<NetworkCenterInteract>());
+            //Destroy(gameObject.GetComponent<Rigidbody>());
 
-            // we must wait one more frame here or VRTK_InteractTouch gets a bunch of null exceptions.
-            // probably because it is still using these colliders
-            yield return new WaitForSeconds(0.3f);
             // Disable the network nodes' colliders
             foreach (Transform child in transform)
             {
@@ -835,8 +815,6 @@ namespace CellexalVR.AnalysisObjects
                 button.GetComponent<BoxCollider>().enabled = false;
             }
             CellexalEvents.NetworkUnEnlarged.Invoke();
-            //CellexalEvents.ScriptFinished.Invoke();
-            //handler.runningScript = false;
         }
 
         /// <summary>

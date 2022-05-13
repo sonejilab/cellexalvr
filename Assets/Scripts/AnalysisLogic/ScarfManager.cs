@@ -8,15 +8,12 @@ using System.Linq;
 using System.Text;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
-using JetBrains.Annotations;
-using SQLiter;
 using System.Threading;
 using UnityEngine.Networking;
 using UnityEngine.UIElements;
 using CellexalVR.DesktopUI;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using UnityEngine.InputSystem;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -25,12 +22,6 @@ namespace CellexalVR.AnalysisLogic
         public string uid;
         public List<string> feature;
         public string feat_key;
-    }
-
-
-    [System.Serializable]
-    public class ScarfFeatureNames
-    {
     }
 
     [System.Serializable]
@@ -59,6 +50,7 @@ namespace CellexalVR.AnalysisLogic
 
         public bool scarfActive;
         public bool reqPending;
+        private bool serverStarted;
 
         private int progress = 0;
         private int firstLineLength;
@@ -74,25 +66,6 @@ namespace CellexalVR.AnalysisLogic
         private void Awake()
         {
             instance = this;
-
-            //InitServer();
-        }
-
-        private void Update()
-        {
-            if (Keyboard.current.hKey.wasPressedThisFrame)
-            {
-                //StartCoroutine(GetCellValues("RNA_leiden_cluster", "clusters"));
-                StartCoroutine(GetFeatureNames());
-            }
-            if (Keyboard.current.jKey.wasPressedThisFrame)
-            {
-                //StartCoroutine(GetCellValues("CD14", "gene"));
-            }
-            if (Keyboard.current.lKey.wasPressedThisFrame)
-            {
-                LoadPreprocessedData("qwe");
-            }
         }
 
         public void LoadPreprocessedData(string label, string layoutKey = "RNA_UMAP")
@@ -100,7 +73,7 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(LoadPreprocessedDataCouroutine(label, layoutKey));
         }
 
-        private IEnumerator LoadPreprocessedDataCouroutine(string label, string layoutKey)
+        public IEnumerator LoadPreprocessedDataCouroutine(string label, string layoutKey)
         {
             yield return StartCoroutine(StageDataCoroutine(label));
             yield return StartCoroutine(CreateGraph(label, layoutKey));
@@ -110,6 +83,7 @@ namespace CellexalVR.AnalysisLogic
         {
             string res = "";
             Thread t = new Thread(() => { res = StartServer(); });
+            t.Start();
         }
 
         private string StartServer()
@@ -117,7 +91,7 @@ namespace CellexalVR.AnalysisLogic
             string result = string.Empty;
             try
             {
-                string path = "D:\\scarf_for_cellexalvr\\run_scarf_server.bat";
+                string path = $"{CellexalConfig.Config.ScarfscriptPath}\\run_scarf_server.bat";
 
                 var info = new ProcessStartInfo
                 {
@@ -141,15 +115,10 @@ namespace CellexalVR.AnalysisLogic
                 procOutput = new StringBuilder();
                 p.Start();
                 p.StandardInput.Close();
-                //var _ = ConsumeReader(proc.StandardError);
-                //readTask = ConsumeReader(p.StandardOutput);
                 p.BeginErrorReadLine();
                 p.BeginOutputReadLine();
                 p.WaitForExit();
                 p.Close();
-
-                //PrintToFile(procOutput.ToString(), "scarfout.txt");
-
                 return result;
             }
 
@@ -199,6 +168,10 @@ namespace CellexalVR.AnalysisLogic
                 var text = outLine.Data.Split('|');
                 var firstPart = text[0];
                 var line = $"[{numOutputLines}] - {firstPart}" + Environment.NewLine;
+                if (line.Contains("Running on"))
+                {
+                    serverStarted = true;
+                }
                 //// Add the text to the collected output.
                 int nrOfLines = consoleLines.Length;
                 if (numOutputLines >= nrOfLines)
@@ -222,6 +195,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator GetDatasetsCoroutine()
         {
+            while (!serverStarted)
+                yield return null;
             reqPending = true;
             string reqURL = $"{url}get_datasets";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
@@ -245,6 +220,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator ConvertToZarrCoroutine(string dataLabel, string rawData)
         {
+            while (!serverStarted)
+                yield return null;
             string reqURL = $"{url}convert_to_zarr/{dataLabel}/{rawData}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
             ScarfUIManager.instance.ToggleProgressBar(true);
@@ -264,6 +241,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator StageDataCoroutine(string dataLabel)
         {
+            while (!serverStarted)
+                yield return null;
             string reqURL = $"{url}stage_data/{dataLabel}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
 
@@ -281,6 +260,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator MarkHVGSCoroutine(string topN, VisualElement running, VisualElement done)
         {
+            while (!serverStarted)
+                yield return null;
             running.RemoveFromClassList("inactive");
             while (progress < 1) yield return null;
             ScarfUIManager.instance.ToggleProgressBar(true);
@@ -304,6 +285,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator MakeGraphCoroutine(string featureKey, VisualElement running, VisualElement done)
         {
+            while (!serverStarted)
+                yield return null;
             running.RemoveFromClassList("inactive");
             while (progress < 2) yield return null;
             ScarfUIManager.instance.ToggleProgressBar(true);
@@ -324,6 +307,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator RunClusteringCoroutine(string resolution, VisualElement running, VisualElement done)
         {
+            while (!serverStarted)
+                yield return null;
             running.RemoveFromClassList("inactive");
             while (progress < 4) yield return null;
             ScarfUIManager.instance.ToggleProgressBar(true);
@@ -344,6 +329,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator RunUMAPCoroutine(string nEpochs, VisualElement running, VisualElement done)
         {
+            while (!serverStarted)
+                yield return null;
             running.RemoveFromClassList("inactive");
             while (progress < 3) yield return null;
             ScarfUIManager.instance.ToggleProgressBar(true);
@@ -366,6 +353,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator GetFeatureNames()
         {
+            while (!serverStarted)
+                yield return null;
             string reqURL = $"{url}get_gene_names";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
             reqPending = true;
@@ -391,6 +380,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator GetCellValues(string valueKey)
         {
+            while (!serverStarted)
+                yield return null;
             string reqURL = $"{url}get_cell_values/{valueKey}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
             yield return req.SendWebRequest();
@@ -411,17 +402,23 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator ColorByClusters(string clusterName)
         {
+            while (!serverStarted)
+                yield return null;
             yield return GetCellValues(clusterName);
             ReferenceManager.instance.cellManager.ColorAllClusters(cellValues.ToArray(), true);
         }
         public IEnumerator ColorByGene(string geneName)
         {
+            while (!serverStarted)
+                yield return null;
             yield return GetCellValues(geneName);
             ReferenceManager.instance.cellManager.ColorByGene(cellValues.ToArray());
         }
 
         public IEnumerator RunMarkerSearch(string groupKey, float threshold)
         {
+            while (!serverStarted)
+                yield return null;
             reqPending = true;
             string reqURL = $"{url}run_marker_search/{groupKey}/{threshold}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
@@ -439,6 +436,8 @@ namespace CellexalVR.AnalysisLogic
 
         public IEnumerator GetMarkers(string groupKey)
         {
+            while (!serverStarted)
+                yield return null;
             string reqURL = $"{url}get_markers/{groupKey}";
             UnityWebRequest req = UnityWebRequest.Get(reqURL);
 
