@@ -688,6 +688,8 @@ namespace CellexalVR.AnalysisObjects
             rigidbody.drag = 10;
             rigidbody.angularDrag = 15;
 
+            GetComponent<XRGrabInteractable>().enabled = false;
+
             // save the old variables
             oldParent = transform.parent;
             oldLocalPosition = transform.localPosition;
@@ -814,6 +816,9 @@ namespace CellexalVR.AnalysisObjects
                 button.SetButtonActivated(false);
                 button.GetComponent<BoxCollider>().enabled = false;
             }
+            GetComponent<XRGrabInteractable>().enabled = true;
+
+
             CellexalEvents.NetworkUnEnlarged.Invoke();
         }
 

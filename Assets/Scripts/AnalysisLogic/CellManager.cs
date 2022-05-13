@@ -244,6 +244,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 ColorGraphsByGene(geneName, graphManager.GeneExpressionColoringMethod, true);
             }
+            rightController.SendHapticImpulse(0.7f, 0.15f);
         }
 
         /// <summary>
@@ -332,7 +333,7 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             audioSource.Play();
-            rightController.SendHapticImpulse(0.8f, 0.3f);
+            rightController.SendHapticImpulse(0.7f, 0.15f);
             ArrayList expressions = h5Reader._expressionResult;
 
 
@@ -399,7 +400,6 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
 
             GetComponent<AudioSource>().Play();
-            rightController.SendHapticImpulse(0.7f, 1f);
             ArrayList expressions = database._result;
 
             // stop the coroutine if the gene was not in the database
@@ -785,6 +785,7 @@ namespace CellexalVR.AnalysisLogic
 
             CellexalEvents.GraphsColoredByIndex.Invoke();
             CellexalEvents.CommandFinished.Invoke(true);
+            rightController.SendHapticImpulse(0.7f, 0.15f);
         }
 
         [ConsoleCommand("cellManager", aliases: new string[] { "colorclusters", "cc" })]

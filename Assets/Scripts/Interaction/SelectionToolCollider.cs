@@ -20,7 +20,6 @@ namespace CellexalVR.Interaction
         [SerializeField] private InputActionAsset inputActionAsset;
         [SerializeField] private InputActionReference touchPadClick;
         [SerializeField] private InputActionReference touchPadPos;
-        [SerializeField] private VisualEffect vfx;
 
         private bool _requireToggleToClick;
         public bool RequireToggleToClick
@@ -49,6 +48,7 @@ namespace CellexalVR.Interaction
         public ReferenceManager referenceManager;
         public SelectionManager selectionManager;
         public Material selectionToolMaterial;
+        public Material controllerMaterial;
         public Collider[] selectionToolColliders;
         public Color[] Colors;
         public bool hapticFeedbackThisFrame = true;
@@ -79,7 +79,7 @@ namespace CellexalVR.Interaction
                 {
                     tempColorIndex = CurrentColorIndex;
                     CurrentColorIndex = Colors.Length + 1;
-                    vfx.SetVector3("ParticleColor", new Vector3(1, 1, 1));
+                    controllerMaterial.SetColor("_Tint", new Color(1,1,1));
                 }
                 // Change to remove selection tool: Store color index so when we switch back to normal selection tool we get the correct color.
                 else if (currentMeshIndex < 0)
@@ -119,8 +119,7 @@ namespace CellexalVR.Interaction
                 currentColorIndex = value;
                 if (currentColorIndex > Colors.Length)
                 {
-
-                    vfx.SetVector3("ParticleColor", new Vector3(1, 1, 1));
+                    controllerMaterial.SetColor("_Tint", new Color(1, 1, 1));
                     for (int i = selectionToolColliders.Length / 2; i < selectionToolColliders.Length; i++)
                     {
                         Collider collider = selectionToolColliders[i];
@@ -140,7 +139,7 @@ namespace CellexalVR.Interaction
                     collider.GetComponent<Renderer>().material.color = col;
                 }
 
-                vfx.SetVector3("ParticleColor", new Vector3(col.r, col.g, col.b));
+                controllerMaterial.SetColor("_Tint", col);
             }
         }
 
@@ -194,7 +193,8 @@ namespace CellexalVR.Interaction
                 controllerModelSwitcher = ReferenceManager.instance.controllerModelSwitcher;
             if (controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
-                vfx.gameObject.SetActive(true);
+                controllerMaterial.SetInt("_Toggle", 1);
+                controllerMaterial.SetColor("_Tint", currentColorIndex < Colors.Length ? Colors[currentColorIndex] : Color.white);
                 selectionToolMaterial.SetFloat("_SelectionActive", 1);
                 selActive = true;
             }
@@ -238,8 +238,7 @@ namespace CellexalVR.Interaction
             if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 selActive = false;
-                vfx.gameObject.SetActive(false);
-                //particles.gameObject.SetActive(false);
+                controllerMaterial.SetInt("_Toggle", -1);
                 selectionToolMaterial.SetFloat("_SelectionActive", 0);
             }
         }

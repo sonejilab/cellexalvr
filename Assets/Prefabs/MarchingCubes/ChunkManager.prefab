@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4866979709267056642}
-  - component: {fileID: 4866979709267056643}
   - component: {fileID: 2973343067008227723}
   m_Layer: 0
   m_Name: ChunkManager
@@ -34,19 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4866979709267056643
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4866979709267056668}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2973343067008227723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sphereHolder: {fileID: 4866979709627758797}
-  boxCollider: {fileID: 4866979709267056643}
+  boxCollider: {fileID: 0}
   chunkPrefab: {fileID: 8679631597456197076, guid: 22293016e933c034199c8c8c0791a23c,
     type: 3}
   visualiseChunkPrefab: {fileID: 4094783700118341761, guid: 5ba5762dcec71d54aaaac9a33291c189,

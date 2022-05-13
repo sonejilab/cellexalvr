@@ -165,6 +165,7 @@ namespace CellexalVR.Interaction
         {
             if (referenceManager.multiuserMessageSender != null)
             {
+                // not working properly
                 referenceManager.multiuserMessageSender.SendMessageToggleLaser(toggle);
             }
         }
@@ -173,6 +174,7 @@ namespace CellexalVR.Interaction
         {
             if (referenceManager.multiuserMessageSender != null)
             {
+                // not working properly
                 referenceManager.multiuserMessageSender.SendMessageMoveLaser(origin, hitPoint);
             }
         }

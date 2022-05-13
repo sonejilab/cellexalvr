@@ -47,10 +47,6 @@ namespace CellexalVR.MarchingCubes
 
         private void Awake()
         {
-            //size = MeshGenerator.instance.size;
-            //chunkResolution = MeshGenerator.instance.res;
-            boxCollider.center = transform.position + Vector3.one * size * 0.5f;
-            boxCollider.size = Vector3.one * size;
             chunks = new ChunkScript[size, size, size];
             for (int i = 0; i < size; i++)
             {
