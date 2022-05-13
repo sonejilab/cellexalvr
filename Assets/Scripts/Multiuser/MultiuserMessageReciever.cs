@@ -1601,7 +1601,7 @@ namespace CellexalVR.Multiuser
             //}
             if (activate)
             {
-                referenceManager.velocityGenerator.ReadVelocityFile(shorterFilePath, subGraphName);
+                referenceManager.velocityGenerator.ReadVelocityFile(Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + shorterFilePath, subGraphName);
             }
             else
             {
@@ -1700,7 +1700,7 @@ namespace CellexalVR.Multiuser
         #endregion
 
         #region Images
-        
+
         [PunRPC]
         public void RecieveMessageScroll(int dir)
         {
@@ -1739,8 +1739,8 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageSpawnModel(string modelName)
         {
             AllenReferenceBrain.instance.SpawnModel(modelName);
-        } 
-        
+        }
+
         [PunRPC]
         public void RecieveMessageToggleReferenceOrgan(int pcID, bool toggle)
         {

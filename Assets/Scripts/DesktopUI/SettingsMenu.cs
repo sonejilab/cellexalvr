@@ -90,7 +90,7 @@ namespace CellexalVR.DesktopUI
 
         private ColorPicker colorPicker;
         private Config beforeChanges;
-        [HideInInspector] public bool unsavedChanges;
+        [HideInInspector] public bool unsavedChanges = false;
 
         private string currentProfilePath;
         private bool datasetLoaded = false;

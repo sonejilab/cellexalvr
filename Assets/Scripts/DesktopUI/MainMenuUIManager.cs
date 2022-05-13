@@ -52,13 +52,13 @@ namespace CellexalVR.DesktopUI
         }
 
         private void UpdateRScriptField()
-        { 
+        {
             rScriptInputField.value = CellexalConfig.Config.RscriptexePath.Replace('\\', '/');
         }
 
         private void UpdateScarfScriptField()
         {
-            scarfScriptInputField.value = CellexalConfig.Config.ScarfscriptPath.Replace('\\', '/');
+            scarfScriptInputField.value = CellexalConfig.Config.ScarfscriptPath?.Replace('\\', '/');
         }
 
         private void OnFindRScriptButtonPressed()
