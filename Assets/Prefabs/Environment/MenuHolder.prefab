@@ -6468,7 +6468,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  menuToClose: {fileID: 0}
+  menuToClose: {fileID: 963049857}
   deactivateMenu: 0
   deleteSceneObjs: 1
 --- !u!1 &1189887208503356
@@ -9974,6 +9974,7 @@ GameObject:
   - component: {fileID: 4831156938896316}
   - component: {fileID: 33945550909777146}
   - component: {fileID: 23181629687026920}
+  - component: {fileID: 963049857}
   m_Layer: 10
   m_Name: Confirm Menu
   m_TagString: Untagged
@@ -10049,6 +10050,21 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &963049857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287315055149598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 926028626e82f5a42a7e7a74f9c4baf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
+  buttonsToDeactivate: {fileID: 1084203163407156}
+  textmeshToDarken: {fileID: 1849139524430474}
 --- !u!1 &1291378043113672
 GameObject:
   m_ObjectHideFlags: 0
@@ -27645,7 +27661,7 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
-  menuToClose: {fileID: 0}
+  menuToClose: {fileID: 963049857}
   deactivateMenu: 0
 --- !u!1 &1938326867135608
 GameObject:

@@ -15,19 +15,22 @@ MonoBehaviour:
   version: 5
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: menu_texture_tronned
-  m_Shader: {fileID: 4800000, guid: 50cafd75c554dc5419a4620459901796, type: 3}
-  m_ShaderKeywords: _EMISSION
+  m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _EMISSION
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -129,7 +132,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0, g: 0.7249274, b: 1, a: 1}
-    - _Color: {r: 0, g: 0.7019608, b: 1, a: 1}
+    - _Color: {r: 0, g: 0.7249274, b: 1, a: 1}
     - _EmissionColor: {r: 0.15896086, g: 0.5457247, b: 0.7379107, a: 1}
     - _FrontColor: {r: 1, g: 0.33835933, b: 0, a: 1}
     - _GradientColor: {r: 1, g: 1, b: 1, a: 1}
