@@ -295,6 +295,7 @@ namespace CellexalVR.SceneObjects
         /// Reset everything back to the state it was before loading the data and returns the loading area.
         /// </summary>
         /// <param name="reset">True if everything should be deleted, false if only the loading area should be returned, and everything else kept.</param>
+        [ConsoleCommand("loaderController", aliases: new string[] { "resetfolders", "resf" })]
         public void ResetFolders(bool reset)
         {
             if (reset)

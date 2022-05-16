@@ -620,7 +620,8 @@ namespace CellexalVR.AnalysisObjects
             if (!layoutsCalculated[newLayoutPositionIndex])
             {
                 CalculateLayout(layout);
-                yield break;
+                while (calculatingLayout)
+                    yield return null;
             }
 
 

@@ -130,8 +130,11 @@ namespace CellexalVR.Interaction
                 }
 
                 leftControllerScript.modelPrefab = leftModel.transform;
-                leftControllerScript.model = Instantiate(leftControllerScript.modelPrefab, leftControllerScript.modelParent);
+                Transform model = Instantiate(leftControllerScript.modelPrefab, leftControllerScript.modelParent);
+                leftControllerScript.model = model;
                 leftControllerScript.enabled = true;
+                BoxCollider collider = leftControllerScript.GetComponent<BoxCollider>();
+                collider.center = model.InverseTransformPoint(model.transform.position) - model.InverseTransformDirection(model.transform.forward) * 0.1f;
             }
 
             if (right)
@@ -144,8 +147,11 @@ namespace CellexalVR.Interaction
                 }
 
                 rightControllerScript.modelPrefab = rightModel.transform;
-                rightControllerScript.model = Instantiate(rightControllerScript.modelPrefab, rightControllerScript.modelParent);
+                Transform model = Instantiate(rightControllerScript.modelPrefab, rightControllerScript.modelParent);
+                rightControllerScript.model = model;
                 rightControllerScript.enabled = true;
+                BoxCollider collider = rightControllerScript.GetComponent<BoxCollider>();
+                collider.center = model.InverseTransformPoint(model.transform.position) - model.InverseTransformDirection(model.transform.forward) * 0.1f;
             }
 
             StartCoroutine(WaitOneFrameAndRun(() => SwitchControllerModelColor(colorMode)));

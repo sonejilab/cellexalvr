@@ -66,10 +66,6 @@ namespace CellexalVR.General
             DestroyFolders();
 
             StartCoroutine(GetDirectoriesCoroutine());
-
-
-
-
             // GeneratePreviousSessionFolders(filter);
         }
 
@@ -84,7 +80,6 @@ namespace CellexalVR.General
             else
             {
                 referenceManager.tutorialManager.gameObject.SetActive(false);
-                // TODO: Scarf implementation
                 if (ScarfManager.instance.scarfActive)
                 {
                     StartCoroutine(ScarfManager.instance.GetDatasetsCoroutine());
@@ -221,6 +216,8 @@ namespace CellexalVR.General
             {
                 Destroy(child.gameObject);
             }
+            directories.Clear();
         }
+        
     }
 }

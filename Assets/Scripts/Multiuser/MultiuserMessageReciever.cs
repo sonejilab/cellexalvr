@@ -19,6 +19,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using CellexalVR.Menu.Buttons.Selection;
 using AnalysisLogic;
 using Unity.Entities;
+using System.Linq;
 
 namespace CellexalVR.Multiuser
 {
@@ -99,21 +100,22 @@ namespace CellexalVR.Multiuser
         {
             GameObject obj = GameObject.Find(name);
             if (obj == null)
-            {
                 return;
-            }
-
-            Collider[] children = obj.GetComponentsInChildren<Collider>();
-            int i = 0;
-            foreach (Collider c in children)
-            {
-                if (c)
-                {
-                    i++;
-                    colliders[c] = c.enabled;
-                    c.enabled = false;
-                }
-            }
+            obj.TryGetComponent(out OffsetGrab interactable);
+            if (interactable)
+                interactable.enabled = false;
+            //List<Collider> colliders = interactable.colliders;
+            //foreach (Collider c in colliders)
+            //{
+            //    c.enabled = false;
+            //}
+            // if controller is inside object need to clear interactor as well. 
+            //var overlap = Physics.OverlapBox(obj.transform.position, obj.transform.localScale / 2);
+            //bool controllerInside = overlap.ToList().Any(x => x.CompareTag("GameController"));
+            //if (controllerInside)
+            //{
+            //    obj.
+            //}
         }
 
         [PunRPC]
@@ -121,20 +123,15 @@ namespace CellexalVR.Multiuser
         {
             GameObject obj = GameObject.Find(name);
             if (obj == null)
-            {
                 return;
-            }
-
-            Collider[] children = obj.GetComponentsInChildren<Collider>();
-            int i = 0;
-            foreach (KeyValuePair<Collider, bool> pair in colliders)
-            {
-                if (pair.Key)
-                {
-                    i++;
-                    pair.Key.enabled = pair.Value;
-                }
-            }
+            obj.TryGetComponent(out OffsetGrab interactable);
+            if (interactable)
+                interactable.enabled = true;
+            //List<Collider> colliders = obj.GetComponent<OffsetGrab>().colliders;
+            //foreach (Collider c in colliders)
+            //{
+            //    c.enabled = true;
+            //}
         }
 
         [PunRPC]

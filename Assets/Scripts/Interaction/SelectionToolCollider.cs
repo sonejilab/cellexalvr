@@ -204,7 +204,7 @@ namespace CellexalVR.Interaction
         private void OnTriggerDown()
         {
             if (PointCloudGenerator.instance.pointClouds.Count > 0) return;
-            if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
+            if (ReferenceManager.instance.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.SelectionTool)
             {
                 hapticFeedbackThisFrame = true;
                 var activeCollider = selectionToolColliders[CurrentMeshIndex];
