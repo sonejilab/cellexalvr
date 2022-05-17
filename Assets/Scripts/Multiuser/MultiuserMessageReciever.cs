@@ -103,13 +103,13 @@ namespace CellexalVR.Multiuser
                 return;
             var rightController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
             var leftController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
+            int layerMask = LayerMask.GetMask("GraphLayer");
             Collider[] overlapR = Physics.OverlapBox(rightController.transform.position, rightController.GetComponent<BoxCollider>().size / 2f,
                 rightController.transform.rotation, layerMask, QueryTriggerInteraction.Collide);
             Collider[] overlapL = Physics.OverlapBox(leftController.transform.position, leftController.GetComponent<BoxCollider>().size / 2f,
                 leftController.transform.rotation, layerMask, QueryTriggerInteraction.Collide);
             foreach (Collider col in overlapR)
             {
-                print(col.gameObject.name);
                 if (col.gameObject == obj)
                 {
                     rightController.SendMessage("OnTriggerExit", col);
@@ -118,7 +118,6 @@ namespace CellexalVR.Multiuser
 
             foreach (Collider col in overlapL)
             {
-                print(col.gameObject.name);
                 if (col.gameObject == obj)
                 {
                     leftController.SendMessage("OnTriggerExit", col);
