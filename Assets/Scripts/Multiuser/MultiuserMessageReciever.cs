@@ -99,13 +99,10 @@ namespace CellexalVR.Multiuser
         public void RecieveMessageDisableColliders(string n)
         {
             GameObject obj = GameObject.Find(n);
-            print($"disable colliders for {n} {n == null}");
             if (obj == null)
                 return;
-            print($"disable colliders for {n}");
             var rightController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
             var leftController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
-            int layerMask = LayerMask.GetMask("GraphLayer");
             Collider[] overlapR = Physics.OverlapBox(rightController.transform.position, rightController.GetComponent<BoxCollider>().size / 2f,
                 rightController.transform.rotation, layerMask, QueryTriggerInteraction.Collide);
             Collider[] overlapL = Physics.OverlapBox(leftController.transform.position, leftController.GetComponent<BoxCollider>().size / 2f,
@@ -116,7 +113,6 @@ namespace CellexalVR.Multiuser
                 if (col.gameObject == obj)
                 {
                     rightController.SendMessage("OnTriggerExit", col);
-                    print("send on trigger exit");
                 }
             }
 
@@ -125,7 +121,6 @@ namespace CellexalVR.Multiuser
                 print(col.gameObject.name);
                 if (col.gameObject == obj)
                 {
-                    print("send on trigger exit");
                     leftController.SendMessage("OnTriggerExit", col);
                 }
             }
@@ -137,11 +132,9 @@ namespace CellexalVR.Multiuser
         [PunRPC]
         public void RecieveMessageEnableColliders(string n)
         {
-            print($"enable colliders for {n} {n == null}");
             GameObject obj = GameObject.Find(n);
             if (obj == null)
                 return;
-            print($"enable colliders for {n}");
             var rightController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
             var leftController = ReferenceManager.instance.leftController.GetComponent<XRDirectInteractor>();
             int layerMask = LayerMask.GetMask("GraphLayer");
@@ -771,25 +764,6 @@ namespace CellexalVR.Multiuser
                 g.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
                 r.velocity = new Vector3(velX, velY, velZ);
                 r.angularVelocity = new Vector3(angVelX, angVelY, angVelZ);
-            }
-        }
-
-        [PunRPC]
-        public void RecieveMessageToggleGrabbable(string name, bool enable)
-        {
-            //var graph = referenceManager.graphManager.FindGraph(name);
-            var gameObject = GameObject.Find(name);
-            if (gameObject == null)
-            {
-                CellexalLog.Log("Tried to toggle object colliders but could not find object with name: " + name);
-            }
-            else
-            {
-                var colliders = gameObject.GetComponents<Collider>();
-                foreach (Collider c in colliders)
-                {
-                    c.enabled = enable;
-                }
             }
         }
 

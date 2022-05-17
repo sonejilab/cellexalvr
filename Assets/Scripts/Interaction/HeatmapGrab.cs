@@ -19,32 +19,17 @@ namespace CellexalVR.Interaction
 
         protected override void OnSelectEntering(SelectEnterEventArgs args)
         {
-            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
+            referenceManager.multiuserMessageSender.SendMessageDisableColliders(gameObject.name);
             GetComponent<MeshCollider>().convex = true;
             base.OnSelectEntering(args);
         }
 
         protected override void OnSelectExiting(SelectExitEventArgs args)
         {
-            referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
+            referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
             GetComponent<MeshCollider>().convex = false;
             base.OnSelectExiting(args);
         }
-
-        //public override void OnInteractableObjectGrabbed(InteractableObjectEventArgs e)
-        //{
-        //    referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, false);
-        //    GetComponent<MeshCollider>().convex = true;
-        //    base.OnInteractableObjectGrabbed(e);
-        //}
-
-        //public override void OnInteractableObjectUngrabbed(InteractableObjectEventArgs e)
-        //{
-        //    referenceManager.multiuserMessageSender.SendMessageToggleGrabbable(gameObject.name, true);
-        //    if (grabbingObjects.Count == 0)
-        //        GetComponent<MeshCollider>().convex = false;
-        //    base.OnInteractableObjectUngrabbed(e);
-        //}
 
         //private void OnTriggerEnter(Collider other)
         //{
