@@ -38,6 +38,7 @@ namespace CellexalVR.Interaction
         public Material animatedPulseMaterial;
 
         //private SelectionToolHandler selectionToolHandler;
+        [SerializeField] private GameObject toolsParent;
         private SelectionToolCollider selectionToolCollider;
         private GameObject deleteTool;
         private GameObject minimizeTool;

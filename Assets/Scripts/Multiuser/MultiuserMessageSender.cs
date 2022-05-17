@@ -181,16 +181,16 @@ namespace CellexalVR.Multiuser
 
         #region Interaction
 
-        public void SendMessageEnableColliders(string name)
+        public void SendMessageEnableColliders(string n)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageEnableColliders", PhotonTargets.Others, name);
+            coordinator.photonView.RPC("RecieveMessageEnableColliders", PhotonTargets.Others, n);
         }
 
-        public void SendMessageDisableColliders(string name)
+        public void SendMessageDisableColliders(string n)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageDisableColliders", PhotonTargets.Others, name);
+            coordinator.photonView.RPC("RecieveMessageDisableColliders", PhotonTargets.Others, n);
         }
 
         public void SendMessageToggleLaser(bool active)
@@ -1084,6 +1084,7 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageChangeAverageVelocityResolution", PhotonTargets.Others, value);
         }
+ 
 
         #endregion
 

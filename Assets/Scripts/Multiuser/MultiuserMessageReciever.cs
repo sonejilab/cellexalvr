@@ -96,42 +96,77 @@ namespace CellexalVR.Multiuser
         #region Interaction
 
         [PunRPC]
-        public void RecieveMessageDisableColliders(string name)
+        public void RecieveMessageDisableColliders(string n)
         {
-            GameObject obj = GameObject.Find(name);
+            GameObject obj = GameObject.Find(n);
+            print($"disable colliders for {n} {n == null}");
             if (obj == null)
                 return;
+            print($"disable colliders for {n}");
+            var rightController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
+            var leftController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
+            int layerMask = LayerMask.GetMask("GraphLayer");
+            Collider[] overlapR = Physics.OverlapBox(rightController.transform.position, rightController.GetComponent<BoxCollider>().size / 2f,
+                rightController.transform.rotation, layerMask, QueryTriggerInteraction.Collide);
+            Collider[] overlapL = Physics.OverlapBox(leftController.transform.position, leftController.GetComponent<BoxCollider>().size / 2f,
+                leftController.transform.rotation, layerMask, QueryTriggerInteraction.Collide);
+            foreach (Collider col in overlapR)
+            {
+                print(col.gameObject.name);
+                if (col.gameObject == obj)
+                {
+                    rightController.SendMessage("OnTriggerExit", col);
+                    print("send on trigger exit");
+                }
+            }
+
+            foreach (Collider col in overlapL)
+            {
+                print(col.gameObject.name);
+                if (col.gameObject == obj)
+                {
+                    print("send on trigger exit");
+                    leftController.SendMessage("OnTriggerExit", col);
+                }
+            }
             obj.TryGetComponent(out OffsetGrab interactable);
             if (interactable)
                 interactable.enabled = false;
-            //List<Collider> colliders = interactable.colliders;
-            //foreach (Collider c in colliders)
-            //{
-            //    c.enabled = false;
-            //}
-            // if controller is inside object need to clear interactor as well. 
-            //var overlap = Physics.OverlapBox(obj.transform.position, obj.transform.localScale / 2);
-            //bool controllerInside = overlap.ToList().Any(x => x.CompareTag("GameController"));
-            //if (controllerInside)
-            //{
-            //    obj.
-            //}
         }
 
         [PunRPC]
-        public void RecieveMessageEnableColliders(string name)
+        public void RecieveMessageEnableColliders(string n)
         {
-            GameObject obj = GameObject.Find(name);
+            print($"enable colliders for {n} {n == null}");
+            GameObject obj = GameObject.Find(n);
             if (obj == null)
                 return;
+            print($"enable colliders for {n}");
+            var rightController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
+            var leftController = ReferenceManager.instance.leftController.GetComponent<XRDirectInteractor>();
+            int layerMask = LayerMask.GetMask("GraphLayer");
+            Collider[] overlapR = Physics.OverlapBox(rightController.transform.position, rightController.GetComponent<BoxCollider>().size / 2f,
+                rightController.transform.rotation, layerMask, QueryTriggerInteraction.Collide);
+            Collider[] overlapL = Physics.OverlapBox(leftController.transform.position, leftController.GetComponent<BoxCollider>().size / 2f,
+                leftController.transform.rotation, layerMask, QueryTriggerInteraction.Collide);
+            foreach (Collider col in overlapR)
+            {
+                if (col.gameObject == obj)
+                {
+                    rightController.SendMessage("OnTriggerEnter", col);
+                }
+            }
+
+            foreach (Collider col in overlapL)
+            {
+                if (col.gameObject == obj)
+                {
+                    leftController.SendMessage("OnTriggerEnter", col);
+                }
+            }
             obj.TryGetComponent(out OffsetGrab interactable);
             if (interactable)
                 interactable.enabled = true;
-            //List<Collider> colliders = obj.GetComponent<OffsetGrab>().colliders;
-            //foreach (Collider c in colliders)
-            //{
-            //    c.enabled = true;
-            //}
         }
 
         [PunRPC]
