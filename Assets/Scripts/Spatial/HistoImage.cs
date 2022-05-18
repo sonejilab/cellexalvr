@@ -33,9 +33,7 @@ namespace CellexalVR.Spatial
         private Vector3 diffCoordValues;
 
         private Texture2D posTexture;
-        private Texture2D colorTexture;
         private Texture2D alphaTexture;
-        private Transform rayCastingSource;
         private Vector2Int cropStart = new Vector2Int();
         private Vector3 startHit = new Vector3();
         private Vector3 originalScale = new Vector3();
@@ -49,11 +47,6 @@ namespace CellexalVR.Spatial
         {
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             visualEffect = GetComponentInChildren<VisualEffect>();
-            //rightHand = Player.instance.rightHand;
-            //if (rightHand)
-            //{
-            //    rayCastingSource = rightHand.GetComponent<SteamVR_LaserPointer>().transform;
-            //}
             pc = GetComponent<PointCloud>();
 
             originalScale = transform.localScale;
@@ -105,7 +98,6 @@ namespace CellexalVR.Spatial
             float maxY = 0f;
             float minY = 0f;
             posTexture = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
-            colorTexture = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             alphaTexture = new Texture2D(width, height, TextureFormat.RGBAFloat, true, true);
             Color[] positions = new Color[width * height];
             Color[] colors = new Color[width * height];
@@ -153,21 +145,7 @@ namespace CellexalVR.Spatial
 
             scaledMaxValues = new Vector2(maxX, maxY);
             scaledMinValues = new Vector2(minX, minY);
-
-            //posTexture.SetPixels(positions);
-            //colorTexture.SetPixels(colors);
-            //alphaTexture.SetPixels(alphas);
             image.GetComponent<MeshRenderer>().material.mainTexture = texture;
-
-            //posTexture.Apply();
-            //colorTexture.Apply();
-            //alphaTexture.Apply();
-            //visualEffect.SetTexture("PositionMapTex", posTexture);
-            //visualEffect.SetTexture("ColorMapTex", colorTexture);
-            //visualEffect.SetTexture("AlphaMapTex", alphaTexture);
-            //visualEffect.SetInt("SpawnRate", (width * height));
-
-
             visualEffect.Stop();
             visualEffect.Play();
         }
@@ -277,73 +255,6 @@ namespace CellexalVR.Spatial
             }
         }
 
-        private void ImageRayCast()
-        {
-            //    Physics.Raycast(rayCastingSource.position, rayCastingSource.TransformDirection(Vector3.forward), out RaycastHit hit, Mathf.Infinity, layerMask);
-            //    //Debug.DrawRay(rayCastingSource.position, rayCastingSource.TransformDirection(Vector3.forward));
-            //    int hitx = 0;
-            //    int hity = 0;
-            //    if (hit.collider && hit.transform == image.transform)
-            //    {
-            //        hitx = (int)(hit.textureCoord.x * texture.width);
-            //        hity = (int)(hit.textureCoord.y * texture.height);
-            //        if (rightHand.grabPinchAction.GetStateDown(rightHand.handType))
-            //        {
-            //            // Save coordinates when button is first pressed.
-            //            foreach (LineRenderer lr in lines)
-            //            {
-            //                lr.gameObject.SetActive(true);
-            //            }
-            //            cropStart.x = hitx;
-            //            cropStart.y = hity;
-            //            startHit = hit.point;
-            //        }
-            //        if (rightHand.grabPinchAction.GetState(rightHand.handType))
-            //        {
-            //            // Show crop area with lines while button is down.
-            //            Vector3 start = startHit;
-            //            Vector3 corner2 = new Vector3(hit.point.x, startHit.y, startHit.z);
-            //            Vector3 corner3 = new Vector3(hit.point.x, hit.point.y, startHit.z);
-            //            Vector3 corner4 = new Vector3(startHit.x, hit.point.y, startHit.z);
-
-            //            //Vector3 corner5 = new Vector3(startHit.x, startHit.y, hit.point.z);
-            //            //Vector3 corner6 = new Vector3(hit.point.x, startHit.y, hit.point.z);
-            //            //Vector3 corner7 = new Vector3(hit.point.x, hit.point.y, hit.point.z);
-            //            //Vector3 corner8 = new Vector3(startHit.x, hit.point.y, hit.point.z);
-
-            //            lines[0].SetPositions(new Vector3[] { start, corner2 });
-            //            lines[1].SetPositions(new Vector3[] { corner2, corner3 });
-            //            lines[2].SetPositions(new Vector3[] { corner3, corner4 });
-            //            lines[3].SetPositions(new Vector3[] { corner4, start });
-
-            //            //lines[4].SetPositions(new Vector3[] { start, corner5 });
-            //            //lines[5].SetPositions(new Vector3[] { corner2, corner6 });
-            //            //lines[6].SetPositions(new Vector3[] { corner3, corner7 });
-            //            //lines[7].SetPositions(new Vector3[] { corner4, corner8 });
-
-            //            //lines[8].SetPositions(new Vector3[] { corner5, corner6});
-            //            //lines[9].SetPositions(new Vector3[] { corner6, corner7 });
-            //            //lines[10].SetPositions(new Vector3[] { corner7, corner8 });
-            //            //lines[11].SetPositions(new Vector3[] { corner8, corner5 });
-
-            //        }
-            //    }
-            //    if (rightHand.grabPinchAction.GetStateUp(rightHand.handType))
-            //    {
-            //        // Do cropping when button is released.
-            //        foreach (LineRenderer lr in lines)
-            //        {
-            //            lr.gameObject.SetActive(false);
-            //        }
-            //        if (math.abs(hitx - cropStart.x) > 1 && math.abs(hity - cropStart.y) > 1)
-            //        {
-            //            CropImage((int)cropStart.x, (int)cropStart.y, hitx, hity);
-            //            CropPoints(startHit, hit.point);
-            //        }
-            //    }
-
-        }
-
         private void CropImage(int startX, int startY, int endX, int endY)
         {
             if (startX > endX)
@@ -364,7 +275,7 @@ namespace CellexalVR.Spatial
             Color[] colors = texture.GetPixels();
             for (int i = 0; i < colors.Length; i++)
             {
-                colors[i].a = 0.01f;// = new Color(0.1f, 0.1f, 0.1f, 0.1f);
+                colors[i].a = 0.01f;
             }
             croppedIm.SetPixels(colors);
 
@@ -384,19 +295,6 @@ namespace CellexalVR.Spatial
         {
             startPos = visualEffect.transform.InverseTransformPoint(startPos);
             endPos = visualEffect.transform.InverseTransformPoint(endPos);
-            //if (startPos.x > endPos.x)
-            //{
-            //    float temp = startPos.x;
-            //    startPos.x = endPos.x;
-            //    endPos.x = temp;
-            //}
-
-            //if (startPos.y > endPos.y)
-            //{
-            //    float temp = startPos.y;
-            //    startPos.y = endPos.y;
-            //    endPos.y = temp;
-            //}
             Color[] positions = posTexture.GetPixels();
             Color[] alphas = alphaTexture.GetPixels();
             for (int i = 0; i < positions.Length; i++)
@@ -408,20 +306,11 @@ namespace CellexalVR.Spatial
                 }
                 else
                 {
-                    //alphas[i] = new Color(0.01f, 0.01f, 0.01f);
                     alphas[i] = Color.black;
                 }
             }
             alphaTexture.SetPixels(alphas);
             alphaTexture.Apply();
-        }
-
-        private void Update()
-        {
-            //ImageRayCast();
-            //UpdateColorTexture();
-
-
         }
     }
 }

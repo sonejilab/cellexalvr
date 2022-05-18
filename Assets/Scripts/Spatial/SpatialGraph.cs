@@ -42,19 +42,7 @@ namespace CellexalVR.Spatial
         private void Start()
         {
             startPosition = transform.position;
-            GameObject brain = GameObject.Instantiate(brainModel);
-            brain.GetComponent<ReferenceMouseBrain>().spatialGraph = this;
             _rigidBody = GetComponent<Rigidbody>();
-
-            // var angle = -(Math.PI);
-            // var radius = 1f;
-            // for (int i = 0; i < 8; i++)
-            // {
-            //     Vector3 pos = radius * new Vector3((float) Math.Cos(angle), 1, (float) Math.Sin(angle));
-            //     var obj = GameObject.Instantiate(cubePrefab, transform);
-            //     obj.transform.localPosition = pos;
-            //     angle += (Math.PI) / 8d;
-            // }
         }
 
         private void Update()

@@ -8,7 +8,9 @@ using CellexalVR.General;
 
 namespace CellexalVR.Spatial
 {
-
+    /// <summary>
+    /// General class for a geo mx image. Scan images, roi images and aoi images inherit this class.
+    /// </summary>
     public abstract class GeoMXSlide : MonoBehaviour
     {
         public string displayName;

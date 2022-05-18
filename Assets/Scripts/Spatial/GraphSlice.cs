@@ -90,27 +90,6 @@ namespace CellexalVR.Spatial
             CellexalEvents.ColorTextureUpdated.AddListener(UpdateColorTexture);
         }
 
-        private void Update()
-        {
-            //if (SelectionToolCollider.instance.selActive)
-            //{
-            //    UpdateColorTexture();
-            //}
-
-            //if (Keyboard.current.tKey.wasPressedThisFrame)
-            //{
-            //    DisperseSlices();
-            //}
-
-            //if (++frameCount > 10)
-            //{
-            //    frameCount = 0;
-            //}
-
-            //CheckForController();
-
-        }
-
 
         private void ActivateBox()
         {
@@ -124,8 +103,6 @@ namespace CellexalVR.Spatial
             {
                 slicerBox.Active = true;
             }
-            //GetComponent<OffsetGrab>().colliders.Clear();
-            //GetComponent<OffsetGrab>().colliders.Add(GetComponent<BoxCollider>());
         }
 
         private bool CheckForController()
@@ -137,10 +114,12 @@ namespace CellexalVR.Spatial
                 return true;
             }
             return false;
-
-
         }
 
+        /// <summary>
+        /// Update the color texture map of the point cloud to correspond to the parents color map.
+        /// The parent point cloud contains all the original points whereas this slice is a subset.
+        /// </summary>
         public void UpdateColorTexture()
         {
             if (points.Count > 0 && histoImage == null)
@@ -179,7 +158,6 @@ namespace CellexalVR.Spatial
         /// <returns></returns>
         public void MoveToGraph()
         {
-            //StartCoroutine(MoveToGraphCoroutine());
             transform.parent = parentPC.transform;
             transform.DOLocalMove(Vector3.zero, 0.8f).SetEase(Ease.InOutSine);
             transform.DOLocalRotate(Vector3.zero, 0.8f).SetEase(Ease.InOutSine).OnComplete(() => gameObject.SetActive(false));
@@ -219,21 +197,6 @@ namespace CellexalVR.Spatial
         /// <returns></returns>
         private void DisperseSlices()
         {
-            //dispersing = true;
-            //_rigidBody.drag = 1;
-            //_rigidBody.angularDrag = 1;
-
-            //float time = 0;
-
-            //while (time <= 1.0f)
-            //{
-            //    time += Time.deltaTime;
-            //    yield return null;
-            //}
-
-            //_rigidBody.velocity = Vector3.zero;
-            //_rigidBody.angularVelocity = Vector3.zero;
-
             float angle = (Mathf.PI * 1.1f);
             Vector3 center = Vector3.zero; // referenceManager.headset.transform.position;
             int slicesPerRow = childSlices.Count / 4;
@@ -264,19 +227,6 @@ namespace CellexalVR.Spatial
                 Vector3 wPos = transform.TransformPoint(pos);
                 gs.transform.DODynamicLookAt(2 * wPos - lookAtPos, 0.8f);
             }
-
-            //float animationTime = 1f;
-            //for (int i = 0; i < childSlices.Count; i++)
-            //{
-            //}
-
-            //while (time < 1f + animationTime)
-            //{
-            //    time += Time.deltaTime;
-            //    yield return null;
-            //}
-
-            //ActivateSlices(false);
         }
 
 
@@ -303,6 +253,10 @@ namespace CellexalVR.Spatial
             wire.SetActive(false);
         }
 
+        /// <summary>
+        /// Separates the slice from its parent point cloud so it can be individually interacted with.
+        /// </summary>
+        /// <param name="toggle">To separate or move back to parent.</param>
         public void ActivateSlices(bool toggle)
         {
             foreach (CellexalButton b in GetComponentsInChildren<CellexalButton>(true))
@@ -381,7 +335,15 @@ namespace CellexalVR.Spatial
             }
         }
 
-
+        /// <summary>
+        /// Creates a set of new slices from this based on the position in a given axis. 
+        /// Also based on the nr of slices you want.
+        /// E.g. if you want 10 new slices in the x it divides up the slice in 10 equally big (in x) slices.
+        /// </summary>
+        /// <param name="axis">Which axis to subdivide on. 0 = x, 1 = y, 2 = z.</param>
+        /// <param name="points">Which points to slice.</param>
+        /// <param name="nrOfSlices">Nr of slices to make. </param>
+        /// <returns></returns>
         public IEnumerator SliceAxis(int axis, List<Point> points, int nrOfSlices)
         {
             GraphSlice[] oldSlices = childSlices.ToArray();
@@ -420,7 +382,6 @@ namespace CellexalVR.Spatial
                 sortedPoints = sortedPointsZ;
             }
 
-            //ClearSlices();
             List<GraphSlice> slices = new List<GraphSlice>();
             int sliceNr = 0;
             PointCloud newPc = PointCloudGenerator.instance.CreateFromOld(pointCloud.transform);
@@ -434,8 +395,6 @@ namespace CellexalVR.Spatial
             slices.Add(slice);
             childSlices.Add(slice);
             slice.gameObject.name = pointCloud.gameObject.name + "_" + SliceNr;
-
-
             float currentCoord, diff, prevCoord;
             Point point = sortedPoints[0];
             float firstCoord = prevCoord = point.offset[axis];
@@ -458,16 +417,10 @@ namespace CellexalVR.Spatial
                 currentCoord = point.offset[axis];
                 // when we reach new slice (new x/y/z coordinate) build the graph and then start adding to a new one.
                 diff = math.abs(currentCoord - firstCoord);
-
                 if (diff > epsilonToUse)
                 {
-                    //slice.BuildPointCloud(pointCloud.transform);
                     yield return PointCloudGenerator.instance.SpawnPoints(newPc, pointCloud, slice.points);
                     newPc = PointCloudGenerator.instance.CreateFromOld(pointCloud.transform);
-                    //while (PointCloudGenerator.instance.creatingGraph)
-                    //{
-                    //    yield return null;
-                    //}
 
                     yield return new WaitForSeconds(0.1f);
                     slice = newPc.GetComponent<GraphSlice>();
@@ -491,7 +444,6 @@ namespace CellexalVR.Spatial
                 {
                     slices.Add(slice);
                     yield return PointCloudGenerator.instance.SpawnPoints(newPc, pointCloud, slice.points);
-                    //slice.BuildPointCloud(pointCloud.transform);
                     childSlices.Add(slice);
                     while (PointCloudGenerator.instance.creatingGraph)
                     {
@@ -511,34 +463,8 @@ namespace CellexalVR.Spatial
 
             slicerBox.sliceAnimationActive = false;
             parentSlice.ActivateSlices(true);
-            //ActivateSlices(true);
-            //PointCloudGenerator.instance.BuildSlices(pointCloud.transform, slices.ToArray());
 
         }
-
-        //private void OnTriggerEnter(Collider other)
-        //{
-        //    if (!parentSlice.controllerInsideSomeBox && other.CompareTag("GameController"))
-        //    {
-        //        parentSlice.controllerInsideSomeBox = true;
-        //        controllerInside = true;
-        //        slicerBox.box.SetActive(true);
-        //    }
-
-        //}
-
-        //private void OnTriggerExit(Collider other)
-        //{
-        //    if (other.CompareTag("GameController"))
-        //    {
-        //        parentSlice.controllerInsideSomeBox = false;
-        //        controllerInside = false;
-        //        if (!slicerBox.Active)
-        //        {
-        //            slicerBox.box.SetActive(false);
-        //        }
-        //    }
-        //}
     }
 
 }

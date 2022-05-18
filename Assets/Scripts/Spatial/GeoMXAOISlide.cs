@@ -5,7 +5,9 @@ using UnityEngine;
 
 namespace CellexalVR.Spatial
 {
-
+    /// <summary>
+    /// Class represents on Area of Illumination (AOI) image. Each aoi image corresponds to one cell in the graph.
+    /// </summary>
     public class GeoMXAOISlide : GeoMXSlide
     {
         public string aoiID;
@@ -24,10 +26,12 @@ namespace CellexalVR.Spatial
                 button.group = i;
             }
         }
-        public override void Select()
-        {
-            // HighLight points?
-        }
+        public override void Select() {}
+
+        /// <summary>
+        /// Select the cell with the same id as this aoi image. This highlights the graph point as well as this image.
+        /// </summary>
+        /// <param name="group"></param>
         public override void SelectCells(int group)
         {
             int cellID = GeoMXImageHandler.instance.GetCellFromAoiID(aoiID).id;

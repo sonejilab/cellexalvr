@@ -6,7 +6,11 @@ using UnityEngine.InputSystem;
 
 namespace CellexalVR.Spatial
 {
-
+    /// <summary>
+    /// Class to handle the rayasting of the different geo mx images.
+    /// The selection of the scans, roi, aois are handled via raycasting (and trigger click).
+    /// The images are all assumed to have a collider on the EnvironmentButtonLayer and a GeoMXSlide component.
+    /// </summary>
     public class GeoMXImageRaycaster : MonoBehaviour
     {
         private GeoMXImageHandler imageHandler;
@@ -21,6 +25,9 @@ namespace CellexalVR.Spatial
             CellexalEvents.ImagesLoaded.AddListener(() => block = false);
         }
 
+        /// <summary>
+        /// When trigger click is called ray cast and see if an image is it. If it is the image is selected.
+        /// </summary>
         private void OnTriggerClick()
         {
             if (block)
@@ -41,7 +48,10 @@ namespace CellexalVR.Spatial
         {
             Raycast();
         }
-
+        
+        /// <summary>
+        /// Raycast and see if image is hit. Displays the name of the image (if hit).
+        /// </summary>
         private void Raycast()
         {
             if (block)
@@ -62,13 +72,11 @@ namespace CellexalVR.Spatial
                 else
                 {
                     imageHandler.ResetDisplayName();
-                    //imageHandler.ResetHighlightedCells();
                     currentSlideHit = null;
                 }
             }
             else
             {
-                //imageHandler.ResetHighlightedCells();
                 imageHandler.ResetDisplayName();
                 currentSlideHit = null;
             }

@@ -94,7 +94,6 @@ namespace CellexalVR.Spatial
         [BurstCompile]
         public void SliceFromSelection(int graphNr)
         {
-            //Color[] colors = TextureHandler.instance.colorTextureMaps[0].GetPixels();
             NativeArray<Color> colorArray = new NativeArray<Color>(TextureHandler.instance.colorTextureMaps[0].GetPixels(), Allocator.TempJob);
             int entityCount = query.CalculateEntityCount();
             NativeArray<bool> move = new NativeArray<bool>(entityCount, Allocator.TempJob);
@@ -102,7 +101,6 @@ namespace CellexalVR.Spatial
                 (Entity entity, int entityInQueryIndex, ref LocalToWorld localToWorld, ref Point point, ref Translation translation) =>
                 {
                     if (point.parentID != graphNr && point.orgParentID != graphNr) return;
-                    //move[entityInQueryIndex] = GetComponentDataFromEntity<SelectedPointComponent>().HasComponent(entity);
                     move[entityInQueryIndex] = colorArray[entityInQueryIndex].a > 0.9f;
                 }).ScheduleParallel(Dependency);
             jobHandle.Complete();

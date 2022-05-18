@@ -8,6 +8,11 @@ using UnityEngine.Networking;
 
 namespace CellexalVR.Spatial
 {
+    /// <summary>
+    /// This class handls the slide stacks.
+    /// A slide stack is created when a selection is made.
+    /// The aoi images corresponding to the selections are all put in a stack based on the group it belongs to.
+    /// </summary>
     public class GeoMXSlideStack : MonoBehaviour
     {
         private int group;
@@ -29,6 +34,10 @@ namespace CellexalVR.Spatial
         private int currentSlideCount = 0;
         private List<GeoMXAOISlide> aoiSlides = new List<GeoMXAOISlide>();
 
+        /// <summary>
+        /// Add a slide to the stack.
+        /// </summary>
+        /// <param name="slide"></param>
         public void AddSlide(GeoMXAOISlide slide)
         {
             slides.Add(slide);
@@ -47,15 +56,15 @@ namespace CellexalVR.Spatial
             count++;
         }
 
-        public void Scroll(int val)
+        /// <summary>
+        /// Scroll through the stack images.
+        /// </summary>
+        /// <param name="direction">Right/Left</param>
+        public void Scroll(int direction)
         {
-            //if (aoiSlides.Count > 0)
-            //{
-            //    currentSlide.Select();
-            //}
             currentSlide.Move(new Vector3(0, -1, 0));
             currentSlide.Fade(false);
-            currentSlideCount = SlideScroller.mod(currentSlideCount + val, count);
+            currentSlideCount = SlideScroller.mod(currentSlideCount + direction, count);
             GeoMXSlide newSlide = slides[currentSlideCount];
             newSlide.gameObject.SetActive(true);
             newSlide.Fade(true);
@@ -63,60 +72,6 @@ namespace CellexalVR.Spatial
             currentSlide = newSlide;
         }
 
-        public void SpawnAOIImages(string scanID, string roiID, string[] aoiIDs)
-        {
-            StartCoroutine(SpawnAOIImagesCoroutine(scanID, roiID, aoiIDs));
-        }
-
-        private IEnumerator SpawnAOIImagesCoroutine(string scanID, string roiID, string[] aoiIDs)
-        {
-            for (int i = 0; i < aoiIDs.Length; i++)
-            {
-                string path = $"{GeoMXImageHandler.imagePath}\\{scanID}\\{aoiIDs[i]}.png";
-                if (File.Exists(path))
-                {
-                    using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture($"file://{path}"))
-                    {
-                        uwr.downloadHandler = new DownloadHandlerTexture(true);
-                        yield return uwr.SendWebRequest();
-                        if (uwr.result != UnityWebRequest.Result.Success)
-                        {
-                            print(uwr.error);
-                        }
-                        else
-                        {
-                            GeoMXAOISlide aoi = Instantiate(GeoMXImageHandler.instance.aoiPrefab, transform);
-                            aoi.imageHandler = GeoMXImageHandler.instance;
-                            Texture2D aoiTexture = DownloadHandlerTexture.GetContent(uwr);
-                            aoi.SetLowQ(aoiTexture);
-                            //aoi.GetComponent<MeshRenderer>().material.SetTexture("_MainTex", aoiTexture);
-                            float ratio = (float)aoiTexture.width / (float)aoiTexture.height;
-                            aoi.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
-                            aoi.originalScale = aoi.transform.localScale;
-                            aoi.transform.localPosition = new Vector3(1.2f * i, 1.2f, 0);
-                            aoiSlides.Add(aoi);
-                            aoi.index = i;
-                            aoi.displayName = aoiIDs[i];
-                            aoi.type = 2;
-                            aoi.aoiID = aoiIDs[i];
-                        }
-                    }
-                }
-                else
-                {
-                    print($"Could not find image {path}");
-                }
-            }
-
-        }
-        public void UnSelectROI(string roiID)
-        {
-            foreach(GeoMXAOISlide slide in aoiSlides)
-            {
-                Destroy(slide.gameObject);
-            }
-            aoiSlides.Clear();
-        }
     }
 
 #if UNITY_EDITOR

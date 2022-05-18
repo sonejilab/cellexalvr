@@ -5,7 +5,9 @@ using AnalysisLogic;
 
 namespace CellexalVR.Spatial
 {
-
+    /// <summary>
+    /// Class that handles the positioning of the culling walls. Culling walls are used to cull the pointclouds. Points on one side of the wall will be culled.
+    /// </summary>
     public class CullingWall : MonoBehaviour
     {
         public GameObject wall;
@@ -13,14 +15,10 @@ namespace CellexalVR.Spatial
         public Vector3 sliderStartPosition;
         public Vector3 handleStartPosition;
 
-        private MeshRenderer mr;
-        private PointCloud parentPointCloud;
         private SliderController slider;
 
         private void Start()
         {
-            mr = GetComponent<MeshRenderer>();
-            parentPointCloud = GetComponentInParent<PointCloud>();
             slider = GetComponentInParent<SliderController>(true);
         }
 
@@ -38,25 +36,6 @@ namespace CellexalVR.Spatial
             slider.transform.localPosition = sliderStartPosition;
             transform.localPosition = handleStartPosition;
         }
-
-
-        //private void OnTriggerEnter(Collider other)
-        //{
-        //    if (other.CompareTag("Player"))
-        //    {
-        //        //mr.enabled = true;
-        //        wall.SetActive(true);
-        //    }
-        //}
-
-        //private void OnTriggerExit(Collider other)
-        //{
-        //    if (!interactable.isGrabbed && other.CompareTag("Player"))
-        //    {
-        //        //mr.enabled = false;
-        //        wall.SetActive(false);
-        //    }
-        //}
 
     }
 }
