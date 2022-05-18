@@ -384,7 +384,6 @@ namespace CellexalVR.General
             {
                 // beginning of history reached
                 CellexalEvents.BeginningOfHistoryReached.Invoke();
-                //selectionToolMenu.UndoSelection();
             }
 
             else if (indexToMoveTo < 0)
@@ -394,31 +393,21 @@ namespace CellexalVR.General
             }
 
             HistoryListInfo info = selectionHistory[indexToMoveTo];
-            //info.graphPoint.Group = info.fromGroup;
-
-            // if info.fromGroup != 1 then the outline should be drawn
             foreach (Graph graph in graphManager.Graphs)
             {
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
                 gp.ColorSelectionColor(info.fromGroup, !info.newNode);
             }
+            referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(info.toGroup.ToString(), -1, selectionToolCollider.Colors[info.toGroup]);
 
-            //groupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
-            //HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
-            //FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, -1);
             if (info.newNode)
             {
                 selectedCells.Remove(info.graphPoint);
                 info.graphPoint.unconfirmedInSelection = false;
-                //info.graphPoint.ResetColor();
             }
-
             else
             {
-                //groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-                //HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-                //FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, 1);
-                // info.graphPoint.ResetColor();
+                referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(info.fromGroup.ToString(), 1, selectionToolCollider.Colors[info.fromGroup]);
             }
 
             historyIndexOffset++;
@@ -433,7 +422,6 @@ namespace CellexalVR.General
             if (historyIndexOffset == selectionHistory.Count)
             {
                 CellexalEvents.BeginningOfHistoryLeft.Invoke();
-                //selectionToolMenu.SelectionStarted();
             }
 
             int indexToMoveTo = selectionHistory.Count - historyIndexOffset;
@@ -449,16 +437,13 @@ namespace CellexalVR.General
             }
 
             HistoryListInfo info = selectionHistory[indexToMoveTo];
-            //info.graphPoint.Group = info.toGroup;
             foreach (Graph graph in graphManager.Graphs)
             {
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
                 gp.ColorSelectionColor(info.toGroup, info.toGroup != -1);
             }
+            referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(info.toGroup.ToString(), 1, selectionToolCollider.Colors[info.toGroup]);
 
-            //groupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
-            //HUDGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
-            //FarGroupInfoDisplay.ChangeGroupsInfo(info.toGroup, 1);
             if (info.newNode)
             {
                 selectedCells.Add(info.graphPoint);
@@ -467,9 +452,7 @@ namespace CellexalVR.General
 
             else
             {
-                //groupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
-                //HUDGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
-                //FarGroupInfoDisplay.ChangeGroupsInfo(info.fromGroup, -1);
+                referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(info.fromGroup.ToString(), -1, selectionToolCollider.Colors[info.fromGroup]);
             }
 
             historyIndexOffset--;
