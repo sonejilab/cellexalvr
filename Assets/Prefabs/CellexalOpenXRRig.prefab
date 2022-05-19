@@ -7340,11 +7340,11 @@ MonoBehaviour:
     type: 3}
   touchPadPos: {fileID: -3834433346304978039, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
-  vfx: {fileID: 2073454253}
   referenceManager: {fileID: 0}
   selectionManager: {fileID: 0}
   selectionToolMaterial: {fileID: 2100000, guid: 96b0e99b8991fab4e844e566d297fd42,
     type: 2}
+  controllerMaterial: {fileID: 0}
   selectionToolColliders:
   - {fileID: 8162680222943719376}
   - {fileID: 968746370772724379}
@@ -7900,10 +7900,11 @@ MonoBehaviour:
     type: 3}
   ActualModel: 0
   colorMode: 0
-  defaultStaticMaterial: {fileID: 2100000, guid: cc151daa0e8ba3c48abed9c86b2e090d,
+  defaultStaticMaterial: {fileID: 2100000, guid: 282096f81f2f0d34eabef4235b1617b1,
     type: 2}
   animatedPulseMaterial: {fileID: 2100000, guid: 1acb6b523c0ab4841ba455c24a8c05d6,
     type: 2}
+  toolsParent: {fileID: 0}
 --- !u!65 &1638506007
 BoxCollider:
   m_ObjectHideFlags: 0
