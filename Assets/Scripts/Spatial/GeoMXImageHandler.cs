@@ -104,7 +104,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Read the image data and spawn the scan images to start with.
+        /// Read the image data and spawn the scan <see cref="GeoMXScanSlide"/> images to start with.
         /// </summary>
         public void ReadData()
         {
@@ -147,7 +147,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Unselecting a scan destroys the roiImages that are linked to it that were spawned when the spawn was selected. 
+        /// Unselecting a scan <see cref="GeoMXScanSlide"/> destroys the roiImages that are linked to it that were spawned when the spawn was selected. 
         /// </summary>
         /// <param name="scanID">The id of the scan to unselect.</param>
         /// <param name="moveBack">If the image should be moved back to original position.</param>
@@ -178,7 +178,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Unselecting an roi destroys the aoiImages that are linked to it that were spawned when the spawn was selected. 
+        /// Unselecting an roi <see cref="GeoMXROISlide"/> destroys the aoiImages that are linked to it that were spawned when the spawn was selected. 
         /// </summary>
         /// <param name="roiID">The id of the roi to unselect.</param>
         /// <param name="moveBack">If the image should be moved back to original position.</param>
@@ -211,7 +211,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Spawns some aoi images that are linked to a given scan and roiID. This is called when an roi is selected.
+        /// Spawns some aoi images <see cref="GeoMXAOISlide"/> that are linked to a given scan and roiID. This is called when an roi is selected.
         /// It also unselects the previously selected roi.
         /// </summary>
         /// <param name="scanID">The scanID that the aoi is linked to.</param>
@@ -228,7 +228,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Coroutine to spawn aoi images. It first spawns a low quality version and saves the high quality for when the user comes closer.
+        /// Coroutine to spawn aoi images <see cref="GeoMXAOISlide"/>. It first spawns a low quality version and saves the high quality for when the user comes closer.
         /// Also updates the slide scroller so it slides the correct images. 
         /// Moves around the images to avoid overlap.
         /// </summary>
@@ -332,7 +332,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Function called when a scan is selected. It spawns the roi images linked to the selected scan. 
+        /// Function called when a scan is selected. It spawns the roi <see cref="GeoMXROISlide"/> images linked to the selected scan. 
         /// It also unselects the previously selected scan and roi.
         /// </summary>
         /// <param name="scanID">The id of the selected scan.</param>
@@ -359,7 +359,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Coroutine that spawns the roi images.
+        /// Coroutine that spawns the roi images <see cref="GeoMXROISlide"/>.
         /// First spawns a lower quality version and saves a high quality version that it switches to when the user gets close enough.
         /// </summary>
         /// <param name="scanID"></param>
@@ -408,14 +408,6 @@ namespace CellexalVR.Spatial
                                 roi.gameObject.SetActive(false);
                             }
                             roiSlides[roiIDs[i]] = roi;
-                            //foreach (string aoi in roi.aoiIDs)
-                            //{
-                            //    var cellID = GetCellFromAoiID(aoi).id;
-                            //    var graph = referenceManager.graphManager.Graphs[0];
-                            //    var gPoint = graph.FindGraphPoint(cellID.ToString());
-                            //    Color c = Color.blue;
-                            //    referenceManager.selectionManager.AddGraphpointToSelection(gPoint, 0, false, c);
-                            //}
                             ShowName($"Loading {i} of {roiIDs.Length}");
                             roi.type = 1;
                         }
@@ -464,7 +456,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Spawns the aoi images that are linked to the cells selected in a graph. Also unselects previously selected roi and scan image.
+        /// Spawns the aoi images <see cref="GeoMXAOISlide"/> that are linked to the cells selected in a graph. Also unselects previously selected roi and scan image.
         /// The spawned aoi images can come from several different roi and scans.
         /// </summary>
         public void SpawnAOIFromSelection()
@@ -484,7 +476,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Coroutine to spawn the aoi images linked to the given graph points. The graph points and aoi images have the same id.
+        /// Coroutine to spawn the aoi images <see cref="GeoMXAOISlide"/> linked to the given graph points. The graph points and aoi images have the same id.
         /// It first clears the previous images as well as the slide stacks if a previous selection was made.
         /// </summary>
         /// <param name="gps"></param>
@@ -601,7 +593,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Spawns all scan images. Called at first when reading the data.
+        /// Spawns all scan images <see cref="GeoMXScanSlide"/>. Called at first when reading the data.
         /// </summary>
         public void SpawnAllScanImages()
         {
@@ -615,7 +607,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Coroutine to load the scan images linked to the given ids.
+        /// Coroutine to load the scan images <see cref="GeoMXScanSlide"/> linked to the given ids.
         /// </summary>
         /// <param name="scanIDs">The ids of the scans to load.</param>
         /// <returns></returns>
@@ -653,7 +645,6 @@ namespace CellexalVR.Spatial
                             scan.transform.localPosition = new Vector3(0, 0, radius);
                             scan.transform.LookAt(2 * scan.transform.position - center);
                             Texture2D scanTexture = DownloadHandlerTexture.GetContent(uwr);
-                            //scan.GetComponent<MeshRenderer>().material.SetTexture("_BaseMap", scanTexture);
                             float ratio = (float)scanTexture.width / (float)scanTexture.height;
                             scan.transform.localScale = new Vector3(1f * ratio, 1f, 1f);
                             scan.originalScale = scan.transform.localScale;
@@ -745,7 +736,7 @@ namespace CellexalVR.Spatial
         }
 
         /// <summary>
-        /// Set the slide scroller to a scan, roi or aoi.
+        /// Set the slide scroller <see cref="SlideScroller"/> to a scan, roi or aoi.
         /// </summary>
         /// <param name="type">The type to switch to 0 = scan, 1 = roi, 2 = aoi.</param>
         public void SetScroller(int type)
@@ -842,7 +833,7 @@ namespace CellexalVR.Spatial
 
 
         /// <summary>
-        /// Clear the stacks created when confirming a selection.
+        /// Clear the stacks <see cref="GeoMXSlideStack"/> created when confirming a selection.
         /// </summary>
         private void ClearSlideStacks()
         {

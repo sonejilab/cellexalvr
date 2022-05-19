@@ -1,30 +1,24 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using AnalysisLogic;
-using CellexalVR;
-using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Interaction;
-using Unity.Collections;
-// using CellexalVR.AnalysisLogic;
-// using CellexalVR.AnalysisObjects;
-// using CellexalVR.General;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine.VFX;
-using Random = Unity.Mathematics.Random;
 using CellexalVR.Spatial;
-using System.Diagnostics;
-using UnityEngine.InputSystem;
 
 namespace CellexalVR.AnalysisLogic
 {
+    /// <summary>
+    /// A point is the point cloud equivalent of <see cref="CellexalVR.AnalysisObjects.Graph.GraphPoint"/>. 
+    /// The indexes refer to the index in the position and color texture maps.
+    /// </summary>
     public struct Point : IComponentData
     {
         public bool selected;
@@ -44,6 +38,10 @@ namespace CellexalVR.AnalysisLogic
         public int pointCloudId;
     }
 
+    /// <summary>
+    /// This class handles the generation of the points clouds so it is the equivalent of the <see cref="CellexalVR.AnalysisObjects.GraphGenerator"/> but for point clouds.
+    /// Instantiates a point cloud prefab or spatial point cloud depending on the dataset.
+    /// </summary>
     public class PointCloudGenerator : MonoBehaviour
     {
         public static PointCloudGenerator instance;
@@ -70,28 +68,26 @@ namespace CellexalVR.AnalysisLogic
 
         public const int textureWidth = 1000;
         public bool readingFile;
-        // public List<string> cells = new List<string>();
 
         private float3 diffCoordValues;
         private Dictionary<string, float3> points = new Dictionary<string, float3>();
         private int graphNr;
         private EntityManager entityManager;
         private EntityArchetype entityArchetype;
-        private QuadrantSystem quadrantSystem;
-        private int maxPointCount;
-        private int slicePrefabsUsed;
-        //[SerializeField] private PointCloud[] slicePrefabs;
+        private OctantSystem quadrantSystem;
 
         private void Awake()
         {
             instance = this;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            quadrantSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>();
+            quadrantSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<OctantSystem>();
             CreateParentArchetype();
             CellexalEvents.GraphsUnloaded.AddListener(Reset);
         }
 
-
+        /// <summary>
+        /// When going back to loading menu destroy all point clouds.
+        /// </summary>
         private void Reset()
         {
             foreach (PointCloud pc in pointClouds)
@@ -101,6 +97,11 @@ namespace CellexalVR.AnalysisLogic
             pointClouds.Clear();
         }
 
+        /// <summary>
+        /// Create a new points cloud or spatial point cloud.
+        /// </summary>
+        /// <param name="spatial"></param>
+        /// <returns></returns>
         public PointCloud CreateNewPointCloud(bool spatial = false)
         {
             points.Clear();
@@ -123,6 +124,11 @@ namespace CellexalVR.AnalysisLogic
             return pc;
         }
 
+        /// <summary>
+        /// Create a point cloud that also contains a histology image.
+        /// </summary>
+        /// <param name="parentPC"></param>
+        /// <returns></returns>
         public HistoImage CreateNewHistoImage(PointCloud parentPC)
         {
             points.Clear();
@@ -140,6 +146,13 @@ namespace CellexalVR.AnalysisLogic
             return hi;
         }
 
+        /// <summary>
+        /// Create a new point cloud based on an existing one.
+        /// For example when slicing a graph.
+        /// </summary>
+        /// <param name="oldPc"></param>
+        /// <param name="spatial"></param>
+        /// <returns></returns>
         public PointCloud CreateFromOld(Transform oldPc, bool spatial = true)
         {
             points.Clear();
@@ -162,12 +175,22 @@ namespace CellexalVR.AnalysisLogic
             return pc;
         }
 
+        /// <summary>
+        /// Iterates through the graphslices to create and builds them.
+        /// </summary>
+        /// <param name="oldPc"></param>
+        /// <param name="newSlices"></param>
         public void BuildSlices(Transform oldPc, GraphSlice[] newSlices)
         {
-            //StartCoroutine(BuildSlicesCoroutine(oldPc, new GraphSlice[] { newSlices[0], newSlices[1], newSlices[2] }));
             StartCoroutine(BuildSlicesCoroutine(oldPc, newSlices));
         }
 
+        /// <summary>
+        /// Coroutine to build the slices which means spawning the points.
+        /// </summary>
+        /// <param name="oldPc"></param>
+        /// <param name="newSlices"></param>
+        /// <returns></returns>
         private IEnumerator BuildSlicesCoroutine(Transform oldPc, GraphSlice[] newSlices)
         {
             GraphSlice parentSlice = oldPc.GetComponent<GraphSlice>();
@@ -177,7 +200,6 @@ namespace CellexalVR.AnalysisLogic
                 parentSlice.childSlices.Remove(oldSlice);
                 Destroy(oldSlice.gameObject);
             }
-            maxPointCount = newSlices.ToList().Max(x => x.points.Count);
 
             yield return new WaitForSeconds(0.2f);
             GraphSlice slice;
@@ -198,13 +220,25 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
-
+        /// <summary>
+        /// Add graph point to the point cloud currently being built.
+        /// </summary>
+        /// <param name="cellName"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
         public void AddGraphPoint(string cellName, float x, float y, float z)
         {
             points[cellName] = new float3(x, y, z);
             UpdateMinMaxCoords(x, y, z);
         }
 
+        /// <summary>
+        /// Add graph point to the point cloud currently being built. Sets the z coordinate to zero for a 2D graph.
+        /// </summary>
+        /// <param name="cellName"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void AddGraphPoint(string cellName, float x, float y)
         {
             points[cellName] = new float3(x, y, 0);
@@ -260,6 +294,13 @@ namespace CellexalVR.AnalysisLogic
             );
         }
 
+        /// <summary>
+        /// Spawn new points based on the given points and a parent point cloud. Used when slicing.
+        /// </summary>
+        /// <param name="pc">The instatiated point cloud the points belongs to.</param>
+        /// <param name="parentPC">The parent point cloud. </param>
+        /// <param name="points"></param>
+        /// <returns></returns>
         public IEnumerator SpawnPoints(PointCloud pc, PointCloud parentPC, List<Point> points)
         {
             creatingGraph = false;
@@ -278,6 +319,10 @@ namespace CellexalVR.AnalysisLogic
             yield return CreateColorTextureMap(points, pc, parentPC);
         }
 
+        /// <summary>
+        /// Spawn the points and create poisition texture map.
+        /// </summary>
+        /// <param name="pc"></param>
         public void SpawnPoints(PointCloud pc)
         {
             Entity parent = entityManager.CreateEntity(entityArchetype);
@@ -307,12 +352,16 @@ namespace CellexalVR.AnalysisLogic
             }
 
             pointCount = scaledCoordinates.Count;
-            //WriteToFile(pc.GraphName + ".txt");
             pc.CreatePositionTextureMap(scaledCoordinates.Values.ToList(), scaledCoordinates.Keys.ToList());
             points.Clear();
             scaledCoordinates.Clear();
         }
 
+        /// <summary>
+        /// Retrieve the point cloud with the given name.
+        /// </summary>
+        /// <param name="pcName">The name of the point cloud.</param>
+        /// <returns></returns>
         public PointCloud FindPointCloud(string pcName)
         {
             for (int i = 0; i < pointClouds.Count; i++)
@@ -337,6 +386,11 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Spawn the points of a histology image point cloud.
+        /// </summary>
+        /// <param name="hi"></param>
+        /// <param name="parentPC"></param>
         public void SpawnPoints(HistoImage hi, PointCloud parentPC)
         {
             PointCloud pc = hi.GetComponent<PointCloud>();
@@ -370,23 +424,19 @@ namespace CellexalVR.AnalysisLogic
                 if (scaledPos.x > maxX)
                 {
                     maxX = scaledPos.x;
-                    //maxInds[0] = ind;
                 }
 
                 if (scaledPos.x < minX)
                 {
                     minX = scaledPos.x;
-                    //maxInds[1] = ind;
                 }
                 if (scaledPos.y > maxY)
                 {
                     maxY = scaledPos.y;
-                    //maxInds[2] = ind;
                 }
                 if (scaledPos.y < minY)
                 {
                     minY = scaledPos.y;
-                    //maxInds[3] = ind;
                 }
                 pc.points[pointPair.Key] = pointPair.Value;
             }
@@ -399,13 +449,19 @@ namespace CellexalVR.AnalysisLogic
             scaledCoordinates.Clear();
         }
 
-
+        /// <summary>
+        /// Create the texture that handles the color of each point. 
+        /// This texture is sent to the visual effects graph that then colors the points.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="hi"></param>
+        /// <param name="parentCloud"></param>
+        /// <returns></returns>
         public IEnumerator CreateColorTextureMap(Dictionary<string, float3> points, HistoImage hi, PointCloud parentCloud)
         {
             while (readingFile) yield return null;
-            int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(points.Count / (float)textureWidth);//width;
-            //int height = parentCloud.positionTextureMap.height;
+            int width = textureWidth;
+            int height = (int)math.ceil(points.Count / (float)textureWidth);
             PointCloud pc = hi.GetComponent<PointCloud>();
             colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
@@ -420,7 +476,6 @@ namespace CellexalVR.AnalysisLogic
             alphaMap.SetPixels(0, 0, width, height, aarray);
 
             Texture2D parentTexture = parentCloud.colorTextureMap;
-            //Fix spawning of histo image points. Maybe use same as other parentPC spawning...
             foreach (KeyValuePair<string, float3> kvp in points)
             {
                 Vector2Int textureCoord = TextureHandler.instance.textureCoordDict[kvp.Key];
@@ -437,23 +492,28 @@ namespace CellexalVR.AnalysisLogic
             VisualEffect vfx = pc.GetComponentInChildren<VisualEffect>();
             vfx.SetTexture("ColorMapTex", colorMap);
             vfx.SetTexture("AlphaMapTex", alphaMap);
-            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<OctantSystem>().SetHashMap(pc.pcID);
             TextureHandler.instance.colorTextureMaps.Add(colorMap);
             TextureHandler.instance.alphaTextureMaps.Add(alphaMap);
             vfx.enabled = true;
             vfx.Stop();
             vfx.Play();
             instance.creatingGraph = false;
-            //EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
         }
 
-
+        /// <summary>
+        /// Create the texture that handles the color of each point. 
+        /// This texture is sent to the visual effects graph that then colors the points.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="pc"></param>
+        /// <param name="parentCloud"></param>
+        /// <returns></returns>
         public IEnumerator CreateColorTextureMap(List<Point> points, PointCloud pc, PointCloud parentCloud)
         {
             while (readingFile) yield return null;
-            int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(points.Count / (float)textureWidth);//width;
-            //int height = parentCloud.positionTextureMap.height;
+            int width = textureWidth;
+            int height = (int)math.ceil(points.Count / (float)textureWidth);
             colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             pc.colorTextureMap = colorMap;
@@ -478,7 +538,6 @@ namespace CellexalVR.AnalysisLogic
 
             colorMap.SetPixels(carray);
             alphaMap.SetPixels(aarray);
-            //clusterMap.SetPixels(carrayClusters);
             CellexalLog.Log("Color Texture Map created");
             colorMap.Apply();
             alphaMap.Apply();
@@ -486,22 +545,25 @@ namespace CellexalVR.AnalysisLogic
             VisualEffect vfx = pc.GetComponent<VisualEffect>();
             vfx.SetTexture("ColorMapTex", colorMap);
             vfx.SetTexture("AlphaMapTex", alphaMap);
-            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
+            World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<OctantSystem>().SetHashMap(pc.pcID);
             TextureHandler.instance.colorTextureMaps.Add(colorMap);
             TextureHandler.instance.alphaTextureMaps.Add(alphaMap);
             vfx.enabled = true;
             vfx.Stop();
             vfx.Play();
             instance.creatingGraph = false;
-            //EntityManager.DestroyEntity(GetEntityQuery(typeof(Point)));
         }
 
-
+        /// <summary>
+        /// Create the texture that handles the color of each point. 
+        /// This texture is sent to the visual effects graph that then colors the points.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator CreateColorTextureMap()
         {
             while (readingFile) yield return null;
-            int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(pointCount / (float)textureWidth);//width;
+            int width = textureWidth;
+            int height = (int)math.ceil(pointCount / (float)textureWidth);
             colorMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             alphaMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             clusterMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
@@ -551,24 +613,19 @@ namespace CellexalVR.AnalysisLogic
                 vfx.enabled = true;
                 vfx.Stop();
                 vfx.Play();
-                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<QuadrantSystem>().SetHashMap(pc.pcID);
+                World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<OctantSystem>().SetHashMap(pc.pcID);
             }
-
-
-            //clusterDict.Clear();
-
-            //var p = clusterMap.EncodeToPNG();
-            //File.WriteAllBytes("clusterTest.png", p);
 
             TextureHandler.instance.colorTextureMaps.Add(colorMap);
             TextureHandler.instance.mainColorTextureMaps.Add(colorMap);
             TextureHandler.instance.clusterTextureMaps.Add(clusterMap);
             TextureHandler.instance.alphaTextureMaps.Add(alphaMap);
-
             instance.creatingGraph = false;
         }
 
-
+        /// <summary>
+        /// Read a color map stored in a text file.
+        /// </summary>
         private void ReadColorMapFromFile()
         {
             string path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder;
@@ -590,16 +647,19 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
-
+        /// <summary>
+        /// Read meta data file. 
+        /// Previously stored in a meta.cell file but this is when each point belongs to just one cluster in the file.
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <returns></returns>
         public IEnumerator ReadMetaData(string dir)
         {
             readingFile = true;
-            //ReadColorMapFromFile();
-            int width = textureWidth;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(pointCount / (float)textureWidth);//width;
+            int width = textureWidth;
+            int height = (int)math.ceil(pointCount / (float)textureWidth);
             int id = 0;
             string[] metafiles = Directory.GetFiles(dir, "*metadata.csv");
-            //UnityEngine.Debug.Log(metafiles[0]);
             if (metafiles.Length != 0)
             {
                 int clusterCount = 0;
@@ -615,7 +675,6 @@ namespace CellexalVR.AnalysisLogic
                         // If no cell name column. Otherwise change below.
                         string[] words = sr.ReadLine().Split(',');
                         string cluster = words[words.Length - 1];
-                        //string cluster = sr.ReadLine();
                         clusterDict[id++] = cluster;
                         if (!clusters.ContainsKey(cluster))
                         {

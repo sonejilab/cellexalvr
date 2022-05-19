@@ -12,6 +12,9 @@ using UnityEditor;
 
 namespace CellexalVR.Spatial
 {
+    /// <summary>
+    /// Class that represents a hisology image for spatial data. Image coordinates are linked to graph points.
+    /// </summary>
     public class HistoImage : MonoBehaviour
     {
         public Texture2D texture;
@@ -34,13 +37,7 @@ namespace CellexalVR.Spatial
 
         private Texture2D posTexture;
         private Texture2D alphaTexture;
-        private Vector2Int cropStart = new Vector2Int();
-        private Vector3 startHit = new Vector3();
-        private Vector3 originalScale = new Vector3();
-        private float originalImageRatio;
-        private int layerMask;
         private List<Vector2Int> tissueCoords = new List<Vector2Int>();
-        private List<Vector3> scaledCoords = new List<Vector3>();
         private PointCloud pc;
 
         private void Start()
@@ -48,10 +45,6 @@ namespace CellexalVR.Spatial
             Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
             visualEffect = GetComponentInChildren<VisualEffect>();
             pc = GetComponent<PointCloud>();
-
-            originalScale = transform.localScale;
-            originalImageRatio = (float)texture.width / (float)texture.height;
-            layerMask = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
             maxValues = new Vector2(int.MinValue, int.MinValue);
             minValues = new Vector2(int.MaxValue, int.MaxValue);
             image = GetComponent<GraphSlice>().image;
@@ -59,35 +52,13 @@ namespace CellexalVR.Spatial
             CellexalEvents.ColorTextureUpdated.AddListener(UpdateColorTexture);
         }
 
+        /// <summary>
+        /// Initialize by setting texture coordinates and linking to graph points.
+        /// </summary>
         public void Initialize()
         {
             InitializeCoroutine();
         }
-
-        public void UpdateColorTexture()
-        {
-            if (pc.points.Count > 0)
-            {
-                Texture2D parentTexture = TextureHandler.instance.mainColorTextureMaps[0];
-                Texture2D parentATexture = TextureHandler.instance.alphaTextureMaps[0];
-                Color c;
-                Color alpha;
-                foreach (KeyValuePair<string, float3> kvp in pc.points)
-                {
-                    Vector2Int textureCoord = TextureHandler.instance.textureCoordDict[kvp.Key];
-                    c = parentTexture.GetPixel(textureCoord.x, textureCoord.y);
-                    alpha = parentATexture.GetPixel(textureCoord.x, textureCoord.y);
-                    Vector2Int hiTexCoord = textureCoords[kvp.Key];
-                    pc.colorTextureMap.SetPixel(hiTexCoord.x, hiTexCoord.y, c);
-                    pc.alphaTextureMap.SetPixel(hiTexCoord.x, hiTexCoord.y, alpha);
-                }
-
-                pc.colorTextureMap.Apply();
-                pc.alphaTextureMap.Apply();
-            }
-        }
-
-
         private void InitializeCoroutine()
         {
             ScaleCoordinates();
@@ -150,6 +121,37 @@ namespace CellexalVR.Spatial
             visualEffect.Play();
         }
 
+
+        /// <summary>
+        /// Similar to how a graph slice updates to its parent points cloud a histology image is seen as a subset of all the data and images loaded.
+        /// This method makes sure the color of the points are in synch with the color texture map of the entire dataset.
+        /// </summary>
+        public void UpdateColorTexture()
+        {
+            if (pc.points.Count > 0)
+            {
+                Texture2D parentTexture = TextureHandler.instance.mainColorTextureMaps[0];
+                Texture2D parentATexture = TextureHandler.instance.alphaTextureMaps[0];
+                Color c;
+                Color alpha;
+                foreach (KeyValuePair<string, float3> kvp in pc.points)
+                {
+                    Vector2Int textureCoord = TextureHandler.instance.textureCoordDict[kvp.Key];
+                    c = parentTexture.GetPixel(textureCoord.x, textureCoord.y);
+                    alpha = parentATexture.GetPixel(textureCoord.x, textureCoord.y);
+                    Vector2Int hiTexCoord = textureCoords[kvp.Key];
+                    pc.colorTextureMap.SetPixel(hiTexCoord.x, hiTexCoord.y, c);
+                    pc.alphaTextureMap.SetPixel(hiTexCoord.x, hiTexCoord.y, alpha);
+                }
+
+                pc.colorTextureMap.Apply();
+                pc.alphaTextureMap.Apply();
+            }
+        }
+
+        /// <summary>
+        /// Crops outside parts of texture that does not have tissue on it.
+        /// </summary>
         public void CropToTissue()
         {
             Color[] colors = texture.GetPixels();
@@ -175,27 +177,17 @@ namespace CellexalVR.Spatial
                     }
 
                 }
-
             }
-
-            //print(textureCoords.Count);
-            //int j = 0;
-            //foreach (Vector2Int tissueCoord in textureCoords.Values)
-            //{
-            //    Vector2 texCoord = PointToTexture((float)tissueCoord.x, (float)tissueCoord.y);
-            //    //print($"{texCoord}");
-            //    if (j++ < 250)
-            //    {
-            //        print($"{texCoord}, {tissueCoord}");
-            //    }
-            //    //texture.SetPixel((int)tissueCoord.x, (int)tissueCoord.y, Color.white);
-            //    texture.SetPixel((int)texCoord.y, (int)texCoord.x, Color.red);
-            //}
             texture.Apply();
         }
 
 
-
+        /// <summary>
+        /// Helper function to go from a graph point to a coordinate on the tissue texture.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         private Vector2 PointToTexture(float x, float y)
         {
             Vector2 textureCoord = new Vector2(x, y);
@@ -204,57 +196,74 @@ namespace CellexalVR.Spatial
             return textureCoord;
         }
 
+        /// <summary>
+        /// Helper function to scale all point coordinates.
+        /// </summary>
         public void ScaleCoordinates()
         {
             texMaxValues = new Vector3(texture.width, texture.height, 0f);
-            //texMaxValues = new Vector3(1200, 1200, 0f);
             texMinValues = new Vector3(0f, 0f, 0f);
             diffCoordValues = texMaxValues - texMinValues;
-            //diffCoordValues = maxValues - minValues;
             longestAxis = Mathf.Max(diffCoordValues.x, diffCoordValues.y);
-            //longestAxis = Mathf.Max(texture.width, texture.height);
             scaledOffset = (diffCoordValues / longestAxis) / 2;
         }
 
+        /// <summary>
+        /// Helper function to scale a coordinate.
+        /// </summary>
+        /// <param name="coord"></param>
+        /// <returns></returns>
         public Vector3 ScaleCoordinate(Vector3 coord)
         {
             Vector3 scaledCoord = coord - texMinValues;
             scaledCoord /= longestAxis;
             scaledCoord -= scaledOffset;
-
             return scaledCoord;
         }
 
+        /// <summary>
+        /// Add graph point and update the min max coordinates later used for scaling the graph.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void AddGraphPoint(int x, int y)
         {
             tissueCoords.Add(new Vector2Int(x, y));
             UpdateMinMaxCoords(x, y);
         }
 
-
+        /// <summary>
+        /// Updates min max coordinates that are then used for scaling the graph.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         private void UpdateMinMaxCoords(int x, int y)
         {
             if (x > maxValues.x)
             {
                 maxValues.x = x;
             }
-
             if (y > maxValues.y)
             {
                 maxValues.y = y;
             }
-
             if (x < minValues.x)
             {
                 minValues.x = x;
             }
-
             if (y < minValues.y)
             {
                 minValues.y = y;
             }
         }
 
+        /// <summary>
+        /// Crop image based on the given coordinates. Mark a certain are in the image and crop away the outside of that area.
+        /// </summary>
+        /// <param name="startX">Start from this x coordinate.</param>
+        /// <param name="startY">Start from this y coordinate.</param>
+        /// <param name="endX">The end x coordinate.</param>
+        /// <param name="endY">End y coordinate. The parameters together make up a square to crop (or rather inverse crop).</param>
         private void CropImage(int startX, int startY, int endX, int endY)
         {
             if (startX > endX)
@@ -291,6 +300,11 @@ namespace CellexalVR.Spatial
             image.GetComponent<MeshRenderer>().material.mainTexture = croppedIm;
         }
 
+        /// <summary>
+        /// Crop are of tissue to only show the parts that you are interested in. 
+        /// </summary>
+        /// <param name="startPos">Start point to crop from.</param>
+        /// <param name="endPos">End point to crop from.</param>
         private void CropPoints(Vector3 startPos, Vector3 endPos)
         {
             startPos = visualEffect.transform.InverseTransformPoint(startPos);

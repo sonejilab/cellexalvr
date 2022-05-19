@@ -4,8 +4,7 @@ using CellexalVR;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Spatial;
-using CellexalVR.AnalysisLogic
-    ;
+using CellexalVR.AnalysisLogic;
 using TMPro;
 using Unity.Collections;
 using Unity.Entities;
@@ -14,12 +13,14 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.VFX;
 using DG.Tweening;
-using UnityEngine.InputSystem;
-using System.Threading.Tasks;
-using UnityEngine.Pool;
 
 namespace AnalysisLogic
 {
+    /// <summary>
+    /// A point cloud is graph that has the same functionality as <see cref="Graph"/> but is built using a visual effects graph.
+    /// This because it can handle more points and animations used in slicing, spreading and streaming to reference organ.
+    /// Positions and colors for the points are stored in textures.
+    /// </summary>
     public class PointCloud : MonoBehaviour
     {
         private VisualEffect vfx;
@@ -95,69 +96,25 @@ namespace AnalysisLogic
             {
                 vfx = GetComponentInChildren<VisualEffect>();
             }
-            //selectionSphere = SelectionToolCollider.instance.transform;
             vfx.pause = true;
             entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            //interactableObjectBasic = GetComponent<InteractableObjectBasic>();
-            //interactableObjectBasic.InteractableObjectGrabbed += OnGrabbed;
-            //interactableObjectBasic.InteractableObjectUnGrabbed += OnUnGrabbed;
-            //slicerBox = GetComponentInChildren<SlicerBox>(true);
             graphSlice = GetComponent<GraphSlice>();
         }
 
         private void Update()
         {
-            //if ((Player.instance.rightHand != null && controllerAction.GetStateDown(Player.instance.rightHand.handType)) || Input.GetKeyDown(KeyCode.M))
-            //{
-            //    targetPositionTextureMap = morphTexture;
-            //    vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
-            //    StartCoroutine(Morph());
-            //}
-
-            //if (Player.instance.leftHand != null && controllerAction.GetStateDown(Player.instance.leftHand.handType))
-            //{
-            //    SpreadOutClusters();
-            //}
-
-            if (Keyboard.current.eKey.wasPressedThisFrame)
-            {
-                SpreadOutPoints();
-            }
-            if (Keyboard.current.yKey.wasPressedThisFrame)
-            {
-                SpreadOutClusters();
-            }
-
             if (interactable.isSelected)
             {
                 ReferenceManager.instance.multiuserMessageSender.SendMessageMoveGraph(originalName,
                     transform.position, transform.rotation, transform.localScale);
             }
-
-
         }
 
-        //private void OnGrabbed(object sender, Hand hand)
-        //{
-        //    foreach (CullingWall cw in slicerBox.cullingWalls)
-        //    {
-        //        cw.GetComponent<InteractableObjectBasic>().isGrabbable = false;
-        //    }
-        //}
-
-        //private void OnUnGrabbed(object sender, Hand hand)
-        //{
-        //    foreach (CullingWall cw in slicerBox.cullingWalls)
-        //    {
-        //        cw.GetComponent<InteractableObjectBasic>().isGrabbable = true;
-        //    }
-        //}
 
         public void ToggleInfoText()
         {
             infoParent.SetActive(!infoParent.gameObject.activeSelf);
         }
-
 
         public void SetCollider(bool offset = false)
         {
@@ -204,14 +161,21 @@ namespace AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// The target texture is used when morphing the graph to animate the point positions.
+        /// </summary>
+        /// <param name="newCols">New colors in the position map essentially means new positions.</param>
         public void SetTargetTexture(Color[] newCols)
         {
             targetPositionTextureMap.SetPixels(newCols);
             targetPositionTextureMap.Apply(false);
-            //vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
         }
 
 
+        /// <summary>
+        /// Morph between the current position map and the target position map.
+        /// </summary>
+        /// <param name="animationTime"></param>
         public void Morph(float animationTime = 1f)
         {
             morphed = !morphed;
@@ -249,6 +213,11 @@ namespace AnalysisLogic
             vfx.SetTexture("TargetPosMapTex", targetTex);
         }
 
+        /// <summary>
+        /// The alpha clip threshold is used to determine what points to hide. 
+        /// The points under the threshold are hidden.
+        /// </summary>
+        /// <param name="val"></param>
         public void SetAlphaClipThreshold(float val)
         {
             int ind = (int)val;
@@ -261,7 +230,12 @@ namespace AnalysisLogic
             vfx.SetFloat("AlphaClipThresh", val);
         }
 
-
+        /// <summary>
+        /// Creates the point cloud position map  that determines the position of each point.
+        /// </summary>
+        /// <param name="points">The points to create from.</param>
+        /// <param name="parentPC">The parent points cloud. Means that the new point cloud is a subset (slice) of the parent. </param>
+        /// <returns></returns>
         public IEnumerator CreatePositionTextureMap(List<Point> points, PointCloud parentPC)
         {
             pointCount = points.Count;
@@ -283,19 +257,12 @@ namespace AnalysisLogic
             }
             Color[] positions = new Color[width * height];
             Color[] targetPositions = new Color[positions.Length];
-            //for (int i = 0; i < points.Count; i++)
-            //{
-            //    Point p = points[i];
-            //    Color c = parentTextureMap.GetPixel(p.xindex, p.yindex);
-            //    targetPositions[i] = c;
-            //}
 
             Color c;
             float3 pos;
             float3 wPos;
             Point p;
             Point newP;
-            //Entity e;
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -306,9 +273,7 @@ namespace AnalysisLogic
                     p = points[ind];
                     c = parentTargetTextureMap.GetPixel(p.xindex, p.yindex);
                     targetPositions[ind] = c;
-
                     pos = p.offset;
-                    //Entity e = entityManager.Instantiate(PrefabEntities.prefabEntity);
                     wPos = math.transform(transform.localToWorldMatrix, pos);
                     entityManager.SetComponentData(p.entity, new Translation { Value = wPos });
                     newP = new Point
@@ -329,7 +294,6 @@ namespace AnalysisLogic
                     positions[ind] = new Color(pos.x, pos.y, pos.z, 1);
 
                 }
-                //if (y % 10 == 0) yield return null;
             }
             targetPositionTextureMap.SetPixels(targetPositions);
             positionTextureMap.SetPixels(positions);
@@ -339,23 +303,25 @@ namespace AnalysisLogic
             vfx.SetTexture("PositionMapTex", positionTextureMap);
             vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
             vfx.pause = false;
-            //PointCloudGenerator.instance.creatingGraph = false;
         }
 
-
+        /// <summary>
+        /// Creates a position texture map based on the given positions.
+        /// </summary>
+        /// <param name="pointPositions">The positions to store in the texture.</param>
+        /// <param name="names">The cell names.</param>
         public void CreatePositionTextureMap(List<float3> pointPositions, List<string> names)
         {
             pointCount = pointPositions.Count;
             if (vfx == null) vfx = GetComponent<VisualEffect>();
-            //vfx.visualEffectAsset = pointCount < 500000 ? pointCloudQuad : pointCloudHighCap;  //
             if (pointCount > 500000)
             {
                 vfx.visualEffectAsset = pointCloudHighCap;
                 vfx.SetFloat("Size", 0.003f);
             }
             vfx.SetInt("SpawnRate", pointCount);
-            int width = PointCloudGenerator.textureWidth;//(int)math.ceil(math.sqrt(pointCount));
-            int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);//width;
+            int width = PointCloudGenerator.textureWidth;
+            int height = (int)math.ceil(pointCount / (float)PointCloudGenerator.textureWidth);
             positionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             orgPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
             targetPositionTextureMap = new Texture2D(width, height, TextureFormat.RGBAFloat, false, true);
@@ -405,10 +371,14 @@ namespace AnalysisLogic
             vfx.SetTexture("TargetPosMapTex", targetPositionTextureMap);
             vfx.pause = false;
             PointCloudGenerator.instance.creatingGraph = false;
-            //SpreadOutPoints();
-            //StartCoroutine(SpawnAnimation());
         }
         
+        /// <summary>
+        /// Creates a position texture map based on the given positions. 
+        /// </summary>
+        /// <param name="pointPositions">The positions to store in the texture.</param>
+        /// <param name="names">The cell names.</param>
+        /// <param name="slicePoints">A reference to the list of points in the slice the points should belong to.</param>
         public void CreatePositionTextureMap(List<float3> pointPositions, List<string> names, ref List<Point> slicePoints)
         {
             pointCount = pointPositions.Count;
@@ -468,8 +438,6 @@ namespace AnalysisLogic
             vfx.pause = false;
             PointCloudGenerator.instance.creatingGraph = false;
             GetComponent<GraphSlice>().points = slicePoints;
-            //SpreadOutPoints();
-            //StartCoroutine(SpawnAnimation());
         }
 
 
@@ -490,7 +458,9 @@ namespace AnalysisLogic
             vfx.SetFloat("SpawnAnimation", 1f);
         }
 
-
+        /// <summary>
+        /// Animate between the current position and the position in the reference glass organ.
+        /// </summary>
         public void BlendToGlassOrgan()
         {
             pointSpreadTexture = new Texture2D(positionTextureMap.width, positionTextureMap.height, TextureFormat.RGBAFloat, true, true);
@@ -523,6 +493,11 @@ namespace AnalysisLogic
 
         }
 
+        /// <summary>
+        /// Spread out the points from the center of the graph. 
+        /// Places every point on an equal distance from the center.
+        /// </summary>
+        /// <param name="doSpread"></param>
         public void SpreadOutPoints(bool doSpread = true)
         {
             //if (pointSpreadTexture == null && doSpread) // skip redo texture if it hasnt changed (?)
@@ -537,8 +512,6 @@ namespace AnalysisLogic
                 Vector3 newPos;
                 for (int i = 0; i < positions.Length; i++)
                 {
-                    //if (i % 10000 == 0)
-                    //    yield return null;
                     if (colors[i].r < 0.5f)
                     {
                         newPositions[i] = positions[i];
@@ -587,6 +560,10 @@ namespace AnalysisLogic
             Morph(0.4f);
         }
 
+        /// <summary>
+        /// Spread out the points from the center.
+        /// The spreading is based on the center of the cluster each point belongs to.
+        /// </summary>
         public void SpreadOutClusters()
         {
             if (!morphed)
@@ -614,12 +591,6 @@ namespace AnalysisLogic
                         Color newPosCol = new Color(newPos.x, newPos.y, newPos.z);
                         newPositions[i] = newPosCol;
                     }
-                    //}
-
-                    //else
-                    //{
-                    //    newPositions[i] = pos;
-                    //}
                 }
 
                 clusterSpreadTexture.SetPixels(newPositions);
@@ -630,6 +601,9 @@ namespace AnalysisLogic
             Morph();
         }
 
+        /// <summary>
+        /// Calculate the centroid of each cluster to use for <see cref="PointCloud.SpreadOutClusters"/>
+        /// </summary>
         private void CalculateClusterCentroids()
         {
             foreach (KeyValuePair<string, List<Vector2Int>> kvp in PointCloudGenerator.instance.clusters)
@@ -646,22 +620,5 @@ namespace AnalysisLogic
             }
 
         }
-
-        //
-        // public void UpdateColorTexture(int x, int y)
-        // {
-        //     colorMap.SetPixel(x, y, Color.red);
-        //     colorMap.Apply();
-        //     vfx.SetTexture("ColorMapTex", colorMap);
-        // }
-
-
-
-
-
-
-
     }
-
-
 }

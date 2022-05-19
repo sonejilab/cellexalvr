@@ -1,14 +1,14 @@
 using AnalysisLogic;
 using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace CellexalVR.Spatial
 {
-
+    /// <summary>
+    /// Handles the interaction to spread out points <see cref="PointCloud.SpreadOutPoints(bool)"/>.
+    /// </summary>
     public class PointSpreader : MonoBehaviour
     {
         private PointCloud pointCloud;
@@ -25,17 +25,12 @@ namespace CellexalVR.Spatial
         [SerializeField] private InputActionAsset actionAsset;
         [SerializeField] private InputActionReference actionReferenceL;
         [SerializeField] private InputActionReference actionReferenceR;
-        //private MenuToggler menuToggler;
 
         private void Start()
         {
             pointCloud = GetComponent<PointCloud>();
             controllerL = ReferenceManager.instance.leftController.transform;
             controllerR = ReferenceManager.instance.rightController.transform;
-            //CellexalEvents.RightTriggerClick.AddListener(OnRightTriggerClick);
-            //CellexalEvents.LeftTriggerClick.AddListener(OnLeftTriggerClick);
-            //CellexalEvents.LeftTriggerUp.AddListener(OnRightTriggerUp);
-            //CellexalEvents.LeftTriggerUp.AddListener(OnLeftTriggerUp);
 
             actionReferenceL.action.performed += LeftAction;
             actionReferenceR.action.performed += RightAction;

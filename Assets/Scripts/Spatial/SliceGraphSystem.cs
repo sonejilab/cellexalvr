@@ -17,22 +17,15 @@ using UnityEngine;
 
 namespace CellexalVR.Spatial
 {
-    public struct Slice1TagComponent : IComponentData
-    {
-    }
-    public struct Slice2TagComponent : IComponentData
-    {
-    }
-
-    public struct RemoveEntityTagComponent : IComponentData
-    {
-    }
-
+    /// <summary>
+    /// Main class to handle slicing of graphs.
+    /// Slicing means dividing up the graph into two or more new graphs that can be interacted with individually.
+    /// </summary>
     public class SliceGraphSystem : SystemBase
     {
         // private Slicer slicer;
         private EndSimulationEntityCommandBufferSystem ecbSystem;
-        private QuadrantSystem quadrantSystem;
+        private OctantSystem quadrantSystem;
         private EntityQuery query;
         private GameObject slicer;
         private int graphToSliceID;
@@ -58,7 +51,7 @@ namespace CellexalVR.Spatial
         protected override void OnCreate()
         {
             base.OnCreate();
-            quadrantSystem = World.GetOrCreateSystem<QuadrantSystem>();
+            quadrantSystem = World.GetOrCreateSystem<OctantSystem>();
             ecbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             query = GetEntityQuery(typeof(Point));
             slicer = GameObject.Find("SlicePlane");
@@ -66,6 +59,14 @@ namespace CellexalVR.Spatial
 
         protected override void OnUpdate() {}
 
+        /// <summary>
+        /// Slice from a plane. 
+        /// This means that the graph will be divided into two new graphs.
+        /// One on each side of the slicing plane.
+        /// </summary>
+        /// <param name="graphNr">The id of the graph to slice.</param>
+        /// <param name="planeNormal">Normal of the plane used to calculate which side each point is on.</param>
+        /// <param name="planePos">Position of plane used to calculate which side each point is on.</param>
         [BurstCompile]
         public void Slice(int graphNr, Vector3 planeNormal, Vector3 planePos)
         {
@@ -91,6 +92,10 @@ namespace CellexalVR.Spatial
             move.Dispose();
         }
 
+        /// <summary>
+        /// Slice based on selected/highlighted points. 
+        /// </summary>
+        /// <param name="graphNr"></param>
         [BurstCompile]
         public void SliceFromSelection(int graphNr)
         {
@@ -110,6 +115,12 @@ namespace CellexalVR.Spatial
             move.Dispose();
         }
 
+        /// <summary>
+        /// Divides up the points into two new sets of points and creates two new graphs.
+        /// </summary>
+        /// <param name="slice">Boolean array of each point will be true for one slice and false for the other. </param>
+        /// <param name="graphNr">The id of the graph to slice. </param>
+        /// <param name="moveDir">Direction to separate the slices from to easier see the slicing. </param>
         private void DoSlice(NativeArray<bool> slice, int graphNr, Vector3 moveDir)
         {
             Transform oldPc = quadrantSystem.graphParentTransforms[graphNr];
@@ -189,7 +200,11 @@ namespace CellexalVR.Spatial
 
         }
 
-
+        /// <summary>
+        /// Helper function to retrieve the points for a certain graph.
+        /// </summary>
+        /// <param name="graphID">The id of the graph of interest.</param>
+        /// <returns></returns>
         public List<Point> GetPoints(int graphID)
         {
             List<Point> points = new List<Point>();
@@ -202,55 +217,17 @@ namespace CellexalVR.Spatial
             return points;
         }
 
-
+        /// <summary>
+        /// Sorts the points based on position in a certain axis.
+        /// </summary>
+        /// <param name="points">The points to sort.</param>
+        /// <param name="axis">The axis to use for sorting.</param>
+        /// <returns></returns>
         public static List<Point> SortPoints(IReadOnlyCollection<Point> points, int axis)
         {
             List<Point> sortedPoints = new List<Point>(points);
             sortedPoints.Sort((x, y) => x.offset[axis].CompareTo(y.offset[axis]));
             return sortedPoints;
         }
-
-
-        // public void GatherSlices()
-        // {
-        //     EntityCommandBuffer.ParallelWriter ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter();
-        //     Entities.WithAll<PointMovedToNewParent>().ForEach((Entity entity, int entityInQueryIndex, ref Translation translation, ref Point point, ref PointMovedToNewParent pointMovedToNewParent) =>
-        //     {
-        //         GraphParent gpPrev = GetComponent<GraphParent>(pointMovedToNewParent.previousParent);
-        //         // if (gpPrev.graphNr != graphNr) return;
-        //         pointMovedToNewParent.newParent = pointMovedToNewParent.previousParent;
-        //         pointMovedToNewParent.previousParent = point.parent;
-        //         point.parentId = gpPrev.graphNr;
-        //         point.previousParent = point.parent;
-        //         point.parent = pointMovedToNewParent.newParent;
-        //         ecb.AddComponent<MoveTowards>(entityInQueryIndex, entity);
-        //         ecb.SetComponent(entityInQueryIndex, entity, new MoveTowards {speed = 1.2f});
-        //         ecb.SetComponent(entityInQueryIndex, entity, pointMovedToNewParent);
-        //         ecb.SetComponent(entityInQueryIndex, entity, point);
-        //     }).ScheduleParallel();
-        //     ecbSystem.AddJobHandleForProducer(Dependency);
-        //     // DestroyEmptySlices();
-        // }
-        //
-        // public void GatherSlicesToOriginal()
-        // {
-        //     EntityCommandBuffer.ParallelWriter ecb = ecbSystem.CreateCommandBuffer().AsParallelWriter();
-        //     Entities.WithAll<PointMovedToNewParent>().ForEach((Entity entity, int entityInQueryIndex, ref Translation translation, ref Point point, ref PointMovedToNewParent pointMovedToNewParent) =>
-        //     {
-        //         // if (gpPrev.graphNr != graphNr) return;
-        //         pointMovedToNewParent.newParent = point.originalParent;
-        //         pointMovedToNewParent.previousParent = point.parent;
-        //         GraphParent graphParent = GetComponent<GraphParent>(point.originalParent);
-        //         point.parentId = graphParent.graphNr;
-        //         point.previousParent = point.parent;
-        //         point.parent = pointMovedToNewParent.newParent;
-        //         ecb.AddComponent<MoveTowards>(entityInQueryIndex, entity);
-        //         ecb.SetComponent(entityInQueryIndex, entity, new MoveTowards {speed = 1.2f});
-        //         ecb.SetComponent(entityInQueryIndex, entity, pointMovedToNewParent);
-        //         ecb.SetComponent(entityInQueryIndex, entity, point);
-        //     }).ScheduleParallel();
-        //     ecbSystem.AddJobHandleForProducer(Dependency);
-        //     // DestroyEmptySlices();
-        // }
     }
 }

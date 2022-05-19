@@ -17,6 +17,11 @@ using CellexalVR.General;
 
 namespace CellexalVR.Spatial
 {
+    /// <summary>
+    /// This class handles the box used for spatial graphs.
+    /// Handles culling, slicing and reference mesh and mesh generation.
+    /// As of now only used on spatial graphs but could be applicable to other data sets as well.
+    /// </summary>
     public class SlicerBox : MonoBehaviour
     {
         public GameObject blade;
@@ -45,9 +50,6 @@ namespace CellexalVR.Spatial
             set
             {
                 active = value;
-                //Color c = boxMaterial.color;
-                //c.a = active ? 0.5f : 0.05f;
-                //boxMaterial.color = c;
                 slicingMenu.gameObject.SetActive(active);
                 slicingMenu.transform.localPosition = transform.InverseTransformPoint(menuPosition.position);
                 toggleSlicingMenuButton.transform.localPosition = transform.InverseTransformPoint(buttonPosition.position);
@@ -86,21 +88,11 @@ namespace CellexalVR.Spatial
             graphSlice = GetComponentInParent<GraphSlice>();
             boxMaterial = box.GetComponent<MeshRenderer>().material;
             boxMaterial.SetMatrix("_BoxMatrix", transform.worldToLocalMatrix);
-            //Color c = boxMaterial.color;
-            //c.a = 0.05f;
-            //boxMaterial.color = c;
             toggleSlicingMenuButton = GetComponentInChildren<ToggleSlicingMenuButton>(true);
             vfx = GetComponentInParent<VisualEffect>();
             Active = false;
             cullingWalls.All(x => x.transform.hasChanged = false);
         }
-
-        //private void OnValidate()
-        //{
-        //    Material mat = box.GetComponent<Renderer>().sharedMaterial;
-        //    print($"validate {box == null}, {mat == null}");
-        //    mat.SetMatrix("_BoxMatrix", transform.worldToLocalMatrix);
-        //}
 
         private void Update()
         {
@@ -111,18 +103,17 @@ namespace CellexalVR.Spatial
             }
         }
 
+        /// <summary>
+        /// Using the position of the culling sliders it sets the values of the culling box in the visual effects graph.
+        /// And in that way decides which points are visible.
+        /// </summary>
         public void UpdateCullingBox()
         {
-            //cullPos1.x = Math.Min(0.6f, cullingWalls[0].handle.transform.localPosition.x);
-            //cullPos1.y = Math.Min(0.6f, cullingWalls[1].handle.transform.localPosition.x);
-            //cullPos1.z = Math.Min(0.6f, cullingWalls[2].handle.transform.localPosition.x);
             cullPos1.x = 1f - cullingWalls[0].handle.transform.localPosition.x;
             cullPos1.y = 1f - cullingWalls[1].handle.transform.localPosition.x;
             cullPos1.z = 1f - cullingWalls[2].handle.transform.localPosition.x;
             if (singleSliceViewMode != -1)
             {
-                //cullingWalls[singleSliceViewMode + 3].handle.transform.localPosition = cullingWalls[singleSliceViewMode].handle.transform.localPosition;
-                //cullingWalls[singleSliceViewMode + 3].transform.localPosition = new Vector3(0.1f, 0, 0);
                 cullPos2[singleSliceViewMode] = cullPos1[singleSliceViewMode] - 0.9f;
             }
             else
@@ -137,12 +128,22 @@ namespace CellexalVR.Spatial
             ReferenceManager.instance.multiuserMessageSender.SendMessageUpdateCullingBox(pointCloud.pcID, cullPos1, cullPos2);
         }
 
+        /// <summary>
+        /// Update the values in the visual effects graph that decides which points are visible.
+        /// </summary>
+        /// <param name="pos1"></param>
+        /// <param name="pos2"></param>
         public void UpdateCullingBox(Vector3 pos1, Vector3 pos2)
         {
             vfx.SetVector3("CullingCubePos", pos1);
             vfx.SetVector3("CullingCube2Pos", pos2);
         }
 
+        /// <summary>
+        /// Plays an animation to indicate a slicing of the graph was initiated and is running.
+        /// </summary>
+        /// <param name="axis"></param>
+        /// <param name="toggle"></param>
         public void BoxAnimation(int axis, int toggle)
         {
             Material mat = box.GetComponent<Renderer>().material;
@@ -161,6 +162,9 @@ namespace CellexalVR.Spatial
             }
         }
 
+        /// <summary>
+        /// Set the position of the handles for the culling walls.
+        /// </summary>
         public void SetHandlePositions()
         {
             foreach (CullingWall cw in cullingWalls)
@@ -168,7 +172,11 @@ namespace CellexalVR.Spatial
                 cw.SetStartPosition();
             }
         }
-
+        
+        /// <summary>
+        /// Sets the graph to only view one slice of points at a time. 
+        /// </summary>
+        /// <param name="axis">Decides in which direction to divide up the graph when viewing.</param>
         public void SingleSliceViewMode(int axis = -1)
         {
             //reset handle positions back when deactivate....
@@ -198,6 +206,9 @@ namespace CellexalVR.Spatial
             }
         }
 
+        /// <summary>
+        /// Animates the culling to get a slice by slice view of the graph.
+        /// </summary>
         public void SliceBySliceAnimation()
         {
             CullingWall cw = cullingWalls[singleSliceViewMode];
@@ -205,6 +216,10 @@ namespace CellexalVR.Spatial
             cw.transform.DOLocalMoveX(targetX, 2f).SetEase(Ease.Linear);
         }
 
+        /// <summary>
+        /// Slice the graph with the plane using the <see cref="SliceGraphSystem"/>.
+        /// The normal and position of the plane is used to divide the graph.
+        /// </summary>
         public void SliceGraphManual()
         {
             Material mat = blade.GetComponent<Renderer>().material;
@@ -216,6 +231,9 @@ namespace CellexalVR.Spatial
             ReferenceManager.instance.multiuserMessageSender.SendMessageSliceGraphManual(pointCloud.pcID, plane.transform.forward, plane.transform.position);
         }
 
+        /// <summary>
+        /// Slice the graph based on which points are selected.
+        /// </summary>
         public void SliceGraphFromSelection()
         {
             Material mat = blade.GetComponent<Renderer>().material;
@@ -228,27 +246,42 @@ namespace CellexalVR.Spatial
             ReferenceManager.instance.multiuserMessageSender.SendMessageSliceGraphFromSelection(pointCloud.pcID);
         }
 
+        /// <summary>
+        /// Slicing the graph based on an axis.
+        /// Dividing upp the graph into equally big.
+        /// </summary>
+        /// <param name="axis">The axis used to divide up the graph.</param>
+        /// <param name="nrOfSlices">The nr of slices to make.</param>
         public void SliceGraphAutomatic(int axis, int nrOfSlices)
         {
-            //StartCoroutine(SliceAnimation());
             BoxAnimation(axis, 1);
             StartCoroutine(graphSlice.SliceAxis(axis, sliceGraphSystem.GetPoints(pointCloud.pcID), nrOfSlices));
             ReferenceManager.instance.multiuserMessageSender.SendMessageSliceGraphAutomatic(pointCloud.pcID, axis, nrOfSlices);
         }
 
+        /// <summary>
+        /// Morph to other graph to highlight differences between the two representations.
+        /// Animates the position of each point to its corresponding position in the other.
+        /// </summary>
         public void MorphToOtherGraph()
         {
-            //int index = (pointCloud.pcID + 1) % PointCloudGenerator.instance.pointClouds.Count;
-            //pointCloud.targetPositionTextureMap = PointCloudGenerator.instance.pointClouds[index].positionTextureMap;
             pointCloud.GetComponent<VisualEffect>().SetTexture("TargetPosMapTex", pointCloud.targetPositionTextureMap);
             pointCloud.Morph();
         }
 
+        /// <summary>
+        /// Activates the reference glass organ and places it on top of the graph points.
+        /// </summary>
+        /// <param name="toggle"></param>
         public void ToggleReferenceOrgan(bool toggle)
         {
             GetComponentInChildren<ReferenceOrganToggleButton>().CurrentState = toggle;
         }
 
+        /// <summary>
+        /// Toggle the manual slicing plane used to divide up the graph.
+        /// </summary>
+        /// <param name="toggle"></param>
         public void ToggleManualSlicer(bool toggle)
         {
             Automatic = !toggle;
@@ -256,6 +289,10 @@ namespace CellexalVR.Spatial
             Axis = 2;
         }
 
+        /// <summary>
+        /// Change the axis used to slice the graph.
+        /// </summary>
+        /// <param name="axis"></param>
         public void ChangeAxis(int axis)
         {
             Axis = axis;
@@ -275,32 +312,10 @@ namespace CellexalVR.Spatial
             }
         }
 
-        public IEnumerator SliceAnimation()
-        {
-            plane.SetActive(false);
-            var pc = GetComponentInParent<PointCloud>();
-            slicingAnimation.enabled = true;
-            sliceAnimationActive = true;
-            float t = 0f;
-            float animationTime = 2.0f;
-
-            while (t < animationTime || sliceAnimationActive)
-            {
-                t += Time.deltaTime;
-                yield return null;
-            }
-
-            slicingAnimation.enabled = false;
-            Active = false;
-            pc.GetComponent<VisualEffect>().enabled = false;
-            if (gameObject.activeSelf)
-            {
-                pc.gameObject.SetActive(false);
-            }
-            sliceAnimationActive = false;
-            graphSlice.ActivateSlices(true);
-        }
-
+        /// <summary>
+        /// Retrieve the plane used to slice the graph.
+        /// </summary>
+        /// <returns></returns>
         public Plane GetPlane()
         {
             return new Plane(plane.transform.forward, plane.transform.position);

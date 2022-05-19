@@ -15,13 +15,13 @@ using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
+    /// <summary>
+    /// This class handles the coloring of the color texture maps of point clouds in the scene.
+    /// Each point cloud has a reference to a color map where each pixel in the texture is linked to a point.
+    /// This is handled via the visual effects graph.
+    /// </summary>
     public class TextureHandler : SystemBase
     {
-        private EndSimulationEntityCommandBufferSystem ecbSystem;
-        private EntityManager entityManager;
-        private int frameCount;
-        private EntityQuery query;
-
         public Dictionary<int, int> sps;
         public List<Texture2D> colorTextureMaps = new List<Texture2D>();
         public List<Texture2D> mainColorTextureMaps = new List<Texture2D>();
@@ -34,10 +34,7 @@ namespace CellexalVR.AnalysisLogic
         protected override void OnCreate()
         {
             base.OnCreate();
-            entityManager = World.EntityManager;
-            ecbSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             sps = new Dictionary<int, int>();
-            query = GetEntityQuery(typeof(RaycastCheckComponent));
             instance = this;
         }
 
@@ -80,6 +77,12 @@ namespace CellexalVR.AnalysisLogic
             //frameCount++;
         }
 
+        /// <summary>
+        /// Adds a point to the selection.
+        /// Updates the corresponding pixel in the texture and adds the points label to a dictionairy for later reference.
+        /// </summary>
+        /// <param name="indGroupTuple"></param>
+        /// <param name="select"></param>
         public void AddPointsToSelection(List<Vector2Int> indGroupTuple, bool select = false)
         {
             int i = 0;
@@ -106,6 +109,11 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
+        /// <summary>
+        /// Color a cluster by updating the color texture map.
+        /// </summary>
+        /// <param name="cluster"></param>
+        /// <param name="toggle"></param>
         public void ColorCluster(string cluster, bool toggle)
         {
             List<Vector2Int> indices = PointCloudGenerator.instance.clusters[cluster];
@@ -154,6 +162,10 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
+        /// <summary>
+        /// By updating the alpha texture map it toggles the transparency of the points of all point clouds in the scene.
+        /// </summary>
+        /// <param name="toggle"></param>
         public void MakeAllPointsTransparent(bool toggle)
         {
             Color a = toggle ? Color.white * 0.4f : Color.white * 0.8f;
@@ -169,6 +181,10 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
+        /// <summary>
+        /// Colors the points clouds by cluster information.
+        /// </summary>
+        /// <param name="toggle"></param>
         public void ColorAllClusters(bool toggle)
         {
             if (toggle)
@@ -184,6 +200,10 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
+        /// <summary>
+        /// Color by gene (or other numerical value).
+        /// </summary>
+        /// <param name="expressions"></param>
         public void ColorByExpression(ArrayList expressions)
         {
             Texture2D tex = mainColorTextureMaps[0];
@@ -201,6 +221,9 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.ColorTextureUpdated.Invoke();
         }
 
+        /// <summary>
+        /// Reset to standard color map texture which sets all the points to white. 
+        /// </summary>
         public void ResetTexture()
         {
             Color[] colors = new Color[mainColorTextureMaps[0].width * mainColorTextureMaps[0].height];

@@ -8,6 +8,11 @@ using UnityEngine.VFX;
 
 namespace CellexalVR.Spatial
 {
+
+    /// <summary>
+    /// This class handles the positioning and animation of slicing light saber.
+    /// For collision and slice logic <see cref="LightSaberSliceCollision"/>
+    /// </summary>
     public class LightSaber : MonoBehaviour
     {
         public static LightSaber instance;
@@ -27,17 +32,11 @@ namespace CellexalVR.Spatial
         private void Start()
         {
             rigidbody = GetComponent<Rigidbody>();
-            // grabPinch.AddOnStateDownListener(OnRightTriggerDown, inputSource);
         }
 
         private void Update()
         {
             if (inHand) return;
-            if (Input.GetKeyDown(KeyCode.H))
-            {
-                StartCoroutine(MoveToHand());
-            }
-
             Ray ray = new Ray(rayCastSource.transform.position, rayCastSource.transform.forward);
             if (!Physics.Raycast(ray, out RaycastHit hit, 10)) return;
             if (hit.collider.gameObject != gameObject)
@@ -57,6 +56,9 @@ namespace CellexalVR.Spatial
             }
         }
 
+        /// <summary>
+        /// Move the saber around a bit when hand is facing it.
+        /// </summary>
         private void LaserHover()
         {
             if (!rigidbody.isKinematic)
@@ -72,6 +74,10 @@ namespace CellexalVR.Spatial
             transform.position = pos;
         }
 
+        /// <summary>
+        /// Animate saber to attach it to your hand.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator MoveToHand()
         {
             inHand = true;
@@ -82,15 +88,17 @@ namespace CellexalVR.Spatial
             while (Vector3.Distance(transform.localPosition, positionInHand) > 0.01f)
             {
                 transform.localPosition = Vector3.MoveTowards(transform.localPosition, positionInHand, dT * 5);
-                // transform.localRotation = Quaternion.RotateTowards(transform.localRotation, rotationInHand, dT * 5);
                 transform.Rotate(90f * dT, 80 * dT, 150f * dT);
                 yield return null;
             }
-
             yield return new WaitForSeconds(0.1f);
             StartCoroutine(ActivateLaser());
         }
 
+        /// <summary>
+        /// Activate the light part of the light saber.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator ActivateLaser()
         {
             laser.gameObject.SetActive(true);
