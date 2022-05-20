@@ -7940,11 +7940,10 @@ MonoBehaviour:
     type: 3}
   ActualModel: 0
   colorMode: 0
-  defaultStaticMaterial: {fileID: 2100000, guid: cc151daa0e8ba3c48abed9c86b2e090d,
+  defaultStaticMaterial: {fileID: 2100000, guid: 282096f81f2f0d34eabef4235b1617b1,
     type: 2}
   animatedPulseMaterial: {fileID: 2100000, guid: 1acb6b523c0ab4841ba455c24a8c05d6,
     type: 2}
-  toolsParent: {fileID: 7204312198556623501}
 --- !u!65 &1638506007
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -42,19 +42,7 @@ namespace CellexalVR.Spatial
         private void Start()
         {
             startPosition = transform.position;
-            GameObject brain = GameObject.Instantiate(brainModel);
-            brain.GetComponent<ReferenceMouseBrain>().spatialGraph = this;
             _rigidBody = GetComponent<Rigidbody>();
-
-            // var angle = -(Math.PI);
-            // var radius = 1f;
-            // for (int i = 0; i < 8; i++)
-            // {
-            //     Vector3 pos = radius * new Vector3((float) Math.Cos(angle), 1, (float) Math.Sin(angle));
-            //     var obj = GameObject.Instantiate(cubePrefab, transform);
-            //     obj.transform.localPosition = pos;
-            //     angle += (Math.PI) / 8d;
-            // }
         }
 
         private void Update()
@@ -99,98 +87,6 @@ namespace CellexalVR.Spatial
 
             yield return null;
         }
-
-        /// <summary>
-        /// Create a mesh using the marching cubes algorithm. Read the coordinates and add a density value of one to each point.
-        /// </summary>
-        /// <returns></returns>
-        //public IEnumerator CreateMesh()
-        //{
-        //    string path = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" +
-        //                  "slice.mds";
-        //    ChunkManager chunkManager = GameObject.Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
-        //    yield return null;
-        //    int i = 0;
-        //    using (StreamReader sr = new StreamReader(path))
-        //    {
-        //        string header = sr.ReadLine();
-        //        while (!sr.EndOfStream)
-        //        {
-        //            string[] coords = sr.ReadLine()
-        //                .Split(new string[] {" ", "\t"}, StringSplitOptions.RemoveEmptyEntries);
-        //            i++;
-        //            int x = (int) float.Parse(coords[1]);
-        //            int y = (int) float.Parse(coords[2]);
-        //            int z = (int) float.Parse(coords[3]);
-        //            chunkManager.addDensity(x, y, z, 1);
-
-        //            //chunkManager.addDensity(x, y, z + (1 % z), 1);
-        //            //chunkManager.addDensity(x, y, z + z * (1 % z), 1);
-        //            //chunkManager.addDensity(x, y, z + z * (1 % z), 1);
-        //        }
-        //    }
-        //    //print(i);
-
-        //    chunkManager.toggleSurfaceLevelandUpdateCubes(0);
-
-
-        //    foreach (MeshFilter mf in chunkManager.GetComponentsInChildren<MeshFilter>())
-        //    {
-        //        mf.mesh.RecalculateBounds();
-        //        mf.mesh.RecalculateNormals();
-        //    }
-
-        //    contour = Instantiate(contourParent);
-        //    chunkManager.transform.parent = contour.transform;
-        //    contour.transform.localScale = Vector3.one * 0.15f;
-        //    BoxCollider bc = contour.AddComponent<BoxCollider>();
-        //    bc.center = Vector3.one * 4;
-        //    bc.size = Vector3.one * 6;
-        //}
-
-        /// <summary>
-        /// Create a mesh inside the full spatial graph mesh. This is used when colouring by gene expression to create a kernel to visualise.
-        /// </summary>
-        /// <param name="geneName"></param>
-        /// <returns></returns>
-        //public IEnumerator CreateMeshFromAShape(string geneName)
-        //{
-        //    //string path = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + "gene1triang" + ".hull";
-        //    string vertPath = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" +
-        //                      geneName + ".mesh";
-        //    ChunkManager chunkManager = GameObject.Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
-        //    chunkManager.gameObject.name = geneName;
-        //    yield return null;
-        //    using (StreamReader sr = new StreamReader(vertPath))
-        //    {
-        //        sr.ReadLine();
-        //        while (!sr.EndOfStream)
-        //        {
-        //            string[] line = sr.ReadLine().Split(null);
-        //            chunkManager.addDensity((int) float.Parse(line[1]), (int) float.Parse(line[2]),
-        //                (int) float.Parse(line[3]), 1);
-        //        }
-        //    }
-
-        //    List<int> triangles = new List<int>();
-        //    CellexalLog.Log("Started reading " + vertPath);
-        //    chunkManager.toggleSurfaceLevelandUpdateCubes(0);
-        //    foreach (MeshFilter mf in chunkManager.GetComponentsInChildren<MeshFilter>())
-        //    {
-        //        Renderer r = mf.gameObject.GetComponent<Renderer>();
-        //        r.material = opaqueMat;
-        //        r.material.color = Color.red;
-        //        mf.mesh.RecalculateBounds();
-        //        mf.mesh.RecalculateNormals();
-        //    }
-
-        //    chunkManager.transform.parent = contour.transform;
-        //    yield return null;
-        //    chunkManager.transform.localScale = Vector3.one;
-        //    chunkManager.transform.localPosition = Vector3.zero;
-        //    chunkManager.transform.localRotation = Quaternion.identity;
-        //}
-
 
         /// <summary>
         /// Places the slices in a grid pattern to be able to look at them all individually.

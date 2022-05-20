@@ -12,7 +12,9 @@ using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.DesktopUI
 {
-
+    /// <summary>
+    /// Handles the scarf desktop ui. This means handling different button clicks such as pre-processing steps and so on.
+    /// </summary>
     public class ScarfUIManager : MonoBehaviour
     {
         public GameObject mainMenuUI;
@@ -326,7 +328,7 @@ namespace CellexalVR.DesktopUI
             progressBarContainer.RemoveFromClassList("inactive");
             makeGraphButton.AddToClassList("inactive");
             AnimateUIRotation(graphOuterPivot);
-            StartCoroutine(ScarfManager.instance.MakeGraphCoroutine(featKeyTextField.value, graphRunning, graphDone));
+            StartCoroutine(ScarfManager.instance.MakeNeighborhoodGraphCoroutine(featKeyTextField.value, graphRunning, graphDone));
         }
 
         private void OnClusteringButtonPressed()

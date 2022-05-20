@@ -13,6 +13,10 @@ using UnityEngine.VFX;
 
 namespace CellexalVR.Spatial
 {
+    /// <summary>
+    /// This class the light saber slicing. It creates a plane based on where the light saber entered the graph and where it exited.
+    /// Points on one side of the plane is one slice and the other another one.
+    /// </summary>
     public class LightSaberSliceCollision : MonoBehaviour
     {
         private Vector3 enterPosition;
@@ -42,16 +46,17 @@ namespace CellexalVR.Spatial
         {
             collider = GetComponent<BoxCollider>();
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
-            CellexalEvents.RightTriggerPressed.AddListener(OnTriggerDown);
             CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
         }
 
+        /// <summary>
+        /// Start creating the cut plane. 
+        /// </summary>
         private void OnTriggerClick()
         {
             vfx.enabled = true;
             cuttingActive = true;
             enterPosition = transform.position;
-            //planeVisualizer.enabled = true;
             planeMesh.transform.parent = null;
             planeMesh.transform.rotation = Quaternion.identity;
             planeMesh.transform.position = Vector3.zero;
@@ -62,12 +67,9 @@ namespace CellexalVR.Spatial
             lastPoint = false;
         }
 
-        private void OnTriggerDown()
-        {
-
-
-        }
-
+        /// <summary>
+        /// Event that happends when user is done creating the plane.
+        /// </summary>
         private void OnTriggerUp()
         {
             cuttingActive = false;
@@ -83,12 +85,8 @@ namespace CellexalVR.Spatial
 
         private void Update()
         {
-
             if (cuttingActive)
             {
-                //int hashMapKey = QuadrantSystem.GetPositionHashMapKey(transform.position);
-                //SaveClosestPointPosition(hashMapKey); // * QuadrantSystem.quadrantYMultiplier); // current quadrant
-                //SaveClosestPointPosition();
                 VisualizeCuttingPlane();
             }
         }
@@ -98,8 +96,8 @@ namespace CellexalVR.Spatial
         {
             if (pcToSlice == null) return float3.zero;
             float3 saberInPCLocalPos = pcToSlice.transform.InverseTransformPoint(transform.position);
-            int hashMapKey = QuadrantSystem.GetPositionHashMapKey(saberInPCLocalPos);
-            if (QuadrantSystem.quadrantMultiHashMaps[pcToSlice.pcID].TryGetFirstValue(hashMapKey, out QuadrantData quadrantData,
+            int hashMapKey = OctantSystem.GetPositionHashMapKey(saberInPCLocalPos);
+            if (OctantSystem.quadrantMultiHashMaps[pcToSlice.pcID].TryGetFirstValue(hashMapKey, out OctantData quadrantData,
                 out NativeMultiHashMapIterator<int> nativeMultiHashMapIterator))
             {
                 do
@@ -107,44 +105,18 @@ namespace CellexalVR.Spatial
                     Vector3 difference = saberInPCLocalPos - quadrantData.position;
                     if (!Physics.Raycast(quadrantData.position, difference, difference.magnitude, 1 << 14))
                     {
-                        // Debug.DrawRay(pointPosition, difference, Color.green);
-                        // AddGraphPointToSelection(quadrantData);
-                        //if (!firstPoint)
-                        //{
-                        //    // enterPosition = quadrantData.position;
-                        //    //enterPosition = transform.position;
-                        //    graphToCut = quadrantData.parentID;
-                        //    firstPoint = true;
-                        //    //planeVisualizer.SetPosition(1, (enterPosition - 0.4f * transform.up));
-                        //    //planeVisualizer.enabled = true;
-                        //}
-
-                        //else if (quadrantData.parentID != graphToCut)
-                        //{
-                        //    firstPoint = false;
-                        //    exitPosition = transform.position;
-                        //    //planeVisualizer.enabled = false;
-                        //    graphToCut = -1;
-                        //    cuttingActive = false;
-                        //}
                     }
-                } while (QuadrantSystem.quadrantMultiHashMaps[0].TryGetNextValue(out quadrantData, ref nativeMultiHashMapIterator));
+                } while (OctantSystem.quadrantMultiHashMaps[0].TryGetNextValue(out quadrantData, ref nativeMultiHashMapIterator));
             }
-
-            //else if (firstPoint)
-            //{
-            //    firstPoint = false;
-            //    exitPosition = transform.position;
-            //    CreateSlicePlane(enterPosition, exitPosition, graphToCut);
-            //    planeVisualizer.enabled = false;
-            //    graphToCut = -1;
-            //    cuttingActive = false;
-            //}
-
             return quadrantData.position;
         }
 
 
+        /// <summary>
+        /// Creates the plane to use for slicing.
+        /// </summary>
+        /// <param name="enter"></param>
+        /// <param name="exit"></param>
         private void CreateSlicePlane(float3 enter, float3 exit)
         {
             if (pcToSlice == null) return;
@@ -154,7 +126,9 @@ namespace CellexalVR.Spatial
             planeMesh.gameObject.SetActive(false);
         }
 
-
+        /// <summary>
+        /// Visualize the plane to use for slizing.
+        /// </summary>
         private void VisualizeCuttingPlane()
         {
             Vector3 dir = math.normalize(enterPosition - transform.position);

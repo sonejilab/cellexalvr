@@ -352,11 +352,12 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void RecreateHistogram()
         {
-            if (tabData[currentTab] != null)
+            if (tabData.Count == 0 || tabData[currentTab] == null)
             {
-                tabData[currentTab].CalculateBarHeights(DesiredYAxisMode, TallestBarsToSkip);
-                CreateHistogram(tabData[currentTab]);
+                return;
             }
+            tabData[currentTab].CalculateBarHeights(DesiredYAxisMode, TallestBarsToSkip);
+            CreateHistogram(tabData[currentTab]);
         }
 
         /// <summary>
@@ -523,17 +524,17 @@ namespace CellexalVR.AnalysisObjects
                 {
                     sum += data.heightsInt[i];
                 }
-                highlightAreaInfoText.text = "x: [" + minX + ", " + maxX + "]\nsum: " + sum + "\nmean: " + mean + "\nmedian: " + median;
+                highlightAreaInfoText.text = $"x: [{minX}, {maxX}]\ny sum: {sum}\ny mean: {mean}\ny median: {median}";
             }
             else
             {
                 if (DesiredYAxisMode == YAxisMode.Linear)
                 {
-                    highlightAreaInfoText.text = "x: " + minX + "\ny: " + data.heightsInt[minX];
+                    highlightAreaInfoText.text = $"x: {minX}\ny: {data.heightsInt[minX]}";
                 }
                 else
                 {
-                    highlightAreaInfoText.text = "x: " + minX + "\ny: " + Math.Log(data.heightsInt[minX] + 1);
+                    highlightAreaInfoText.text = $"x: {minX}\ny: {Math.Log(data.heightsInt[minX] + 1)}";
                 }
             }
         }

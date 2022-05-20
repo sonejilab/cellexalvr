@@ -5,7 +5,9 @@ using CellexalVR.General;
 
 namespace CellexalVR.DesktopUI
 {
-
+    /// <summary>
+    /// Handles the multi user desktop ui menu.
+    /// </summary>
     public class MultiUserUIManager : MonoBehaviour
     {
         public GameObject mainMenu;

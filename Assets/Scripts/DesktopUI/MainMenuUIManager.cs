@@ -11,6 +11,9 @@ using UnityEngine.UIElements;
 
 namespace CellexalVR.DesktopUI
 {
+    /// <summary>
+    /// Handles the main menu desktop ui. Such as what happens when you click the buttons on the main menu. 
+    /// </summary>
     public class MainMenuUIManager : MonoBehaviour
     {
         public GameObject scarfMenu;

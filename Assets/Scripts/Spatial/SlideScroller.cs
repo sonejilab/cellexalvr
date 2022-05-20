@@ -8,7 +8,10 @@ using UnityEngine.InputSystem;
 
 namespace CellexalVR.Spatial
 {
-
+    /// <summary>
+    /// This class handles the scrolling of the geo mx images. In the future could be used for different type of image data.
+    /// The images are placed in a circle around the user and six images are shown at a time. 
+    /// </summary>
     public class SlideScroller : MonoBehaviour
     {
         private GeoMXImageHandler imageHandler;
@@ -55,6 +58,11 @@ namespace CellexalVR.Spatial
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
 
+        /// <summary>
+        /// Clicking right or left on touchpad/thumbstick triggers the scrolling. 
+        /// Only scroll if the controller is being pointed towards one of the images.
+        /// </summary>
+        /// <param name="context"></param>
         private void OnTouchPadClick(InputAction.CallbackContext context)
         {
             if (ReferenceManager.instance.controllerModelSwitcher.DesiredModel == ControllerModelSwitcher.Model.SelectionTool)
@@ -90,12 +98,20 @@ namespace CellexalVR.Spatial
             }
         }
 
+        /// <summary>
+        /// Scroll to a specific image slice.
+        /// </summary>
+        /// <param name="toSlice"></param>
         public void ScrollTo(int toSlice)
         {
             int diff = toSlice - currentSlide[currentType];
             Scroll(diff);
         }
 
+        /// <summary>
+        /// Scroll right or left through the image slices.
+        /// </summary>
+        /// <param name="val"></param>
         public void Scroll(int val)
         {
             if (currentSlides.Count <= imageHandler.nrOfPositions)
@@ -172,12 +188,24 @@ namespace CellexalVR.Spatial
             }
         }
 
+
+        /// <summary>
+        /// Scroll through a stack of images works differently so it calls the function in <see cref="GeoMXSlideStack"/>.
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="group"></param>
         public void ScrollStack(int val, int group)
         {
             GeoMXSlideStack stack = imageHandler.stacks[group];
             stack.Scroll(val);
         }
 
+        /// <summary>
+        /// Helper function used among other things in the scrolling so that you go back to the first one after scrolling through the last.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="m"></param>
+        /// <returns></returns>
         public static int mod(int x, int m)
         {
             return (x % m + m) % m;

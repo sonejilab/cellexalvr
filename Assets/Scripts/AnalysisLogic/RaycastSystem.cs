@@ -9,6 +9,12 @@ using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
+    /// <summary>
+    /// This class is also part of the selection of points in a point cloud logic see also <see cref="PointSelectionSystem"/> and <see cref="OctantSystem"/>.
+    /// Relevant points, meaning points that are in the same or an octant close to the users selection tool are raycasted and checked if they are outside or inside of the selection tool mesh.
+    /// If they are inside they are selected, i.e. a <see cref="SelectedPointComponent"/> is added.
+    /// All the logic happends inside the <see cref="OnUpdate"/> function.
+    /// </summary>
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     public class RaycastSystem : SystemBase
     {
@@ -28,15 +34,12 @@ namespace CellexalVR.AnalysisLogic
             moveEntityArchetype = EntityManager.CreateArchetype(typeof(MovePointComponent));
         }
 
-        protected override void OnDestroy()
-        {
-
-        }
+        protected override void OnDestroy() {}
 
         protected override void OnUpdate()
         {
             if (!SelectionToolCollider.instance.selActive) return;
-            int entityCount = query.CalculateEntityCount(); //GetEntityQuery(typeof(Point)).CalculateEntityCount();
+            int entityCount = query.CalculateEntityCount();
 
             float3 origin = SelectionToolCollider.instance.GetCurrentCollider().transform.position;
             EntityCommandBuffer commandBuffer = ecbSystem.CreateCommandBuffer();

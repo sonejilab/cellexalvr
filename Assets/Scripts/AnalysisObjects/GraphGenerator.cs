@@ -229,6 +229,7 @@ namespace CellexalVR.AnalysisObjects
                     }
                 }
             }
+            referenceManager.legendManager.geneExpressionHistogram.RecreateHistogram();
         }
 
         /// <summary>

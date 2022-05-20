@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
+    /// <summary>
+    /// Component struct to add to each selected point so that it can then be found and colored.
+    /// </summary>
     public struct SelectedPointComponent : IComponentData
     {
         public int orgXIndex;
@@ -19,7 +22,10 @@ namespace CellexalVR.AnalysisLogic
         public int parentID;
     }
 
-
+    /// <summary>
+    /// Component to add to the points that are to be raycasted and checked if they are inside the selection tool.
+    /// If they are a <see cref="SelectedPointComponent"/> is added.
+    /// </summary>
     public struct RaycastCheckComponent : IComponentData
     {
         public int orgXIndex;
@@ -32,30 +38,23 @@ namespace CellexalVR.AnalysisLogic
         public int parentID;
     }
 
+    /// <summary>
+    /// This class is a component system to handle the point selection in point clouds.
+    /// Since the point clouds are not built using octree as the normal graphs we can not use the same selection system.
+    /// But this system also in the end uses ray casts to decide if the points are inside of the selection tool.
+    /// Which points are to be checked <see cref="OctantSystem"/>
+    /// </summary>
     public class PointSelectionSystem : SystemBase
     {
-        private Entity brainParent;
-        private bool textureChanged;
         private int frameCount;
-        private EntityQuery query;
         private BeginSimulationEntityCommandBufferSystem ecbSystem;
-        private GameObject newParent;
         private EntityArchetype entityArchetype;
-
-        private EntityManager entityManager;
 
         protected override void OnCreate()
         {
             base.OnCreate();
-            entityManager = World.EntityManager;
             ecbSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
             entityArchetype = EntityManager.CreateArchetype(typeof(RaycastCheckComponent));
-        }
-
-        public void CreateMesh()
-        {
-            EntityQuery group = GetEntityQuery(typeof(SelectedPointComponent), typeof(Point));
-            NativeArray<Entity> points = group.ToEntityArray(Allocator.Temp);
         }
 
         protected override void OnUpdate()
@@ -76,70 +75,78 @@ namespace CellexalVR.AnalysisLogic
             if (pc == null) return;
             float3 selectionToolCenter = pc.transform.InverseTransformPoint(selTransform.position);
             //QuadrantSystem.DebugDrawCubes(selectionToolCenter, pc.transform);
-            int hashMapKey = QuadrantSystem.GetPositionHashMapKey(selectionToolCenter);
+            int hashMapKey = OctantSystem.GetPositionHashMapKey(selectionToolCenter);
             if (frameCount == 10)
             {
-                CheckOneQuadrantYLayer(hashMapKey, -1, pc);
+                CheckOneOctantYLayer(hashMapKey, -1, pc);
             }
 
             if (frameCount == 11)
             {
-                CheckOneHalfQuadrantYLayer(hashMapKey, -1, pc);
+                CheckOneHalfOctantYLayer(hashMapKey, -1, pc);
             }
 
             if (frameCount == 12)
             {
-                CheckOneQuadrantYLayer(hashMapKey, 0, pc);
+                CheckOneOctantYLayer(hashMapKey, 0, pc);
             }
 
             if (frameCount == 13)
             {
-                CheckOneHalfQuadrantYLayer(hashMapKey, 0, pc);
+                CheckOneHalfOctantYLayer(hashMapKey, 0, pc);
             }
 
             if (frameCount == 14)
             {
-                CheckOneQuadrantYLayer(hashMapKey, 1, pc);
+                CheckOneOctantYLayer(hashMapKey, 1, pc);
             }
             else if (frameCount == 15)
             {
                 frameCount = 0;
-                CheckOneHalfQuadrantYLayer(hashMapKey, 1, pc);
+                CheckOneHalfOctantYLayer(hashMapKey, 1, pc);
             }
 
             frameCount++;
         }
 
+        /// <summary>
+        /// Check one quadrant y layer for nearby points to see if they are inside the selection tool. 
+        /// For more information what a quadrant is <see cref="OctantSystem"/>.
+        /// </summary>
+        /// <param name="hashMapKey"></param>
+        /// <param name="y"></param>
+        /// <param name="pc"></param>
         [BurstCompile]
-        private void CheckOneQuadrantYLayer(int hashMapKey, int y, PointCloud pc)
+        private void CheckOneOctantYLayer(int hashMapKey, int y, PointCloud pc)
         {
-            CheckForNearbyEntities(hashMapKey + y * QuadrantSystem.quadrantYMultiplier, pc); // current quadrant
-            CheckForNearbyEntities((hashMapKey + 1) + y * QuadrantSystem.quadrantYMultiplier, pc); // one to the right
-            CheckForNearbyEntities((hashMapKey - 1) + y * QuadrantSystem.quadrantYMultiplier, pc); // one to the left
-            CheckForNearbyEntities((hashMapKey) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc); // and so on..
+            CheckForNearbyEntities(hashMapKey + y * OctantSystem.octantYMultiplier, pc); // current quadrant
+            CheckForNearbyEntities((hashMapKey + 1) + y * OctantSystem.octantYMultiplier, pc); // one to the right
+            CheckForNearbyEntities((hashMapKey - 1) + y * OctantSystem.octantYMultiplier, pc); // one to the left
+            CheckForNearbyEntities((hashMapKey) + 1 * OctantSystem.octantZMultiplier + y * OctantSystem.octantYMultiplier, pc); // and so on..
         }
 
         [BurstCompile]
-        private void CheckOneHalfQuadrantYLayer(int hashMapKey, int y, PointCloud pc)
+        private void CheckOneHalfOctantYLayer(int hashMapKey, int y, PointCloud pc)
         {
-            CheckForNearbyEntities((hashMapKey) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
-            CheckForNearbyEntities((hashMapKey + 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
-            CheckForNearbyEntities((hashMapKey - 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
-            CheckForNearbyEntities((hashMapKey + 1) - 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
-            CheckForNearbyEntities((hashMapKey - 1) + 1 * QuadrantSystem.quadrantZMultiplier + y * QuadrantSystem.quadrantYMultiplier, pc);
+            CheckForNearbyEntities((hashMapKey) - 1 * OctantSystem.octantZMultiplier + y * OctantSystem.octantYMultiplier, pc);
+            CheckForNearbyEntities((hashMapKey + 1) + 1 * OctantSystem.octantZMultiplier + y * OctantSystem.octantYMultiplier, pc);
+            CheckForNearbyEntities((hashMapKey - 1) - 1 * OctantSystem.octantZMultiplier + y * OctantSystem.octantYMultiplier, pc);
+            CheckForNearbyEntities((hashMapKey + 1) - 1 * OctantSystem.octantZMultiplier + y * OctantSystem.octantYMultiplier, pc);
+            CheckForNearbyEntities((hashMapKey - 1) + 1 * OctantSystem.octantZMultiplier + y * OctantSystem.octantYMultiplier, pc);
         }
 
-
+        /// <summary>
+        /// Check for points/entities near the selection tool and check if they are inside the selection tool mesh.
+        /// </summary>
+        /// <param name="hashMapKey"></param>
+        /// <param name="pc"></param>
         [BurstCompile]
         private void CheckForNearbyEntities(int hashMapKey, PointCloud pc)
         {
             NativeList<RaycastCheckComponent> entityArray = new NativeList<RaycastCheckComponent>(Allocator.Temp);
             float3 origin = SelectionToolCollider.instance.GetCurrentCollider().transform.position;
             // If a childSlice check quadrant map of parent slice;
-            //PointCloud parent = pc.graphSlice.parentSlice.pointCloud;
-            //int id = parent.pcID;
-            //Debug.Log($"{QuadrantSystem.GetEntityCountInHashMap(QuadrantSystem.quadrantMultiHashMaps[pc.pcID], hashMapKey)}");
-            if (QuadrantSystem.quadrantMultiHashMaps[pc.pcID].TryGetFirstValue(hashMapKey, out QuadrantData quadrantData,
+            if (OctantSystem.quadrantMultiHashMaps[pc.pcID].TryGetFirstValue(hashMapKey, out OctantData quadrantData,
                 out NativeMultiHashMapIterator<int> nativeMultiHashMapIterator))
             {
                 do
@@ -160,7 +167,7 @@ namespace CellexalVR.AnalysisLogic
                         label = quadrantData.label,
                         parentID = pc.pcID
                     });
-                } while (QuadrantSystem.quadrantMultiHashMaps[pc.pcID].TryGetNextValue(out quadrantData,
+                } while (OctantSystem.quadrantMultiHashMaps[pc.pcID].TryGetNextValue(out quadrantData,
                     ref nativeMultiHashMapIterator));
             }
             NativeArray<Entity> entities = new NativeArray<Entity>(entityArray.Length, Allocator.Temp);
@@ -185,71 +192,5 @@ namespace CellexalVR.AnalysisLogic
             entities.Dispose();
             entityArray.Dispose();
         }
-
-
-        // [BurstCompile]
-        // private void MoveToReferenceBrain(QuadrantData quadrantData, Entity entity, Point point)
-        // {
-        //     if (brainParent == Entity.Null)
-        //     {
-        //         GameObject brain = GameObject.Find("BrainParent");
-        //         if (!brain) return;
-        //         brainParent = AddNewParent(brain);
-        //         int graphNr = PointSpawner.instance.nrOfGraphs++;
-        //         PointMoveSystem pointMoveSystem = World.GetExistingSystem<PointMoveSystem>();
-        //         pointMoveSystem.graphParentTransforms.Add(brain.transform);
-        //         pointMoveSystem.graphParentTransforms[graphNr] = brain.transform;
-        //     }
-        //
-        //     Point qdPoint = quadrantData.point;
-        //     entityManager.AddComponent<PointMovedToNewParent>(quadrantData.entity);
-        //     entityManager.AddComponent<MoveTowards>(quadrantData.entity);
-        //     entityManager.SetComponentData(quadrantData.entity, new MoveTowards {speed = 0.5f});
-        //     SetComponent(quadrantData.entity, new PointMovedToNewParent
-        //     {
-        //         previousParent = quadrantData.point.parent,
-        //         newParent = brainParent
-        //     });
-        //     qdPoint.parentId = -1;
-        //     qdPoint.previousParent = point.parent;
-        //     qdPoint.parent = brainParent;
-        //     qdPoint.offset = point.offset;
-        //     // Debug.Log($"p : {point.offset}");
-        //     SetComponent(quadrantData.entity, qdPoint);
-        // }
-
-        // [BurstCompile]
-        // public Entity AddNewParent(GameObject newParent)
-        // {
-        //     float3 newParentPos = newParent.transform.position;
-        //     quaternion newParentRot = newParent.transform.rotation;
-        //     float3 newParentScale = newParent.transform.localScale;
-        //     int graphNr = PointSpawner.instance.nrOfGraphs;
-        //     // PointMoveSystem pointMoveSystem = World.GetExistingSystem<PointMoveSystem>();
-        //     // pointMoveSystem.graphParentTransforms.Add(newParent.transform);
-        //     // pointMoveSystem.graphParentTransforms[graphNr] = newParent.transform;
-        //     newParent.transform.hasChanged = false;
-        //     Entity parent = entityManager.CreateEntity(PointSpawner.instance.parentEntityArcheType);
-        //
-        //     entityManager.SetComponentData(parent, new Translation
-        //     {
-        //         Value = newParentPos
-        //     });
-        //     entityManager.SetComponentData(parent, new Rotation
-        //     {
-        //         Value = newParentRot
-        //     });
-        //     entityManager.SetComponentData(parent, new Scale
-        //     {
-        //         Value = newParentScale.x
-        //     });
-        //     entityManager.SetComponentData(parent, new GraphParent
-        //     {
-        //         graphNr = graphNr,
-        //         pointCount = 0
-        //     });
-        //     // entityManager.AddComponent<ReferenceBrain>(brainParent);
-        //     return parent;
-        // }
     }
 }

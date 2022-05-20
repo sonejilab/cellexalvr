@@ -217,19 +217,6 @@ namespace CellexalVR.Interaction
             CellexalLog.Log($"Device disconnected. Name: {device.name}, role: {device.characteristics}, manufacturer: {device.manufacturer}");
         }
 
-        private void Update()
-        {
-            if (Keyboard.current.rKey.wasPressedThisFrame)
-            {
-                var allDevices = new System.Collections.Generic.List<UnityEngine.XR.InputDevice>();
-                UnityEngine.XR.InputDevices.GetDevices(allDevices);
-                foreach (var device in allDevices)
-                {
-                    OnDeviceConnected(device);
-                }
-            }
-        }
-
         /// <summary>
         /// Used when starting the program.
         /// It takes some time for steamvr and vrtk to set everything up, and for some time
