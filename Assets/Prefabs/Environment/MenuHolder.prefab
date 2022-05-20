@@ -10376,7 +10376,7 @@ MonoBehaviour:
   graphPointColorsModeText: {fileID: 2412912811244708016}
   particleMaterialText: {fileID: 5783040249359284680}
   buttons: []
-  particleSizeSlider: {fileID: 0}
+  particleSizeSlider: {fileID: 6146933225180799089}
   averageVelocityResolutionText: {fileID: 456311345567361814}
 --- !u!1 &1319203109623742
 GameObject:
@@ -32252,13 +32252,15 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   valuePrefix: 'Particle Size: '
-  minValue: 0.01
-  maxValue: 0.5
+  minValue: 0.001
+  maxValue: 0.01
   startFactor: 1
   startValue: 0.3
   minPos: -0.5
   maxPos: 0.5
   type: 0
+  slideType: 0
+  currentValue: 0
 --- !u!114 &467042364
 MonoBehaviour:
   m_ObjectHideFlags: 0
