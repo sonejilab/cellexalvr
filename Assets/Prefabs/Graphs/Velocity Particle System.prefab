@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 198557150336610568}
   - component: {fileID: 199209307711368580}
   - component: {fileID: 114329870430505690}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Velocity Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
