@@ -17,7 +17,7 @@ namespace CellexalVR.Menu.SubMenus
         public TextMeshPro graphPointColorsModeText;
         public TextMeshPro particleMaterialText;
         public List<LoadVelocityButton> buttons = new List<LoadVelocityButton>();
-        public VRSlider particleSizeSlider;
+        public SliderController particleSizeSlider;
         public TextMeshPro averageVelocityResolutionText;
 
         private int buttonNbr;

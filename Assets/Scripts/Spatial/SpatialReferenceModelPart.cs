@@ -32,7 +32,7 @@ namespace CellexalVR.Spatial
             color = col;
             foreach (MeshRenderer r in rend)
             {
-                r.material.SetColor("_Color", col);
+                r.sharedMaterial.SetColor("_BaseColor", col);
             }
         }
 

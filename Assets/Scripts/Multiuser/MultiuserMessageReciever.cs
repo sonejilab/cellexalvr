@@ -202,28 +202,18 @@ namespace CellexalVR.Multiuser
 
         public void RecieveMessageUpdateSliderValue(string sliderType, float value)
         {
-            VRSlider.SliderType slider = (VRSlider.SliderType)Enum.Parse(typeof(VRSlider.SliderType), sliderType);
+            SliderController.sliderType slider = (SliderController.sliderType)Enum.Parse(typeof(SliderController.sliderType), sliderType);
 
             switch (slider)
             {
-                case VRSlider.SliderType.VelocityParticleSize:
-                    VRSlider veloSlider = referenceManager.velocitySubMenu.particleSizeSlider;
+                case SliderController.sliderType.VELOCITY:
+                    SliderController veloSlider = referenceManager.velocitySubMenu.particleSizeSlider;
                     veloSlider.UpdateSliderValue(value);
-                    referenceManager.velocityGenerator.ChangeParticleSize(veloSlider.Value);
+                    referenceManager.velocityGenerator.ChangeParticleSize(veloSlider.currentValue);
                     break;
-                case VRSlider.SliderType.PDFCurvature:
-                    VRSlider curvatureSlider = referenceManager.pdfMesh.curvatureSlider;
-                    curvatureSlider.UpdateSliderValue(value);
-                    referenceManager.pdfMesh.ChangeCurvature(curvatureSlider.Value);
-                    break;
-                case VRSlider.SliderType.PDFRadius:
-                    referenceManager.pdfMesh.radiusSlider.UpdateSliderValue(value);
-                    break;
-                case VRSlider.SliderType.PDFWidth:
-                    referenceManager.pdfMesh.scaleXSliderStationary.UpdateSliderValue(value);
-                    break;
-                case VRSlider.SliderType.PDFHeight:
-                    referenceManager.pdfMesh.scaleYSliderStationary.UpdateSliderValue(value);
+                case SliderController.sliderType.PARTICLESIZE:
+                case SliderController.sliderType.PARTICLESPREAD:
+                case SliderController.sliderType.PARTICLEALPHA:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -1593,7 +1583,6 @@ namespace CellexalVR.Multiuser
         {
             CellexalLog.Log("Recieved message to read velocity file - " + graphName);
             var veloButton = referenceManager.velocitySubMenu.FindButton(graphName, subGraphName);
-
 
             Graph graph = referenceManager.graphManager.FindGraph(subGraphName);
             //if (subGraphName != string.Empty)
