@@ -22,7 +22,7 @@ namespace CellexalVR.Spatial
         public static GeoMXImageHandler instance;
 
         public ReferenceManager referenceManager;
-        
+
         /// <summary>
         /// A GeoMX cell corresponds to an aoi image. It therefore links to an aoi, an roi and a scan.
         /// </summary>
@@ -792,6 +792,11 @@ namespace CellexalVR.Spatial
         /// </summary>
         private void Reset()
         {
+            if (!slideScroller)
+            {
+                return;
+            }
+
             ClearSlideStacks();
             int i = 0;
             foreach (KeyValuePair<string, GeoMXSlide> kvp in scanSlides)
