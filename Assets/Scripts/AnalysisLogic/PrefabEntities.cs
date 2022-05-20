@@ -3,6 +3,9 @@ using Unity.Entities;
 
 namespace CellexalVR
 {
+    /// <summary>
+    /// Spawns entities, in our case points, and converts to an entity.
+    /// </summary>
     public class PrefabEntities : MonoBehaviour, IConvertGameObjectToEntity
     {
         public static Entity prefabEntity;

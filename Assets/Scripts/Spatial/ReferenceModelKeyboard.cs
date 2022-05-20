@@ -6,7 +6,9 @@ using System;
 
 namespace CellexalVR.Interaction
 {
-
+    /// <summary>
+    /// This keyboard handler is linked to the Allen Reference Brain and is used to search through glass brain parts to show.
+    /// </summary>
     public class ReferenceModelKeyboard : KeyboardHandler
     {
         public override string[][] Layouts { get; protected set; } = {

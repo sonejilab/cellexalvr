@@ -9,145 +9,139 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.VFX;
 
-public class PointCloudSettings : MonoBehaviour
+namespace CellexalVR.Spatial
 {
-    [SerializeField] private GameObject sizeSlider;
-    [SerializeField] private GameObject spreadSlider;
-    [SerializeField] private GameObject alphaSlider;
-    [SerializeField] private UnityEvent<float> onSizeValueChanged;
-    [SerializeField] private UnityEvent<float> onSpreadValueChanged;
-    [SerializeField] private UnityEvent<float> onAlphaValueChanged;
-
-    [SerializeField] private InputActionAsset actionAsset;
-    [SerializeField] private InputActionReference actionReference;
-
-
-    private bool toggled;
-    private List<VisualEffect> pointClouds = new List<VisualEffect>();
-    public float size = 0.003f;
-    public float Size
+    /// <summary>
+    /// Class used to change the point cloud settings such as transparency, size and spread.
+    /// The way to change the values is through a slider for each.
+    /// Changing the settings changes the value for all point clouds in the scene.
+    /// </summary>
+    public class PointCloudSettings : MonoBehaviour
     {
-        get => size;
-        set
+        [SerializeField] private GameObject sizeSlider;
+        [SerializeField] private GameObject spreadSlider;
+        [SerializeField] private GameObject alphaSlider;
+        [SerializeField] private UnityEvent<float> onSizeValueChanged;
+        [SerializeField] private UnityEvent<float> onSpreadValueChanged;
+        [SerializeField] private UnityEvent<float> onAlphaValueChanged;
+
+        [SerializeField] private InputActionAsset actionAsset;
+        [SerializeField] private InputActionReference actionReference;
+
+
+        private bool toggled;
+        private List<VisualEffect> pointClouds = new List<VisualEffect>();
+        public float size = 0.003f;
+        public float Size
         {
-            size = value;
-            onSizeValueChanged.Invoke(size);
+            get => size;
+            set
+            {
+                size = value;
+                onSizeValueChanged.Invoke(size);
+            }
         }
-    }
 
-    public float spread = 1f;
-    public float Spread
-    {
-        get => spread;
-        set
+        public float spread = 1f;
+        public float Spread
         {
-            spread = value;
-            onSpreadValueChanged.Invoke(spread);
+            get => spread;
+            set
+            {
+                spread = value;
+                onSpreadValueChanged.Invoke(spread);
+            }
         }
-    }
 
-    public float alpha = 1f;
-    public float Alpha
-    {
-        get => alpha;
-        set
+        public float alpha = 1f;
+        public float Alpha
         {
-            alpha = value;
-            onAlphaValueChanged.Invoke(alpha);
+            get => alpha;
+            set
+            {
+                alpha = value;
+                onAlphaValueChanged.Invoke(alpha);
+            }
         }
-    }
 
-    private void Start()
-    {
-        CellexalEvents.GraphsLoaded.AddListener(PopulateList);
-        //actionReference.action.performed += OnActionClick;
-    }
-
-    private void PopulateList()
-    {
-        foreach (PointCloud pc in PointCloudGenerator.instance.pointClouds)
+        private void Start()
         {
-            pointClouds.Add(pc.GetComponent<VisualEffect>());
+            CellexalEvents.GraphsLoaded.AddListener(PopulateList);
         }
-    }
 
-    private void OnActionClick(InputAction.CallbackContext context)
-    {
-        ToggleSettings();
-    }
-
-    public void ToggleSettings()
-    {
-        if (!toggled)
+        private void PopulateList()
         {
-            Transform cameraTransform = ReferenceManager.instance.headset.transform;
-            transform.position = cameraTransform.position + cameraTransform.forward * 0.7f;
-            transform.LookAt(2 * transform.position - cameraTransform.position);
+            foreach (PointCloud pc in PointCloudGenerator.instance.pointClouds)
+            {
+                pointClouds.Add(pc.GetComponent<VisualEffect>());
+            }
         }
-        Vector3 targetScale = toggled ? Vector3.zero : Vector3.one;
-        sizeSlider.transform.DOScale(targetScale, 0.8f).SetEase(Ease.OutBounce);
-        spreadSlider.transform.DOScale(targetScale, 0.8f).SetEase(Ease.OutBounce);
-        alphaSlider.transform.DOScale(targetScale, 0.8f).SetEase(Ease.OutBounce);
-        toggled = !toggled;
-    }
 
-    public void ChangePointSize(float value)
-    {
-        foreach (VisualEffect vfx in pointClouds)
+        private void OnActionClick(InputAction.CallbackContext context)
         {
-            vfx.SetFloat("Size", value);
-            vfx.enabled = false;
-            vfx.enabled = true;
+            ToggleSettings();
         }
-    }
 
-    public void ChangePointSpread(float value)
-    {
-        foreach (VisualEffect vfx in pointClouds)
+        /// <summary>
+        /// Make the settings sliders visible and active to change.
+        /// </summary>
+        public void ToggleSettings()
         {
-            vfx.SetFloat("Spread", value);
-            vfx.enabled = false;
-            vfx.enabled = true;
+            if (!toggled)
+            {
+                Transform cameraTransform = ReferenceManager.instance.headset.transform;
+                transform.position = cameraTransform.position + cameraTransform.forward * 0.7f;
+                transform.LookAt(2 * transform.position - cameraTransform.position);
+            }
+            Vector3 targetScale = toggled ? Vector3.zero : Vector3.one;
+            sizeSlider.transform.DOScale(targetScale, 0.8f).SetEase(Ease.OutBounce);
+            spreadSlider.transform.DOScale(targetScale, 0.8f).SetEase(Ease.OutBounce);
+            alphaSlider.transform.DOScale(targetScale, 0.8f).SetEase(Ease.OutBounce);
+            toggled = !toggled;
         }
-    }
 
-    public void ChangePointAlpha(float value)
-    {
-        foreach (VisualEffect vfx in pointClouds)
+        /// <summary>
+        /// Sets the point size of all point clouds in the scene.
+        /// </summary>
+        /// <param name="value">The size to set.</param>
+        public void ChangePointSize(float value)
         {
-            vfx.SetFloat("Transparency", value);
-            vfx.enabled = false;
-            vfx.enabled = true;
+            foreach (VisualEffect vfx in pointClouds)
+            {
+                vfx.SetFloat("Size", value);
+                vfx.enabled = false;
+                vfx.enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Sets the point spread of all point clouds in the scene.
+        /// Spread means the distances between each point without changing size.
+        /// It scales the same for all points so the structure of the graph remains.
+        /// </summary>
+        /// <param name="value"></param>
+        public void ChangePointSpread(float value)
+        {
+            foreach (VisualEffect vfx in pointClouds)
+            {
+                vfx.SetFloat("Spread", value);
+                vfx.enabled = false;
+                vfx.enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Change transparency of all point clouds in the scene.
+        /// </summary>
+        /// <param name="value"></param>
+        public void ChangePointAlpha(float value)
+        {
+            foreach (VisualEffect vfx in pointClouds)
+            {
+                vfx.SetFloat("Transparency", value);
+                vfx.enabled = false;
+                vfx.enabled = true;
+            }
         }
     }
 }
-#if UNITY_EDITOR
-[CustomEditor(typeof(PointCloudSettings))]
-public class PointCloudSettingsEditor : Editor
-{
-
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-        var settings = (PointCloudSettings)target;
-
-        float newSizeValue = EditorGUILayout.FloatField("size", settings.size);
-        if (newSizeValue != settings.Size)
-        {
-            settings.Size = newSizeValue;
-        }
-
-        float newSpreadValue = EditorGUILayout.FloatField("spread", settings.spread);
-        if (newSpreadValue != settings.Spread)
-        {
-            settings.Spread = newSpreadValue;
-        }
-
-        float newAlphaValue = EditorGUILayout.FloatField("alpha", settings.alpha);
-        if (newAlphaValue != settings.Alpha)
-        {
-            settings.Alpha = newAlphaValue;
-        }
-    }
-}
-#endif

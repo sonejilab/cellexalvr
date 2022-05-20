@@ -5,7 +5,10 @@ using UnityEngine;
 
 namespace CellexalVR.Spatial
 {
-
+    /// <summary>
+    /// Class to represent a Region of Interest (ROI) image such as what happens when selected. 
+    /// An roi image is linked to a scan and 1 or more aoi images.
+    /// </summary>
     public class GeoMXROISlide : GeoMXSlide
     {
         public string scanID;
@@ -14,81 +17,43 @@ namespace CellexalVR.Spatial
 
         private bool selected;
 
+        /// <summary>
+        /// Select/Unselect this image. Highlights/Unhighlights the image as well as spawns/destroys the linked aoi images.
+        /// </summary>
         public override void Select()
         {
-            GeoMXSlideStack stack = GetComponentInParent<GeoMXSlideStack>();
             if (selected)
             {
                 selected = false;
-                if (stack)
-                {
-                    stack.UnSelectROI(roiID);
-                }
-                else
-                {
-                    imageHandler.UnSelectROI(roiID, true);
-                }
+                imageHandler.UnSelectROI(roiID, true);
                 UnHighlight();
             }
             else
             {
                 selected = true;
-                if (stack)
-                {
-                    stack.SpawnAOIImages(scanID, roiID, aoiIDs);
-                }
-                else
-                {
-                    imageHandler.SpawnAOIImages(scanID, aoiIDs, roiID);
-                }
+                imageHandler.SpawnAOIImages(scanID, aoiIDs, roiID);
                 Highlight();
             }
         }
 
-        public override void SelectCells(int group)
-        {
+        public override void SelectCells(int group){}
 
-        }
-
+        /// <summary>
+        /// Detach from the slide scroller so you can freely move it around.
+        /// </summary>
         public override void Detach()
         {
             base.Detach();
         }
 
+        /// <summary>
+        /// Reattaches to its position in the slide scroller.
+        /// </summary>
         public override void Reattach()
         {
             base.Reattach();
         }
 
-        public override void OnRaycastHit()
-        {
-            //imageHandler.HighlightCells(roiID);
-        }
+        public override void OnRaycastHit() {}
     }
-
-//#if UNITY_EDITOR
-//    [CustomEditor(typeof(GeoMXROISlide))]
-//    public class GeoMXROISlideEditor : Editor
-//    {
-//        public override void OnInspectorGUI()
-//        {
-//            GeoMXROISlide myTarget = (GeoMXROISlide)target;
-//            GUILayout.BeginHorizontal();
-//            if (GUILayout.Button("Select"))
-//            {
-//                myTarget.Select();
-//            }
-//            GUILayout.EndHorizontal();
-//            GUILayout.BeginHorizontal();
-//            if (GUILayout.Button("Reattach"))
-//            {
-//                myTarget.Reattach();
-//            }
-//            GUILayout.EndHorizontal();
-
-//            DrawDefaultInspector();
-//        }
-//    }
-//#endif
-
 }

@@ -13,6 +13,11 @@ using AnalysisLogic;
 
 namespace CellexalVR.Spatial
 {
+    /// <summary>
+    /// A class to calculate overlap of certain points of interest with reference organ parts.
+    /// Let's say you make a selection and want to see which parts in the brain it overlaps the most with.
+    /// (Work in progress)
+    /// </summary>
     public class ReferenceModelOverlap : MonoBehaviour
     {
         public GameObject cube;

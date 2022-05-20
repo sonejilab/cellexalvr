@@ -14,7 +14,12 @@ using UnityEngine.InputSystem;
 
 namespace CellexalVR.Spatial
 {
-
+    /// <summary>
+    /// This class takes care of the brain reference model. The mouse brain model is downloaded using the allen sdk https://allensdk.readthedocs.io/en/latest/. 
+    /// The reference model is useful when a spatial mouse brain dataset is analyzed.
+    /// To place the data points in relation to the brain glass organ.
+    /// Ids, names and acronyms are retrieved via the allen sdk and these can be used to search trough brain parts.
+    /// </summary>
     public class AllenReferenceBrain : MonoBehaviour
     {
         public static AllenReferenceBrain instance;
@@ -43,8 +48,6 @@ namespace CellexalVR.Spatial
         private string currentFilter;
         private bool loadBrain = false;
 
-
-
         private void Awake()
         {
             instance = this;
@@ -59,7 +62,6 @@ namespace CellexalVR.Spatial
             }
             boxCollider = GetComponent<BoxCollider>();
             keyboard = GetComponentInChildren<ReferenceModelKeyboard>(true);
-            //Make list of spawned brain models and add meshes for all.
             foreach (LoadReferenceModelMeshButton b in GetComponentsInChildren<LoadReferenceModelMeshButton>())
             {
                 suggestionButtons.Add(b);
@@ -69,18 +71,14 @@ namespace CellexalVR.Spatial
             {
                 idToModelDictionary[int.Parse(model.gameObject.name)] = model.GetComponent<SpatialReferenceModelPart>();
             }
-
+            
             string filePath = "Assets/StreamingAssets/structure_info.csv";
-
-            //Create instance of material for each color.
-
             using (StreamReader sr = new StreamReader(filePath))
             {
                 string header = sr.ReadLine();
                 while (!sr.EndOfStream)
                 {
                     string line = sr.ReadLine();
-                    //string[] words = line.Split(',');
                     string[] words = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"); // monster regex to handle comma inside quotes (inside part name in this case) https://stackoverflow.com/questions/18893390/splitting-on-comma-outside-quotes
                     int id = int.Parse(words[0]);
                     string n = words[1].Trim(new char[] { ' ', '\"' });
@@ -99,16 +97,17 @@ namespace CellexalVR.Spatial
                         continue;
                     }
                     model.SetColor(c);
-                    //print($"id: {id}, name: {n}, acr: {acronym}, {model.gameObject.name}");
                 }
             }
             // root model is the main brain model. have active and transparent on start...
-            //idToModelDictionary[997].color = Color.white / 10f;
             SpawnModel("root");
             UpdateSuggestions();
             CellexalEvents.GraphsLoaded.AddListener(ParentBrain);
         }
 
+        /// <summary>
+        /// For the spatial dataset graph points to be placed in relation to the glass brain it parents the object to the spatial graph transform.
+        /// </summary>
         private void ParentBrain()
         {
             gameObject.SetActive(true);
@@ -116,8 +115,6 @@ namespace CellexalVR.Spatial
             transform.localPosition = Vector3.one * -0.5f;
             transform.localScale = Vector3.one;
             transform.localRotation = Quaternion.identity;
-
-
         }
 
         private void Update()
@@ -130,7 +127,6 @@ namespace CellexalVR.Spatial
 
         private void CheckForController()
         {
-            //if (!boxCollider.enabled) return;
             Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
             if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("GameController")))
             {
@@ -142,11 +138,19 @@ namespace CellexalVR.Spatial
             }
         }
 
+        /// <summary>
+        /// Activates the keyboard to use to search trough brain part models to spawn.
+        /// </summary>
+        /// <param name="activate"></param>
         public void ActivateKeyboard(bool activate)
         {
             keyboard.gameObject.SetActive(activate);
         }
 
+        /// <summary>
+        /// Remove a spawn glass brain part.
+        /// </summary>
+        /// <param name="modelName"></param>
         public void RemovePart(string modelName)
         {
             spawnedParts[modelName].SetActive(false);
@@ -157,7 +161,12 @@ namespace CellexalVR.Spatial
             UpdateButtonPositions();
         }
 
-
+       
+        /// <summary>
+        /// Spawns a glass brain part.
+        /// </summary>
+        /// <param name="id">ID of the brain part.</param>
+        /// <returns></returns>
         [ConsoleCommand("brainModel", aliases: new string[] { "spawnbrainmodel", "sbm" })]
         public SpatialReferenceModelPart SpawnModel(int id)
         {
@@ -168,6 +177,10 @@ namespace CellexalVR.Spatial
             return objToSpawn;
         }
 
+        /// <summary>
+        /// Spawn a glass brain part.
+        /// </summary>
+        /// <param name="modelName">Name of the model.</param>
         public void SpawnModel(string modelName)
         {
             spawnedParts.TryGetValue(modelName, out GameObject spawnedPart);
@@ -183,6 +196,10 @@ namespace CellexalVR.Spatial
             UpdateSuggestions(keyboard.output.text, suggestionOffset);
         }
 
+
+        /// <summary>
+        /// Spawning a brain part creates a button to toggle it on/off. These positions are updated each time a new one is added.
+        /// </summary>
         private void UpdateButtonPositions()
         {
             for (int i = 0; i < brainPartButtons.Count; i++)
@@ -192,6 +209,11 @@ namespace CellexalVR.Spatial
             }
         }
 
+        /// <summary>
+        /// Create a button corresponding to the brain part spawned. The button toggles the part on/off. 
+        /// </summary>
+        /// <param name="modelName"></param>
+        /// <param name="color"></param>
         private void CreateButton(string modelName, Color color)
         {
             BrainPartButton button = Instantiate(brainPartButtonPrefab, keyboard.transform);
@@ -208,6 +230,11 @@ namespace CellexalVR.Spatial
             mr.material.color = color;
         }
 
+        /// <summary>
+        /// Given a name of a model retrieves the corresponding id.
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
         private int GetModelId(string n)
         {
             if (!idToModelDictionary.ContainsKey(names[n]))
@@ -220,6 +247,9 @@ namespace CellexalVR.Spatial
             }
         }
 
+        /// <summary>
+        /// Spread out the spawned brain parts. Distances the parts from the center.
+        /// </summary>
         public void Spread()
         {
             foreach (GameObject obj in spawnedParts.Values)
@@ -228,13 +258,21 @@ namespace CellexalVR.Spatial
             }
         }
 
+        /// <summary>
+        /// Scroll through the brain part suggestions.
+        /// </summary>
+        /// <param name="dir">Up/down</param>
         public void ScrollSuggestions(int dir)
         {
             suggestionOffset = Mathf.Max(0, Mathf.Min(suggestionOffset + dir, names.Keys.Count - 1));
             UpdateSuggestions(keyboard.output.text, suggestionOffset);
         }
 
-
+        /// <summary>
+        /// Writing on the keyboard filters the brain part names/acronyms.
+        /// </summary>
+        /// <param name="filter">The letters that the brain part must contains.</param>
+        /// <param name="offset">Used for the suggestions to be correct.</param>
         public void UpdateSuggestions(string filter = "", int offset = 0)
         {
             if (!filter.Equals(currentFilter))
@@ -303,7 +341,11 @@ namespace CellexalVR.Spatial
 
         }
 
-
+        /// <summary>
+        /// Checks if the brain part button is already added.
+        /// </summary>
+        /// <param name="n">Name of model to the corresponding button.</param>
+        /// <returns></returns>
         private bool BrainMeshButtonAdded(string n)
         {
             foreach (BrainPartButton bpb in brainPartButtons)
@@ -313,6 +355,10 @@ namespace CellexalVR.Spatial
             return false;
         }
 
+        /// <summary>
+        /// Helper function to deal with the imported meshes.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator PopulateMeshes()
         {
             var models = GetComponentsInChildren<SpatialReferenceModelPart>(true);
@@ -325,14 +371,17 @@ namespace CellexalVR.Spatial
                 {
                     string partName = $"{modelName}_{mr.gameObject.name}";
                     var m = (Mesh)Resources.Load($"meshparts/{partName}");
-                    print($"{m}, {partName} load meshparts/{partName}.asset");
                     mr.GetComponent<MeshFilter>().mesh = m;
                     yield return null;
                 }
             }
-
         }
+
 #if UNITY_EDITOR
+        /// <summary>
+        /// Many meshes are two mirror images (left and right side). For spread, overlap and the colliders to work these need to be split into seperate meshes.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator SplitMeshesCoroutine()
         {
             // 567, 824

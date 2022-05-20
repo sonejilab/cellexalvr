@@ -17,32 +17,17 @@ using Newtonsoft.Json.Linq;
 
 namespace CellexalVR.AnalysisLogic
 {
-    public class PostParams
-    {
-        public string uid;
-        public List<string> feature;
-        public string feat_key;
-    }
 
-    [System.Serializable]
-    public class ScarfObject
-    {
-        [HideInInspector] public Dictionary<string, List<float>> cellStats { get; set; }
-        [HideInInspector] public Dictionary<string, List<string>> cluster { get; set; }
-        [HideInInspector] public Dictionary<string, List<float>> coords { get; set; }
-        [HideInInspector] public List<string> feature_names;
-    }
-
+    /// <summary>
+    /// Class to handle the communication between the REST-ful scarf api and CellexalVR. The api is a flask app that gets http requests and sends back data in json format.
+    /// The cellexal-scarf web api can be found here: https://github.com/sonejilab/scarf_for_cellexalvr/
+    /// </summary>
     public class ScarfManager : MonoBehaviour
     {
         public static ScarfManager instance;
 
-        // private static string url = "https://scarfweb.xyz";
         private static readonly string url = "http://127.0.0.1:9977/";
-        //private static readonly string url = "http://192.168.0.16:8090/";
 
-        public static ScarfObject scarfObject;
-        //public static Dictionary<string, List<float>> cellStats;
         public string[] datasets;
         public string[] geneNames;
         public string[] markers;
@@ -73,12 +58,21 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(LoadPreprocessedDataCouroutine(label, layoutKey));
         }
 
+        /// <summary>
+        /// Load data into CellexalVR that has been preprocessed in scarf.
+        /// </summary>
+        /// <param name="label">Name of the dataset folder.</param>
+        /// <param name="layoutKey">Name of the value you wish to plot. For example if you have made a umap based on RNA data it is usually called RNA_UMAP. Or whatever else you have named it when pre-processing the data.</param>
+        /// <returns></returns>
         public IEnumerator LoadPreprocessedDataCouroutine(string label, string layoutKey)
         {
             yield return StartCoroutine(StageDataCoroutine(label));
             yield return StartCoroutine(CreateGraph(label, layoutKey));
         }
 
+        /// <summary>
+        /// Initializes the flask app that runs the api. Start in a seperate thread.
+        /// </summary>
         public void InitServer()
         {
             string res = "";
@@ -86,6 +80,10 @@ namespace CellexalVR.AnalysisLogic
             t.Start();
         }
 
+        /// <summary>
+        /// Opens up a cmd window and runs the bat script located in the Scarf script path you have set in the config. This in turn activates a conda environment and starts the flask app.
+        /// </summary>
+        /// <returns></returns>
         private string StartServer()
         {
             string result = string.Empty;
@@ -133,34 +131,11 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        async Task ConsumeReader(TextReader reader)
-        {
-            char[] buffer = new char[1];
-            string line = "";
-            while ((await reader.ReadAsync(buffer, 0, 1)) > 0)
-            {
-                // process character...for example:
-                if (buffer[0] == '\n')
-                {
-                    print(procOutput.ToString());
-                    procOutput.Clear();
-                }
-                else
-                {
-                    procOutput.Append(buffer[0]);
-                }
-            }
-        }
-
-        private void PrintToFile(string data, string fp)
-        {
-            using (StreamWriter sw = new StreamWriter(fp))
-            {
-                sw.Write(data);
-            }
-        }
-
-
+        /// <summary>
+        /// Handles output from the thread that runs the flask app. 
+        /// </summary>
+        /// <param name="sendingProcess"></param>
+        /// <param name="outLine"></param>
         private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
         {
             if (!String.IsNullOrEmpty(outLine.Data))
@@ -188,11 +163,14 @@ namespace CellexalVR.AnalysisLogic
                 {
                     consoleLines[numOutputLines] = line;
                 }
-                //procOutput.Append($"[{numOutputLines}] - {outLine.Data}" + Environment.NewLine);
                 numOutputLines++;
             }
         }
 
+        /// <summary>
+        /// Retrieves the scarf datasets in the data folder.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator GetDatasetsCoroutine()
         {
             while (!serverStarted)
@@ -218,6 +196,12 @@ namespace CellexalVR.AnalysisLogic
             reqPending = false;
         }
 
+        /// <summary>
+        /// Convert h5 raw data to zarr format.
+        /// </summary>
+        /// <param name="dataLabel">What you want to call the resulting data folder.</param>
+        /// <param name="rawData">The name of the raw data file.</param>
+        /// <returns></returns>
         public IEnumerator ConvertToZarrCoroutine(string dataLabel, string rawData)
         {
             while (!serverStarted)
@@ -239,6 +223,11 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
+        /// <summary>
+        /// Prepares the scarf object to work with.
+        /// </summary>
+        /// <param name="dataLabel"></param>
+        /// <returns></returns>
         public IEnumerator StageDataCoroutine(string dataLabel)
         {
             while (!serverStarted)
@@ -258,6 +247,13 @@ namespace CellexalVR.AnalysisLogic
             progress++;
         }
 
+        /// <summary>
+        /// Calls the scarf backend function to marks highly variable genes in the staged data.
+        /// </summary>
+        /// <param name="topN">Number of genes.</param>
+        /// <param name="running">For the user interface icons animation.</param>
+        /// <param name="done">For the user interface icons animation.</param>
+        /// <returns></returns>
         public IEnumerator MarkHVGSCoroutine(string topN, VisualElement running, VisualElement done)
         {
             while (!serverStarted)
@@ -283,7 +279,14 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-        public IEnumerator MakeGraphCoroutine(string featureKey, VisualElement running, VisualElement done)
+        /// <summary>
+        /// Calls the scarf function to create a neighborhood graph. 
+        /// </summary>
+        /// <param name="featureKey">The feature key in the scarf object to use to create the graph. E.g. hvgs (if you have marked hvgs that is.)</param>
+        /// <param name="running">For the user interface icons animation.</param>
+        /// <param name="done">For the user interface icons animation.</param>
+        /// <returns></returns>
+        public IEnumerator MakeNeighborhoodGraphCoroutine(string featureKey, VisualElement running, VisualElement done)
         {
             while (!serverStarted)
                 yield return null;
@@ -305,6 +308,13 @@ namespace CellexalVR.AnalysisLogic
             progress++;
         }
 
+        /// <summary>
+        /// Calls the scarf function to do clustering. Requires the neighborhood graph to be made.
+        /// </summary>
+        /// <param name="resolution">Resolution of clustering. Corresponding to the argument with the same name in the scarf clustering function.</param>
+        /// <param name="running">For the user interface icons animation.</param>
+        /// <param name="done">For the user interface icons animation.</param>
+        /// <returns></returns>
         public IEnumerator RunClusteringCoroutine(string resolution, VisualElement running, VisualElement done)
         {
             while (!serverStarted)
@@ -327,6 +337,13 @@ namespace CellexalVR.AnalysisLogic
             progress++;
         }
 
+        /// <summary>
+        /// Calls the scarf function to create a umap. Requires the neighborhood graph to be made.
+        /// </summary>
+        /// <param name="nEpochs">Number of epochs to run.</param>
+        /// <param name="running">For the user interface icons animation.</param>
+        /// <param name="done">For the user interface icons animation.</param>
+        /// <returns></returns>
         public IEnumerator RunUMAPCoroutine(string nEpochs, VisualElement running, VisualElement done)
         {
             while (!serverStarted)
@@ -351,6 +368,10 @@ namespace CellexalVR.AnalysisLogic
             progress++;
         }
 
+        /// <summary>
+        /// Calls the scarf function to retrieve the feature names present in the dataset. This can be gene names or other features.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator GetFeatureNames()
         {
             while (!serverStarted)
@@ -378,6 +399,11 @@ namespace CellexalVR.AnalysisLogic
             reqPending = false;
         }
 
+        /// <summary>
+        /// Retrieves the cell values for a specific feature key. This can be a gene or some other feature present in your dataset.
+        /// </summary>
+        /// <param name="valueKey">The name of the feature.</param>
+        /// <returns></returns>
         public IEnumerator GetCellValues(string valueKey)
         {
             while (!serverStarted)
@@ -400,6 +426,11 @@ namespace CellexalVR.AnalysisLogic
                 .ToArray();
         }
 
+        /// <summary>
+        /// Retrieves the cell values for the clustering and then colors the graphs accordingly.
+        /// </summary>
+        /// <param name="clusterName">The name of the clustering label e.g. RNA_leiden_cluster.</param>
+        /// <returns></returns>
         public IEnumerator ColorByClusters(string clusterName)
         {
             while (!serverStarted)
@@ -407,6 +438,12 @@ namespace CellexalVR.AnalysisLogic
             yield return GetCellValues(clusterName);
             ReferenceManager.instance.cellManager.ColorAllClusters(cellValues.ToArray(), true);
         }
+
+        /// <summary>
+        /// Retrieves the cell values for the given gene or other feature and then colors the graphs accordingly.
+        /// </summary>
+        /// <param name="geneName">The name of the gene or feature to color by.</param>
+        /// <returns></returns>
         public IEnumerator ColorByGene(string geneName)
         {
             while (!serverStarted)
@@ -415,6 +452,12 @@ namespace CellexalVR.AnalysisLogic
             ReferenceManager.instance.cellManager.ColorByGene(cellValues.ToArray());
         }
 
+        /// <summary>
+        /// Find marker genes in the dataset.
+        /// </summary>
+        /// <param name="groupKey">The key used to separate the cells into groups. For example RNA_leiden clusters.</param>
+        /// <param name="threshold">Threshold to use for a gene correlation.</param>
+        /// <returns></returns>
         public IEnumerator RunMarkerSearch(string groupKey, float threshold)
         {
             while (!serverStarted)
@@ -434,6 +477,11 @@ namespace CellexalVR.AnalysisLogic
             reqPending = false;
         }
 
+        /// <summary>
+        /// Retrieves the marker genes. Requires RunMarkerSearch to have been run or have been marked in the dataset in pre-processing.
+        /// </summary>
+        /// <param name="groupKey">The key used to separate the cells into groups. For example RNA_leiden clusters.</param>
+        /// <returns></returns>
         public IEnumerator GetMarkers(string groupKey)
         {
             while (!serverStarted)
@@ -458,19 +506,15 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
-        //private IEnumerator RegisterSelection()
-        //{
-        //    string reqURL = $"{url}consolidate_groups";
-
-        //    string postData = 
-        //    UnityWebRequest req = UnityWebRequest.Post(reqURL, postData);
-        //}
-
         public void CloseServer()
         {
             StartCoroutine(CloseServerCoroutine());
         }
 
+        /// <summary>
+        /// Close server and close down backend process that runs the flask app.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator CloseServerCoroutine()
         {
             string reqURL = $"{url}shutdown";
@@ -488,12 +532,22 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
-
+        /// <summary>
+        /// Load the dataset into CellexalVR which creates the graph object.
+        /// </summary>
+        /// <param name="dataset"></param>
+        /// <param name="key"></param>
         public void LoadData(string dataset, string key)
         {
             StartCoroutine(CreateGraph(dataset, key));
         }
 
+        /// <summary>
+        /// Retrieves the graph coordinates and then creates the graph object.
+        /// </summary>
+        /// <param name="dataset">Name of the data folder.</param>
+        /// <param name="key">Key used to find the coordinates. E.g. RNA_UMAP or RNA_tSNE.</param>
+        /// <returns></returns>
         private IEnumerator CreateGraph(string dataset, string key)
         {
             string reqURL = $"{url}get_coords/{dataset}/{key}";
