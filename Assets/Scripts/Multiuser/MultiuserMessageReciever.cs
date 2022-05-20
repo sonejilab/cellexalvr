@@ -200,6 +200,7 @@ namespace CellexalVR.Multiuser
             if (!lr.gameObject.activeSelf) lr.gameObject.SetActive(true);
         }
 
+        [PunRPC]
         public void RecieveMessageUpdateSliderValue(string sliderType, float value)
         {
             SliderController.sliderType slider = (SliderController.sliderType)Enum.Parse(typeof(SliderController.sliderType), sliderType);
