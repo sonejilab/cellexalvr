@@ -444,6 +444,7 @@ namespace CellexalVR.DesktopUI
             numberOfGraphColorsInputField.text = "" + nColors;
             CellexalConfig.Config.GraphNumberOfExpressionColors = nColors;
             referenceManager.graphGenerator.CreateShaderColors();
+            referenceManager.graphManager.ResetGraphsColor();
             graphGradient.material.SetInt("_NColors", nColors);
         }
 

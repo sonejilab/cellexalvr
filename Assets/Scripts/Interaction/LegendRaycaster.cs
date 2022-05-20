@@ -143,7 +143,7 @@ namespace CellexalVR.Interaction
 
         private void HandleClickUpGeneExpressionHistogram(Vector3 hit)
         {
-            if (Time.time - clickStartTime < 0.1f)
+            if (Time.time - clickStartTime < 0.5f)
             {
                 legendManager.geneExpressionHistogram.DeactivateSelectedArea();
                 referenceManager.multiuserMessageSender.SendMessageDeactivateSelectedArea();

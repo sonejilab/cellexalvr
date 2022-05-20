@@ -229,7 +229,6 @@ namespace CellexalVR.AnalysisObjects
                     }
                 }
             }
-            referenceManager.legendManager.geneExpressionHistogram.RecreateHistogram();
         }
 
         /// <summary>
@@ -1257,6 +1256,17 @@ namespace CellexalVR.AnalysisObjects
         /// <returns></returns>
         public IEnumerator RebuildGraphs()
         {
+            //int newNbrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
+            //if (nrOfLODGroups == newNbrOfLODGroups)
+            //{
+            //    yield break;
+            //}
+
+            while (isCreating)
+            {
+                yield return null;
+            }
+
             foreach (Graph graph in graphManager.originalGraphs)
             {
                 newGraph = graph;

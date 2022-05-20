@@ -437,6 +437,12 @@ namespace CellexalVR.Spatial
 
         private void Reset()
         {
+            // check if component has been initialised at all
+            if (!slideScroller)
+            {
+                return;
+            }
+
             ClearSlideStacks();
             int i = 0;
             foreach (KeyValuePair<string, GeoMXSlide> kvp in scanSlides)
