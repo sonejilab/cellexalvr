@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ControllerMaterial
+  m_Name: ControllerPulseMaterial
   m_Shader: {fileID: 4800000, guid: 44c4176ff2ba1bd4fa6a658eb53ba09d, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []

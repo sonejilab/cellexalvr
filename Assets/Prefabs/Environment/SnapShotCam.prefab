@@ -3607,7 +3607,7 @@ MonoBehaviour:
   background: {fileID: 4694561341736029175}
   startState: 0
   toggleAllButton: 1
-  layerName: GraphLayer
+  layerName: All Layers
 --- !u!1 &2672820872923408829
 GameObject:
   m_ObjectHideFlags: 0
@@ -6266,7 +6266,7 @@ MonoBehaviour:
   background: {fileID: 3580546390043619261}
   startState: 0
   toggleAllButton: 0
-  layerName: GraphPointLayer
+  layerName: GraphLayer
 --- !u!1 &6176859951055454221
 GameObject:
   m_ObjectHideFlags: 0
