@@ -1,3 +1,4 @@
+using CellexalVR.General;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -27,12 +28,18 @@ namespace CellexalVR.Interaction
         }
         [SerializeField] private updateType type;
 
+        public enum sliderType
+        {
+            VELOCITY, PARTICLEALPHA, PARTICLESPREAD, PARTICLESIZE
+        }
+        [SerializeField] private sliderType slideType;
+
         private IXRSelectInteractor interactor;
         private float startPosition;
         private bool shouldGetHandPosition;
         private XRSimpleInteractable interactable => GetComponent<XRSimpleInteractable>();
         private float currentFactor;
-        private float currentValue;
+        public float currentValue;
 
         private void Awake()
         {
@@ -88,14 +95,7 @@ namespace CellexalVR.Interaction
             }
 
             onReleased?.Invoke(currentValue);
-
-            if (valueHeader != null)
-            {
-            }
-            if (sliderProgressBar != null)
-            {
-
-            }
+            ReferenceManager.instance.multiuserMessageSender.SendMessageUpdateSliderValue(slideType, currentValue);
         }
 
         private void Update()
@@ -118,19 +118,29 @@ namespace CellexalVR.Interaction
                 }
                 onValueChanged?.Invoke(currentValue);
 
-                if (valueHeader != null)
-                {
-                    valueHeader.text = $"{valuePrefix}: {Mathf.Round((currentFactor) * 100f)}%";
-                }
-                if (sliderProgressBar != null)
-                {
-                    float barScale = type == updateType.ABSOLUTE ? currentFactor : currentFactor - 0.5f;
-                    sliderProgressBar.transform.localScale = new Vector3(barScale, 1.1f, 1.1f);
-                    sliderProgressBar.transform.localPosition = new Vector3(-0.5f + (barScale / 2f), 0, 0);
-                }
+                
             }
         }
 
+        private void UpdateTextAndBar()
+        {
+            if (valueHeader != null)
+            {
+                valueHeader.text = $"{valuePrefix}: {Mathf.Round((currentFactor) * 100f)}%";
+            }
+            if (sliderProgressBar != null)
+            {
+                float barScale = type == updateType.ABSOLUTE ? currentFactor : currentFactor - 0.5f;
+                sliderProgressBar.transform.localScale = new Vector3(barScale, 1.1f, 1.1f);
+                sliderProgressBar.transform.localPosition = new Vector3(-0.5f + (barScale / 2f), 0, 0);
+            }
+        }
+
+        public void UpdateSliderValue(float value)
+        {
+            currentValue = value;
+            UpdateTextAndBar();
+        }
     }
 
 }

@@ -209,10 +209,10 @@ namespace CellexalVR.Multiuser
                 hit.x, hit.y, hit.z, coordinator.photonView.ownerId, players[0].gameObject.name);
         }
 
-        public void SendMessageUpdateSliderValue(VRSlider.SliderType sliderType, float value)
+        public void SendMessageUpdateSliderValue(SliderController.sliderType type, float value)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageUpdateSliderValue", PhotonTargets.Others, sliderType.ToString(),
+            coordinator.photonView.RPC("RecieveMessageUpdateSliderValue", PhotonTargets.Others, type.ToString(),
                 value);
         }
 

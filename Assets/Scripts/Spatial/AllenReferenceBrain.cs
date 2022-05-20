@@ -46,7 +46,8 @@ namespace CellexalVR.Spatial
         private bool controllerInside;
         private int suggestionOffset = 0;
         private string currentFilter;
-        private bool loadBrain = false;
+        private bool loadBrain;
+        private bool structureInfoRead;
 
         private void Awake()
         {
@@ -54,6 +55,14 @@ namespace CellexalVR.Spatial
         }
 
         private void Start()
+        {
+            if (!loadBrain)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
+        private void ReadMeshData()
         {
             if (!loadBrain)
             {
@@ -99,16 +108,25 @@ namespace CellexalVR.Spatial
                     model.SetColor(c);
                 }
             }
+            structureInfoRead = true;
             // root model is the main brain model. have active and transparent on start...
+        }
+
+        private void OnEnable()
+        {
+            if (!loadBrain)
+                return;
+            else if (!structureInfoRead)
+                ReadMeshData();
             SpawnModel("root");
             UpdateSuggestions();
-            CellexalEvents.GraphsLoaded.AddListener(ParentBrain);
+            //CellexalEvents.GraphsLoaded.AddListener(ParentBrain);
         }
 
         /// <summary>
         /// For the spatial dataset graph points to be placed in relation to the glass brain it parents the object to the spatial graph transform.
         /// </summary>
-        private void ParentBrain()
+        public void ParentBrain()
         {
             gameObject.SetActive(true);
             transform.parent = GameObject.Find("slice_coords_spatial").transform;
@@ -403,6 +421,25 @@ namespace CellexalVR.Spatial
         public void SplitMeshes()
         {
             StartCoroutine(SplitMeshesCoroutine());
+        }
+
+        [CustomEditor(typeof(AllenReferenceBrain))]
+        public class ColliderGeneratorEditor : Editor
+        {
+            public override void OnInspectorGUI()
+            {
+                AllenReferenceBrain myTarget = (AllenReferenceBrain)target;
+
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Read Structure Info"))
+                {
+                    myTarget.ReadMeshData();
+                }
+                GUILayout.EndHorizontal();
+
+                DrawDefaultInspector();
+            }
+
         }
 
 

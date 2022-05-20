@@ -74,6 +74,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="subGraphName">The name of the subgraph.</param>
         public void ReadVelocityFile(string path, string subGraphName)
         {
+            print(path);
             if (referenceManager.inputReader.h5readers.Count > 0)
             {
                 StartCoroutine(ReadVelocityParticleSystemFromHDF5(referenceManager.inputReader.h5readers.First().Value, path, subGraphName));

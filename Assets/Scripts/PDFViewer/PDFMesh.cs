@@ -26,10 +26,10 @@ namespace CellexalVR.PDFViewer
         public TextMeshPro nrOfPagesText;
         public TextMeshPro currentPagesTextStationary;
         public TextMeshPro currentPagesTextPocket;
-        public VRSlider curvatureSlider;
-        public VRSlider radiusSlider;
-        public VRSlider scaleXSliderStationary;
-        public VRSlider scaleYSliderStationary;
+        public SliderController curvatureSlider;
+        public SliderController radiusSlider;
+        public SliderController scaleXSliderStationary;
+        public SliderController scaleYSliderStationary;
         public GameObject settingsHandlerCurved;
         public GameObject settingsHandlerPocket;
         [HideInInspector] public int currentPage;
@@ -79,7 +79,7 @@ namespace CellexalVR.PDFViewer
             if (pageMesh != null) Destroy(pageMesh.gameObject);
             GameObject obj = Instantiate(meshObjPrefab, pageParent.transform);
             pageMesh = obj.GetComponent<MeshDeformer>();
-            obj.GetComponent<CurvedMeshGenerator>().GenerateNodes(radiusSlider.Value);
+            obj.GetComponent<CurvedMeshGenerator>().GenerateNodes(radiusSlider.currentValue);
         }
 
 
@@ -272,8 +272,8 @@ namespace CellexalVR.PDFViewer
                     SetSettingsHandle(ViewingMode.CurvedStationary);
                     CreatePage();
                     ShowMultiplePages();
-                    ScaleX(scaleXSliderStationary.Value);
-                    ScaleY(scaleYSliderStationary.Value);
+                    ScaleX(scaleXSliderStationary.currentValue);
+                    ScaleY(scaleYSliderStationary.currentValue);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
