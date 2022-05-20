@@ -21,7 +21,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
                 }
             }
         }
-        public string shorterFilePath;
+        public string graphName;
 
         private string filePath;
         private Graph graph = null;
@@ -36,23 +36,23 @@ namespace CellexalVR.Menu.Buttons.Velocity
 
                 //summertwerk
                 if (filePath.Contains(".")) //A .mds file
-                    shorterFilePath = FixGraphPath(value);
+                    graphName = GetGraphName(value);
                 else //Just the projection name
-                    shorterFilePath = filePath.ToUpper();
+                    graphName = filePath.ToUpper();
 
-                graph = referenceManager.graphManager.FindGraph(shorterFilePath);
+                graph = referenceManager.graphManager.FindGraph(graphName);
                 if (subGraphName != string.Empty)
                 {
                     buttonText.text = subGraphName;
                 }
                 else
                 {
-                    buttonText.text = shorterFilePath;
+                    buttonText.text = graphName;
                 }
             }
         }
 
-        private string FixGraphPath(string path)
+        private string GetGraphName(string path)
         {
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
             int lastDotIndex = path.LastIndexOf('.');
@@ -89,7 +89,7 @@ namespace CellexalVR.Menu.Buttons.Velocity
                 }
                 velocityGenerator.ActiveGraphs.Remove(graphToActivate);
             }
-            referenceManager.multiuserMessageSender.SendMessageReadVelocityFile(shorterFilePath, subGraphName, startVelocity);
+            referenceManager.multiuserMessageSender.SendMessageReadVelocityFile(graphName, subGraphName, startVelocity);
             //referenceManager.velocitySubMenu.DeactivateOutlines();
             ToggleOutline(startVelocity);
             //activeOutline.SetActive(true);

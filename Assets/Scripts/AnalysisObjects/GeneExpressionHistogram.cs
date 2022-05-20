@@ -287,6 +287,10 @@ namespace CellexalVR.AnalysisObjects
                         tabButtons[i].GetComponentInChildren<TextMeshPro>().text = next.name;
                         next = temp;
                     }
+                    if (tabData[i].name == geneName)
+                    {
+                        SwitchToTab(i);
+                    }
                 }
                 if (tabData.Count < 10 && next != null)
                 {
@@ -294,7 +298,11 @@ namespace CellexalVR.AnalysisObjects
                     tabButtons[tabData.Count - 1].GetComponentInChildren<TextMeshPro>().text = next.name;
                 }
             }
-            SwitchToTab(0);
+            else
+            {
+                SwitchToTab(0);
+            }
+
         }
 
         private void CreateHistogram(HistogramData data)

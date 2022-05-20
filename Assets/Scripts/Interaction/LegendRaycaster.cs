@@ -113,7 +113,7 @@ namespace CellexalVR.Interaction
         {
             Raycast(triggerClick: true);
         }
-        
+
         private void OnTriggerUp()
         {
             Raycast(triggerUp: true);
@@ -143,19 +143,19 @@ namespace CellexalVR.Interaction
 
         private void HandleClickUpGeneExpressionHistogram(Vector3 hit)
         {
-            if (Time.time - clickStartTime < 0.5f)
+            int hitIndex = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
+            if (legendManager.geneExpressionHistogram.enabled)
             {
                 legendManager.geneExpressionHistogram.DeactivateSelectedArea();
                 referenceManager.multiuserMessageSender.SendMessageDeactivateSelectedArea();
             }
             else
             {
-                int hitIndex = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
                 legendManager.geneExpressionHistogram.MoveSelectedArea(hitIndex, savedGeneExpressionHistogramHitX);
                 referenceManager.multiuserMessageSender.SendMessageMoveSelectedArea(hitIndex,
                     savedGeneExpressionHistogramHitX);
-                savedGeneExpressionHistogramHitX = -1;
             }
+            savedGeneExpressionHistogramHitX = -1;
         }
     }
 }
