@@ -92,7 +92,7 @@ namespace CellexalVR.Menu.SubMenus
             }
             else
             {
-                return buttons.Find(x => x.shorterFilePath == filePath);
+                return buttons.Find(x => x.graphName == filePath);
             }
         }
 
