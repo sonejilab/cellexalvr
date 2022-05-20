@@ -1579,10 +1579,10 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
-        public void RecieveMessageReadVelocityFile(string shorterFilePath, string subGraphName, bool activate)
+        public void RecieveMessageReadVelocityFile(string graphName, string subGraphName, bool activate)
         {
-            CellexalLog.Log("Recieved message to read velocity file - " + shorterFilePath);
-            var veloButton = referenceManager.velocitySubMenu.FindButton(shorterFilePath, subGraphName);
+            CellexalLog.Log("Recieved message to read velocity file - " + graphName);
+            var veloButton = referenceManager.velocitySubMenu.FindButton(graphName, subGraphName);
 
             Graph graph = referenceManager.graphManager.FindGraph(subGraphName);
             //if (subGraphName != string.Empty)
@@ -1595,7 +1595,7 @@ namespace CellexalVR.Multiuser
             //}
             if (activate)
             {
-                referenceManager.velocityGenerator.ReadVelocityFile(Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + shorterFilePath + ".mds", subGraphName);
+                referenceManager.velocityGenerator.ReadVelocityFile(Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + graphName + ".mds", subGraphName);
             }
             else
             {
