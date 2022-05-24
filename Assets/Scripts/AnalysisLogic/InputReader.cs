@@ -30,6 +30,8 @@ namespace CellexalVR.AnalysisLogic
         public AttributeReader attributeReader;
         public MDSReader mdsReader;
         public PointCloudGenerator pointCloudGenerator;
+        public RwebManager rwebManager;
+        public ScarfManager scarfManager;
 
         private readonly char[] separators = { ' ', '\t', ',' };
         private CellManager cellManager;
@@ -53,6 +55,8 @@ namespace CellexalVR.AnalysisLogic
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                rwebManager = new RwebManager { };
+                scarfManager = new ScarfManager { };
             }
         }
 
@@ -162,8 +166,11 @@ namespace CellexalVR.AnalysisLogic
             UpdateSelectionToolHandler();
             attributeFileRead = false;
             CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
+
             CellexalUser.DataSourceFolder = currentPath;
             selectionManager.DataDir = fullPath;
+
+            // here we need to start the R webapi server or we have already gotten the web link to a working one? (next big update?)
             if (!debug)
             {
                 // clear the network folder
@@ -182,44 +189,48 @@ namespace CellexalVR.AnalysisLogic
                     File.Delete(f);
                 }
             }
+
+            // this database would be the 'biggest fish to kill' with the new server
+            // for the time being we should also get some scarf folder loading logics here...
             string databasePath = fullPath + "\\database.sqlite";
+            string cellexalObj = fullPath + "\\cellexalObj.RData";
+            CellexalLog.Log("Stefan screwed this up - if it is not working any more :-(");
             if (File.Exists(databasePath))
             {
+                CellexalLog.Log("Reading the database");
                 database.InitDatabase(fullPath + "\\database.sqlite");
             }
-            string[] mdsFiles = Directory.GetFiles(fullPath,
-                CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
-            bool scarfFile = File.Exists(fullPath + "\\.zgroup");
-            if (mdsFiles.Length == 0 && !scarfFile)
+            else if (File.Exists(cellexalObj)) // start the cellexal webapi
             {
-                CellexalError.SpawnError("Empty dataset",
-                    "The loaded dataset did not contain any .mds files. Make sure you have placed the dataset files in the correct folder.");
-                throw new System.InvalidOperationException("Empty dataset");
+                CellexalLog.Log("Starting R web API - Starting R web API");
+                CellexalLog.Log("RwebManger instance ID="+rwebManager?.GetInstanceID() );
+                rwebManager.InitServer();
+                CellexalLog.Log("Started THE R web API - Started THE R web API");
+                rwebManager.LoadData();
+                CellexalLog.Log("Did all drc's load from the http connection?");
             }
-
-            if (path.Contains("geoMX"))
-            {
-                GeoMXImageHandler.instance.gameObject.SetActive(true);
-            }
-
-            CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
-            mdsReader.referenceManager = referenceManager;
-            if (path.Contains("_pc"))
+            else if (path.Contains("_pc"))
             {
                 yield return StartCoroutine(mdsReader.ReadBigFolder(path));
             }
             else if (File.Exists(fullPath + "\\.zgroup"))
             {
+                CellexalLog.Log("Starting Scarf web API");
                 ScarfManager.instance.InitServer();
                 yield return StartCoroutine(ScarfManager.instance.LoadPreprocessedDataCouroutine(path, "RNA_UMAP"));
             }
-            else
-            {
-                yield return StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
-            }
 
-            if (!ScarfManager.instance.scarfActive)
+            if (! (rwebManager.RwebapiActive || ScarfManager.instance.scarfActive) )
             {
+                mdsReader.referenceManager = referenceManager;
+
+                string[] mdsFiles = Directory.GetFiles(fullPath,
+                    CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
+
+                CellexalLog.Log("Reading " + mdsFiles.Length + " .mds files");
+
+                yield return StartCoroutine(mdsReader.ReadMDSFiles(fullPath, mdsFiles));
+
                 yield return StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
                 attributeReader = gameObject.AddComponent<AttributeReader>();
                 attributeReader.referenceManager = referenceManager;
@@ -229,14 +240,31 @@ namespace CellexalVR.AnalysisLogic
                 ReadFacsFiles(fullPath);
                 ReadNumericalData(fullPath);
                 ReadFilterFiles(CellexalUser.UserSpecificFolder);
-                referenceManager.configManager.ReadConfigFiles(fullPath);
-                if (PhotonNetwork.isMasterClient)
-                {
-                    referenceManager.configManager.MultiUserSynchronise();
-                }
-
-                CellexalEvents.GraphsLoaded.Invoke();
             }
+
+            
+            //bool scarfFile = File.Exists(fullPath + "\\.zgroup");
+            //if (mdsFiles.Length == 0 && !(scarfFile || rwebapiFile))
+            if ( referenceManager.graphManager.Graphs.Count == 0 )
+            {
+                CellexalError.SpawnError("Empty dataset",
+                    "The loaded dataset did not contain any .mds files("+ referenceManager.graphManager.Graphs.Count+"). Make sure you have placed the dataset files in the correct folder.");
+                throw new System.InvalidOperationException("Empty dataset");
+            }
+
+            if (path.Contains("geoMX"))
+            {
+                GeoMXImageHandler.instance.gameObject.SetActive(true);
+            }
+
+            referenceManager.configManager.ReadConfigFiles(fullPath);
+            if (PhotonNetwork.isMasterClient)
+            {
+                referenceManager.configManager.MultiUserSynchronise();
+            }
+            
+            CellexalEvents.GraphsLoaded.Invoke();
+            
         }
 
         private void UpdateSelectionToolHandler()

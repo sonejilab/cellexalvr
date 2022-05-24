@@ -347,7 +347,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.GraphsLoaded.Invoke();
         }
 
-        private void CreateFromCoordinates(List<string> names, List<float> x, List<float> y, List<float> z)
+        public void CreateFromCoordinates(List<string> names, List<float> x, List<float> y, List<float> z)
         {
             if (!referenceManager.loaderController.loaderMovedDown)
             {

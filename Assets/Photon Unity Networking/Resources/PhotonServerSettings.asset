@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3758f8f58fdef43803eb9be1df0608, type: 3}
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
-  AppID: ef19ad79-4218-4fac-bded-3592b383f57d
+  AppID: 
   VoiceAppID: 
   ChatAppID: 
-  HostType: 1
+  HostType: 0
   PreferredRegion: 0
   EnabledRegions: -1
   Protocol: 0
@@ -63,6 +63,7 @@ MonoBehaviour:
   - RecieveMessageClearLinesBetweenGps
   - RecieveMessageClearLinesWithColor
   - RecieveMessageColorByAttribute
+  - RecieveMessageColorByAttributePointCloud
   - RecieveMessageColorByIndex
   - RecieveMessageColorGraphsByGene
   - RecieveMessageColoringMethodChanged
@@ -73,6 +74,7 @@ MonoBehaviour:
   - RecieveMessageCreateMarkerGraph
   - RecieveMessageCreateNewHeatmapFromSelection
   - RecieveMessageCubeColoured
+  - RecieveMessageCumulativeRecolorFromSelection
   - RecieveMessageDeactivateSelectedArea
   - RecieveMessageDeleteObject
   - RecieveMessageDisableColliders
@@ -81,6 +83,7 @@ MonoBehaviour:
   - RecieveMessageEnableColliders
   - RecieveMessageEnlargeNetwork
   - RecieveMessageExportAnnotations
+  - RecieveMessageGenerateMeshes
   - RecieveMessageGenerateNetworks
   - RecieveMessageGenerateRainbowColors
   - RecieveMessageGenerateRandomColors
@@ -90,6 +93,7 @@ MonoBehaviour:
   - RecieveMessageGraphUngrabbed
   - RecieveMessageH5Config
   - RecieveMessageHandleBoxSelection
+  - RecieveMessageHandleHistoryPanelClick
   - RecieveMessageHandleHitAttributeBar
   - RecieveMessageHandleHitGenesList
   - RecieveMessageHandleHitGroupingBar
@@ -116,6 +120,7 @@ MonoBehaviour:
   - RecieveMessageMoveNetworkCenter
   - RecieveMessageMoveSelectedArea
   - RecieveMessageMoveSelection
+  - RecieveMessageNetworkArcButtonClicked
   - RecieveMessageNetworkCenterUngrabbed
   - RecieveMessageNetworkUngrabbed
   - RecieveMessageReadFolder
@@ -131,35 +136,42 @@ MonoBehaviour:
   - RecieveMessageResetHeatmapHighlight
   - RecieveMessageResetInfoTexts
   - RecieveMessageResetSelecting
+  - RecieveMessageScroll
+  - RecieveMessageScrollStack
   - RecieveMessageSearchLockToggled
   - RecieveMessageSelectionLegendChangePage
-  - RecieveMessageSetArcsVisible
   - RecieveMessageSetCombinedArcsVisible
   - RecieveMessageSetFilter
   - RecieveMessageShowGraph
   - RecieveMessageShowHeatmap
   - RecieveMessageShowNetwork
+  - RecieveMessageSliceGraphAutomatic
+  - RecieveMessageSliceGraphFromSelection
+  - RecieveMessageSliceGraphManual
+  - RecieveMessageSpawnModel
+  - RecieveMessageSpreadMeshes
+  - RecieveMessageSpreadPoints
   - RecieveMessageStartVelocity
   - RecieveMessageStopVelocity
   - RecieveMessageSwitchMode
   - RecieveMessageSwitchNetworkLayout
   - RecieveMessageSynchConfig
+  - RecieveMessageToggleAllArcs
+  - RecieveMessageToggleAllAttributesPointCloud
   - RecieveMessageToggleAverageVelocity
   - RecieveMessageToggleAxes
   - RecieveMessageToggleBundle
-  - RecieveMessageToggleGrabbable
   - RecieveMessageToggleGraphPoints
   - RecieveMessageToggleInfoPanels
   - RecieveMessageToggleLaser
   - RecieveMessageToggleLegend
+  - RecieveMessageToggleReferenceOrgan
   - RecieveMessageToggleTransparency
   - RecieveMessageUnhighlightNetworkNode
-  - RequestForPickupItems
-  - RequestForPickupTimes
-  - RecieveMessageCumulativeRecolorFromSelection
-  - RecieveMessageHandleHistoryPanelClick
-  - RecieveMessageNetworkArcButtonClicked
-  - RecieveMessageToggleAllArcs
+  - RecieveMessageUpdateCullingBox
+  - RecieveMessageUpdateSliderValue
   - ReciveMessageToggleAnnotationFile
   - ReciveMessageToggleSelectionFile
+  - RequestForPickupItems
+  - RequestForPickupTimes
   DisableAutoOpenWizard: 1

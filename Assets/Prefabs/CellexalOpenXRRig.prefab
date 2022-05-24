@@ -7944,6 +7944,7 @@ MonoBehaviour:
     type: 2}
   animatedPulseMaterial: {fileID: 2100000, guid: 1acb6b523c0ab4841ba455c24a8c05d6,
     type: 2}
+  toolsParent: {fileID: 0}
 --- !u!65 &1638506007
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -18261,7 +18261,7 @@ MonoBehaviour:
   storedState: 0
   controllerInside: 0
   buttonText: {fileID: 114781739379812666}
-  shorterFilePath: 
+  graphName: 
 --- !u!1 &1601115706213330
 GameObject:
   m_ObjectHideFlags: 0
