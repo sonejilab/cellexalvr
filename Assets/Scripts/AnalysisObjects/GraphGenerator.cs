@@ -1219,8 +1219,7 @@ namespace CellexalVR.AnalysisObjects
             // AddAxes(subGraph, axes);
             if (g.hasVelocityInfo)
             {
-                referenceManager.velocitySubMenu.CreateButton(Directory.GetCurrentDirectory() +
-                                                              @"\Data\" + CellexalUser.DataSourceFolder + @"\" +
+                referenceManager.velocitySubMenu.CreateButton(CellexalUser.DatasetFullPath + @"\" +
                                                               g.GraphName + ".mds", subGraphName);
                 subGraph.hasVelocityInfo = true;
             }
@@ -1256,15 +1255,9 @@ namespace CellexalVR.AnalysisObjects
         /// <returns></returns>
         public IEnumerator RebuildGraphs()
         {
-            //int newNbrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
-            //if (nrOfLODGroups == newNbrOfLODGroups)
-            //{
-            //    yield break;
-            //}
-
             while (isCreating)
             {
-                yield return null;
+                yield break;
             }
 
             foreach (Graph graph in graphManager.originalGraphs)

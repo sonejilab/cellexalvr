@@ -297,7 +297,7 @@ namespace CellexalVR.General
 
                 }
             }
-            string path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder;
+            string path = CellexalUser.DatasetFullPath;
             StartCoroutine(referenceManager.inputReader.attributeReader.ReadAttributeFilesCoroutine(path));
             
         }

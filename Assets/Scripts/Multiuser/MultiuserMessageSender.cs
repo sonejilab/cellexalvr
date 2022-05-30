@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Runtime.Remoting.Messaging;
 using System;
+using System.Linq;
 
 namespace CellexalVR.Multiuser
 {
@@ -35,7 +36,32 @@ namespace CellexalVR.Multiuser
 
         private MultiuserMessageReciever coordinator;
         private List<GameObject> players = new List<GameObject>();
+        private Queue<LabelsToSendLater> labelsToSendQueue = new Queue<LabelsToSendLater>();
+        private class LabelsToSendLater
+        {
+            public string graphName;
+            public List<string> labels;
+            public int newGroup;
+            public Color color;
 
+            public LabelsToSendLater(string graphName, int newGroup, Color color)
+            {
+                this.graphName = graphName;
+                this.labels = new List<string>();
+                this.newGroup = newGroup;
+                this.color = color;
+            }
+
+            public bool SameGroup(LabelsToSendLater other)
+            {
+                return other.graphName == graphName && other.newGroup == newGroup && other.color == color;
+            }
+
+            public bool SameGroup(string otherGraphName, int otherNewGroup, Color otherColor)
+            {
+                return otherGraphName == graphName && otherNewGroup == newGroup && otherColor == color;
+            }
+        }
         #endregion
 
 
@@ -52,7 +78,7 @@ namespace CellexalVR.Multiuser
             //waitingCanvas = referenceManager.screenCanvas.gameObject;
             //StartCoroutine(Init());
         }
-        
+
         public IEnumerator Init()
         {
             while (!PhotonNetwork.connected)
@@ -497,7 +523,37 @@ namespace CellexalVR.Multiuser
         public void SendMessageSelectedAdd(string graphName, string label, int newGroup, Color color)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageAddSelect", PhotonTargets.Others, graphName, label, newGroup,
+            LabelsToSendLater found = labelsToSendQueue.First((LabelsToSendLater item) => item.SameGroup(graphName, newGroup, color));
+            if (found != null)
+            {
+                found.labels.Add(label);
+            }
+            else
+            {
+                if (labelsToSendQueue.Count == 0)
+                {
+                    StartCoroutine(SendSelectionAfterDelay(1f));
+                }
+                LabelsToSendLater newGroupToQueue = new LabelsToSendLater(graphName, newGroup, color);
+                newGroupToQueue.labels.Add(label);
+                labelsToSendQueue.Enqueue(newGroupToQueue);
+            }
+        }
+
+        private IEnumerator SendSelectionAfterDelay(float delay)
+        {
+            do
+            {
+                yield return new WaitForSeconds(delay);
+                LabelsToSendLater labelsToSend = labelsToSendQueue.Dequeue();
+                SendMessageSelectedAddMany(labelsToSend.graphName, labelsToSend.labels.ToArray(), labelsToSend.newGroup, labelsToSend.color);
+            } while (labelsToSendQueue.Count > 0);
+        }
+
+        public void SendMessageSelectedAddMany(string graphName, string[] labels, int newGroup, Color color)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageAddSelectMany", PhotonTargets.Others, graphName, labels, newGroup,
                 color.r, color.g, color.b);
         }
 
@@ -1084,7 +1140,7 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageChangeAverageVelocityResolution", PhotonTargets.Others, value);
         }
- 
+
 
         #endregion
 

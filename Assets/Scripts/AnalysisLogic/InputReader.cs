@@ -162,7 +162,7 @@ namespace CellexalVR.AnalysisLogic
             UpdateSelectionToolHandler();
             attributeFileRead = false;
             CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
-            CellexalUser.DataSourceFolder = currentPath;
+            CellexalUser.DatasetName = currentPath;
             selectionManager.DataDir = fullPath;
             if (!debug)
             {
@@ -283,7 +283,7 @@ namespace CellexalVR.AnalysisLogic
             }
             else
             {
-                dataSourceFolder = Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder;
+                dataSourceFolder = CellexalUser.DatasetFullPath;
             }
 
             string args = serverName + " " + dataSourceFolder + " " +

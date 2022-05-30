@@ -628,7 +628,7 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         private void ReadColorMapFromFile()
         {
-            string path = Directory.GetCurrentDirectory() + "\\Data\\" + CellexalUser.DataSourceFolder;
+            string path = CellexalUser.DatasetFullPath;
             string[] files = Directory.GetFiles(path, "color_codes.csv");
             if (files.Length == 0) return;
             using (StreamReader sr = new StreamReader(files[0]))

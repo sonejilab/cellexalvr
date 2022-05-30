@@ -574,6 +574,15 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
+        public void RecieveMessageAddSelectMany(string graphName, string[] labels, int newGroup, float r, float g, float b)
+        {
+            foreach (string label in labels)
+            {
+                referenceManager.selectionManager.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b));
+            }
+        }
+
+        [PunRPC]
         public void RecieveMessageAddSelect(int[] indices, int[] groups)
         {
             List<Vector2Int> tupleList = new List<Vector2Int>();
@@ -1596,7 +1605,7 @@ namespace CellexalVR.Multiuser
             //}
             if (activate)
             {
-                referenceManager.velocityGenerator.ReadVelocityFile(Directory.GetCurrentDirectory() + @"\Data\" + CellexalUser.DataSourceFolder + @"\" + graphName + ".mds", subGraphName);
+                referenceManager.velocityGenerator.ReadVelocityFile(CellexalUser.DatasetFullPath + @"\" + graphName + ".mds", subGraphName);
             }
             else
             {

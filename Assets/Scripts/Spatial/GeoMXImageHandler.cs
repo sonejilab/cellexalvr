@@ -108,10 +108,10 @@ namespace CellexalVR.Spatial
         /// </summary>
         public void ReadData()
         {
-            imagePath = $"{Directory.GetCurrentDirectory()}\\Data\\{CellexalUser.DataSourceFolder}\\Images";
+            imagePath = $"{CellexalUser.DatasetFullPath}\\Images";
             if (!Directory.Exists(imagePath))
                 return;
-            using (StreamReader sr = new StreamReader($"{Directory.GetCurrentDirectory()}\\Data\\{CellexalUser.DataSourceFolder}\\images.csv"))
+            using (StreamReader sr = new StreamReader($"{CellexalUser.DatasetFullPath}\\images.csv"))
             {
                 string header = sr.ReadLine();
                 while (!sr.EndOfStream)
