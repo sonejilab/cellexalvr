@@ -606,11 +606,17 @@ namespace CellexalVR.DesktopUI
             CellexalConfig.Config = CellexalConfig.savedConfigs[profileName];
             referenceManager.configManager.currentProfileFullPath = configPath;
             currentProfilePath = configPath;
+            SetValues();
+            CellexalLog.Log($"Loaded profile: {profileName}");
         }
 
         public void NewProfile()
         {
             string profileName = newProfileInputField.text;
+            if (profileName == "")
+            {
+                return;
+            }
             bool profileExists = false;
             for (int i = 0; i < profileDropdown.options.Count; i++)
             {
@@ -618,7 +624,7 @@ namespace CellexalVR.DesktopUI
                 if (profileOption.text == profileName)
                 {
                     // profile already exists
-                    profileDropdown.value = i;
+                    profileDropdown.SetValueWithoutNotify(i);
                     profileExists = true;
                     break;
                 }
@@ -633,7 +639,7 @@ namespace CellexalVR.DesktopUI
                     if (profileDropdown.options[i].text.CompareTo(profileName) > 0)
                     {
                         profileDropdown.options.Insert(i, new TMPro.TMP_Dropdown.OptionData(profileName));
-                        profileDropdown.value = i;
+                        profileDropdown.SetValueWithoutNotify(i);
                         inserted = true;
                         break;
                     }
@@ -641,15 +647,15 @@ namespace CellexalVR.DesktopUI
                 if (!inserted)
                 {
                     profileDropdown.options.Add(new TMPro.TMP_Dropdown.OptionData(profileName));
-                    profileDropdown.value = profileDropdown.options.Count - 1;
+                    profileDropdown.SetValueWithoutNotify(profileDropdown.options.Count - 1);
                 }
             }
 
+            CellexalConfig.savedConfigs[profileName] = new Config(CellexalConfig.Config);
             string configPath = referenceManager.configManager.ProfileNameToConfigPath(profileName);
             referenceManager.configManager.SaveConfigFile(configPath);
-
-            CellexalConfig.savedConfigs[profileName] = new Config(CellexalConfig.Config);
             newProfileInputField.text = "";
+            CellexalLog.Log($"Created new profile: {profileName}");
             LoadProfile();
         }
 
@@ -662,13 +668,20 @@ namespace CellexalVR.DesktopUI
             }
             TMPro.TMP_Dropdown.OptionData currentProfile = profileDropdown.options[profileDropdown.value];
             profileDropdown.options.Remove(currentProfile);
-            profileDropdown.value = 0;
+            profileDropdown.SetValueWithoutNotify(0);
             LoadProfile();
         }
 
         public void SetDatasetSpecificProfile()
         {
             string currentProfile = profileDropdown.options[profileDropdown.value].text;
+
+            if (CellexalUser.DatasetName == "" || currentProfile == "default")
+            {
+                // no dataset loaded, or we are on the default profile
+                datasetSpecificProfileToggle.isOn = false;
+                return;
+            }
 
             if (datasetSpecificProfileToggle.isOn)
             {
@@ -679,8 +692,10 @@ namespace CellexalVR.DesktopUI
                 CellexalConfig.Config.ConfigDir = "Config";
             }
             string newFullPath = referenceManager.configManager.ProfileNameToConfigPath(currentProfile);
-            print(currentProfilePath + " " + newFullPath);
-            File.Move(currentProfilePath, newFullPath);
+            if (currentProfilePath != "")
+            {
+                File.Move(currentProfilePath, newFullPath);
+            }
             currentProfilePath = newFullPath;
         }
 
