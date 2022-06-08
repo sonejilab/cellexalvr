@@ -193,7 +193,7 @@ namespace CellexalVR.General
             leftLaser = laserPointerController.leftLaser;
 
             selectionToolCollider = rightController.GetComponentInChildren<SelectionToolCollider>(true);
-            deleteTool = rightController.transform.Find("Delete Tool").gameObject;
+            deleteTool = rightController.transform.Find("Tools/Delete Tool").gameObject;
             minimizeTool = rightController.GetComponentInChildren<MinimizeTool>(true);
             drawTool = rightController.GetComponentInChildren<DrawTool>(true);
             webBrowser = GameObject.Find("WebBrowser");
