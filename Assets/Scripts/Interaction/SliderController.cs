@@ -64,11 +64,6 @@ namespace CellexalVR.Interaction
 
         private void OnEnable()
         {
-            //interactable.selectEntered.AddListener(OnGrabbed);
-            ////interactable.selectExited.AddListener(OnUnGrabbed);
-            //interactable.activated.AddListener(OnGrabbed);
-            //interactable.deactivated.AddListener(OnUnGrabbed);
-
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
             CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
         }
@@ -77,9 +72,10 @@ namespace CellexalVR.Interaction
         {
             interactor = ReferenceManager.instance.rightController.transform;
             Physics.Raycast(interactor.transform.position, interactor.transform.forward, out RaycastHit hit);
-            if (hit.collider.transform != transform)
+            if (hit.collider == null)
                 return;
-            shouldGetHandPosition = true;
+            if (hit.collider.transform == transform)
+                shouldGetHandPosition = true;
         }
 
         private void OnTriggerUp()
