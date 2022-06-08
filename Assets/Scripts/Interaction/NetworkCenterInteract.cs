@@ -38,7 +38,6 @@ namespace CellexalVR.Interaction
             referenceManager.multiuserMessageSender.SendMessageEnableColliders(gameObject.name);
             NetworkCenter center = gameObject.GetComponent<NetworkCenter>();
             Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-            referenceManager.multiuserMessageSender.SendMessageNetworkCenterUngrabbed(center.Handler.name, center.name, transform.position, transform.rotation, rigidbody.velocity, rigidbody.angularVelocity);
         }
     }
 }

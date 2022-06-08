@@ -267,8 +267,6 @@ namespace CellexalVR.General
 
             FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
             StreamWriter streamWriter = new StreamWriter(fileStream);
-            print($"{CellexalConfig.Config.GraphPointQuality}, {path}");
-
             XmlSerializer ser = new XmlSerializer(typeof(Config));
             ser.Serialize(streamWriter, CellexalConfig.Config);
             streamWriter.Close();

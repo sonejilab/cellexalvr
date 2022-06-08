@@ -102,7 +102,7 @@ namespace CellexalVR.Multiuser
             if (obj == null)
                 return;
             var rightController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
-            var leftController = ReferenceManager.instance.rightController.GetComponent<XRDirectInteractor>();
+            var leftController = ReferenceManager.instance.leftController.GetComponent<XRDirectInteractor>();
             int layerMask = LayerMask.GetMask("GraphLayer");
             Collider[] overlapR = Physics.OverlapBox(rightController.transform.position, rightController.GetComponent<BoxCollider>().size / 2f,
                 rightController.transform.rotation, layerMask, QueryTriggerInteraction.Collide);
