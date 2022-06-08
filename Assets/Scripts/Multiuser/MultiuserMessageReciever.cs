@@ -594,6 +594,15 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
+        public void RecieveMessageSelectedRemoveMany(string graphName, string[] labels, int newGroup, float r, float g, float b)
+        {
+            foreach (string label in labels)
+            {
+                referenceManager.selectionManager.RemoveGraphpointFromSelection(graphName, label);
+            }
+        }
+
+        [PunRPC]
         public void RecieveMessageCubeColoured(string graphName, string label, int newGroup, float r, float g, float b)
         {
             referenceManager.selectionManager.DoClientSelectAdd(graphName, label, newGroup, new Color(r, g, b), true);

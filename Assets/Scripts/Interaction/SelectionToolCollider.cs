@@ -79,7 +79,7 @@ namespace CellexalVR.Interaction
                 {
                     tempColorIndex = CurrentColorIndex;
                     CurrentColorIndex = Colors.Length + 1;
-                    controllerMaterial.SetColor("_Tint", new Color(1,1,1));
+                    controllerMaterial.SetColor("_Tint", new Color(1, 1, 1));
                 }
                 // Change to remove selection tool: Store color index so when we switch back to normal selection tool we get the correct color.
                 else if (currentMeshIndex < 0)

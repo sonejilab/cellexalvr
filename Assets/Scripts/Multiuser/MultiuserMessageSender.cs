@@ -33,7 +33,9 @@ namespace CellexalVR.Multiuser
 
         private MultiuserMessageReciever coordinator;
         private List<GameObject> players = new List<GameObject>();
-        private Queue<LabelsToSendLater> labelsToSendQueue = new Queue<LabelsToSendLater>();
+        private Queue<LabelsToSendLater> labelsToAddQueue = new Queue<LabelsToSendLater>();
+        private Queue<LabelsToSendLater> labelsToRemoveQueue = new Queue<LabelsToSendLater>();
+
         private class LabelsToSendLater
         {
             public string graphName;
@@ -520,20 +522,20 @@ namespace CellexalVR.Multiuser
         public void SendMessageSelectedAdd(string graphName, string label, int newGroup, Color color)
         {
             if (!multiplayer) return;
-            LabelsToSendLater found = labelsToSendQueue.FirstOrDefault((LabelsToSendLater item) => item.SameGroup(graphName, newGroup, color));
+            LabelsToSendLater found = labelsToAddQueue.FirstOrDefault((LabelsToSendLater item) => item.SameGroup(graphName, newGroup, color));
             if (found != null)
             {
                 found.labels.Add(label);
             }
             else
             {
-                if (labelsToSendQueue.Count == 0)
+                if (labelsToAddQueue.Count == 0)
                 {
                     StartCoroutine(SendSelectionAfterDelay(1f));
                 }
                 LabelsToSendLater newGroupToQueue = new LabelsToSendLater(graphName, newGroup, color);
                 newGroupToQueue.labels.Add(label);
-                labelsToSendQueue.Enqueue(newGroupToQueue);
+                labelsToAddQueue.Enqueue(newGroupToQueue);
             }
         }
 
@@ -542,17 +544,53 @@ namespace CellexalVR.Multiuser
             do
             {
                 yield return new WaitForSeconds(delay);
-                LabelsToSendLater labelsToSend = labelsToSendQueue.Dequeue();
+                LabelsToSendLater labelsToSend = labelsToAddQueue.Dequeue();
                 SendMessageSelectedAddMany(labelsToSend.graphName, labelsToSend.labels.ToArray(), labelsToSend.newGroup, labelsToSend.color);
-            } while (labelsToSendQueue.Count > 0);
+            } while (labelsToAddQueue.Count > 0);
         }
 
+        public void SendMessageSelectedRemove(string graphName, string label)
+        {
+            if (!multiplayer) return;
+            LabelsToSendLater found = labelsToRemoveQueue.FirstOrDefault((LabelsToSendLater item) => item.SameGroup(graphName, -1, Color.white));
+            if (found != null)
+            {
+                found.labels.Add(label);
+            }
+            else
+            {
+                if (labelsToRemoveQueue.Count == 0)
+                {
+                    StartCoroutine(SendRemoveFromSelectionAfterDelay(1f));
+                }
+                LabelsToSendLater newGroupToQueue = new LabelsToSendLater(graphName, -1, Color.white);
+                newGroupToQueue.labels.Add(label);
+                labelsToRemoveQueue.Enqueue(newGroupToQueue);
+            }
+        }
         public void SendMessageSelectedAddMany(string graphName, string[] labels, int newGroup, Color color)
         {
             if (!multiplayer) return;
             coordinator.photonView.RPC("RecieveMessageAddSelectMany", PhotonTargets.Others, graphName, labels, newGroup,
                 color.r, color.g, color.b);
         }
+
+        private IEnumerator SendRemoveFromSelectionAfterDelay(float delay)
+        {
+            do
+            {
+                yield return new WaitForSeconds(delay);
+                LabelsToSendLater labelsToSend = labelsToRemoveQueue.Dequeue();
+                SendMessageSelectedRemoveMany(labelsToSend.graphName, labelsToSend.labels.ToArray());
+            } while (labelsToRemoveQueue.Count > 0);
+        }
+
+        public void SendMessageSelectedRemoveMany(string graphName, string[] labels)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageSelectedRemoveMany", PhotonTargets.Others, graphName, labels);
+        }
+
 
         public void SendMessageSelectedAddPointCloud(int[] indices, int[] groups)
         {

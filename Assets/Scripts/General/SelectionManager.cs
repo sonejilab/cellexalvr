@@ -120,12 +120,22 @@ namespace CellexalVR.General
 
         public void RemoveGraphpointFromSelection(Graph.GraphPoint graphPoint)
         {
+
+            referenceManager.multiuserMessageSender.SendMessageSelectedRemove(graphPoint.parent.GraphName, graphPoint.Label);
+            RemoveGraphpointFromSelection(graphPoint.parent.GraphName, graphPoint.Label);
+        }
+
+        public void RemoveGraphpointFromSelection(string graphName, string graphpointLabel)
+        {
+            Graph parentGraph = graphManager.FindGraph(graphName);
+            Graph.GraphPoint graphPoint = parentGraph.FindGraphPoint(graphpointLabel);
+
             if (graphPoint == null || graphPoint.Group == -1)
             {
                 return;
             }
 
-            Graph parentGraph = graphPoint.parent;
+
             if (parentGraph.tag.Equals("Untagged"))
             {
                 GraphBetweenGraphs ctcGraph = parentGraph.GetComponent<GraphBetweenGraphs>();
@@ -164,6 +174,7 @@ namespace CellexalVR.General
             }
 
             selectedCells.Remove(graphPoint);
+
             bool hapticFeedback = true;
             if (hapticFeedback && selectionToolCollider.hapticFeedbackThisFrame)
             {
