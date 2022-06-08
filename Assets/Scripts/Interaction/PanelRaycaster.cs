@@ -97,11 +97,11 @@ namespace CellexalVR.Interaction
                     keyPressedMaterial);
             }
 
-            if (referenceManager.webBrowserKeyboard)
-            {
-                referenceManager.webBrowserKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial,
-                    keyPressedMaterial);
-            }
+            //if (referenceManager.webBrowserKeyboard)
+            //{
+            //    referenceManager.webBrowserKeyboard.SetMaterials(keyNormalMaterial, keyHighlightMaterial,
+            //        keyPressedMaterial);
+            //}
 
             if (referenceManager.filterNameKeyboard)
             {

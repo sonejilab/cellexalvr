@@ -1654,52 +1654,52 @@ namespace CellexalVR.Multiuser
 
         #region Browser
 
-        [PunRPC]
-        public void RecieveMessageMoveBrowser(float posX, float posY, float posZ, float rotX, float rotY, float rotZ,
-            float rotW, float scaleX, float scaleY, float scaleZ)
-        {
-            GameObject wm = referenceManager.webBrowser;
-            bool browserExists = wm != null;
-            if (browserExists)
-            {
-                try
-                {
-                    wm.transform.position = new Vector3(posX, posY, posZ);
-                    wm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
-                    wm.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
-                }
-                catch (Exception e)
-                {
-                    CellexalLog.Log("Could not move browser - Error: " + e);
-                }
-            }
-            else
-            {
-                CellexalLog.Log("Could not find browser to move");
-            }
-        }
+        //[PunRPC]
+        //public void RecieveMessageMoveBrowser(float posX, float posY, float posZ, float rotX, float rotY, float rotZ,
+        //    float rotW, float scaleX, float scaleY, float scaleZ)
+        //{
+        //    GameObject wm = referenceManager.webBrowser;
+        //    bool browserExists = wm != null;
+        //    if (browserExists)
+        //    {
+        //        try
+        //        {
+        //            wm.transform.position = new Vector3(posX, posY, posZ);
+        //            wm.transform.rotation = new Quaternion(rotX, rotY, rotZ, rotW);
+        //            wm.transform.localScale = new Vector3(scaleX, scaleY, scaleZ);
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            CellexalLog.Log("Could not move browser - Error: " + e);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        CellexalLog.Log("Could not find browser to move");
+        //    }
+        //}
 
-        [PunRPC]
-        public void RecieveMessageActivateBrowser(bool activate)
-        {
-            CellexalLog.Log("Recieved message to toggle web browser");
-            referenceManager.webBrowser.GetComponent<WebManager>().SetBrowserActive(activate);
-            //referenceManager.webBrowser.GetComponent<WebManager>().SetVisible(activate);
-        }
+        //[PunRPC]
+        //public void RecieveMessageActivateBrowser(bool activate)
+        //{
+        //    CellexalLog.Log("Recieved message to toggle web browser");
+        //    referenceManager.webBrowser.GetComponent<WebManager>().SetBrowserActive(activate);
+        //    //referenceManager.webBrowser.GetComponent<WebManager>().SetVisible(activate);
+        //}
 
-        [PunRPC]
-        public void RecieveMessageBrowserKeyClicked(string key)
-        {
-            CellexalLog.Log("Recieved message to add " + key + " to url field");
-            referenceManager.webBrowserKeyboard.AddText(key, false);
-        }
+        //[PunRPC]
+        //public void RecieveMessageBrowserKeyClicked(string key)
+        //{
+        //    CellexalLog.Log("Recieved message to add " + key + " to url field");
+        //    referenceManager.webBrowserKeyboard.AddText(key, false);
+        //}
 
-        [PunRPC]
-        public void RecieveMessageBrowserEnter()
-        {
-            string text = referenceManager.webBrowserKeyboard.output.text;
-            referenceManager.webBrowser.GetComponentInChildren<SimpleWebBrowser.WebBrowser>().OnNavigate(text);
-        }
+        //[PunRPC]
+        //public void RecieveMessageBrowserEnter()
+        //{
+        //    string text = referenceManager.webBrowserKeyboard.output.text;
+        //    referenceManager.webBrowser.GetComponentInChildren<SimpleWebBrowser.WebBrowser>().OnNavigate(text);
+        //}
 
         #endregion
 

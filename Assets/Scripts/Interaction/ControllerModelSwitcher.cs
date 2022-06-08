@@ -65,7 +65,7 @@ namespace CellexalVR.Interaction
             selectionToolCollider = referenceManager.selectionToolCollider;
             drawTool = referenceManager.drawTool.gameObject;
             keyboard = referenceManager.keyboardSwitch;
-            webBrowser = referenceManager.webBrowser;
+            //webBrowser = referenceManager.webBrowser;
             deleteTool = referenceManager.deleteTool;
             minimizeTool = referenceManager.minimizeTool.gameObject;
             DesiredModel = Model.Normal;

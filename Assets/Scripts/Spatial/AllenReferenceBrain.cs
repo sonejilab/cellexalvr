@@ -410,7 +410,7 @@ namespace CellexalVR.Spatial
             foreach (SpatialReferenceModelPart part in parts)
             {
                 part.gameObject.SetActive(true);
-                part.SplitMesh();
+                //part.SplitMesh();
                 yield return new WaitForSeconds(0.1f);
                 part.gameObject.SetActive(false);
                 i++;

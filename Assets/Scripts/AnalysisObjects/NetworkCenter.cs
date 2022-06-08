@@ -685,9 +685,7 @@ namespace CellexalVR.AnalysisObjects
                 rigidbody = gameObject.AddComponent<Rigidbody>();
             }
             rigidbody.useGravity = false;
-            rigidbody.isKinematic = false;
-            rigidbody.drag = 10;
-            rigidbody.angularDrag = 15;
+            rigidbody.isKinematic = true;
 
             GetComponent<XRGrabInteractable>().enabled = true;
 
