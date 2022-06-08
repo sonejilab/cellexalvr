@@ -7384,15 +7384,15 @@ MonoBehaviour:
   selectionManager: {fileID: 0}
   selectionToolMaterial: {fileID: 2100000, guid: 96b0e99b8991fab4e844e566d297fd42,
     type: 2}
-  controllerMaterial: {fileID: 0}
+  controllerMaterial: {fileID: 2100000, guid: 0c530fde436108f4f9abbe18203db037, type: 2}
   selectionToolColliders:
-  - {fileID: 8162680222943719376}
-  - {fileID: 968746370772724379}
   - {fileID: 8559877190177697062}
+  - {fileID: 968746370772724379}
+  - {fileID: 8162680222943719376}
   - {fileID: 7727602800938723595}
-  - {fileID: 1975809172}
-  - {fileID: 587465448}
   - {fileID: 1776191386}
+  - {fileID: 587465448}
+  - {fileID: 1975809172}
   - {fileID: 762250455}
   Colors:
   - {r: 0, g: 0, b: 0, a: 0}
@@ -7944,6 +7944,7 @@ MonoBehaviour:
     type: 2}
   animatedPulseMaterial: {fileID: 2100000, guid: 1acb6b523c0ab4841ba455c24a8c05d6,
     type: 2}
+  toolsParent: {fileID: 0}
 --- !u!65 &1638506007
 BoxCollider:
   m_ObjectHideFlags: 0

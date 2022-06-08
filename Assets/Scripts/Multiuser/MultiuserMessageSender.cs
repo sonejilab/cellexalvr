@@ -1,14 +1,11 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.Menu;
 using System.Collections;
 using System.Collections.Generic;
-using CellexalVR.AnalysisLogic;
-using CellexalVR.Interaction;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Runtime.Remoting.Messaging;
-using System;
-using System.Linq;
 
 namespace CellexalVR.Multiuser
 {
@@ -523,7 +520,7 @@ namespace CellexalVR.Multiuser
         public void SendMessageSelectedAdd(string graphName, string label, int newGroup, Color color)
         {
             if (!multiplayer) return;
-            LabelsToSendLater found = labelsToSendQueue.First((LabelsToSendLater item) => item.SameGroup(graphName, newGroup, color));
+            LabelsToSendLater found = labelsToSendQueue.FirstOrDefault((LabelsToSendLater item) => item.SameGroup(graphName, newGroup, color));
             if (found != null)
             {
                 found.labels.Add(label);

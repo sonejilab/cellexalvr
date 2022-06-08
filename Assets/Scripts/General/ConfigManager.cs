@@ -43,8 +43,6 @@ namespace CellexalVR.General
         public Color HeatmapLowExpressionColor { get; set; }
         public Color HeatmapMidExpressionColor { get; set; }
         public Color HeatmapHighExpressionColor { get; set; }
-        public Color HeatmapHighlightMarkerColor { get; set; }
-        public Color HeatmapConfirmMarkerColor { get; set; }
         public string HeatmapAlgorithm { get; set; }
         public string NetworkAlgorithm { get; set; }
         public int HeatmapNumberOfGenes { get; set; }
@@ -98,8 +96,6 @@ namespace CellexalVR.General
             HeatmapLowExpressionColor = c.HeatmapLowExpressionColor;
             HeatmapMidExpressionColor = c.HeatmapMidExpressionColor;
             HeatmapHighExpressionColor = c.HeatmapHighExpressionColor;
-            HeatmapHighlightMarkerColor = c.HeatmapHighlightMarkerColor;
-            HeatmapConfirmMarkerColor = c.HeatmapConfirmMarkerColor;
             HeatmapAlgorithm = c.HeatmapAlgorithm;
             NetworkAlgorithm = c.NetworkAlgorithm;
             HeatmapNumberOfGenes = c.HeatmapNumberOfGenes;
@@ -399,8 +395,6 @@ namespace CellexalVR.General
             CellexalConfig.Config.HeatmapLowExpressionColor = config.HeatmapLowExpressionColor;
             CellexalConfig.Config.HeatmapMidExpressionColor = config.HeatmapMidExpressionColor;
             CellexalConfig.Config.HeatmapHighExpressionColor = config.HeatmapHighExpressionColor;
-            CellexalConfig.Config.HeatmapHighlightMarkerColor = config.HeatmapHighlightMarkerColor;
-            CellexalConfig.Config.HeatmapConfirmMarkerColor = config.HeatmapConfirmMarkerColor;
             CellexalConfig.Config.HeatmapAlgorithm = config.HeatmapAlgorithm;
             CellexalConfig.Config.NetworkAlgorithm = config.NetworkAlgorithm;
             CellexalConfig.Config.HeatmapNumberOfGenes = config.HeatmapNumberOfGenes;

@@ -15,7 +15,7 @@
         {
             Tags
             {
-                "RenderQueue" = "Opaque"
+                "RenderQueue" = "Transparent"
             }
 
             CGPROGRAM

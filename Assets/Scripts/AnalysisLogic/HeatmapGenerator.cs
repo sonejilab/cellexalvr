@@ -40,9 +40,6 @@ namespace CellexalVR.AnalysisLogic
         private int numHeatmapTextures;
         private int textureWidth;
 
-        public UnityEngine.Color HighlightMarkerColor { get; private set; }
-        public UnityEngine.Color ConfirmMarkerColor { get; private set; }
-
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -79,8 +76,6 @@ namespace CellexalVR.AnalysisLogic
             }
 
             heatmap.gameObject.name = heatmapNameLastPart;
-            heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
-            heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
         }
 
         void Awake()
@@ -141,8 +136,6 @@ namespace CellexalVR.AnalysisLogic
                     (int)(Mathf.Sqrt(g) * 255), (int)(Mathf.Sqrt(b) * 255)));
             }
 
-            HighlightMarkerColor = CellexalConfig.Config.HeatmapHighlightMarkerColor;
-            ConfirmMarkerColor = CellexalConfig.Config.HeatmapConfirmMarkerColor;
         }
 
         /// <summary>
@@ -336,8 +329,6 @@ namespace CellexalVR.AnalysisLogic
             }
 
             heatmap.gameObject.name = heatmapName; //"heatmap_" + heatmapsCreated;
-            heatmap.highlightQuad.GetComponent<Renderer>().material.color = HighlightMarkerColor;
-            heatmap.confirmQuad.GetComponent<Renderer>().material.color = ConfirmMarkerColor;
             CellexalEvents.CommandFinished.Invoke(true);
         }
 

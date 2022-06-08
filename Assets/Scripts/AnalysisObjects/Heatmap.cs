@@ -162,8 +162,6 @@ namespace CellexalVR.AnalysisObjects
             movingQuadY.SetActive(false);
             highlightInfoText = highlightQuad.GetComponentInChildren<TextMeshPro>();
             heatmapGenerator = referenceManager.heatmapGenerator;
-            highlightQuad.GetComponent<Renderer>().material.color = heatmapGenerator.HighlightMarkerColor;
-            confirmQuad.GetComponent<Renderer>().material.color = heatmapGenerator.ConfirmMarkerColor;
             foreach (CellexalButton b in GetComponentsInChildren<CellexalButton>())
             {
                 b.referenceManager = referenceManager;

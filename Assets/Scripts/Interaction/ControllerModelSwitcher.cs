@@ -270,11 +270,11 @@ namespace CellexalVR.Interaction
                     laserPointerController.origin.localRotation = Quaternion.identity;
                     break;
 
-                case Model.WebBrowser:
-                    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
-                    laserPointerController.ToggleLaser(true);
-                    laserPointerController.origin.localRotation = Quaternion.identity;
-                    break;
+                //case Model.WebBrowser:
+                //    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
+                //    laserPointerController.ToggleLaser(true);
+                //    laserPointerController.origin.localRotation = Quaternion.identity;
+                //    break;
 
                 case Model.TwoLasers:
                     laserPointerController.ToggleLaser(true);
@@ -342,10 +342,10 @@ namespace CellexalVR.Interaction
                     keyboard.SetKeyboardVisible(true);
                     laserPointerController.ToggleLaser(true);
                     break;
-                case Model.WebBrowser:
-                    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
-                    laserPointerController.ToggleLaser(true);
-                    break;
+                //case Model.WebBrowser:
+                //    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
+                //    laserPointerController.ToggleLaser(true);
+                //    break;
                 case Model.TwoLasers:
                     laserPointerController.ToggleLaser(true);
                     leftLaser.enabled = true;
@@ -371,7 +371,7 @@ namespace CellexalVR.Interaction
             laserPointerController.ToggleLaser(false);
             keyboard.SetKeyboardVisible(false);
             drawTool.SetActive(false);
-            webBrowser.GetComponent<WebManager>().SetVisible(false);
+            //webBrowser.GetComponent<WebManager>().SetVisible(false);
             if (inMenu)
             {
                 SwitchToModel(Model.Menu);

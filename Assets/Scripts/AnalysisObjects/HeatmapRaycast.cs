@@ -44,6 +44,10 @@ namespace CellexalVR.Interaction
         private Cell[] cellsToHighlight = new Cell[0];
         private int currentHighlightedGroup;
 
+        private bool triggerDown = false;
+        private bool triggerUp = false;
+        private bool click = false;
+
         private void Start()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -78,10 +82,13 @@ namespace CellexalVR.Interaction
             if (correctModel)
             {
                 Raycast();
+                triggerDown = false;
+                triggerUp = false;
+                click = false;
             }
         }
 
-        private void Raycast(bool click = false, bool triggerDown = false, bool triggerUp = false)
+        private void Raycast(/*bool click = false, bool triggerDown = false, bool triggerUp = false*/)
         {
             raycastingSource = referenceManager.rightLaser.transform;
             //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
@@ -90,8 +97,8 @@ namespace CellexalVR.Interaction
                 Mathf.Infinity, layerMask);
             if (hit.collider && hit.transform == transform)
             {
-                int hitx = (int) (hit.textureCoord.x * heatmap.layout.bitmapWidth);
-                int hity = (int) (hit.textureCoord.y * heatmap.layout.bitmapHeight);
+                int hitx = (int)(hit.textureCoord.x * heatmap.layout.bitmapWidth);
+                int hity = (int)(hit.textureCoord.y * heatmap.layout.bitmapHeight);
                 if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, heatmap.layout.geneListX, heatmap.layout.heatmapY,
                     heatmap.layout.geneListWidth, heatmap.layout.heatmapHeight))
                 {
@@ -202,17 +209,20 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerClick()
         {
-            Raycast(true);
+            //Raycast(true);
+            click = true;
         }
 
         private void OnTriggerDown()
         {
-            Raycast(triggerDown: true);
+            //Raycast(triggerDown: true);
+            triggerDown = true;
         }
 
         private void OnTriggerUp()
         {
-            Raycast(triggerUp: true);
+            //Raycast(triggerUp: true);
+            triggerUp = true;
         }
 
         /// <summary>
@@ -237,8 +247,8 @@ namespace CellexalVR.Interaction
         /// <param name="hity">The y coordinate of the hit. Measured in pixels of the texture.</param>
         public void HandlePressDown(int hitx, int hity)
         {
-            if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, (int) selectedBoxX, (int) selectedBoxY,
-                (int) selectedBoxWidth, (int) selectedBoxHeight))
+            if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, (int)selectedBoxX, (int)selectedBoxY,
+                (int)selectedBoxWidth, (int)selectedBoxHeight))
             {
                 // if we hit a confirmed selection
                 movingSelection = true;
@@ -438,7 +448,7 @@ namespace CellexalVR.Interaction
         public void HandleBoxSelection(int hitx, int hity, int selectionStartX, int selectionStartY)
         {
             // since the groupings have irregular widths we need to iterate over the list of widths
-            float boxX = heatmap.layout.heatmapX; 
+            float boxX = heatmap.layout.heatmapX;
             float boxWidth = 0;
             for (int i = 0; i < heatmap.groupWidths.Count; ++i)
             {

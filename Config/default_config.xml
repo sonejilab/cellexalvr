@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Config xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <ConfigDir>\Config</ConfigDir>
+  <ConfigDir>Data\</ConfigDir>
   <RscriptexePath>C:\Program Files\R\R-4.1.3\bin\x64\Rscript.exe</RscriptexePath>
   <RequireTouchpadClickToInteract>false</RequireTouchpadClickToInteract>
   <ControllerModel>Set Automatically</ControllerModel>
@@ -181,24 +181,24 @@
   </GraphZeroExpressionColor>
   <GraphNumberOfExpressionColors>30</GraphNumberOfExpressionColors>
   <GraphLowExpressionColor>
-    <r>0.267004</r>
-    <g>0.004874</g>
-    <b>0.329415</b>
+    <r>0.050383</r>
+    <g>0.029803</g>
+    <b>0.527975</b>
     <a>1</a>
   </GraphLowExpressionColor>
   <GraphMidExpressionColor>
-    <r>0.127568</r>
-    <g>0.566949</g>
-    <b>0.550556</b>
+    <r>0.798216</r>
+    <g>0.280197</g>
+    <b>0.469538</b>
     <a>1</a>
   </GraphMidExpressionColor>
   <GraphHighExpressionColor>
-    <r>0.993248</r>
-    <g>0.906157</g>
-    <b>0.143936</b>
+    <r>0.940015</r>
+    <g>0.975158</g>
+    <b>0.131326</b>
     <a>1</a>
   </GraphHighExpressionColor>
-  <GraphMostExpressedMarker>false</GraphMostExpressedMarker>
+  <GraphMostExpressedMarker>true</GraphMostExpressedMarker>
   <AttributeColors>
     <Color>
       <r>1</r>
@@ -221,35 +221,23 @@
   </AttributeColors>
   <NumberOfHeatmapColors>30</NumberOfHeatmapColors>
   <HeatmapLowExpressionColor>
-    <r>0.267004</r>
-    <g>0.004874</g>
-    <b>0.329415</b>
+    <r>0.050383</r>
+    <g>0.029803</g>
+    <b>0.527975</b>
     <a>1</a>
   </HeatmapLowExpressionColor>
   <HeatmapMidExpressionColor>
-    <r>0.127568</r>
-    <g>0.566949</g>
-    <b>0.550556</b>
+    <r>0.798216</r>
+    <g>0.280197</g>
+    <b>0.469538</b>
     <a>1</a>
   </HeatmapMidExpressionColor>
   <HeatmapHighExpressionColor>
-    <r>0.993248</r>
-    <g>0.906157</g>
-    <b>0.143936</b>
+    <r>0.940015</r>
+    <g>0.975158</g>
+    <b>0.131326</b>
     <a>1</a>
   </HeatmapHighExpressionColor>
-  <HeatmapHighlightMarkerColor>
-    <r>1</r>
-    <g>1</g>
-    <b>1</b>
-    <a>1</a>
-  </HeatmapHighlightMarkerColor>
-  <HeatmapConfirmMarkerColor>
-    <r>1</r>
-    <g>1</g>
-    <b>0</b>
-    <a>1</a>
-  </HeatmapConfirmMarkerColor>
   <HeatmapAlgorithm>wilcox</HeatmapAlgorithm>
   <NetworkAlgorithm>rho.p</NetworkAlgorithm>
   <HeatmapNumberOfGenes>250</HeatmapNumberOfGenes>
@@ -293,7 +281,7 @@
     <a>1</a>
   </VelocityParticlesHighColor>
   <ConsoleMaxBufferLines>256</ConsoleMaxBufferLines>
-  <ShowNotifications>false</ShowNotifications>
+  <ShowNotifications>true</ShowNotifications>
   <GraphPointQuality>Standard</GraphPointQuality>
   <GraphPointSize>Standard</GraphPointSize>
   <SkyboxTintColor>
