@@ -594,7 +594,7 @@ namespace CellexalVR.Multiuser
         }
 
         [PunRPC]
-        public void RecieveMessageSelectedRemoveMany(string graphName, string[] labels, int newGroup, float r, float g, float b)
+        public void RecieveMessageSelectedRemoveMany(string graphName, string[] labels)
         {
             foreach (string label in labels)
             {
