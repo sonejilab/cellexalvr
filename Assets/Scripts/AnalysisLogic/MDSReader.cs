@@ -33,7 +33,8 @@ namespace CellexalVR.AnalysisLogic
         public IEnumerator ReadMDSFiles(string path, string[] mdsFiles,
             GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
-            nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
+            //nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
+            nrOfLODGroups = 1;
             //  Read each .mds file
             //  The file format should be
             //  cell_id  axis_name1   axis_name2   axis_name3

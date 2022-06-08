@@ -63,72 +63,74 @@ namespace CellexalVR.Spatial
             }
 
         }
-
-#if UNITY_EDITOR
-        /// <summary>
-        /// Split part into separate meshes based on connectivity. This enables the right and left part to be moved separately. 
-        /// Many of the allen reference brain meshes are mirrored right to left which makes this a usable feature.
-        /// </summary>
-        public void SplitMesh()
-        {
-            MeshRenderer meshRenderer = GetComponentInChildren<MeshRenderer>();
-            MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
-            child = transform.GetChild(0);
-            MeshFilter meshFilter = GetComponentInChildren<MeshFilter>();
-            List<Mesh> parts = new List<Mesh>();
-            parts = MeshUtils.MeshSplitter.SplitMesh(meshFilter.mesh);
-
-            meshParent = new GameObject();
-            meshParent.transform.parent = transform;
-            meshParent.transform.localPosition = child.transform.localPosition;
-            meshParent.transform.localRotation = child.transform.localRotation;
-            meshParent.transform.localScale = child.transform.localScale;
-
-            child.transform.parent = meshParent.transform;
-            child.transform.localPosition = Vector3.zero;
-            child.transform.localScale = Vector3.one;
-            child.transform.localRotation = Quaternion.identity;
-
-            for (int i = 0; i < parts.Count; i++)
-            {
-                Mesh m = parts[i];
-                GameObject newObj = new GameObject();
-                newObj.AddComponent<MeshRenderer>().material = meshRenderer.material;
-                newObj.AddComponent<MeshFilter>().mesh = m;
-                MeshCollider meshColldier = newObj.AddComponent<MeshCollider>();
-
-                newObj.transform.parent = meshParent.transform;
-                newObj.transform.localPosition = child.transform.localPosition;
-                newObj.transform.localRotation = child.transform.localRotation;
-                newObj.transform.localScale = Vector3.one;
-                newObj.gameObject.name = $"part{i}";
-
-                AssetDatabase.CreateAsset(m, $"Assets/Resources/meshparts/{id}_part{i}_test.asset");
-            }
-
-            Destroy(child.gameObject);
-
-        }
-
-
     }
-    [CustomEditor(typeof(SpatialReferenceModelPart))]
-    public class SpatialReferenceModelPartEditor : Editor
-    {
-        public override void OnInspectorGUI()
-        {
-            SpatialReferenceModelPart myTarget = (SpatialReferenceModelPart)target;
 
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Split Meshes"))
-            {
-                myTarget.SplitMesh();
-            }
-            GUILayout.EndHorizontal();
+//#if UNITY_EDITOR
+//        /// <summary>
+//        /// Split part into separate meshes based on connectivity. This enables the right and left part to be moved separately. 
+//        /// Many of the allen reference brain meshes are mirrored right to left which makes this a usable feature.
+//        /// </summary>
+//        public void SplitMesh()
+//        {
+//            MeshRenderer meshRenderer = GetComponentInChildren<MeshRenderer>();
+//            MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
+//            child = transform.GetChild(0);
+//            MeshFilter meshFilter = GetComponentInChildren<MeshFilter>();
+//            List<Mesh> parts = new List<Mesh>();
+//            parts = MeshUtils.MeshSplitter.SplitMesh(meshFilter.mesh);
 
-            DrawDefaultInspector();
-        }
+//            meshParent = new GameObject();
+//            meshParent.transform.parent = transform;
+//            meshParent.transform.localPosition = child.transform.localPosition;
+//            meshParent.transform.localRotation = child.transform.localRotation;
+//            meshParent.transform.localScale = child.transform.localScale;
 
-    }
-#endif
+//            child.transform.parent = meshParent.transform;
+//            child.transform.localPosition = Vector3.zero;
+//            child.transform.localScale = Vector3.one;
+//            child.transform.localRotation = Quaternion.identity;
+
+//            for (int i = 0; i < parts.Count; i++)
+//            {
+//                Mesh m = parts[i];
+//                GameObject newObj = new GameObject();
+//                newObj.AddComponent<MeshRenderer>().material = meshRenderer.material;
+//                newObj.AddComponent<MeshFilter>().mesh = m;
+//                MeshCollider meshColldier = newObj.AddComponent<MeshCollider>();
+
+//                newObj.transform.parent = meshParent.transform;
+//                newObj.transform.localPosition = child.transform.localPosition;
+//                newObj.transform.localRotation = child.transform.localRotation;
+//                newObj.transform.localScale = Vector3.one;
+//                newObj.gameObject.name = $"part{i}";
+
+//                AssetDatabase.CreateAsset(m, $"Assets/Resources/meshparts/{id}_part{i}_test.asset");
+//            }
+
+//            Destroy(child.gameObject);
+
+//        }
+
+
+//    }
+//    [CustomEditor(typeof(SpatialReferenceModelPart))]
+//    public class SpatialReferenceModelPartEditor : Editor
+//    {
+//        public override void OnInspectorGUI()
+//        {
+//            SpatialReferenceModelPart myTarget = (SpatialReferenceModelPart)target;
+
+//            GUILayout.BeginHorizontal();
+//            if (GUILayout.Button("Split Meshes"))
+//            {
+//                myTarget.SplitMesh();
+//            }
+//            GUILayout.EndHorizontal();
+
+//            DrawDefaultInspector();
+//        }
+
+//    }
+//#endif
 }
+

@@ -17,11 +17,11 @@ namespace CellexalVR.Menu.Buttons.Report
             }
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-            reportListGenerator = referenceManager.webBrowser.GetComponentInChildren<ReportListGenerator>();
-        }
+        //protected override void Awake()
+        //{
+        //    base.Awake();
+        //    reportListGenerator = referenceManager.webBrowser.GetComponentInChildren<ReportListGenerator>();
+        //}
 
         public override void Click()
         {

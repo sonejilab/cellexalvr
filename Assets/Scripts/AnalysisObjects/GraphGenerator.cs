@@ -1295,8 +1295,8 @@ namespace CellexalVR.AnalysisObjects
                     Destroy(bc);
                 }
 
-
-                nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
+                //TODO
+                //nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
                 StartCoroutine(SliceClusteringLOD(nrOfLODGroups));
 
                 while (isCreating)
