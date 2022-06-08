@@ -67,8 +67,6 @@ namespace CellexalVR.AnalysisObjects
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             GetComponent<NetworkHandlerInteract>().referenceManager = referenceManager;
             multiuserMessageSender = referenceManager.multiuserMessageSender;
-            meshRenderer = GetComponent<MeshRenderer>();
-            standardColor = GetComponent<LineRenderer>().startColor;
             // highlightedMaterials = new Material[] {meshRenderer.materials[0], new Material(highlightMaterial)};
             // highlightedMaterials[1].SetFloat("_Thickness", 0.2f);
             // unhighlightedMaterials = new Material[] {meshRenderer.materials[0], new Material(normalMaterial)};
@@ -402,10 +400,5 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-        public void HighlightNetworkSkeleton(bool toggle)
-        {
-            LineRenderer lr = GetComponent<LineRenderer>();
-            lr.startColor = lr.endColor = toggle ? highlightColor : standardColor;
-        }
     }
 }

@@ -53,6 +53,26 @@ namespace CellexalVR.AnalysisLogic
             instance = this;
         }
 
+        public void SetZarrLoc(string loc)
+        {
+            StartCoroutine(SetZarrLocCoroutine(loc));
+        }
+
+        private IEnumerator SetZarrLocCoroutine(string loc)
+        {
+            while (!serverStarted)
+                yield return null;
+            string reqURL = $"{url}set_zarr_loc/{loc}";
+            UnityWebRequest req = UnityWebRequest.Get(reqURL);
+            yield return req.SendWebRequest();
+
+            if (req.result == UnityWebRequest.Result.ProtocolError || req.result == UnityWebRequest.Result.ConnectionError)
+            {
+                print(req.error);
+                yield break;
+            }
+        }
+
         public void LoadPreprocessedData(string label, string layoutKey = "RNA_UMAP")
         {
             StartCoroutine(LoadPreprocessedDataCouroutine(label, layoutKey));
@@ -78,6 +98,8 @@ namespace CellexalVR.AnalysisLogic
             string res = "";
             Thread t = new Thread(() => { res = StartServer(); });
             t.Start();
+
+            StartCoroutine(SetZarrLocCoroutine($"{Directory.GetCurrentDirectory()}\\Data"));
         }
 
         /// <summary>

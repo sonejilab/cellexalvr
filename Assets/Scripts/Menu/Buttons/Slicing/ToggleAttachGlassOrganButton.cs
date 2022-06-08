@@ -3,6 +3,7 @@ using CellexalVR.Spatial;
 using UnityEngine;
 using DG.Tweening;
 using AnalysisLogic;
+using CellexalVR.Interaction;
 
 namespace CellexalVR.Menu.Buttons.Slicing
 {
@@ -34,7 +35,7 @@ namespace CellexalVR.Menu.Buttons.Slicing
                 t.transform.DOLocalMove(t.transform.localPosition + Vector3.one * 0.1f, 0.5f).SetEase(Ease.InOutSine);
             }
             detached = !detached;
-            t.GetComponent<BoxCollider>().enabled = detached;
+            t.GetComponent<OffsetGrab>().enabled = detached;
         }
     }
 }

@@ -24,7 +24,7 @@ public class LoadReferenceModelMeshButton : CellexalButton
 
     public override void Click()
     {
-        AllenReferenceBrain.instance.ParentBrain();
+        AllenReferenceBrain.instance.SpawnModel(ModelName);
         ReferenceManager.instance.multiuserMessageSender.SendMessageSpawnModel(modelName);
     }
 

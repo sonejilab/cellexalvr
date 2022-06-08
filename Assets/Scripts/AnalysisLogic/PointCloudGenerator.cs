@@ -46,6 +46,7 @@ namespace CellexalVR.AnalysisLogic
     {
         public static PointCloudGenerator instance;
         [SerializeField] private PointCloud pointCloudPrefab;
+        [SerializeField] private PointCloud pointCloudHighCapPrefab;
         [SerializeField] private PointCloud spatialPointCloudPrefab;
         [HideInInspector] public int nrOfGraphs = 0;
         [HideInInspector] public int mdsFileCount;
@@ -681,7 +682,8 @@ namespace CellexalVR.AnalysisLogic
                             if (clusterCount >= CellexalConfig.Config.SelectionToolColors.Length - 1)
                             {
                                 c = UnityEngine.Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
-                                ReferenceManager.instance.settingsMenu.AddSelectionColor(c);
+                                // Takes way too long for the brain atlas data... so many attributes.
+                                //ReferenceManager.instance.settingsMenu.AddSelectionColor(c);
                             }
                             else
                             {

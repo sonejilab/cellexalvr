@@ -1305,12 +1305,12 @@ namespace CellexalVR.AnalysisObjects
                 }
 
                 graph.textures[0].Apply();
-                UpdateLODGroups(graph, nrOfLODGroups);
-                for (int i = 0; i < graph.lodGroupParents.Count; i++)
-                {
-                    graph.lodGroupClusters[i][0].GetComponent<Renderer>().sharedMaterial.mainTexture =
-                        graph.textures[0];
-                }
+                //UpdateLODGroups(graph, nrOfLODGroups);
+                //for (int i = 0; i < graph.lodGroupParents.Count; i++)
+                //{
+                //    graph.lodGroupClusters[i][0].GetComponent<Renderer>().sharedMaterial.mainTexture =
+                //        graph.textures[0];
+                //}
             }
         }
 

@@ -64,6 +64,11 @@ namespace CellexalVR.Spatial
             }
         }
 
+        private void OnEnable()
+        {
+            actionReference.action.performed += OnActionClick;
+        }
+
         private void Start()
         {
             CellexalEvents.GraphsLoaded.AddListener(PopulateList);

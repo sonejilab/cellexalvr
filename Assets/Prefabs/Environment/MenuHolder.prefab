@@ -5145,7 +5145,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4241272704393584
 Transform:
   m_ObjectHideFlags: 0
@@ -12482,7 +12482,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
+  - {fileID: -1007923611405979911, guid: 44f1fef9f9538ee448393c70fa398ea0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14788,7 +14788,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
+  - {fileID: -1007923611405979911, guid: 44f1fef9f9538ee448393c70fa398ea0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -32404,10 +32404,10 @@ BoxCollider:
   m_GameObject: {fileID: 1683170878314643385}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.53681874, y: 12.533941, z: 0.15668343}
-  m_Center: {x: 0.0031314169, y: 2.3991618, z: -0.0041835206}
+  m_Size: {x: 0.53681874, y: 6.06, z: 0.15668343}
+  m_Center: {x: 0.0031314169, y: 1.03, z: -0.0041835206}
 --- !u!54 &1683170878314643389
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -32459,7 +32459,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   valuePrefix: 'Particle Size: '
-  minValue: 0.001
+  minValue: 0.00001
   maxValue: 0.01
   startFactor: 1
   startValue: 0.3
@@ -32475,7 +32475,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683170878314643385}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a35f6cfbfba9b548aaa00d52cfe8a50, type: 3}
   m_Name: 
@@ -42050,7 +42050,7 @@ PrefabInstance:
     - target: {fileID: 2300000, guid: 89c605a6a3afd8e4f8e5a3a301332bca, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+      objectReference: {fileID: 2100000, guid: d7bc53b535c48224d9125f8a4ae0dbe1, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89c605a6a3afd8e4f8e5a3a301332bca, type: 3}
 --- !u!4 &8941415971402765258 stripped

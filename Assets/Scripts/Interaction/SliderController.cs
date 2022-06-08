@@ -34,7 +34,7 @@ namespace CellexalVR.Interaction
         }
         [SerializeField] private sliderType slideType;
 
-        private IXRSelectInteractor interactor;
+        private Transform interactor;
         private float startPosition;
         private bool shouldGetHandPosition;
         private XRSimpleInteractable interactable => GetComponent<XRSimpleInteractable>();
@@ -64,17 +64,25 @@ namespace CellexalVR.Interaction
 
         private void OnEnable()
         {
-            interactable.selectEntered.AddListener(OnGrabbed);
-            interactable.selectExited.AddListener(OnUnGrabbed);
+            //interactable.selectEntered.AddListener(OnGrabbed);
+            ////interactable.selectExited.AddListener(OnUnGrabbed);
+            //interactable.activated.AddListener(OnGrabbed);
+            //interactable.deactivated.AddListener(OnUnGrabbed);
+
+            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
         }
 
-        private void OnGrabbed(SelectEnterEventArgs args)
+        private void OnTriggerClick()
         {
-            interactor = args.interactorObject;
+            interactor = ReferenceManager.instance.rightController.transform;
+            Physics.Raycast(interactor.transform.position, interactor.transform.forward, out RaycastHit hit);
+            if (hit.collider.transform != transform)
+                return;
             shouldGetHandPosition = true;
         }
 
-        private void OnUnGrabbed(SelectExitEventArgs args)
+        private void OnTriggerUp()
         {
             shouldGetHandPosition = false;
 
@@ -102,7 +110,7 @@ namespace CellexalVR.Interaction
         {
             if (shouldGetHandPosition)
             {
-                Vector3 handPosInSliderBarSpace = track.InverseTransformPoint(interactor.transform.position);
+                Vector3 handPosInSliderBarSpace = track.InverseTransformPoint(interactor.position);
                 Vector3 sliderJointPos = sliderJoint.transform.localPosition;
                 float xVal = Mathf.Clamp(handPosInSliderBarSpace.x, minPos, maxPos);
                 sliderJointPos.x = xVal * track.transform.localScale.x;
@@ -116,6 +124,8 @@ namespace CellexalVR.Interaction
                 {
                     currentFactor += 0.5f;
                 }
+
+                UpdateTextAndBar();
                 onValueChanged?.Invoke(currentValue);
 
                 

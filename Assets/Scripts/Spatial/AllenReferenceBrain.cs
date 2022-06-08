@@ -24,6 +24,7 @@ namespace CellexalVR.Spatial
     {
         public static AllenReferenceBrain instance;
 
+        public bool loadBrain;
         public GameObject rootModel;
         public GameObject models;
         public Dictionary<int, SpatialReferenceModelPart> idToModelDictionary = new Dictionary<int, SpatialReferenceModelPart>();
@@ -38,15 +39,14 @@ namespace CellexalVR.Spatial
         [HideInInspector] public Quaternion startRotation;
         [HideInInspector] public List<int> nonSplittableMeshes = new List<int> { 8, 997, 567, 824 };
 
-        private ReferenceModelKeyboard keyboard;
+        [SerializeField] private ReferenceModelKeyboard keyboard;
+        [SerializeField] private BoxCollider boxCollider;
         private List<BrainPartButton> brainPartButtons = new List<BrainPartButton>();
         private const float yInc = 0.20f;
         private const float zInc = 0.65f;
-        private BoxCollider boxCollider;
         private bool controllerInside;
         private int suggestionOffset = 0;
         private string currentFilter;
-        private bool loadBrain;
         private bool structureInfoRead;
 
         private void Awake()
@@ -64,13 +64,6 @@ namespace CellexalVR.Spatial
 
         private void ReadMeshData()
         {
-            if (!loadBrain)
-            {
-                gameObject.SetActive(false);
-                return;
-            }
-            boxCollider = GetComponent<BoxCollider>();
-            keyboard = GetComponentInChildren<ReferenceModelKeyboard>(true);
             foreach (LoadReferenceModelMeshButton b in GetComponentsInChildren<LoadReferenceModelMeshButton>())
             {
                 suggestionButtons.Add(b);
@@ -118,6 +111,8 @@ namespace CellexalVR.Spatial
                 return;
             else if (!structureInfoRead)
                 ReadMeshData();
+            boxCollider = GetComponent<BoxCollider>();
+            keyboard = GetComponentInChildren<ReferenceModelKeyboard>(true);
             SpawnModel("root");
             UpdateSuggestions();
             //CellexalEvents.GraphsLoaded.AddListener(ParentBrain);
@@ -126,13 +121,18 @@ namespace CellexalVR.Spatial
         /// <summary>
         /// For the spatial dataset graph points to be placed in relation to the glass brain it parents the object to the spatial graph transform.
         /// </summary>
-        public void ParentBrain()
+        public void Toggle(bool toggle)
         {
-            gameObject.SetActive(true);
-            transform.parent = GameObject.Find("slice_coords_spatial").transform;
-            transform.localPosition = Vector3.one * -0.5f;
-            transform.localScale = Vector3.one;
-            transform.localRotation = Quaternion.identity;
+            if (!structureInfoRead)
+                ReadMeshData();
+            gameObject.SetActive(toggle);
+            keyboard.gameObject.SetActive(toggle);
+            if (toggle)
+                SpawnModel("root");
+            //transform.parent = GameObject.Find("slice_coords_spatial").transform;
+            //transform.localPosition = Vector3.one * -0.5f;
+            //transform.localScale = Vector3.one;
+            //transform.localRotation = Quaternion.identity;
         }
 
         private void Update()
@@ -145,7 +145,9 @@ namespace CellexalVR.Spatial
 
         private void CheckForController()
         {
-            Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center), boxCollider.size / 2, transform.rotation, 1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
+            Collider[] colliders = Physics.OverlapBox(transform.TransformPoint(boxCollider.center),
+                boxCollider.size / 2, transform.rotation,
+                1 << LayerMask.NameToLayer("Controller") | LayerMask.NameToLayer("Player"));
             if (colliders.Any(x => x.CompareTag("Player") || x.CompareTag("GameController")))
             {
                 controllerInside = true;

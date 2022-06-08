@@ -159,6 +159,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
 
+            referenceManager.configManager.ReadConfigFiles(fullPath);
             UpdateSelectionToolHandler();
             attributeFileRead = false;
             CellexalLog.Log("Started reading the data folder at " + CellexalLog.FixFilePath(fullPath));
@@ -229,7 +230,6 @@ namespace CellexalVR.AnalysisLogic
                 ReadFacsFiles(fullPath);
                 ReadNumericalData(fullPath);
                 ReadFilterFiles(CellexalUser.UserSpecificFolder);
-                referenceManager.configManager.ReadConfigFiles(fullPath);
                 if (PhotonNetwork.isMasterClient)
                 {
                     referenceManager.configManager.MultiUserSynchronise();
