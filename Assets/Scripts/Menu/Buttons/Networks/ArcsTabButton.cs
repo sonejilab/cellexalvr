@@ -13,7 +13,6 @@ namespace CellexalVR.Menu.Buttons.Networks
         public override void SetHighlighted(bool highlight)
         {
             base.SetHighlighted(highlight);
-            Handler.HighlightNetworkSkeleton(highlight);
         }
         
         
