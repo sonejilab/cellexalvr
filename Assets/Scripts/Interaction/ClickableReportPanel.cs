@@ -39,7 +39,7 @@ namespace CellexalVR.Interaction
             Text = name;
             string[] parts = Text.Split('\\');
             Regex regex = new Regex("[a-zA-Z.-]");
-            string panelText = CellexalUser.DataSourceFolder + "\n" + regex.Replace(parts[parts.Length - 1], "");
+            string panelText = CellexalUser.DatasetName + "\n" + regex.Replace(parts[parts.Length - 1], "");
             textMesh.text = panelText;
 
             //NameOfThing = name;

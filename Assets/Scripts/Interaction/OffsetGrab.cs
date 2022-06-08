@@ -30,9 +30,21 @@ namespace CellexalVR.Interaction
 
         protected override void OnSelectEntering(SelectEnterEventArgs args)
         {
+            if (savedInteractor != null)
+            {
+                var savedController = savedInteractor.transform.GetComponentInParent<ActionBasedController>();
+                var argsController = args.interactorObject.transform.GetComponentInParent<ActionBasedController>();
+                if (savedController != null && savedController == argsController)
+                {
+                    // 2 interactors on the same controller grabbing, ignore this second one.
+                    return;
+                }
+            }
             base.OnSelectEntering(args);
             if (scaleGrab && base.interactorsSelecting.Count == 2)
             {
+
+
                 oldTrackposition = base.trackPosition;
                 base.trackPosition = false;
                 base.trackRotation = false;
@@ -84,6 +96,10 @@ namespace CellexalVR.Interaction
                 scaleGrab.firstInteractor.GetAttachTransform(args.interactableObject).transform.rotation = transform.rotation;
                 scaleGrab.secondInteractor.GetAttachTransform(args.interactableObject).transform.position = transform.position;
                 scaleGrab.secondInteractor.GetAttachTransform(args.interactableObject).transform.rotation = transform.rotation;
+            }
+            else
+            {
+                savedInteractor = null;
             }
             base.OnSelectExiting(args);
         }

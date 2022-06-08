@@ -54,7 +54,7 @@ namespace CellexalVR.General
                 if (value.Equals(""))
                     return;
                 username = value.ToLower();
-                UpdateUserSpecificFolder(username, DataSourceFolder);
+                UpdateUserSpecificFolder(username, DatasetName);
                 CellexalEvents.UsernameChanged.Invoke();
             }
         }
@@ -62,7 +62,16 @@ namespace CellexalVR.General
         /// <summary>
         /// The full path to the folder containing the source data that we are currently working on.
         /// </summary>
-        public static string DataSourceFolder
+        /// 
+        public static string DatasetFullPath
+        {
+            get => Path.Combine(Directory.GetCurrentDirectory(), "Data", dataFolder);
+        }
+
+        /// <summary>
+        /// The name of the dataset we are working on.
+        /// </summary>
+        public static string DatasetName
         {
             get
             {
@@ -82,7 +91,7 @@ namespace CellexalVR.General
         /// </summary>
         private static void UpdateUserSpecificFolder(string username, string dataFolder)
         {
-            if (Username == "" || DataSourceFolder == "")
+            if (Username == "" || DatasetName == "")
             {
                 return;
             }
