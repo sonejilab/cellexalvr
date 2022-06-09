@@ -23,6 +23,9 @@ namespace CellexalVR.Interaction
         private int layerMask;
         private float clickStartTime;
 
+        private bool triggerClick = false;
+        private bool triggerUp = false;
+
         private void Start()
         {
 
@@ -55,10 +58,12 @@ namespace CellexalVR.Interaction
             if (correctModel)
             {
                 Raycast();
+                triggerClick = false;
+                triggerUp = false;
             }
         }
 
-        private void Raycast(bool triggerClick = false, bool triggerUp = false)
+        private void Raycast()
         {
             raycastingSource = referenceManager.rightLaser.transform;
             Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward),
@@ -111,12 +116,12 @@ namespace CellexalVR.Interaction
 
         private void OnTriggerClick()
         {
-            Raycast(triggerClick: true);
+            triggerClick = true;
         }
 
         private void OnTriggerUp()
         {
-            Raycast(triggerUp: true);
+            triggerUp = true;
         }
 
         private void HandleHitGeneExpressionHistogram(Vector3 hit)
@@ -144,7 +149,7 @@ namespace CellexalVR.Interaction
         private void HandleClickUpGeneExpressionHistogram(Vector3 hit)
         {
             int hitIndex = (int)(hit.x * legendManager.geneExpressionHistogram.NumberOfBars);
-            if (legendManager.geneExpressionHistogram.enabled)
+            if (legendManager.geneExpressionHistogram.selectedArea.activeSelf)
             {
                 legendManager.geneExpressionHistogram.DeactivateSelectedArea();
                 referenceManager.multiuserMessageSender.SendMessageDeactivateSelectedArea();

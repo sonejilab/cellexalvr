@@ -531,7 +531,7 @@ namespace CellexalVR.Multiuser
             {
                 if (labelsToAddQueue.Count == 0)
                 {
-                    StartCoroutine(SendSelectionAfterDelay(1f));
+                    StartCoroutine(SendSelectionAfterDelay(0.5f));
                 }
                 LabelsToSendLater newGroupToQueue = new LabelsToSendLater(graphName, newGroup, color);
                 newGroupToQueue.labels.Add(label);
@@ -561,7 +561,7 @@ namespace CellexalVR.Multiuser
             {
                 if (labelsToRemoveQueue.Count == 0)
                 {
-                    StartCoroutine(SendRemoveFromSelectionAfterDelay(1f));
+                    StartCoroutine(SendRemoveFromSelectionAfterDelay(0.5f));
                 }
                 LabelsToSendLater newGroupToQueue = new LabelsToSendLater(graphName, -1, Color.white);
                 newGroupToQueue.labels.Add(label);

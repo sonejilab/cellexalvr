@@ -287,7 +287,7 @@ namespace CellexalVR.AnalysisObjects
                         tabButtons[i].GetComponentInChildren<TextMeshPro>().text = next.name;
                         next = temp;
                     }
-                    if (tabData[i].name == geneName)
+                    if (tabData[i] != null && tabData[i].name == geneName)
                     {
                         SwitchToTab(i);
                     }
@@ -532,17 +532,17 @@ namespace CellexalVR.AnalysisObjects
                 {
                     sum += data.heightsInt[i];
                 }
-                highlightAreaInfoText.text = $"x: [{minX}, {maxX}]\ny sum: {sum}\ny mean: {mean}\ny median: {median}";
+                text.text = $"x: [{minX}, {maxX}]\ny sum: {sum}\ny mean: {mean}\ny median: {median}";
             }
             else
             {
                 if (DesiredYAxisMode == YAxisMode.Linear)
                 {
-                    highlightAreaInfoText.text = $"x: {minX}\ny: {data.heightsInt[minX]}";
+                    text.text = $"x: {minX}\ny: {data.heightsInt[minX]}";
                 }
                 else
                 {
-                    highlightAreaInfoText.text = $"x: {minX}\ny: {Math.Log(data.heightsInt[minX] + 1)}";
+                    text.text = $"x: {minX}\ny: {Math.Log(data.heightsInt[minX] + 1)}";
                 }
             }
         }
