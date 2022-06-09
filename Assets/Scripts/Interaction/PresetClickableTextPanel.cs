@@ -40,7 +40,7 @@ namespace CellexalVR.Interaction
                 else if (type == Definitions.Measurement.ATTRIBUTE)
                 {
                     referenceManager.cellManager.ColorByAttribute(nameOfThing, true);
-                    referenceManager.multiuserMessageSender.SendMessageColorByAttribute(nameOfThing, true);
+                    referenceManager.multiuserMessageSender.SendMessageColorByAttribute(nameOfThing, true, 0);
                 }
                 else if (type == Definitions.Measurement.FACS)
                 {

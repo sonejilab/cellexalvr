@@ -363,11 +363,11 @@ namespace CellexalVR.Multiuser
         //    coordinator.photonView.RPC("RecieveMessageColorGraphsByPreviousExpression", PhotonTargets.Others, geneName);
         //}
 
-        public void SendMessageColorByAttribute(string attributeType, bool colored)
+        public void SendMessageColorByAttribute(string attributeType, bool colored, int colIndex)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
-            coordinator.photonView.RPC("RecieveMessageColorByAttribute", PhotonTargets.Others, attributeType, colored);
+            coordinator.photonView.RPC("RecieveMessageColorByAttribute", PhotonTargets.Others, attributeType, colored, colIndex);
         }
 
         public void SendMessageColorByAttributePointCloud(string attributeType, bool colored)

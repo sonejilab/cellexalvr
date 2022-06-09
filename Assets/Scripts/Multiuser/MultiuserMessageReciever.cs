@@ -382,11 +382,11 @@ namespace CellexalVR.Multiuser
         //}
 
         [PunRPC]
-        public void RecieveMessageColorByAttribute(string attributeType, bool toggle)
+        public void RecieveMessageColorByAttribute(string attributeType, bool toggle, int colIndex)
         {
             CellexalLog.Log("Recieved message to " + (toggle ? "toggle" : "untoggle") + " all graphs by attribute " +
                             attributeType);
-            referenceManager.cellManager.ColorByAttribute(attributeType, toggle);
+            referenceManager.cellManager.ColorByAttribute(attributeType, toggle, colIndex: colIndex);
             var attributeButton = referenceManager.attributeSubMenu.FindButton(attributeType);
             attributeButton.ToggleOutline(toggle);
             attributeButton.GetComponent<ColorByAttributeButton>().colored = toggle;

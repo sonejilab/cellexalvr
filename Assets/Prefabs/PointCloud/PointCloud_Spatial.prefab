@@ -385,7 +385,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_InteractionLayers:
     m_Bits: 1
-  m_SelectMode: 0
+  m_SelectMode: 1
   m_CustomReticle: {fileID: 0}
   m_FirstHoverEntered:
     m_PersistentCalls:
@@ -481,7 +481,7 @@ MonoBehaviour:
   m_ForceGravityOnDetach: 0
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
-  scaleGrab: {fileID: 0}
+  scaleGrab: {fileID: 3838600011430942258}
   actionAsset: {fileID: 0}
   action: {fileID: 0}
   referenceManager: {fileID: 0}
