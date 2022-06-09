@@ -76,6 +76,7 @@ namespace CellexalVR.Spatial
         public async Task<ChunkManager> GenerateGraphMesh(Graph graph)
         {
             ChunkManager chunkManager = Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
+            chunkManager.transform.parent = graph.convexHull.transform;
             chunkManager.transform.localScale = Vector3.one * 1.55f;
             int i = 0;
             List<Graph.GraphPoint> points = graph.points.Values.ToList();
@@ -162,7 +163,7 @@ namespace CellexalVR.Spatial
                     ChunkManager chunkManager = Instantiate(chunkManagerPrefab).GetComponent<ChunkManager>();
                     chunkManager.transform.parent = ReferenceManager.instance.brainModel.transform;
                     chunkManager.transform.localScale = Vector3.one * 1.55f;
-                    chunkManager.transform.localPosition = Vector3.zero;
+                    chunkManager.transform.localPosition = Vector3.one * 0.5f;
                     chunkManager.transform.localRotation = Quaternion.identity;
                     meshDict[key] = chunkManager;
                 }

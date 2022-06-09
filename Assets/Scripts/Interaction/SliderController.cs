@@ -22,6 +22,7 @@ namespace CellexalVR.Interaction
         [SerializeField] private float startValue;
         [SerializeField] private float minPos;
         [SerializeField] private float maxPos;
+        [SerializeField] private bool useTriggerToMove;
         private enum updateType
         {
             ABSOLUTE, RELATIVE
@@ -64,8 +65,27 @@ namespace CellexalVR.Interaction
 
         private void OnEnable()
         {
-            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
-            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
+            if (useTriggerToMove)
+            {
+                CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+                CellexalEvents.RightTriggerUp.AddListener(Release);
+            }
+            else
+            {
+                interactable.selectEntered.AddListener(OnGrabbed);
+                interactable.selectExited.AddListener(OnUngrabbed);
+            }
+        }
+
+        private void OnGrabbed(SelectEnterEventArgs args)
+        {
+            interactor = ReferenceManager.instance.rightController.transform;
+            shouldGetHandPosition = true;
+        }
+
+        private void OnUngrabbed(SelectExitEventArgs args)
+        {
+            Release();
         }
 
         private void OnTriggerClick()
@@ -78,7 +98,7 @@ namespace CellexalVR.Interaction
                 shouldGetHandPosition = true;
         }
 
-        private void OnTriggerUp()
+        private void Release()
         {
             shouldGetHandPosition = false;
 
@@ -124,7 +144,7 @@ namespace CellexalVR.Interaction
                 UpdateTextAndBar();
                 onValueChanged?.Invoke(currentValue);
 
-                
+
             }
         }
 

@@ -70,7 +70,6 @@ namespace CellexalVR.AnalysisObjects
             // highlightedMaterials = new Material[] {meshRenderer.materials[0], new Material(highlightMaterial)};
             // highlightedMaterials[1].SetFloat("_Thickness", 0.2f);
             // unhighlightedMaterials = new Material[] {meshRenderer.materials[0], new Material(normalMaterial)};
-            this.transform.localScale = Vector3.zero;
             CellexalEvents.ScriptFinished.AddListener(() => removable = true);
             CellexalEvents.ScriptRunning.AddListener(() => removable = false);
             referenceManager.graphManager.AddNetwork(this);
@@ -313,9 +312,7 @@ namespace CellexalVR.AnalysisObjects
                 transform.rotation = graph.rotation;
                 transform.position += transform.forward * 0.3f;
             }
-
             transform.DOScale(Vector3.one, animationTime + 0.3f).SetEase(Ease.OutBounce).OnComplete(() => OnShowComplete());
-
         }
 
         /// <summary

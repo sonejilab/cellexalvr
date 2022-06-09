@@ -14,12 +14,8 @@ namespace CellexalVR.Spatial
     public class HistoImageHandler : MonoBehaviour
     {
         public static HistoImageHandler instance;
-
-        public HistoImage slicePrefab;
-        public List<HistoImage> images = new List<HistoImage>();
+        [HideInInspector] public List<HistoImage> images = new List<HistoImage>();
         public Dictionary<string, List<HistoImage>> imageDict;
-
-        public GameObject parentPrefab;
 
         private void Awake()
         {
@@ -42,21 +38,6 @@ namespace CellexalVR.Spatial
             }
         }
 
-        /// <summary>
-        /// Gather your images to original positions.
-        /// </summary>
-        private void GatherImages()
-        {
-            foreach (KeyValuePair<string, List<HistoImage>> kvp in imageDict)
-            {
-                var parent = GameObject.Instantiate(parentPrefab);
-                parent.gameObject.name = kvp.Key;
-                foreach (HistoImage im in kvp.Value)
-                {
-                    im.transform.parent = parent.transform;
-                }
-            }
-        }
 
         /// <summary>
         /// Add new image to the handler.

@@ -45,7 +45,6 @@ namespace CellexalVR.Tools
 
         private void OnTriggerClick()
         {
-            // Open XR
             if (controllerInside)
             {
                 if (objectToDelete == null) return;

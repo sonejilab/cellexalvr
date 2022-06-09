@@ -221,7 +221,7 @@ namespace CellexalVR.AnalysisLogic
 
             if (!ScarfManager.instance.scarfActive)
             {
-                yield return StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
+                StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
                 attributeReader = gameObject.AddComponent<AttributeReader>();
                 attributeReader.referenceManager = referenceManager;
                 StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
@@ -235,8 +235,8 @@ namespace CellexalVR.AnalysisLogic
                     referenceManager.configManager.MultiUserSynchronise();
                 }
 
-                CellexalEvents.GraphsLoaded.Invoke();
             }
+            CellexalEvents.GraphsLoaded.Invoke();
         }
 
         private void UpdateSelectionToolHandler()

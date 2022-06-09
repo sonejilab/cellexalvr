@@ -37,10 +37,10 @@ namespace CellexalVR.Menu.Buttons.General
 
         public void StartVideo()
         {
-            referenceManager.helpVideoManager.videoCanv.SetActive(true);
-            referenceManager.helpVideoManager.GetComponent<PlayVideo>().StartVideo(url, audioClip);
-            infoMenu.SetActive(false);
-            Exit();
+            //referenceManager.helpVideoManager.videoCanv.SetActive(true);
+            //referenceManager.helpVideoManager.GetComponent<PlayVideo>().StartVideo(url, audioClip);
+            //infoMenu.SetActive(false);
+            //Exit();
         }
 
         public void StopVideo()

@@ -1002,7 +1002,6 @@ namespace CellexalVR.AnalysisObjects
 
             var skeleton = await MeshGenerator.instance.GenerateGraphMesh(this);
             skeleton.SmoothMesh();
-            skeleton.transform.parent = convexHull.transform;
         }
 
         /// <summary>

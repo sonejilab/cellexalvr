@@ -245,7 +245,9 @@ namespace CellexalVR.AnalysisLogic
             int layoutSeed)
         {
             NetworkCenter network = Instantiate(networkCenterPrefab);
+            var scale = network.transform.localScale;
             network.transform.parent = handler.gameObject.transform;
+            network.transform.localScale = scale;
             network.transform.localPosition = position;
             network.referenceManager = referenceManager;
             handler.AddNetwork(network);

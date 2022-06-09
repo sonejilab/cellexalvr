@@ -71,15 +71,6 @@ namespace CellexalVR.MarchingCubes
             }
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                SmoothMesh();
-            }
-        }
-
-
         public void SmoothMesh(int iterations = 1)
         {
             foreach (MeshFilter mf in GetComponentsInChildren<MeshFilter>())
@@ -218,7 +209,7 @@ namespace CellexalVR.MarchingCubes
                 c.updateTriangles();
                 MeshFilter mf = c.GetComponent<MeshFilter>();
                 //color.a = 1;
-                //c.GetComponent<Renderer>().material.color = color;
+                c.GetComponent<Renderer>().material.color = color;
                 mf.mesh.RecalculateBounds();
                 mf.mesh.RecalculateNormals();
                 float scale = 1f / transform.localScale.x;

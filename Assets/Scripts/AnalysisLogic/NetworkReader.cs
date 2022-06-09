@@ -2,6 +2,7 @@
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
+using CellexalVR.Spatial;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -129,12 +130,13 @@ namespace CellexalVR.AnalysisLogic
                         yield break;
                     }
                     graph.CreateGraphSkeleton(false);
-                    while (!graph.convexHull.activeSelf)
+                    while (MeshGenerator.instance.creatingMesh)
                     {
                         yield return null;
                     }
 
                     var skeleton = graph.convexHull;
+                    networkHandler = skeleton.GetComponent<NetworkHandler>();
                     if (skeleton == null)
                     {
                         CellexalError.SpawnError("Error when generating networks",
@@ -146,7 +148,6 @@ namespace CellexalVR.AnalysisLogic
                     }
 
                     CellexalLog.Log("Successfully created convex hull of " + graphName);
-                    networkHandler = skeleton.GetComponent<NetworkHandler>();
                     foreach (BoxCollider graphCollider in graph.GetComponents<BoxCollider>())
                     {
                         BoxCollider newCollider = networkHandler.gameObject.AddComponent<BoxCollider>();
@@ -334,7 +335,6 @@ namespace CellexalVR.AnalysisLogic
             }
 
             networkHandler.CreateNetworkAnimation(graph.transform);
-
             CellexalEvents.NetworkCreated.Invoke();
         }
 

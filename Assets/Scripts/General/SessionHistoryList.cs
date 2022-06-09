@@ -185,32 +185,18 @@ namespace CellexalVR.General
 
             prefabInstance.listNodes.Clear();
             prefabInstance.sessionHistoryListNodes.Clear();
-
             PanelRaycaster panelRaycaster = prefabInstance.GetComponentInParent<PanelRaycaster>();
-
-            // generate new nodes
             for (int i = 0; i < numberOfPanels; ++i)
             {
                 GameObject newPanel =
                     Instantiate(prefabInstance.listNodePrefab, prefabInstance.transform);
                 newPanel.SetActive(true);
-                // newPanel.transform.parent = prefabInstance.listNodesParent.transform;
-                // get the child components
                 ClickableHistoryPanel historyPanel = newPanel.GetComponentInChildren<ClickableHistoryPanel>();
-                // add the components to the lists
                 prefabInstance.listNodes.Add(newPanel);
                 prefabInstance.sessionHistoryListNodes.Add(historyPanel);
-
-                // assign meshes
-                //Mesh previousSearchesListNodeMesh = new Mesh();
-                //correlatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
-                //anticorrelatedPanel.GetComponent<MeshFilter>().sharedMesh = quadPrefab;
-                // assign materials
                 historyPanel.GetComponent<MeshRenderer>().sharedMaterial = panelRaycaster.keyNormalMaterial;
-
                 newPanel.gameObject.name = "History List Node " + (i + 1);
                 newPanel.transform.localPosition = Vector3.zero;
-                // assign positions
                 KeyboardItem historyItem = historyPanel.GetComponentInParent<KeyboardItem>();
                 int keyboardPosY = numberOfPanels - i - 1;
                 historyItem.position = new Vector2Int(-22, keyboardPosY);
