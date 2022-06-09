@@ -1136,7 +1136,6 @@ namespace CellexalVR.AnalysisObjects
                 BooleanExpression.Expr tempExpr = expr;
                 expr = new BooleanExpression.OrExpr(tempExpr, new BooleanExpression.AttributeExpr(attributes[i], true));
             }
-
             StartCoroutine(CreateSubgraphsCoroutine(expr, attributes, graphManager.originalGraphs, subGraphName));
         }
 
@@ -1173,7 +1172,7 @@ namespace CellexalVR.AnalysisObjects
             subGraph.tag = "SubGraph";
 
             g.CreateGraphSkeleton(true);
-            while (g.convexHull.activeSelf == false)
+            while (MeshGenerator.instance.creatingMesh)
             {
                 yield return null;
             }
@@ -1183,8 +1182,6 @@ namespace CellexalVR.AnalysisObjects
             skeleton.transform.localPosition = Vector3.zero;
 
             List<Cell> subset = referenceManager.cellManager.SubSet(expr);
-            //Graph graph = g;
-
             foreach (Cell cell in subset)
             {
                 var point = g.FindGraphPoint(cell.Label).Position;
@@ -1212,11 +1209,8 @@ namespace CellexalVR.AnalysisObjects
                 print($"{attributeIndex}, {attribute}");
                 referenceManager.cellManager.ColorByAttribute(attribute, true, true, attributeIndex);
             }
-
             graphManager.Graphs.Add(subGraph);
             graphManager.attributeSubGraphs.Add(subGraph);
-            // string[] axes = g.axisNames.ToArray();
-            // AddAxes(subGraph, axes);
             if (g.hasVelocityInfo)
             {
                 referenceManager.velocitySubMenu.CreateButton(CellexalUser.DatasetFullPath + @"\" +

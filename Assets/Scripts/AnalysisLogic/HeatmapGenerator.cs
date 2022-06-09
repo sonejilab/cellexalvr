@@ -55,9 +55,7 @@ namespace CellexalVR.AnalysisLogic
             string heatmapNameLastPart = words[words.Length - 1];
             string directory = (CellexalUser.UserSpecificFolder + "/Heatmap/" + heatmapNameLastPart).FixFilePath();
             CellexalLog.Log("Loading old heatmap from file " + directory);
-            // the important parts in the GenerateHeatmapRoutine to            build the heatmap ? !
             Heatmap heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
-
             List<Graph.GraphPoint> selection = referenceManager.inputReader.ReadSelectionFile(fromSelectionFile, false);
             heatmap.Init();
             heatmap.transform.parent = transform;
