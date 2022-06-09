@@ -281,10 +281,14 @@ namespace CellexalVR.General
 
             using (StreamWriter sw = new StreamWriter(metaCellFile))
             {
+                string firstLine = lines[0];
+                foreach (string key in annotatedPoints.Keys)
+                {
+                    firstLine += $"\t myGroups@{key}";
+                }
+                sw.WriteLine(firstLine);
                 foreach (KeyValuePair<string, List<string>> kvp in annotatedPoints)
                 {
-                    string firstLine = lines[0] + "\t" + "myGroups@" + kvp.Key;
-                    sw.WriteLine(firstLine);
                     var annotatedCellIDs = kvp.Value;
                     for (int i = 1; i < lines.Count; i++)
                     {
@@ -292,7 +296,9 @@ namespace CellexalVR.General
                         string[] words = line.Split('\t');
                         string cellID = words[0];
                         int inSet = annotatedCellIDs.Contains(cellID) ? 1 : 0;
-                        sw.WriteLine(line + '\t' + inSet);
+                        line += $"\t{inSet}";
+                        lines[i] = line;
+                        sw.WriteLine(line);
                     }
 
                 }
