@@ -644,8 +644,8 @@ namespace CellexalVR.Multiuser
             }
         }
 
-        [PunRPC]
-        public void ReciveMessageToggleAnnotationFile(string path, bool toggle)
+        [PunRPC] 
+        public void RecieveMessageToggleAnnotationFile(string path, bool toggle)
         {
             referenceManager.annotationManager.ToggleAnnotationFile(path, toggle);
             SelectAnnotationButton button = referenceManager.selectionFromPreviousMenu.FindAnnotationButton(path);
@@ -655,7 +655,7 @@ namespace CellexalVR.Multiuser
 
 
         [PunRPC]
-        public void ReciveMessageToggleSelectionFile(string path)
+        public void RecieveMessageToggleSelectionFile(string path)
         {
             referenceManager.inputReader.ReadSelectionFile(path);
             SelectionFromPreviousButton button = referenceManager.selectionFromPreviousMenu.FindSelectionButton(path);
