@@ -12482,7 +12482,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -1007923611405979911, guid: 44f1fef9f9538ee448393c70fa398ea0, type: 2}
+  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14788,7 +14788,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -1007923611405979911, guid: 44f1fef9f9538ee448393c70fa398ea0, type: 2}
+  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -16418,7 +16418,7 @@ BoxCollider:
   m_GameObject: {fileID: 1507566150067650}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 5.5, y: 5.5, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -16464,7 +16464,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: d7343a5bbd37d3e4cb1dbd03a409d00d, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -30908,7 +30908,7 @@ BoxCollider:
   m_GameObject: {fileID: 980279655097732716}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1.3922125, y: 1.6373956, z: 10.728225}
   m_Center: {x: 0.0039874874, y: 0.3138697, z: -4.3641148}
@@ -32404,7 +32404,7 @@ BoxCollider:
   m_GameObject: {fileID: 1683170878314643385}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 0.53681874, y: 6.06, z: 0.15668343}
   m_Center: {x: 0.0031314169, y: 1.03, z: -0.0041835206}
@@ -32465,6 +32465,7 @@ MonoBehaviour:
   startValue: 0.3
   minPos: -0.5
   maxPos: 0.5
+  useTriggerToMove: 1
   type: 0
   slideType: 0
   currentValue: 0
@@ -33204,7 +33205,7 @@ Transform:
   m_GameObject: {fileID: 2237591050712066032}
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0.5929275, y: 0.014004664, z: 0.0005156584}
-  m_LocalScale: {x: 1.2273096, y: 0.021661941, z: 1.2800413}
+  m_LocalScale: {x: 1.2273096, y: 0.0174034, z: 1.028406}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2024041592064328976}
