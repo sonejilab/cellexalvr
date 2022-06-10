@@ -482,6 +482,7 @@ namespace CellexalVR.AnalysisObjects
                     collider.size = node.size;
                 }
             }
+            newGraph.GetComponent<GraphInteract>().RegisterColliders();
 
             // if (slice?.LODGroupClusters[0]?.Count > 0)
             // {

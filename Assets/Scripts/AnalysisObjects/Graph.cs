@@ -1001,6 +1001,7 @@ namespace CellexalVR.AnalysisObjects
             }
 
             var skeleton = await MeshGenerator.instance.GenerateGraphMesh(this);
+            skeleton.GetComponentInChildren<MeshRenderer>().material.color = new Color(1f, 1f, 1f, 0.1f);
             skeleton.SmoothMesh();
         }
 

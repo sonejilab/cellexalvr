@@ -1,6 +1,7 @@
 ﻿using AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.Spatial;
 using System;
 using System.Collections;
@@ -187,12 +188,7 @@ namespace CellexalVR.AnalysisLogic
                 // If high quality mesh is used. Use LOD groups to swap to low q when further away.
                 // Improves performance a lot when analysing larger graphs.
                 int n = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
-                StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
-
-                while (referenceManager.graphGenerator.isCreating)
-                {
-                    yield return null;
-                }
+                yield return StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
 
                 if (nrOfLODGroups > 1)
                 {

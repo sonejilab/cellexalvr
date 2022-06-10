@@ -70,7 +70,7 @@ Material:
     - _AlphaTest: 1
     - _BumpScale: 1
     - _Clipping: 2
-    - _Culling: 1
+    - _Culling: 0
     - _Cutoff: 0.504
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -105,6 +105,6 @@ Material:
     m_Colors:
     - _Color: {r: 0, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 12.54902, g: 28.611765, b: 32, a: 1}
-    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 0.21176471}
     - _Tint: {r: 0, g: 0, b: 0, a: 0.1764706}
   m_BuildTextureStacks: []
