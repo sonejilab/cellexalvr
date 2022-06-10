@@ -1206,7 +1206,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 // int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(attribute, (s1, s2) => s1.ToLower() == s2.ToLower());
                 int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(attribute);
-                print($"{attributeIndex}, {attribute}");
                 referenceManager.cellManager.ColorByAttribute(attribute, true, true, attributeIndex);
             }
             graphManager.Graphs.Add(subGraph);

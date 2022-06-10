@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4792838495551032}
   - component: {fileID: 33350529180476388}
   - component: {fileID: 23423498432608762}
-  - component: {fileID: 54438818171834790}
   m_Layer: 11
   m_Name: EmptySkeletonPrefab
   m_TagString: Subgraph
@@ -84,19 +83,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &54438818171834790
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1496824086956574}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
