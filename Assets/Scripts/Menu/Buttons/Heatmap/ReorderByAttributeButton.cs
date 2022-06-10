@@ -31,7 +31,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
             }
             else
             {
-                heatmapGenerator.BuildTexture(heatmap.selection, "", heatmap);
+                heatmapGenerator.BuildTexture(heatmap.selection, "", heatmap, false);
             }
         }
     }

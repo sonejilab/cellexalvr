@@ -62,6 +62,7 @@ namespace CellexalVR.AnalysisObjects
         [HideInInspector] public bool buildingTexture = false;
         [HideInInspector] public string[] genes;
         public HeatmapLayout layout;
+        public Vector3 startPosition;
 
         #endregion region
 
@@ -71,7 +72,6 @@ namespace CellexalVR.AnalysisObjects
         private MultiuserMessageSender multiuserMessageSender;
         private HeatmapGenerator heatmapGenerator;
         // For creation animation
-        private Vector3 startPosition;
 
         // Minimizing
         private Vector3 originalPos;
@@ -193,6 +193,7 @@ namespace CellexalVR.AnalysisObjects
         {
             transform.DOMove(startPosition, animationTime).SetEase(Ease.InCubic);
             transform.DOScale(Vector3.one * 2f, animationTime).SetEase(Ease.InCubic);
+            transform.DODynamicLookAt(2 * startPosition - new Vector3(0, 1.5f, 0), animationTime);
         }
 
         /// <summary>
@@ -536,7 +537,7 @@ namespace CellexalVR.AnalysisObjects
 
             orderedByAttribute = true;
 
-            StartCoroutine(heatmapGenerator.BuildTextureCoroutine(this));
+            StartCoroutine(heatmapGenerator.BuildTextureCoroutine(this, false));
         }
 
         /// <summary>
