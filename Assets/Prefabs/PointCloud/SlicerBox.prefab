@@ -230,6 +230,9 @@ MonoBehaviour:
   m_ForceGravityOnDetach: 0
   m_RetainTransformParent: 1
   m_AttachPointCompatibilityMode: 0
+  scaleGrab: {fileID: 0}
+  actionAsset: {fileID: 0}
+  action: {fileID: 0}
 --- !u!1 &39789371971664073
 GameObject:
   m_ObjectHideFlags: 0
@@ -1507,7 +1510,10 @@ MonoBehaviour:
   startValue: 0
   minPos: 0
   maxPos: 1
+  useTriggerToMove: 0
   type: 0
+  slideType: 0
+  currentValue: 0
 --- !u!114 &3205970723811420079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2756,7 +2762,10 @@ MonoBehaviour:
   startValue: 0
   minPos: 0
   maxPos: 1
+  useTriggerToMove: 0
   type: 0
+  slideType: 0
+  currentValue: 0
 --- !u!114 &5942058866671326997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6653,7 +6662,10 @@ MonoBehaviour:
   startValue: 0
   minPos: 0
   maxPos: 1
+  useTriggerToMove: 0
   type: 0
+  slideType: 0
+  currentValue: 0
 --- !u!114 &911923476548315702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6985,10 +6997,9 @@ MonoBehaviour:
   addSliceButton: {fileID: 774667369315919560}
   subtractSliceButton: {fileID: 8152350510859767660}
   nrOfSlices: 40
-  movableContent: {fileID: 6207144566641187431}
-  movableContent2: {fileID: 8780373371818709862}
-  movableContent3: {fileID: 2184389806240874906}
+  movableContent_meshCulling: {fileID: 6207144566641187431}
   currentAxis: 2
+  slicerBox: {fileID: 0}
 --- !u!54 &2222045814825867223
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7651,7 +7662,10 @@ MonoBehaviour:
   startValue: 0
   minPos: 0
   maxPos: 1
+  useTriggerToMove: 0
   type: 0
+  slideType: 0
+  currentValue: 0
 --- !u!114 &4331917579280882809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11016,7 +11030,10 @@ MonoBehaviour:
   startValue: 0
   minPos: 0
   maxPos: 1
+  useTriggerToMove: 0
   type: 0
+  slideType: 0
+  currentValue: 0
 --- !u!114 &6638739891252126063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12499,7 +12516,10 @@ MonoBehaviour:
   startValue: 0
   minPos: 0
   maxPos: 1
+  useTriggerToMove: 0
   type: 0
+  slideType: 0
+  currentValue: 0
 --- !u!114 &1403007467938545658
 MonoBehaviour:
   m_ObjectHideFlags: 0

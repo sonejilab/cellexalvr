@@ -675,7 +675,6 @@ namespace CellexalVR.DesktopUI
         public void SetDatasetSpecificProfile()
         {
             string currentProfile = profileDropdown.options[profileDropdown.value].text;
-            print($"{currentProfile}, {CellexalConfig.Config.ConfigDir}");
             if (CellexalUser.DatasetName == "" || currentProfile == "default")
             {
                 // no dataset loaded, or we are on the default profile

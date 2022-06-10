@@ -54,6 +54,8 @@ namespace CellexalVR.Spatial
 
         private void Awake()
         {
+            _requireToggleToClick = false;
+            touchPadPos.action.performed += OnTouchPadClick;
             imageHandler = GetComponent<GeoMXImageHandler>();
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
         }
