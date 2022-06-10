@@ -29,7 +29,7 @@ namespace CellexalVR.AnalysisLogic
         public bool GeneratingHeatmaps { get; private set; }
         public SolidBrush[] expressionColors;
         public SelectionManager selectionManager;
-
+        public Vector3[] startPositions;
 
         private Thread t;
         private Vector3 heatmapPosition;
@@ -78,6 +78,17 @@ namespace CellexalVR.AnalysisLogic
 
         void Awake()
         {
+            int posCount = 6;
+            startPositions = new Vector3[posCount];
+            double angleStep = (-2.2f * Mathf.PI) / (float)(posCount + 1);
+            double angle;
+            for (int i = 0; i < posCount; i++)
+            {
+                angle = -1.7f * Mathf.PI + angleStep + (float)i * angleStep;
+                Vector3 pos = new Vector3(Mathf.Cos((float)angle) * 2f, 1.5f, Mathf.Sin((float)angle) * 2f);
+                startPositions[i] = pos;
+            }
+
             t = null;
             heatmapPosition = heatmapPrefab.transform.position;
             selectionManager = referenceManager.selectionManager;
@@ -338,7 +349,7 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="selection">An array containing the <see cref="GraphPoint"/> that are in the heatmap</param>
         /// <param name="filepath">A path to the file containing the gene names</param>
-        public void BuildTexture(List<Graph.GraphPoint> selection, string filepath, Heatmap heatmap)
+        public void BuildTexture(List<Graph.GraphPoint> selection, string filepath, Heatmap heatmap, bool newHeatmap = true)
         {
             if (selection == null)
             {
@@ -436,7 +447,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             heatmap.orderedByAttribute = false;
-            StartCoroutine(BuildTextureCoroutine(heatmap));
+            StartCoroutine(BuildTextureCoroutine(heatmap, newHeatmap));
         }
 
         /// <summary>
@@ -497,7 +508,7 @@ namespace CellexalVR.AnalysisLogic
         /// Coroutine that starts a thread and generates the heatmap.
         /// </summary>
         /// <param name="heatmap"></param>
-        public IEnumerator BuildTextureCoroutine(Heatmap heatmap)
+        public IEnumerator BuildTextureCoroutine(Heatmap heatmap, bool newHeatmap = true)
         {
             heatmap.buildingTexture = true;
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
@@ -723,9 +734,15 @@ namespace CellexalVR.AnalysisLogic
             stopwatch.Stop();
             CellexalLog.Log("Finished building a heatmap texture in " + stopwatch.Elapsed.ToString());
             heatmap.buildingTexture = false;
-            heatmap.CreateHeatmapAnimation();
 
-            heatmapsCreated++;
+            if (newHeatmap)
+            {
+                heatmap.startPosition = startPositions[heatmapsCreated % 6];
+                heatmapsCreated++;
+                heatmap.CreateHeatmapAnimation();
+            }
+
+
             CellexalEvents.HeatmapCreated.Invoke();
             CellexalEvents.ScriptFinished.Invoke();
             referenceManager.notificationManager.SpawnNotification("Heatmap finished.");
