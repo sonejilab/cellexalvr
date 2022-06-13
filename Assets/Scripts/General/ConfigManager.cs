@@ -172,7 +172,7 @@ namespace CellexalVR.General
             configPaths = new List<string>();
             ReadConfigFiles(configDir);
             CellexalConfig.Config = CellexalConfig.savedConfigs["default"];
-            CellexalEvents.ConfigLoaded.Invoke();
+            //CellexalEvents.ConfigLoaded.Invoke();
         }
 
         public void ReadConfigFiles(string folderPath)

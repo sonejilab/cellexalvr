@@ -548,6 +548,12 @@ namespace CellexalVR.Multiuser
                 SendMessageSelectedAddMany(labelsToSend.graphName, labelsToSend.labels.ToArray(), labelsToSend.newGroup, labelsToSend.color);
             } while (labelsToAddQueue.Count > 0);
         }
+        public void SendMessageSelectedAddMany(string graphName, string[] labels, int newGroup, Color color)
+        {
+            if (!multiplayer) return;
+            coordinator.photonView.RPC("RecieveMessageAddSelectMany", PhotonTargets.Others, graphName, labels, newGroup,
+                color.r, color.g, color.b);
+        }
 
         public void SendMessageSelectedRemove(string graphName, string label)
         {
@@ -567,12 +573,6 @@ namespace CellexalVR.Multiuser
                 newGroupToQueue.labels.Add(label);
                 labelsToRemoveQueue.Enqueue(newGroupToQueue);
             }
-        }
-        public void SendMessageSelectedAddMany(string graphName, string[] labels, int newGroup, Color color)
-        {
-            if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageAddSelectMany", PhotonTargets.Others, graphName, labels, newGroup,
-                color.r, color.g, color.b);
         }
 
         private IEnumerator SendRemoveFromSelectionAfterDelay(float delay)
