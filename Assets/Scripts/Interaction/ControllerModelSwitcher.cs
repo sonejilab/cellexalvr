@@ -217,22 +217,6 @@ namespace CellexalVR.Interaction
             CellexalLog.Log($"Device disconnected. Name: {device.name}, role: {device.characteristics}, manufacturer: {device.manufacturer}");
         }
 
-        /// <summary>
-        /// Used when starting the program.
-        /// It takes some time for steamvr and vrtk to set everything up, and for some time
-        /// these variables will be null because the components are not yet added to the gameobjects.
-        /// </summary>
-        /// <returns></returns>
-        internal bool Ready()
-        {
-            // Open XR
-            return true;
-            if (CrossSceneInformation.Spectator)
-                return true;
-            //return rightControllerBody.GetComponent<MeshFilter>() != null && rightControllerBody.GetComponent<Renderer>() != null
-            //     && leftControllerBody.GetComponent<MeshFilter>() != null && leftControllerBody.GetComponent<Renderer>() != null;
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.name.Equals("Menu Selecter Collider"))

@@ -181,8 +181,7 @@ namespace CellexalVR.Interaction
 
         private void Raycast(bool click = false)
         {
-            if (!CrossSceneInformation.Tutorial && !(CrossSceneInformation.Normal && controllerModelSwitcher.Ready() &&
-                !grabbingObject && !referenceManager.selectionToolCollider.IsSelectionToolEnabled() &&
+            if (!CrossSceneInformation.Tutorial && !(CrossSceneInformation.Normal && !grabbingObject && !referenceManager.selectionToolCollider.IsSelectionToolEnabled() &&
                 controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu))
                 return;
 

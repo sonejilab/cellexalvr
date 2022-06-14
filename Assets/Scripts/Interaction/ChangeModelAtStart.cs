@@ -31,10 +31,9 @@ namespace CellexalVR.Interaction
 
         IEnumerator ChangeModel()
         {
-            while (!modelSwitcher.Ready())
-            {
-                yield return new WaitForEndOfFrame();
-            }
+
+            yield return new WaitForEndOfFrame();
+
             //modelSwitcher.TrySetMeshes();
             CellexalEvents.ControllersInitiated.Invoke();
         }
