@@ -2900,7 +2900,7 @@ MonoBehaviour:
   background: {fileID: 8710106219542084685}
   startState: 1
   toggleAllButton: 0
-  layerName: Default
+  layerName: Default, Ignore Raycast, Water, TransparentFX, UI
 --- !u!1 &1931913973899047547
 GameObject:
   m_ObjectHideFlags: 0

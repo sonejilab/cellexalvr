@@ -35,10 +35,12 @@ namespace CellexalVR.Tools
             layerButtons = GetComponentsInChildren<ScreenshotLayerToggleButton>();
             foreach (ScreenshotLayerToggleButton button in layerButtons)
             {
-                if (button.layerName != "Background" && !button.toggleAllButton)
+                foreach (string layerName in button.layerNames)
                 {
-
-                    layersToRender.Add(button.layerName);
+                    if (layerName != "Background" && !button.toggleAllButton)
+                    {
+                        layersToRender.Add(layerName);
+                    }
                 }
             }
             snapShotCamera.cullingMask = LayerMask.GetMask(layersToRender.ToArray());
@@ -131,13 +133,6 @@ namespace CellexalVR.Tools
             foreach (ScreenshotLayerToggleButton button in layerButtons)
             {
                 button.CurrentState = toggle;
-            }
-
-            // first 8 layers are the built in ones. unity allows 32 layers max.
-            for (int i = 0; i < 8; i++)
-            {
-                string layerName = LayerMask.LayerToName(i);
-                ToggleLayerToCapture(layerName, toggle);
             }
         }
 

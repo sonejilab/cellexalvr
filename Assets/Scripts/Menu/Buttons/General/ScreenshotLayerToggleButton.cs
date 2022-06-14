@@ -1,4 +1,5 @@
 ﻿using CellexalVR.Menu.Buttons;
+using System.Linq;
 using UnityEngine;
 
 namespace Menu.Buttons.General
@@ -6,25 +7,28 @@ namespace Menu.Buttons.General
     public class ScreenshotLayerToggleButton : SliderButton
     {
         public bool toggleAllButton;
-        public string layerName;
-        protected override string Description => $"Toggle {layerName}";
+        public string[] layerNames;
+        protected override string Description => $"Toggle {string.Join(", ", layerNames)}";
         protected override void ActionsAfterSliding()
         {
             if (toggleAllButton)
             {
                 referenceManager.screenshotCamera.ToggleAllLayers(currentState);
             }
-            else if (layerName.Equals("Background"))
-            {
-                referenceManager.screenshotCamera.ToggleBackground(currentState);
-
-            }
             else
             {
-                referenceManager.screenshotCamera.ToggleLayerToCapture(layerName, currentState);
+                foreach (string layerName in layerNames)
+                {
+                    if (layerName == "Background")
+                    {
+                        referenceManager.screenshotCamera.ToggleBackground(currentState);
+                    }
+                    else
+                    {
+                        referenceManager.screenshotCamera.ToggleLayerToCapture(layerName, currentState);
+                    }
+                }
             }
         }
-        
-        
     }
 }

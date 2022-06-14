@@ -1147,7 +1147,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 4271117279524115948}
   m_maskType: 0
 --- !u!1 &3413427611781192762
@@ -2918,7 +2918,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916361739024411}
   m_maskType: 0
 --- !u!65 &6571916361739024408
@@ -3165,7 +3165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6571916361818764287
 Transform:
   m_ObjectHideFlags: 0
@@ -3714,7 +3714,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362126627517}
   m_maskType: 0
 --- !u!65 &6571916362126627490
@@ -3928,7 +3928,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362175139637}
   m_maskType: 0
 --- !u!65 &6571916362175139642
@@ -4140,7 +4140,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362185794027}
   m_maskType: 0
 --- !u!1 &6571916362188871879
@@ -4324,7 +4324,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362188871900}
   m_maskType: 0
 --- !u!65 &6571916362188871873
@@ -5116,7 +5116,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362370068611}
   m_maskType: 0
 --- !u!1 &6571916362426312612
@@ -5464,7 +5464,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362539566469}
   m_maskType: 0
 --- !u!1 &6571916362586996456
@@ -5648,7 +5648,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362586996453}
   m_maskType: 0
 --- !u!65 &6571916362586996458
@@ -6248,7 +6248,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362687697506}
   m_maskType: 0
 --- !u!65 &6571916362687697511
@@ -6462,7 +6462,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362738512093}
   m_maskType: 0
 --- !u!65 &6571916362738512066
@@ -6674,7 +6674,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362815337599}
   m_maskType: 0
 --- !u!1 &6571916362954209697
@@ -6856,7 +6856,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916362954209725}
   m_maskType: 0
 --- !u!1 &6571916362992550775
@@ -7110,7 +7110,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916363272469494}
   m_maskType: 0
 --- !u!1 &6571916363420525087
@@ -7294,7 +7294,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916363420525076}
   m_maskType: 0
 --- !u!65 &6571916363420525081
@@ -7506,7 +7506,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916363422438190}
   m_maskType: 0
 --- !u!1 &6571916363468731766
@@ -7966,7 +7966,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6571916363505325941}
   m_maskType: 0
 --- !u!1 &6571916363568928960
