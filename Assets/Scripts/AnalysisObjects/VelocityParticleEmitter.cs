@@ -217,11 +217,6 @@ namespace CellexalVR.AnalysisObjects
                     InvokeRepeating("DoEmit", 0f, ArrowEmitRate);
                 }
             }
-
-            if (graph.transform.hasChanged && transform.localScale != graph.transform.localScale)
-            {
-                transform.localScale = graph.transform.localScale;
-            }
         }
 
         private IEnumerator DoEmitCoroutine()

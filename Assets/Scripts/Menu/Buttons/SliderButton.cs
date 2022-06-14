@@ -43,6 +43,7 @@ namespace CellexalVR.Menu.Buttons
         private void Start()
         {
             currentState = startState;
+            slider.transform.localPosition = currentState ? rightSide.localPosition : leftSide.localPosition;
             UpdateColors();
         }
 
@@ -74,7 +75,7 @@ namespace CellexalVR.Menu.Buttons
             ActionsAfterSliding();
         }
 
-        protected virtual void MultiUserSynchronise() {}
+        protected virtual void MultiUserSynchronise() { }
 
         /// <summary>
         /// Actions to be performed once animation is complete.

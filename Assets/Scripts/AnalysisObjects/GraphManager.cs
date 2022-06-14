@@ -243,7 +243,7 @@ namespace CellexalVR.AnalysisObjects
             // string geneName = filePath.Replace(".txt", "");
 
             yield return StartCoroutine(ReadExpressions(filePath));
-            
+
 
             ColorAllGraphsByGeneExpression(featureName, expressionValues);
             PythonInterpreter.WriteToOutput(
@@ -511,17 +511,32 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         /// <param name="graphName"> The graph's name, or an empty string for any graph. </param>
         /// <returns> A reference to the graph, or null if no graph was found </returns>
-        public Graph FindGraph(string graphName)
+        public Graph FindGraph(string graphName, bool caseSensitive = false)
         {
             if (graphName == "" && Graphs.Count > 0)
             {
                 return Graphs[0];
             }
-            foreach (Graph g in Graphs)
+
+            if (!caseSensitive)
             {
-                if (g.GraphName == graphName)
+                foreach (Graph g in Graphs)
                 {
-                    return g;
+                    if (g.GraphName == graphName)
+                    {
+                        return g;
+                    }
+                }
+            }
+            else
+            {
+                graphName = graphName.ToLower();
+                foreach (Graph g in Graphs)
+                {
+                    if (g.GraphName.ToLower() == graphName)
+                    {
+                        return g;
+                    }
                 }
             }
             // no graph found

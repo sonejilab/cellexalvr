@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8454109894400497788}
   - component: {fileID: 9091372700342084824}
   - component: {fileID: 7596919644147155907}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_strap_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 3086321126695754237}
   - component: {fileID: 2239500461327678205}
   - component: {fileID: 5989594900856233852}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_rear_middle_inner_con_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 4420616373153477363}
   - component: {fileID: 7264211507405158632}
   - component: {fileID: 2081844668564413175}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_outer_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 8304148797404344905}
   - component: {fileID: 5051592123350555053}
   - component: {fileID: 1161656805768453124}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_middle_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -341,7 +341,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2775876457403682498}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,7 +376,7 @@ GameObject:
   - component: {fileID: 7478794305555171459}
   - component: {fileID: 611276002787339156}
   - component: {fileID: 1891408211653796587}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_rear_grip_con_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -459,7 +459,7 @@ GameObject:
   - component: {fileID: 5019202985586587882}
   - component: {fileID: 9189701734113780813}
   - component: {fileID: 5056595284254040601}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_middle_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -542,7 +542,7 @@ GameObject:
   - component: {fileID: 6199306554175455603}
   - component: {fileID: 1762612011359061678}
   - component: {fileID: 692369626198059096}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_front_front_con_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -625,7 +625,7 @@ GameObject:
   - component: {fileID: 2009114160292295211}
   - component: {fileID: 2699309370864692169}
   - component: {fileID: 2901671078395547121}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_B_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -708,7 +708,7 @@ GameObject:
   - component: {fileID: 3559640718178128990}
   - component: {fileID: 3048897989496021724}
   - component: {fileID: 6243896269964942589}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -791,7 +791,7 @@ GameObject:
   - component: {fileID: 8219088736246004570}
   - component: {fileID: 4094026546111542011}
   - component: {fileID: 3427421548695227070}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_front_half_ring_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -874,7 +874,7 @@ GameObject:
   - component: {fileID: 8981974834068130205}
   - component: {fileID: 3042135691996302170}
   - component: {fileID: 6562078736897232064}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_A_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -957,7 +957,7 @@ GameObject:
   - component: {fileID: 1205627063938321395}
   - component: {fileID: 4278487016934190006}
   - component: {fileID: 5616758409046314461}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_A_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1040,7 +1040,7 @@ GameObject:
   - component: {fileID: 599600803959711494}
   - component: {fileID: 7266956369625318799}
   - component: {fileID: 409589030930391298}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_system_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1124,7 +1124,7 @@ GameObject:
   - component: {fileID: 4264981872112342629}
   - component: {fileID: 6740621746713039688}
   - component: {fileID: 7102281557226904731}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_grip_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1220,7 +1220,7 @@ GameObject:
   - component: {fileID: 4142309605103302228}
   - component: {fileID: 2858897807857666843}
   - component: {fileID: 7267768696403553158}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_system_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1301,7 +1301,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3398046054206648751}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Decals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1347,7 +1347,7 @@ GameObject:
   - component: {fileID: 1066510772828277925}
   - component: {fileID: 1336459874379773715}
   - component: {fileID: 2476069676005760778}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_front_con_to_middle_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1431,7 +1431,7 @@ GameObject:
   - component: {fileID: 3761487103217389787}
   - component: {fileID: 8063103510666165413}
   - component: {fileID: 9190030148826257203}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_rear_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1525,7 +1525,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2435116233016734099}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1558,7 +1558,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 980998853932514827}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1600,7 +1600,7 @@ GameObject:
   - component: {fileID: 1167699171663671696}
   - component: {fileID: 3398865328962421265}
   - component: {fileID: 5029456469292642710}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_rear_grip_con_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1683,7 +1683,7 @@ GameObject:
   - component: {fileID: 5260132445201948917}
   - component: {fileID: 6895862439579074629}
   - component: {fileID: 8681350828253715263}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_outer_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1766,7 +1766,7 @@ GameObject:
   - component: {fileID: 4657037078645782014}
   - component: {fileID: 804483114022331169}
   - component: {fileID: 8576207399590374123}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_front_con_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1849,7 +1849,7 @@ GameObject:
   - component: {fileID: 1677897913709691885}
   - component: {fileID: 3126976496659211514}
   - component: {fileID: 9201198013730044979}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1933,7 +1933,7 @@ GameObject:
   - component: {fileID: 2407613349924440563}
   - component: {fileID: 753562489804550682}
   - component: {fileID: 6786995191475432934}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_touchpad_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2029,7 +2029,7 @@ GameObject:
   - component: {fileID: 373149519075242234}
   - component: {fileID: 3677210711478231274}
   - component: {fileID: 2712004202824223898}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_thumbpad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2112,7 +2112,7 @@ GameObject:
   - component: {fileID: 1808188004713789060}
   - component: {fileID: 8972282880198852026}
   - component: {fileID: 3199905638264449126}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_led
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2196,7 +2196,7 @@ GameObject:
   - component: {fileID: 4975843938428979812}
   - component: {fileID: 4029521374557667165}
   - component: {fileID: 6341282799078537476}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_trigger_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2292,7 +2292,7 @@ GameObject:
   - component: {fileID: 8840262948822067554}
   - component: {fileID: 3438554020902225894}
   - component: {fileID: 5818882357518797851}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_rear_middle_inner_con_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2375,7 +2375,7 @@ GameObject:
   - component: {fileID: 8276049130656184556}
   - component: {fileID: 8171830004621397283}
   - component: {fileID: 5655420213198089043}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_front_front_con_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2458,7 +2458,7 @@ GameObject:
   - component: {fileID: 8816341396187388795}
   - component: {fileID: 202188437099034382}
   - component: {fileID: 2333935213374813451}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_upper_ring_thicker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2541,7 +2541,7 @@ GameObject:
   - component: {fileID: 1144591329394328025}
   - component: {fileID: 2543036908526209015}
   - component: {fileID: 2535870110633550141}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_led
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2624,7 +2624,7 @@ GameObject:
   - component: {fileID: 8505473244144606941}
   - component: {fileID: 199976821087517992}
   - component: {fileID: 6402224204085732191}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_front_half_ring_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2707,7 +2707,7 @@ GameObject:
   - component: {fileID: 5618472707182262883}
   - component: {fileID: 5803822243521219057}
   - component: {fileID: 1692553944467064886}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_joystick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2790,7 +2790,7 @@ GameObject:
   - component: {fileID: 8212296396802863671}
   - component: {fileID: 3765353446652948909}
   - component: {fileID: 6859927930928720832}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2871,7 +2871,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4150267316246148138}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2913,7 +2913,7 @@ GameObject:
   - component: {fileID: 1176621326012396289}
   - component: {fileID: 1910724110090706529}
   - component: {fileID: 519228880543101784}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_joystick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2996,7 +2996,7 @@ GameObject:
   - component: {fileID: 883124953215854090}
   - component: {fileID: 4314647832137257375}
   - component: {fileID: 4061950935887974235}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_thumbpad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3079,7 +3079,7 @@ GameObject:
   - component: {fileID: 9052905641414870334}
   - component: {fileID: 4833315718784553506}
   - component: {fileID: 2825583676158758031}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_upper_ring_thicker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3162,7 +3162,7 @@ GameObject:
   - component: {fileID: 4511286419776959692}
   - component: {fileID: 4917659109713600284}
   - component: {fileID: 3781822858945180306}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_front_con_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3246,7 +3246,7 @@ GameObject:
   - component: {fileID: 7262409206290086986}
   - component: {fileID: 3749266284749768733}
   - component: {fileID: 6578350592987326871}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_trigger_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3342,7 +3342,7 @@ GameObject:
   - component: {fileID: 2978358547703941866}
   - component: {fileID: 8626623242632724597}
   - component: {fileID: 1557090352713406304}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3423,7 +3423,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4299993724756029376}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Knuckles_parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3458,7 +3458,7 @@ GameObject:
   - component: {fileID: 1958022566053725695}
   - component: {fileID: 7444230644518759299}
   - component: {fileID: 3795122945927416014}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_B_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3541,7 +3541,7 @@ GameObject:
   - component: {fileID: 3874471831553651559}
   - component: {fileID: 707817922518896258}
   - component: {fileID: 4342893158115080073}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_rear_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3624,7 +3624,7 @@ GameObject:
   - component: {fileID: 8598044336652505394}
   - component: {fileID: 2331716482661100415}
   - component: {fileID: 4978308803539099815}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_body_strap_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3705,7 +3705,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2428205923863128788}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Decals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3751,7 +3751,7 @@ GameObject:
   - component: {fileID: 7720732227198112911}
   - component: {fileID: 7554022920475740426}
   - component: {fileID: 8436311035054146105}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_front_con_to_middle_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3834,7 +3834,7 @@ GameObject:
   - component: {fileID: 8282718902658887279}
   - component: {fileID: 7592091368992253377}
   - component: {fileID: 8971693129890780343}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_grip_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3918,7 +3918,7 @@ GameObject:
   - component: {fileID: 6946135467926019718}
   - component: {fileID: 4730112102632355861}
   - component: {fileID: 7921564959296413863}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: r_touchpad_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}

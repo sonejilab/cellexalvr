@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 569149805364755186}
   - component: {fileID: 1436764542360628400}
   - component: {fileID: 2876612386729121703}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: laser_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 8294630111888502858}
   - component: {fileID: 7623792217637600134}
   - component: {fileID: 986534036229075878}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 1101007187971593542}
   - component: {fileID: 7229412751262611638}
   - component: {fileID: 3339996399619700079}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: front_ring_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 4631612911916727518}
   - component: {fileID: 4551168335210442114}
   - component: {fileID: 9138399422272596813}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: trigger_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -357,7 +357,7 @@ GameObject:
   - component: {fileID: 1110630217318176168}
   - component: {fileID: 5397097273114970300}
   - component: {fileID: 6275791019941141640}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: front_top_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -440,7 +440,7 @@ GameObject:
   - component: {fileID: 4405492311845048480}
   - component: {fileID: 4339273773797762151}
   - component: {fileID: 1763419161456560093}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: trigger_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -524,7 +524,7 @@ GameObject:
   - component: {fileID: 9115090722301463353}
   - component: {fileID: 1843449754904259564}
   - component: {fileID: 3945383244044946891}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -618,7 +618,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7765669110620422883}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Decals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -663,7 +663,7 @@ GameObject:
   - component: {fileID: 7061787856732373533}
   - component: {fileID: 4573424886826721768}
   - component: {fileID: 8957472371983340439}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: body_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -746,7 +746,7 @@ GameObject:
   - component: {fileID: 7050558692602068304}
   - component: {fileID: 2396026183905305437}
   - component: {fileID: 6214113260609224942}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: body_to_touchpad_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -829,7 +829,7 @@ GameObject:
   - component: {fileID: 7300750579399615278}
   - component: {fileID: 5203838601369786581}
   - component: {fileID: 7632685987853201271}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: body_to_touchpad_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -912,7 +912,7 @@ GameObject:
   - component: {fileID: 6627541465992331267}
   - component: {fileID: 2150402366066639817}
   - component: {fileID: 1471899896884658878}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bottom_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -995,7 +995,7 @@ GameObject:
   - component: {fileID: 3569188321536473431}
   - component: {fileID: 9129022441330010042}
   - component: {fileID: 116568678802234941}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: laser_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1078,7 +1078,7 @@ GameObject:
   - component: {fileID: 5175156453107106385}
   - component: {fileID: 3674401746456488130}
   - component: {fileID: 3804090109121931292}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: body_to_trigger_decal_thick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1161,7 +1161,7 @@ GameObject:
   - component: {fileID: 2637532828308680914}
   - component: {fileID: 3348839892800766625}
   - component: {fileID: 1357779356186497310}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bottom_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1244,7 +1244,7 @@ GameObject:
   - component: {fileID: 5047109131295612002}
   - component: {fileID: 5192560358806157676}
   - component: {fileID: 2020406720676810906}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: body_to_trigger_decal_thick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1327,7 +1327,7 @@ GameObject:
   - component: {fileID: 4342808586911195889}
   - component: {fileID: 7526445055484158139}
   - component: {fileID: 3131488385842686893}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1410,7 +1410,7 @@ GameObject:
   - component: {fileID: 450831922128591482}
   - component: {fileID: 3842163349062247793}
   - component: {fileID: 2216336913125042502}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: grip_button_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1493,7 +1493,7 @@ GameObject:
   - component: {fileID: 3168854275183072870}
   - component: {fileID: 2971234049543710970}
   - component: {fileID: 8946078344827536441}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: trigger_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1574,7 +1574,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4437993691452440063}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1609,7 +1609,7 @@ GameObject:
   - component: {fileID: 373548708818501961}
   - component: {fileID: 747248536581611328}
   - component: {fileID: 6109267398856389818}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: body_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1693,7 +1693,7 @@ GameObject:
   - component: {fileID: 8149049928205156695}
   - component: {fileID: 7995826120491616531}
   - component: {fileID: 8048321892989464331}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: trigger_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1789,7 +1789,7 @@ GameObject:
   - component: {fileID: 19366773910840299}
   - component: {fileID: 1399995199442728399}
   - component: {fileID: 3593652490351321826}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: grip_button_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1872,7 +1872,7 @@ GameObject:
   - component: {fileID: 4016329858227972896}
   - component: {fileID: 3344368267332411962}
   - component: {fileID: 4451109170224253979}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: gip_button_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1955,7 +1955,7 @@ GameObject:
   - component: {fileID: 4882203499921462147}
   - component: {fileID: 2570130383015174899}
   - component: {fileID: 1266939963334109781}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: fron_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2038,7 +2038,7 @@ GameObject:
   - component: {fileID: 6807917060097459154}
   - component: {fileID: 4361804821818272485}
   - component: {fileID: 2505086560795000237}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: front_top_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2122,7 +2122,7 @@ GameObject:
   - component: {fileID: 5970061842825892114}
   - component: {fileID: 4875280404755721018}
   - component: {fileID: 5763469154055839820}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad_cross_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2218,7 +2218,7 @@ GameObject:
   - component: {fileID: 496604161541294994}
   - component: {fileID: 2209708630906238313}
   - component: {fileID: 9158906919582339606}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: front_ring_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2299,7 +2299,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3765421499320154085}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2335,7 +2335,7 @@ GameObject:
   - component: {fileID: 2290098390470392962}
   - component: {fileID: 7285700036691001154}
   - component: {fileID: 4526003168632171028}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2432,7 +2432,7 @@ GameObject:
   - component: {fileID: 4220313221713411101}
   - component: {fileID: 3361990732646531766}
   - component: {fileID: 1061067324588343730}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad_cross_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2526,7 +2526,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5110203664414476175}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2564,7 +2564,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4902755095164345249}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: vive_tron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2599,7 +2599,7 @@ GameObject:
   - component: {fileID: 715018726522507688}
   - component: {fileID: 3178085757578070781}
   - component: {fileID: 4079560174062925214}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: fron_button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2682,7 +2682,7 @@ GameObject:
   - component: {fileID: 4820590849734030301}
   - component: {fileID: 4181731998745067956}
   - component: {fileID: 2949452714018945670}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: gip_button_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2765,7 +2765,7 @@ GameObject:
   - component: {fileID: 2849044852316870398}
   - component: {fileID: 8936098577394608232}
   - component: {fileID: 7972444406505771966}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad_cross
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2848,7 +2848,7 @@ GameObject:
   - component: {fileID: 6900139862560776320}
   - component: {fileID: 7243523508011935714}
   - component: {fileID: 8590945717467668251}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad_cross
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2929,7 +2929,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1884586956316593892}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2967,7 +2967,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7564630720148073056}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Decals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3013,7 +3013,7 @@ GameObject:
   - component: {fileID: 4892780513296747546}
   - component: {fileID: 3685256537843866816}
   - component: {fileID: 4195857462756993490}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: left_grip_button_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3109,7 +3109,7 @@ GameObject:
   - component: {fileID: 2757135346977774628}
   - component: {fileID: 7779509647831911870}
   - component: {fileID: 7836889040252100591}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad_to_menu_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3193,7 +3193,7 @@ GameObject:
   - component: {fileID: 8666338012055372147}
   - component: {fileID: 6561064952951279621}
   - component: {fileID: 7214417077238928360}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: left_grip_button_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3289,7 +3289,7 @@ GameObject:
   - component: {fileID: 7865743308107159925}
   - component: {fileID: 8665718493483598252}
   - component: {fileID: 3946496904112326390}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3372,7 +3372,7 @@ GameObject:
   - component: {fileID: 9104585618728349261}
   - component: {fileID: 953883504535373198}
   - component: {fileID: 7306177280491935713}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad_to_menu_decal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3455,7 +3455,7 @@ GameObject:
   - component: {fileID: 2751528630314974896}
   - component: {fileID: 5972678076856776881}
   - component: {fileID: 338124980048710769}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: touchpad
   m_TagString: Untagged
   m_Icon: {fileID: 0}

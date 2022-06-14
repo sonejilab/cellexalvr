@@ -20,6 +20,8 @@ namespace CellexalVR.AnalysisLogic
         public GameObject averageVelocityArrowPrefab;
         [HideInInspector]
         public List<Material> averageVelocityMaterials = new List<Material>();
+        [HideInInspector]
+        public bool isCreating = false;
 
         private float frequency = 1f;
         private float speed = 8f;
@@ -74,7 +76,6 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="subGraphName">The name of the subgraph.</param>
         public void ReadVelocityFile(string path, string subGraphName)
         {
-            print(path);
             if (referenceManager.inputReader.h5readers.Count > 0)
             {
                 StartCoroutine(ReadVelocityParticleSystemFromHDF5(referenceManager.inputReader.h5readers.First().Value, path, subGraphName));
@@ -86,17 +87,33 @@ namespace CellexalVR.AnalysisLogic
 
         private IEnumerator ReadVelocityParticleSystem(string path, string subGraphName = "")
         {
+
             while (referenceManager.graphGenerator.isCreating)
             {
                 yield return null;
             }
+            if (isCreating)
+            {
+                CellexalLog.Log($"Not reading velocity file at {path} because there is already another one being read.");
+                yield break;
+            }
             CellexalLog.Log("Started reading velocity file " + path);
-
+            isCreating = true;
             Graph graph;
             Graph originalGraph;
             int lastSlashIndex = path.LastIndexOfAny(new char[] { '/', '\\' });
             int lastDotIndex = path.LastIndexOf('.');
-            string graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
+            string graphName;
+
+            if (lastSlashIndex == -1)
+            {
+                graphName = path.Substring(lastSlashIndex + 1, path.Length - lastSlashIndex - 1);
+            }
+            else
+            {
+                graphName = path.Substring(lastSlashIndex + 1, lastDotIndex - lastSlashIndex - 1);
+            }
+
             originalGraph = referenceManager.graphManager.FindGraph(graphName);
             if (subGraphName != string.Empty)
             {
@@ -106,6 +123,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 graph = originalGraph;
             }
+            ActiveGraphs.Add(graph);
             Dictionary<Graph.GraphPoint, Vector3> velocities =
                 new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
             using (FileStream stream = new FileStream(path, FileMode.Open))
@@ -163,7 +181,7 @@ namespace CellexalVR.AnalysisLogic
                 stream.Close();
             }
 
-            ActiveGraphs.Add(graph);
+            isCreating = false;
             CellexalLog.Log("Finished reading velocity file with " + velocities.Count + " velocities");
         }
 
@@ -175,7 +193,13 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
             }
 
+            if (isCreating)
+            {
+                CellexalLog.Log($"Not reading velocity file at {path} because there is already another one being read.");
+                yield break;
+            }
             CellexalLog.Log("Started reading velocity file " + path);
+            isCreating = true;
 
             Graph graph;
             Graph originalGraph;
@@ -192,6 +216,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 graph = originalGraph;
             }
+            ActiveGraphs.Add(graph);
             Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>(graph.points.Count);
 
             while (h5Reader.busy)
@@ -243,8 +268,7 @@ namespace CellexalVR.AnalysisLogic
                 graph.ToggleGraphPoints();
             }
 
-
-            ActiveGraphs.Add(graph);
+            isCreating = false;
             CellexalLog.Log("Finished reading velocity file with " + velocities.Count + " velocities");
         }
 

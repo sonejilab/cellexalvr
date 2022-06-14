@@ -33,10 +33,15 @@ namespace CellexalVR.Tools
         private void Start()
         {
             layerButtons = GetComponentsInChildren<ScreenshotLayerToggleButton>();
-            // foreach (ScreenshotLayerToggleButton button in layerButtons)
-            // {
-            //     button.CurrentState = true;
-            // }
+            foreach (ScreenshotLayerToggleButton button in layerButtons)
+            {
+                if (button.layerName != "Background" && !button.toggleAllButton)
+                {
+
+                    layersToRender.Add(button.layerName);
+                }
+            }
+            snapShotCamera.cullingMask = LayerMask.GetMask(layersToRender.ToArray());
 
             gameObject.SetActive(false);
             audioSource = GetComponent<AudioSource>();
