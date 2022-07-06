@@ -58,7 +58,7 @@ namespace CellexalVR.Tools
             minimizedObjects.Add(jail);
             jail.transform.localRotation = Quaternion.identity;
             //jail.transform.Rotate(0f, 0f, -90f);
-            jail.transform.localScale = new Vector3(0.2f, 0.2f, 0.15f);
+            jail.transform.localScale = new Vector3(0.17f, 0.17f, 0.15f);
             MinimizedObjectContainer container = jail.GetComponent<MinimizedObjectContainer>();
             container.MinimizedObject = objectToMinimize;
             container.Handler = this;

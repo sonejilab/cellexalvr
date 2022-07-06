@@ -53,7 +53,7 @@ namespace CellexalVR.Interaction
             orgColor = GetComponent<Renderer>().material.color;
             frameCount = 0;
             layerMask = 1 << LayerMask.NameToLayer("MenuLayer");
-            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            //CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
         private void Update()
@@ -86,19 +86,19 @@ namespace CellexalVR.Interaction
         }
 
         // Open XR
-        private void OnTriggerClick()
+        public void Maximize()
         {
             if (CrossSceneInformation.Spectator)
             {
                 return;
             }
-            RaycastHit hit;
-            Transform raycastingSource = Handler.referenceManager.laserPointerController.origin;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
-            if (!hit.collider)
-            {
-                return;
-            }
+            //RaycastHit hit;
+            //Transform raycastingSource = Handler.referenceManager.laserPointerController.origin;
+            //Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
+            //if (!hit.collider)
+            //{
+            //    return;
+            //}
             if (MinimizedObject.CompareTag("Graph"))
             {
                 MinimizedObject.GetComponent<Graph>().ShowGraph();
@@ -142,6 +142,17 @@ namespace CellexalVR.Interaction
             Destroy(gameObject);
         }
 
+        public void SetHighlighted(bool highlight)
+        {
+            if (highlight)
+            {
+                GetComponent<Renderer>().material.color = Color.cyan;
+            }
+            else
+            {
+                GetComponent<Renderer>().material.color = orgColor;
+            }
+        }
 
 
         private void OnDrawGizmos()
