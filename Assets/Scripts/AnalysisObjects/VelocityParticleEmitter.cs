@@ -65,17 +65,23 @@ namespace CellexalVR.AnalysisObjects
 
         public new ParticleSystem particleSystem;
 
+        /// <summary>
+        /// The velocities that should be visualised.
+        /// Using this property's getter may take a long time because the <see cref="VelocityParticleEmitter"/> 
+        /// does not keep the velocities saved as a <see cref="Dictionary{Graph.GraphPoint, Vector3}"/>, so it has 
+        /// to be reconstructed each time.
+        /// </summary>
         public Dictionary<Graph.GraphPoint, Vector3> Velocities
         {
-            //get
-            //{
-            //    Dictionary<Graph.GraphPoint, Vector3> result = new Dictionary<Graph.GraphPoint, Vector3>(emitOrder.Length);
-            //    foreach (var tuple in emitOrder)
-            //    {
-            //        result[tuple.Item1] = tuple.Item2;
-            //    }
-            //    return result;
-            //}
+            get
+            {
+                Dictionary<Graph.GraphPoint, Vector3> result = new Dictionary<Graph.GraphPoint, Vector3>(emitOrder.Length);
+                foreach (var tuple in emitOrder)
+                {
+                    result[tuple.Item1] = tuple.Item2;
+                }
+                return result;
+            }
             set
             {
                 emitOrder = new Tuple<Graph.GraphPoint, Vector3>[value.Count];
