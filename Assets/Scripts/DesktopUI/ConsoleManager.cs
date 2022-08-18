@@ -361,7 +361,15 @@ namespace CellexalVR.DesktopUI
             {
                 // suggest file or folder
                 string currentText = words[words.Length - 1];
-                string folder = Directory.GetCurrentDirectory() + @"\" + folders[command] + @"\";
+                string folder;
+                if (folders[command] == "%CURRENT_LOADED_DATA%")
+                {
+                    folder = CellexalUser.DatasetFullPath;
+                }
+                else
+                {
+                    folder = Directory.GetCurrentDirectory() + @"\" + folders[command] + @"\";
+                }
                 string[] foundFolders = Directory.GetDirectories(folder, currentText + "*", SearchOption.TopDirectoryOnly);
                 string[] foundFiles = Directory.GetFiles(folder, currentText + "*", SearchOption.TopDirectoryOnly);
                 // put everything in one list
@@ -611,6 +619,7 @@ namespace CellexalVR.DesktopUI
         /// Marks a method as runnable in the console.
         /// </summary>
         /// <param name="access">The name of a field in the <see cref="ReferenceManager"/> to access this method from. Case sensitive.</param>
+        /// <param name="folder">(Used only if this command should autocomplete a filename) The folder that this command reads files from (if any). Use "%CURRENT_LOADED_DATA%" for a path to the currently loaded dataset.</param>
         /// <param name="aliases">One or more ways to refer to this method from the console.</param>
         public ConsoleCommandAttribute(string access, string folder = "", params string[] aliases)
         {

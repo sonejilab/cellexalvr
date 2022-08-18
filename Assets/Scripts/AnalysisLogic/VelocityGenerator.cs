@@ -63,10 +63,10 @@ namespace CellexalVR.AnalysisLogic
         /// Reads a velocity file and starts the particle system that visualises the velcoity information.
         /// </summary>
         /// <param name="path">The path to the .mds file that contains the velocity information.</param>
-        [ConsoleCommand("velocityGenerator", folder: "Data", aliases: new string[] { "readvelocityfile", "rvf" })]
+        [ConsoleCommand("velocityGenerator", folder: "%CURRENT_LOADED_DATA%", aliases: new string[] { "readvelocityfile", "rvf" })]
         public void ReadVelocityFile(string path)
         {
-            ReadVelocityFile(path, "");
+            ReadVelocityFile(Path.Combine(CellexalUser.DatasetFullPath, path), "");
         }
 
         /// <summary>
@@ -105,7 +105,15 @@ namespace CellexalVR.AnalysisLogic
             int lastDotIndex = path.LastIndexOf('.');
             string graphName;
 
-            if (lastSlashIndex == -1)
+            if (lastSlashIndex == -1 && lastDotIndex == -1)
+            {
+                graphName = path;
+            }
+            else if (lastSlashIndex == -1)
+            {
+                graphName = path.Substring(0, lastDotIndex);
+            }
+            else if (lastDotIndex == -1)
             {
                 graphName = path.Substring(lastSlashIndex + 1, path.Length - lastSlashIndex - 1);
             }

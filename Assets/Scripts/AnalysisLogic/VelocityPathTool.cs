@@ -21,11 +21,11 @@ namespace Assets.Scripts.AnalysisLogic
         {
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                CalculatePath(referenceManager.selectionManager.GetCurrentSelection());
+                CalculatePath(referenceManager.selectionManager.GetLastSelection());
             }
         }
 
-        public List<VelocityPathNode> CalculatePath(List<Graph.GraphPoint> selection, float threshold = 0f)
+        public List<VelocityPathNode> CalculatePath(List<Graph.GraphPoint> selection, float threshold = 0f, float stepThreshold = 0.005f)
         {
             if (selection.Count == 0)
             {
@@ -61,15 +61,25 @@ namespace Assets.Scripts.AnalysisLogic
             }
             stopwatch.Stop();
             print($"foreach: {stopwatch.Elapsed}");
-            float extents = (maxX - minX + maxY - minY + maxZ - minZ) / 2f;
-            print($"extents: {extents}");
+            Vector3 halfExtents = new Vector3(maxX - minX, maxY - minY, maxZ - minZ) / 2f;
+            float sphereRadius = (halfExtents.x + halfExtents.y + halfExtents.z) / 3f;
+            Vector3 centerPos = new Vector3(minX + halfExtents.x, minY + halfExtents.y, minZ + halfExtents.z);
+            print($"center: {centerPos}, extents: {halfExtents}, sphere radius: {sphereRadius}");
             stopwatch.Restart();
             Graph graph = selection[0].parent;
             float squaredThreshold = threshold * threshold;
             List<VelocityPathNode> path = new List<VelocityPathNode>();
             List<Graph.GraphPoint> candidates = new List<Graph.GraphPoint>();
+            candidates.AddRange(selection);
             Dictionary<Graph.GraphPoint, Vector3> velocities = graph.velocityParticleEmitter.Velocities;
-            do
+            int group = 0;
+            graph.octreeRoot.Group = -1;
+            foreach (Graph.GraphPoint point in selection)
+            {
+                point.node.Group = 0;
+            }
+
+            while (candidates.Count > 0)
             {
                 float averageX = 0f;
                 float averageY = 0f;
@@ -90,8 +100,10 @@ namespace Assets.Scripts.AnalysisLogic
                 averageY /= velocities.Count;
                 averageZ /= velocities.Count;
                 Vector3 average = new Vector3(averageX, averageY, averageZ);
-                candidates.AddRange(graph.MinkowskiDetection)
-            } while (candidates.Count > 0);
+                candidates.Clear();
+                candidates.AddRange(graph.MinkowskiDetection(graph.transform.InverseTransformPoint(centerPos), sphereRadius, group));
+                group++;
+            }
             stopwatch.Stop();
             print($"loop: {stopwatch.Elapsed}");
             return path;

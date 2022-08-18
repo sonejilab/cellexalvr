@@ -214,7 +214,7 @@ namespace CellexalVR.AnalysisObjects
             if (delete)
             {
                 targetPosition = referenceManager.deleteTool.transform.position;
-            }    
+            }
             else if (referenceManager.menuToggler.MenuActive)
             {
                 targetPosition = referenceManager.minimizedObjectHandler.transform.position;
@@ -649,12 +649,23 @@ namespace CellexalVR.AnalysisObjects
             /// </summary>
             /// <param name="selectionToolCenter">The selection tool's position in world space.</param>
             /// <param name="pointPosWorldSpace">This node's position in world space. (use Transform.TransformPoint(node.splitCenter) )</param>
-            /// <returns>True if <paramref name="pointPosWorldSpace"/> is inside the selection tool.</returns>
+            /// <returns>True if this point is inside the selection tool.</returns>
             public bool PointInsideSelectionTool(Vector3 selectionToolCenter, Vector3 pointPosWorldSpace)
             {
                 raycasted = true;
                 Vector3 difference = selectionToolCenter - pointPosWorldSpace;
                 return !Physics.Raycast(pointPosWorldSpace, difference, difference.magnitude, Graph.selectionToolLayerMask);
+            }
+
+            /// <summary>
+            /// Checks if this point is inside a sphere.
+            /// </summary>
+            /// <param name="sphereCenter">The sphere's center point, in local coordinates.</param>
+            /// <param name="radius">The sphere's radius.</param>
+            /// <returns>True if this point is inside the sphere. False otherwise.</returns>
+            public bool PointInsideSphere(Vector3 sphereCenter, float sqrRadius)
+            {
+                return (center - sphereCenter).sqrMagnitude <= sqrRadius;
             }
 
             /// <summary>
@@ -1512,6 +1523,104 @@ namespace CellexalVR.AnalysisObjects
                     CheckIfLeavesInside(selectionToolWorldPos, child, group, ref result);
                 }
             }
+        }
+
+        /// <summary>
+        /// Finds all <see cref="GraphPoint"/> that are inside a sphere.
+        /// </summary>
+        /// <param name="sphereCenter">The sphere's center, in local coordinates.</param>
+        /// <param name="radius">The sphere's radius.</param>
+        /// <param name="group">The group to assign the found points. Points already in this group will be ignored, unless -1 is passed as this argument.</param>
+        /// <returns>A list of all <see cref="GraphPoint"/> that are inside the sphere.</returns>
+        public List<GraphPoint> MinkowskiDetection(Vector3 sphereCenter, float radius, int group = -1)
+        {
+            List<GraphPoint> result = new List<GraphPoint>(64);
+            Vector3 boundingBoxMin = new Vector3(sphereCenter.x - radius, sphereCenter.y - radius, sphereCenter.z - radius);
+            Vector3 boundingBoxMax = new Vector3(sphereCenter.x + radius, sphereCenter.y + radius, sphereCenter.z + radius);
+
+            MinkowskiDetectionRecursive(sphereCenter, radius * radius, boundingBoxMin, boundingBoxMax, octreeRoot, group, ref result);
+            return result;
+        }
+
+        /// <summary>
+        /// Recursive function that checks if a node in the octree is inside a sphere.
+        /// </summary>
+        /// <param name="sphereCenter">The sphere's center, in local coordinates.</param>
+        /// <param name="sqrRadius">The sphere's radius squared.</param>
+        /// <param name="boundingBoxMin">The minimum coordinates of a bounding box containing the sphere.</param>
+        /// <param name="boundingBoxMax">The maximum coordinates of a bounding box containing the sphere.</param>
+        /// <param name="node">The node to investigate.</param>
+        /// <param name="group">The group to assign the found points. Points already in this group will be ignored, unless -1 is passed as this argument.</param>
+        /// <param name="result">A list where <see cref="GraphPoint"/> can be placed.</param>
+        private void MinkowskiDetectionRecursive(Vector3 sphereCenter, float sqrRadius, Vector3 boundingBoxMin, Vector3 boundingBoxMax, OctreeNode node, int group, ref List<GraphPoint> result)
+        {
+            if (boundingBoxMin.x - node.pos.x - node.size.x <= 0
+                && boundingBoxMax.x - node.pos.x >= 0
+                && boundingBoxMin.y - node.pos.y - node.size.y <= 0
+                && boundingBoxMax.y - node.pos.y >= 0
+                && boundingBoxMin.z - node.pos.z - node.size.z <= 0
+                && boundingBoxMax.z - node.pos.z >= 0)
+            {
+                // check if this node is entirely inside the bounding box
+                if (boundingBoxMin.x < node.pos.x && boundingBoxMax.x > node.pos.x + node.size.x &&
+                    boundingBoxMin.y < node.pos.y && boundingBoxMax.y > node.pos.y + node.size.y &&
+                    boundingBoxMin.z < node.pos.z && boundingBoxMax.z > node.pos.z + node.size.z)
+                {
+                    // just find the leaves and check if they are inside
+                    if (group == -1 || node.Group != group)
+                    {
+                        node.completelyInside = true;
+                        CheckIfLeavesInside(sphereCenter, sqrRadius, node, group, ref result);
+                        return;
+                    }
+                }
+
+                if (node.point != null && (group == -1 || node.Group != group) && node.PointInsideSphere(sphereCenter, sqrRadius))
+                {
+                    node.Group = group;
+                    result.Add(node.point);
+                }
+                else
+                {
+                    // recursion
+                    foreach (var child in node.children)
+                    {
+                        MinkowskiDetectionRecursive(sphereCenter, sqrRadius, boundingBoxMin, boundingBoxMax, child, group, ref result);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Recursive function that finds all leaves that are below a node and checks if they are inside a sphere.
+        /// </summary>
+        /// <param name="sphereCenter">The sphere's center, in local coordinates.</param>
+        /// <param name="sqrRadius">The sphere's radius squared.</param>
+        /// <param name="node">The node to investigate.</param>
+        /// <param name="group">The group to assign the found points. Points already in this group will be ignored, unless -1 is passed as this argument.</param>
+        /// <param name="result">A list where <see cref="GraphPoint"/> can be placed.</param>
+        private void CheckIfLeavesInside(Vector3 sphereCenter, float sqrRadius, OctreeNode node, int group, ref List<GraphPoint> result)
+        {
+            if (node.point != null && (group == -1 || node.Group != group) && node.PointInsideSphere(sphereCenter, sqrRadius))
+            {
+                node.Group = group;
+                result.Add(node.point);
+                return;
+            }
+
+            foreach (var child in node.children)
+            {
+                if (child.point != null && (group == -1 || node.Group != group) && node.PointInsideSphere(sphereCenter, sqrRadius))
+                {
+                    node.Group = group;
+                    result.Add(child.point);
+                }
+                else
+                {
+                    CheckIfLeavesInside(sphereCenter, sqrRadius, child, group, ref result);
+                }
+            }
+
         }
     }
 }

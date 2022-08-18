@@ -267,6 +267,7 @@ namespace CellexalVR.AnalysisLogic
                 if (File.Exists(timeSelectionPath))
                 {
                     groupingFilePath = timeSelectionPath;
+                    referenceManager.inputReader.ReadSelectionFile(groupingFilePath);
                 }
                 else
                 {

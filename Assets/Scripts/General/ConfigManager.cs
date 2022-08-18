@@ -172,19 +172,25 @@ namespace CellexalVR.General
             configPaths = new List<string>();
             ReadConfigFiles(configDir);
             CellexalConfig.Config = CellexalConfig.savedConfigs["default"];
-            //CellexalEvents.ConfigLoaded.Invoke();
+            CellexalEvents.ConfigLoaded.Invoke();
         }
 
         public void ReadConfigFiles(string folderPath)
         {
-            // read all configs and set the default config as the current one
-            configPaths.AddRange(Directory.GetFiles(folderPath, "*.xml", SearchOption.TopDirectoryOnly));
+            // read all configs in this folder, add only the ones that are not already added
+            string[] newConfigs = Directory.GetFiles(folderPath, "*.xml", SearchOption.TopDirectoryOnly);
+            foreach (string configPath in newConfigs)
+            {
+                if (!configPaths.Contains(configPath))
+                {
+                    configPaths.Add(configPath);
+                }
+            }
             CellexalConfig.savedConfigs = new Dictionary<string, Config>();
             foreach (string path in configPaths)
             {
-                ReadConfigFile(path);
+                ReadConfigFile(path, switchTo: false);
             }
-
             //SaveConfigFile();
             // set up a filesystemwatcher that notifies us if the file is changed and we should reload it
             FileSystemWatcher watcher = new FileSystemWatcher(configDir);
@@ -218,7 +224,8 @@ namespace CellexalVR.General
         /// Reads a config file.
         /// </summary>
         /// <param name="configPath">The full path to the config file.</param>
-        public void ReadConfigFile(string configPath)
+        /// <param name="switchTo">True if this config should become the new config to use right now, setting this to false disables invoking the <see cref="CellexalEvents.ConfigLoaded"/> event.</param>
+        public void ReadConfigFile(string configPath, bool switchTo = true)
         {
             // make sure the folder and the file exists.
             if (!Directory.Exists("Config"))
@@ -237,7 +244,11 @@ namespace CellexalVR.General
                 }
                 configPath = defaultConfigPath;
             }
-            CellexalLog.Log("Started reading a config file");
+            if (!configPaths.Contains(configPath))
+            {
+                configPaths.Add(configPath);
+            }
+            CellexalLog.Log($"Started reading the config file at {configPath}");
             int indexOfLastSlash = Mathf.Max(configPath.LastIndexOf('/'), configPath.LastIndexOf('\\'));
             int indexOfLastUnderscore = configPath.LastIndexOf('_');
             string profileName = configPath.Substring(indexOfLastSlash + 1, indexOfLastUnderscore - indexOfLastSlash - 1);
@@ -245,10 +256,14 @@ namespace CellexalVR.General
             StreamReader streamReader = new StreamReader(fileStream);
             XmlSerializer serializer = new XmlSerializer(typeof(Config));
             CellexalConfig.savedConfigs[profileName] = (Config)serializer.Deserialize(streamReader);
-            CellexalConfig.Config = CellexalConfig.savedConfigs[profileName];
             streamReader.Close();
             fileStream.Close();
-            CellexalEvents.ConfigLoaded.Invoke();
+            CellexalLog.Log($"Finished reading the config file at {configPath}");
+            if (switchTo)
+            {
+                CellexalConfig.Config = CellexalConfig.savedConfigs[profileName];
+                CellexalEvents.ConfigLoaded.Invoke();
+            }
         }
 
         /// <summary>

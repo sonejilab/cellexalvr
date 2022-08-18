@@ -105,7 +105,8 @@ namespace CellexalVR.DesktopUI
 
         private void Awake()
         {
-            CellexalEvents.ConfigLoaded.AddListener(SetValues);
+            CellexalEvents.ConfigLoaded.AddListener(OnConfigLoaded);
+            //CellexalEvents.ConfigLoaded.AddListener(SetValues);
             CellexalEvents.GraphsLoaded.AddListener(OnGraphsLoaded);
             CellexalEvents.GraphsUnloaded.AddListener(OnGraphsUnloaded);
             CellexalEvents.ScarfObjectLoaded.AddListener(OnGraphsLoaded);
@@ -198,26 +199,31 @@ namespace CellexalVR.DesktopUI
 
         private void Start()
         {
-            CellexalEvents.ConfigLoaded.AddListener(OnConfigLoaded);
         }
 
         private void OnConfigLoaded()
         {
-            currentProfilePath = referenceManager.configManager.ProfileNameToConfigPath("default");
-            var profiles = new List<TMPro.TMP_Dropdown.OptionData>();
+            var profiles = new List<TMPro.TMP_Dropdown.OptionData>(CellexalConfig.savedConfigs.Count);
             foreach (string s in CellexalConfig.savedConfigs.Keys)
             {
-                if (s != "default")
-                {
-                    profiles.Add(new TMPro.TMP_Dropdown.OptionData(s));
-                }
+                profiles.Add(new TMPro.TMP_Dropdown.OptionData(s));
             }
-            profiles.Sort((TMPro.TMP_Dropdown.OptionData d1, TMPro.TMP_Dropdown.OptionData d2) => (d1.text.CompareTo(d2.text)));
+            profiles.Sort((TMPro.TMP_Dropdown.OptionData d1, TMPro.TMP_Dropdown.OptionData d2) =>
+            {
+                if (d1.text == "default")
+                {
+                    return int.MinValue;
+                }
+                else if (d2.text == "default")
+                {
+                    return int.MaxValue;
+                }
+                return d1.text.CompareTo(d2.text);
+            });
             // make sure default profile is at the top of the list
-            profiles.Insert(0, new TMPro.TMP_Dropdown.OptionData("default"));
+            //profiles.Insert(0, new TMPro.TMP_Dropdown.OptionData("default"));
             profileDropdown.options = profiles;
-
-            CellexalEvents.ConfigLoaded.RemoveListener(OnConfigLoaded);
+            SetValues();
         }
 
         void Update()
@@ -634,7 +640,8 @@ namespace CellexalVR.DesktopUI
             {
                 // insert the new profile and keep the list sorted
                 bool inserted = false;
-                for (int i = 0; i < profileDropdown.options.Count; ++i)
+                // start at index 1, the default profile is always first.
+                for (int i = 1; i < profileDropdown.options.Count; ++i)
                 {
                     if (profileDropdown.options[i].text.CompareTo(profileName) > 0)
                     {
@@ -650,7 +657,7 @@ namespace CellexalVR.DesktopUI
                     profileDropdown.SetValueWithoutNotify(profileDropdown.options.Count - 1);
                 }
             }
-
+            print(profileDropdown.value);
             CellexalConfig.savedConfigs[profileName] = new Config(CellexalConfig.Config);
             string configPath = referenceManager.configManager.ProfileNameToConfigPath(profileName);
             referenceManager.configManager.SaveConfigFile(configPath);
