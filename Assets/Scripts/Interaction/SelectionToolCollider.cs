@@ -3,6 +3,7 @@ using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Multiuser;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,6 +17,7 @@ namespace CellexalVR.Interaction
     public class SelectionToolCollider : MonoBehaviour
     {
         public static SelectionToolCollider instance;
+        public List<Graph> touchingGraphs = new List<Graph>();
 
         [SerializeField] private InputActionAsset inputActionAsset;
         [SerializeField] private InputActionReference touchPadClick;
@@ -199,6 +201,30 @@ namespace CellexalVR.Interaction
                 selActive = true;
             }
 
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Graph"))
+            {
+                Graph graph = other.GetComponent<Graph>();
+                if (graph)
+                {
+                    touchingGraphs.Add(other.GetComponent<Graph>());
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Graph"))
+            {
+                Graph graph = other.GetComponent<Graph>();
+                if (graph)
+                {
+                    touchingGraphs.Remove(other.GetComponent<Graph>());
+                }
+            }
         }
 
         private void OnTriggerDown()
