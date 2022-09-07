@@ -374,7 +374,7 @@ namespace CellexalVR.DesktopUI
                 string[] foundFiles = Directory.GetFiles(folder, currentText + "*", SearchOption.TopDirectoryOnly);
                 // put everything in one list
                 var list = foundFolders.Concat(foundFiles);
-                print($"folder: {folder}, list: {string.Join(", ", list)}");
+                //print($"folder: {folder}, list: {string.Join(", ", list)}");
                 // remove the unnecessary full path, just keep the relative part
                 list = list.Select((f) => f.Substring(folder.Length));
 

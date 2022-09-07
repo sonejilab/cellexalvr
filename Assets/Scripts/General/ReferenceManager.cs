@@ -52,7 +52,7 @@ namespace CellexalVR.General
         //public GameObject webBrowser;
         public CaptureScreenshot screenshotCamera;
         public GameObject teleportLaser;
-
+        public VelocityPathTool velocityPathTool;
         #endregion
 
         #region Menu
@@ -199,6 +199,7 @@ namespace CellexalVR.General
             //webBrowser = GameObject.Find("WebBrowser");
             screenshotCamera = GameObject.Find("SnapShotCam").GetComponent<CaptureScreenshot>();
             teleportLaser = leftController.gameObject;
+            velocityPathTool = rightController.GetComponentInChildren<VelocityPathTool>(true);
 
             mainMenu = GameObject.Find("MenuHolder/Main Menu");
             arcsSubMenu = mainMenu.GetComponentInChildren<ToggleArcsSubMenu>(true);
