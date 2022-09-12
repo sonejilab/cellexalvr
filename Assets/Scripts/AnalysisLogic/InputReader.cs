@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
+using Parquet;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -100,6 +101,23 @@ namespace CellexalVR.AnalysisLogic
         public void ReadPreviousSessionConsole(string path, string fromPreviousSession = "")
         {
             ReadFolder(path, null, fromPreviousSession);
+        }
+
+        [ConsoleCommand("inputReader", folder: "Data", aliases: new string[] { "readparquetfile", "rpf" })]
+        public void ReadParquetFile(string path)
+        {
+            path = "Data\\" + path;
+            using (ParquetReader reader = ParquetReader.OpenFromFile(path))
+            {
+                Parquet.Data.DataColumn[] dataCol = reader.ReadEntireRowGroup();
+                foreach (Parquet.Data.DataColumn col in dataCol)
+                {
+                    foreach (object row in col.Data)
+                    {
+                        print(string.Join(", ", row));
+                    }
+                }
+            }
         }
 
         /// <summary>

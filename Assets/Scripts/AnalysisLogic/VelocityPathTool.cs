@@ -59,7 +59,7 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.selectionToolCollider.transform.parent = null;
                 referenceManager.controllerModelSwitcher.DesiredModel = Interaction.ControllerModelSwitcher.Model.SelectionTool;
                 referenceManager.controllerModelSwitcher.ActivateDesiredTool();
-                referenceManager.selectionToolCollider.transform.position = new Vector3(-0.7442f, 1.0642f, 0.0797f);
+                referenceManager.selectionToolCollider.transform.position = new Vector3(-0.034f, 1.064f, -0.464f);
                 referenceManager.velocityGenerator.ToggleGraphPoints();
             }
 
@@ -325,8 +325,8 @@ namespace CellexalVR.AnalysisLogic
                 int max_point_index = -1;
                 for (int current = 0; current < k; ++current)
                 {
-                    //float n_points_to_iterate_over_multiplier = 1f;
-                    //int n_points_to_iterate_over = Math.Max((int)(1 / n_points_to_iterate_over_multiplier), (int)(clusters[current].points.Count * n_points_to_iterate_over_multiplier));
+                    float n_points_to_iterate_over_multiplier = 0.25f;
+                    int n_points_to_iterate_over = Math.Max((int)(1 / n_points_to_iterate_over_multiplier), (int)(clusters[current].points.Count * n_points_to_iterate_over_multiplier));
 
                     for (int i = 0; i < clusters[current].points.Count; ++i)
                     {
@@ -391,19 +391,27 @@ namespace CellexalVR.AnalysisLogic
             foreach (Cluster cluster in clusters)
             {
                 twoClusterVariance += cluster.ClusterVariance();
+                // always move the next cluster's center atleast 1 radius away
+                Vector3 distance = startingCluster.center - cluster.center;
+                if (distance.magnitude < sphereRadius)
+                {
+                    distance *= sphereRadius / distance.magnitude;
+                    cluster.center = startingCluster.center + distance;
+                }
+
             }
             float oneClusterVariance = Cluster.ClusterVariance(candidates, barycenter);
-            if (twoClusterVariance < oneClusterVariance)
+            if (twoClusterVariance <= oneClusterVariance)
             {
                 // prediction: one cluster
-                VelocityPathNode newNode = new VelocityPathNode(barycenter, sphereRadius);
+                VelocityPathNode newNode = NextNodeFromAverageVelocities(candidates, 0f);
                 return new List<VelocityPathNode>() { newNode };
             }
             else
             {
                 // prediction: two clusters
-                VelocityPathNode newNode1 = new VelocityPathNode(clusters[0].center, sphereRadius);
-                VelocityPathNode newNode2 = new VelocityPathNode(clusters[1].center, sphereRadius);
+                VelocityPathNode newNode1 = NextNodeFromAverageVelocities(clusters[0].points, 0f);
+                VelocityPathNode newNode2 = NextNodeFromAverageVelocities(clusters[1].points, 0f);
                 return new List<VelocityPathNode>() { newNode1, newNode2 };
             }
 
@@ -484,6 +492,7 @@ namespace CellexalVR.AnalysisLogic
                         newLine.sharedMaterial = materials[Math.Min((int)((currentPathNode.center - nextNode.center).magnitude / 0.002f), materials.Count - 1)];
                         currentPath.Add(newLine);
                     }
+                    yield return null;
                 }
                 //candidates.Clear();
                 // grow sphere slightly to make up for CalculateSphereFromSelection making it slightly smaller
