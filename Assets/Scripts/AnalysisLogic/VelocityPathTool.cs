@@ -291,7 +291,7 @@ namespace CellexalVR.AnalysisLogic
 
 
 
-        private List<Cluster> KMeans(Cluster candidates, Vector3 sphereCenter, float sphereRadius, int maxIterations = 500)
+        private List<Cluster> KMeans(Cluster candidates, Vector3 sphereCenter, float sphereRadius, int maxIterations = 250)
         {
             int k = 2;
             List<Cluster> clusters = new List<Cluster>();
@@ -327,25 +327,20 @@ namespace CellexalVR.AnalysisLogic
                 {
                     float n_points_to_iterate_over_multiplier = 0.25f;
                     int n_points_to_iterate_over = Math.Max((int)(1 / n_points_to_iterate_over_multiplier), (int)(clusters[current].points.Count * n_points_to_iterate_over_multiplier));
+                    // if current == 0 then candidate = 1 else candidate = 0 since k = 2
+                    int candidate = (current - 1) * -1;
 
-                    for (int i = 0; i < clusters[current].points.Count; ++i)
+                    for (int i = 0; i < n_points_to_iterate_over; ++i)
                     {
-                        var point = clusters[current].points[i];
+                        Graph.GraphPoint point = clusters[current].points[i];
 
-                        for (int candidate = 0; candidate < k; ++candidate)
+                        float cost = CostDifference(point.Position, clusters[current], clusters[current].center, clusters[candidate], clusters[candidate].center);
+                        if (cost < maximum_cost)
                         {
-                            if (candidate == current)
-                            {
-                                continue;
-                            }
-                            float cost = CostDifference(point.Position, clusters[current], clusters[current].center, clusters[candidate], clusters[candidate].center);
-                            if (cost < maximum_cost)
-                            {
-                                maximum_cost = cost;
-                                max_current_index = current;
-                                max_candidate_index = candidate;
-                                max_point_index = i;
-                            }
+                            maximum_cost = cost;
+                            max_current_index = current;
+                            max_candidate_index = candidate;
+                            max_point_index = i;
                         }
                     }
                 }
@@ -377,7 +372,7 @@ namespace CellexalVR.AnalysisLogic
         {
             Cluster startingCluster = new Cluster() { points = candidates };
             Vector3 barycenter = CalculateBarycenter(startingCluster, useProjectedPositions: false);
-            float sphereRadius = 0.005f;
+            float sphereRadius = 0.0025f;
             List<Vector3> projectedPositions = new List<Vector3>();
             for (int i = 0; i < candidates.Count; ++i)
             {
@@ -401,7 +396,7 @@ namespace CellexalVR.AnalysisLogic
 
             }
             float oneClusterVariance = Cluster.ClusterVariance(candidates, barycenter);
-            if (twoClusterVariance <= oneClusterVariance)
+            if (oneClusterVariance < twoClusterVariance)
             {
                 // prediction: one cluster
                 VelocityPathNode newNode = NextNodeFromAverageVelocities(candidates, 0f);
