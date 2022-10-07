@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using Parquet;
+using Assets.Scripts.AnalysisLogic;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -206,6 +207,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 database.InitDatabase(fullPath + "\\database.sqlite");
             }
+            Dataset.instance.database = database;
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
             bool scarfFile = File.Exists(fullPath + "\\.zgroup");

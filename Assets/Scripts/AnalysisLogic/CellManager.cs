@@ -14,6 +14,7 @@ using CellexalVR.AnalysisLogic.H5reader;
 using UnityEngine.XR.Interaction.Toolkit;
 using Unity.Entities;
 using CellexalVR.AnalysisLogic;
+using Assets.Scripts.AnalysisLogic;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -283,8 +284,7 @@ namespace CellexalVR.AnalysisLogic
                 CellexalError.SpawnError("Could not colour by gene expression", "Find stack trace in cellexal log");
             }
 
-            referenceManager.heatmapGenerator.HighLightGene(geneName);
-            referenceManager.networkGenerator.HighLightGene(geneName);
+            Dataset.instance.HighlightGene(geneName);
         }
 
         /// <summary>

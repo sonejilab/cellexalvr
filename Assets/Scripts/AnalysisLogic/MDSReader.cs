@@ -1,4 +1,5 @@
 ﻿using AnalysisLogic;
+using Assets.Scripts.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Interaction;
@@ -43,6 +44,7 @@ namespace CellexalVR.AnalysisLogic
             //  CELLNAME_2 X_COORD Y_COORD Z_COORD
             //  ...
 
+            Dataset.instance.sourceFolder = path;
             const float maximumDeltaTime = 0.05f; // 20 fps
             int maximumItemsPerFrame = CellexalConfig.Config.GraphLoadingCellsPerFrameStartCount;
             int totalNbrOfCells = 0;
@@ -54,6 +56,15 @@ namespace CellexalVR.AnalysisLogic
                 }
 
                 Graph combGraph = referenceManager.graphGenerator.CreateGraph(type);
+                if (type == GraphGenerator.GraphType.MDS)
+                {
+                    Dataset.instance.graphs.Add(combGraph);
+                }
+                else if (type == GraphGenerator.GraphType.FACS
+                    || type == GraphGenerator.GraphType.ATTRIBUTE)
+                {
+                    Dataset.instance.generatedGraphs.Add(combGraph);
+                }
                 // file will be the full file name e.g C:\...\graph1.mds
                 // good programming habits have left us with a nice mix of forward and backward slashes
                 string[] regexResult = Regex.Split(file, @"[\\/]");

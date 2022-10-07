@@ -4,6 +4,7 @@ using CellexalVR.General;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using Assets.Scripts.AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -55,6 +56,7 @@ namespace CellexalVR.AnalysisObjects
             originalbackgroundScale = backgroundPlane.transform.localScale;
             CellexalEvents.GraphsReset.AddListener(ClearLegends);
             CellexalEvents.GraphsUnloaded.AddListener(ClearLegends);
+            Dataset.instance.legend = this;
         }
 
         private void Update()

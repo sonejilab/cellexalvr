@@ -1,4 +1,5 @@
-﻿using CellexalVR.AnalysisObjects;
+﻿using Assets.Scripts.AnalysisLogic;
+using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
@@ -196,7 +197,7 @@ namespace CellexalVR.AnalysisLogic
 
                 networks[colorString] = network;
             }
-
+            Dataset.instance.networks.Add(networkHandler);
             CellexalLog.Log("Successfully read .cnt file");
 
             // Read the .nwk file

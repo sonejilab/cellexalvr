@@ -1,4 +1,5 @@
-﻿using CellexalVR.AnalysisObjects;
+﻿using Assets.Scripts.AnalysisLogic;
+using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.General;
@@ -328,6 +329,7 @@ namespace CellexalVR.AnalysisLogic
             heatmap.selectionFile =
                 (CellexalUser.UserSpecificFolder + "/selection" + selectionNr + ".txt").FixFilePath();
             heatmapList.Add(heatmap);
+            Dataset.instance.heatmaps.Add(heatmap);
             heatmap.directory = outputFilePath;
             BuildTexture(selection, outputFilePath, heatmap);
             GameObject existingHeatmap = GameObject.Find(heatmapName);
