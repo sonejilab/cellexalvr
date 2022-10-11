@@ -112,7 +112,7 @@ namespace CellexalVR.Menu.SubMenus
 
 #if UNITY_EDITOR
     /// <summary>
-    /// Editor class for the <see cref="FolderKeyboardHandler "/> to add a "Build keyboard" button.
+    /// Editor class for the <see cref="SubMenu "/> to add a "Toggle renderers/colliders" button.
     /// </summary>
     [CustomEditor(typeof(SubMenu), true)]
     [CanEditMultipleObjects]
