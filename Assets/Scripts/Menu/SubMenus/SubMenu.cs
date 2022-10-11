@@ -1,6 +1,8 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace CellexalVR.Menu.SubMenus
@@ -107,4 +109,46 @@ namespace CellexalVR.Menu.SubMenus
             }
         }
     }
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Editor class for the <see cref="FolderKeyboardHandler "/> to add a "Build keyboard" button.
+    /// </summary>
+    [CustomEditor(typeof(SubMenu), true)]
+    [CanEditMultipleObjects]
+
+    public class SubMenuEditor : Editor
+    {
+        private SubMenu instance;
+
+        void OnEnable()
+        {
+            instance = (SubMenu)target;
+        }
+
+
+
+        public override void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+
+            if (GUILayout.Button("Toggle renderers/colliders"))
+            {
+                bool active = !instance.GetComponent<Renderer>().enabled;
+                instance.GetComponent<Renderer>().enabled = active;
+                instance.GetComponent<Collider>().enabled = active;
+
+                foreach (Collider col in instance.GetComponentsInChildren<Collider>())
+                {
+                    col.enabled = active;
+                }
+                foreach (Renderer ren in instance.GetComponentsInChildren<Renderer>())
+                {
+                    ren.enabled = active;
+                }
+
+            }
+        }
+    }
+#endif
 }
