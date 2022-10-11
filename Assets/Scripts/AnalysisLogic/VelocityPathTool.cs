@@ -7,22 +7,29 @@ using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
+    /// <summary>
+    /// A tool that draws a series of lines along the average velocities of small sections of a <see cref="Graph"/>.
+    /// </summary>
     public class VelocityPathTool : MonoBehaviour
     {
         public ReferenceManager referenceManager;
         public LineRenderer linePrefab;
         public Material materialPrefab;
+        public int maxPathLength = 20;
+        public new GameObject collider;
 
+        private Graph touchingGraph;
+        private Graph previousTouchingGraph;
+        private int nGraphCollidersInside = 0;
         private VelocityPathNode pathRoot;
         private List<LineRenderer> currentPath = new List<LineRenderer>();
         private List<Vector3> currentPathCenters = new List<Vector3>();
         private List<LineRenderer> previousPath = new List<LineRenderer>();
         private int frameCount = 0;
-        private int maxPathLength = 25;
         private bool active = false;
         private List<Material> materials = new List<Material>();
-        private Graph currentGraph;
         private Dictionary<Graph.GraphPoint, Vector3> velocities = new Dictionary<Graph.GraphPoint, Vector3>();
+        private bool calculatingPath = false;
 
 
         private void Awake()
@@ -53,19 +60,19 @@ namespace CellexalVR.AnalysisLogic
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F1))
-            {
-                active = !active;
-                referenceManager.selectionToolCollider.transform.parent = null;
-                referenceManager.controllerModelSwitcher.DesiredModel = Interaction.ControllerModelSwitcher.Model.SelectionTool;
-                referenceManager.controllerModelSwitcher.ActivateDesiredTool();
-                referenceManager.selectionToolCollider.transform.position = new Vector3(-0.034f, 1.064f, -0.464f);
-                referenceManager.velocityGenerator.ToggleGraphPoints();
-            }
+            //if (Input.GetKeyDown(KeyCode.F1))
+            //{
+            //    active = !active;
+            //    referenceManager.velocityGenerator.ToggleGraphPoints();
+            //referenceManager.selectionToolCollider.transform.parent = null;
+            //referenceManager.controllerModelSwitcher.DesiredModel = Interaction.ControllerModelSwitcher.Model.SelectionTool;
+            //referenceManager.controllerModelSwitcher.ActivateDesiredTool();
+            //referenceManager.selectionToolCollider.transform.position = new Vector3(-0.6989f, 1.1888f, -0.0261f);
+            //}
 
-            if (active)
+            if (active && touchingGraph && touchingGraph.velocityParticleEmitter)
             {
-                if (frameCount >= maxPathLength)
+                if (frameCount >= maxPathLength && !calculatingPath)
                 {
                     foreach (var line in previousPath)
                     {
@@ -76,29 +83,99 @@ namespace CellexalVR.AnalysisLogic
                     currentPath.Clear();
                     currentPathCenters.Clear();
                     frameCount = 0;
-                    //print(referenceManager.selectionToolCollider.touchingGraphs.Count);
-                    if (referenceManager.selectionToolCollider.touchingGraphs.Count > 0)
-                    {
-                        Graph touchingGraph = referenceManager.selectionToolCollider.touchingGraphs[0];
-                        if (touchingGraph != currentGraph)
-                        {
-                            velocities = touchingGraph.velocityParticleEmitter.Velocities;
-                        }
-                        //print(touchingGraph);
-                        Vector3 selectionToolPosition = touchingGraph.transform.InverseTransformPoint(referenceManager.selectionToolCollider.transform.position);
-                        StartCoroutine(CalculatePath(touchingGraph.MinkowskiDetection(selectionToolPosition, 0.05f, -1)));
-                    }
+                    Vector3 selectionToolPosition = touchingGraph.transform.InverseTransformPoint(transform.position);
+                    StartCoroutine(CalculatePath(touchingGraph.MinkowskiDetection(selectionToolPosition, 0.03f, -1)));
                 }
                 frameCount++;
             }
+            else
+            {
+                frameCount = maxPathLength;
+                foreach (var line in previousPath)
+                {
+                    Destroy(line.gameObject);
+                }
+                foreach (var line in currentPath)
+                {
+                    Destroy(line.gameObject);
+                }
+                previousPath.Clear();
+                currentPath.Clear();
+                currentPathCenters.Clear();
+                StopAllCoroutines();
+            }
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Graph"))
+            {
+                Graph graph = other.GetComponent<Graph>();
+                if (graph)
+                {
+                    nGraphCollidersInside++;
+                    if (nGraphCollidersInside == 1)
+                    {
+                        touchingGraph = graph;
+                        if (previousTouchingGraph != touchingGraph)
+                        {
+                            velocities = touchingGraph.velocityParticleEmitter.Velocities;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Graph"))
+            {
+                Graph graph = other.GetComponent<Graph>();
+                if (graph == touchingGraph)
+                {
+                    nGraphCollidersInside--;
+                    if (nGraphCollidersInside == 0)
+                    {
+                        touchingGraph = null;
+                        previousTouchingGraph = touchingGraph;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Toggles the <see cref="VelocityPathTool"/> on or off.
+        /// </summary>
+        public void ToggleActive()
+        {
+            active = !active;
+            collider.SetActive(active);
+        }
+
+        /// <summary>
+        /// Helper struct for saving information about the current path of velocities we are tracking. Each <see cref="VelocityPathNode"/> represents a sphere and the <see cref="Graph.GraphPoint"/> inside it.
+        /// </summary>
         private struct VelocityPathNode
         {
+            /// <summary>
+            /// The center of this path node.
+            /// </summary>
             public Vector3 center;
+            /// <summary>
+            /// The radius of this path node.
+            /// </summary>
             public float radius;
+            /// <summary>
+            /// A list of all children nodes that this node connects to, being the nodes that were created from tracking the velocities that this node contains.
+            /// </summary>
             public List<VelocityPathNode> nextNodes;
+            /// <summary>
+            /// The points that are inside this node.
+            /// </summary>
             public List<Graph.GraphPoint> points;
+            /// <summary>
+            /// The <see cref="LineRenderer"/> that draws this node's segment.
+            /// </summary>
             public LineRenderer renderer;
 
             public VelocityPathNode(Vector3 center, float radius)
@@ -116,6 +193,9 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Helper class for the <see cref="KMeans(Cluster, Vector3, float, int)"/> method. Represents a cluster that points are moved to/from according to K-Means clustering.
+        /// </summary>
         private class Cluster
         {
             public Vector3 center;
@@ -128,17 +208,18 @@ namespace CellexalVR.AnalysisLogic
                 projectedPositions = new List<Vector3>();
             }
 
-            public float ClusterVariance()
-            {
-                return ClusterVariance(points, center);
-            }
-
-            public static float ClusterVariance(List<Graph.GraphPoint> points, Vector3 center)
+            /// <summary>
+            /// Calculates the total variance of a cluster.
+            /// </summary>
+            /// <param name="points">The points the cluster contains.</param>
+            /// <param name="center">The center of the cluster.</param>
+            /// <returns>The total variance.</returns>
+            public static float ClusterVariance(List<Vector3> points, Vector3 center)
             {
                 float variance = 0f;
-                foreach (Graph.GraphPoint point in points)
+                foreach (Vector3 point in points)
                 {
-                    variance += (point.Position - center).sqrMagnitude;
+                    variance += (point - center).sqrMagnitude;
                 }
                 variance /= points.Count;
                 return variance;
@@ -150,6 +231,11 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Approximates a new <see cref="VelocityPathNode"/> from a selection of points.
+        /// </summary>
+        /// <param name="selection">The selection to approximate the node from.</param>
+        /// <returns>A new <see cref="VelocityPathNode"/> with it's center at the mean position of the points.</returns>
         private VelocityPathNode CalculateNodeFromSelection(List<Graph.GraphPoint> selection)
         {
             float minX = 1f, maxX = -1f, minY = 1f, maxY = -1f, minZ = 1f, maxZ = -1f;
@@ -171,13 +257,19 @@ namespace CellexalVR.AnalysisLogic
             Vector3 halfExtents = new Vector3(maxX - minX, maxY - minY, maxZ - minZ) / 2f;
             float sphereRadius = (halfExtents.x + halfExtents.y + halfExtents.z) / 3f;
             Vector3 centerPos = new Vector3(minX + halfExtents.x, minY + halfExtents.y, minZ + halfExtents.z);
-            //print($"sphere stats: x: {minX}, {maxX}, y: {minY}, {maxY}, z: {minZ}, {maxZ}, halfextents: {halfExtents}, radius: {sphereRadius}, center: {centerPos}");
             return new VelocityPathNode(centerPos, sphereRadius) { points = selection };
         }
 
-        private VelocityPathNode NextNodeFromAverageVelocities(List<Graph.GraphPoint> candidates, float squaredThreshold)
+        /// <summary>
+        /// Follows the average of some points' velocities and returns a new position to track from next iteration.
+        /// </summary>
+        /// <param name="candidates">The group of points whose velocities to follow.</param>
+        /// <param name="center">The center point of the group.</param>
+        /// <param name="sphereRadius">The radius of the group, to be passed to the next group.</param>
+        /// <param name="squaredThreshold">A threshold of velocities to ignore, squared.</param>
+        /// <returns></returns>
+        private VelocityPathNode NextNodeFromAverageVelocities(List<Graph.GraphPoint> candidates, Vector3 center, float sphereRadius, float squaredThreshold, float stepThreshold)
         {
-            VelocityPathNode pathNode = CalculateNodeFromSelection(candidates);
             float averageX = 0f;
             float averageY = 0f;
             float averageZ = 0f;
@@ -199,14 +291,26 @@ namespace CellexalVR.AnalysisLogic
             averageY /= count;
             averageZ /= count;
             Vector3 average = new Vector3(averageX, averageY, averageZ);
-            if (average.magnitude < pathNode.radius)
+            if (average.magnitude < stepThreshold)
             {
-                average *= pathNode.radius / average.magnitude;
+                return new VelocityPathNode(center, sphereRadius);
             }
-            pathNode.center += average;
-            return pathNode;
+            if (average.magnitude < sphereRadius)
+            {
+                average *= sphereRadius / average.magnitude;
+            }
+
+            return new VelocityPathNode(center + average, sphereRadius);
         }
 
+        /// <summary>
+        /// Follows a line and returns the point where it intersects a sphere.
+        /// </summary>
+        /// <param name="sphereCenter">The center of the sphere.</param>
+        /// <param name="sphereRadius">The radius of the sphere.</param>
+        /// <param name="lineOrigin">The origin of the line.</param>
+        /// <param name="lineDir">The direction of the line.</param>
+        /// <returns>A <see cref="Vector3"/> of the point where the line intersects the sphere.</returns>
         private Vector3 FindLineSphereIntersection(Vector3 sphereCenter, float sphereRadius, Vector3 lineOrigin, Vector3 lineDir)
         {
             Vector3 c = sphereCenter;
@@ -234,15 +338,38 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        private float CostDifference(Vector3 pointPosition, Cluster currentCluster, Vector3 currentClusterCenter, Cluster candidateCluster, Vector3 candidateClusterCenter)
+        /// <summary>
+        /// Returns the cost to move a point from a cluster. This is what we try to maximize each iteration of the K-Means algorithm.
+        /// </summary>
+        /// <param name="pointPosition">The position of the point to evaluate.</param>
+        /// <param name="currentCluster">The cluster the point is currently a part of.</param>
+        /// <param name="candidateCluster">The cluster the point could be moved to.</param>
+        /// <returns>The difference in cost between keeping the point in it's current cluster, or move it to the candidate cluster.</returns>
+        private float CostDifference(Vector3 pointPosition, Cluster currentCluster, Cluster candidateCluster)
         {
+            Vector3 currentClusterCenter = currentCluster.center;
+            Vector3 candidateClusterCenter = candidateCluster.center;
+
             float currentClusterCardinality = currentCluster.points.Count;
             float candidateClusterCardinality = candidateCluster.points.Count;
-            float candidateCost = (candidateClusterCardinality / (candidateClusterCardinality + 1)) * (candidateClusterCenter - pointPosition).sqrMagnitude;
-            float currentCost = (currentClusterCardinality / (currentClusterCardinality - 1)) * (currentClusterCenter - pointPosition).sqrMagnitude;
+            float candidateToPointSqrMagnitude = (candidateClusterCenter.x - pointPosition.x) * (candidateClusterCenter.x - pointPosition.x)
+                                                 + (candidateClusterCenter.y - pointPosition.y) * (candidateClusterCenter.y - pointPosition.y)
+                                                 + (candidateClusterCenter.z - pointPosition.z) * (candidateClusterCenter.z - pointPosition.z);
+            float currentToPointSqrMagnitude = (currentClusterCenter.x - pointPosition.x) * (currentClusterCenter.x - pointPosition.x)
+                                               + (currentClusterCenter.y - pointPosition.y) * (currentClusterCenter.y - pointPosition.y)
+                                               + (currentClusterCenter.z - pointPosition.z) * (currentClusterCenter.z - pointPosition.z);
+
+            float candidateCost = (candidateClusterCardinality / (candidateClusterCardinality + 1)) * candidateToPointSqrMagnitude;
+            float currentCost = (currentClusterCardinality / (currentClusterCardinality - 1)) * currentToPointSqrMagnitude;
             return candidateCost - currentCost;
         }
 
+        /// <summary>
+        /// Calculates the center of a cluster's points.
+        /// </summary>
+        /// <param name="cluster">The cluster evaluate.</param>
+        /// <param name="useProjectedPositions">True if this method should use the points projected positions (see <see cref="FindLineSphereIntersection(Vector3, float, Vector3, Vector3)"/>), false if it should use the points actual positions.</param>
+        /// <returns>The mean position of the points.</returns>
         private Vector3 CalculateBarycenter(Cluster cluster, bool useProjectedPositions = true)
         {
             float averageX = 0f;
@@ -273,6 +400,12 @@ namespace CellexalVR.AnalysisLogic
             return new Vector3(averageX, averageY, averageZ);
         }
 
+        /// <summary>
+        /// Finds the cluster that a position is clusest to.
+        /// </summary>
+        /// <param name="pointPosition">The position of the point.</param>
+        /// <param name="clusters">A list of clusters to evaluate.</param>
+        /// <returns>An index in the list <paramref name="clusters"/>, which the point is closest to.</returns>
         private int ClosestTo(Vector3 pointPosition, List<Cluster> clusters)
         {
             int minIndex = -1;
@@ -289,9 +422,13 @@ namespace CellexalVR.AnalysisLogic
             return minIndex;
         }
 
-
-
-        private List<Cluster> KMeans(Cluster candidates, Vector3 sphereCenter, float sphereRadius, int maxIterations = 250)
+        /// <summary>
+        /// A rather naïve implementation of the K-Means algorithm, with k=2.
+        /// </summary>
+        /// <param name="candidates">A <see cref="Cluster"/> containing all the <see cref="Graph.GraphPoint"/> that should be clustered.</param>
+        /// <param name="maxIterations">The maximum amount of iteration to run.</param>
+        /// <returns>A list of <see cref="Cluster"/> containing the resulting clustering.</returns>
+        private List<Cluster> KMeans(Cluster candidates, int maxIterations = 1000)
         {
             int k = 2;
             List<Cluster> clusters = new List<Cluster>();
@@ -309,9 +446,8 @@ namespace CellexalVR.AnalysisLogic
             // populate initial clusters with the points closest to each
             for (int i = 0; i < candidates.points.Count; ++i)
             {
-                Graph.GraphPoint point = candidates.points[i];
-                int minDistanceIndex = ClosestTo(point.Position, clusters);
-                clusters[minDistanceIndex].points.Add(point);
+                int minDistanceIndex = ClosestTo(candidates.projectedPositions[i], clusters);
+                clusters[minDistanceIndex].points.Add(candidates.points[i]);
                 clusters[minDistanceIndex].projectedPositions.Add(candidates.projectedPositions[i]);
 
             }
@@ -325,16 +461,22 @@ namespace CellexalVR.AnalysisLogic
                 int max_point_index = -1;
                 for (int current = 0; current < k; ++current)
                 {
-                    float n_points_to_iterate_over_multiplier = 0.25f;
-                    int n_points_to_iterate_over = Math.Max((int)(1 / n_points_to_iterate_over_multiplier), (int)(clusters[current].points.Count * n_points_to_iterate_over_multiplier));
                     // if current == 0 then candidate = 1 else candidate = 0 since k = 2
                     int candidate = (current - 1) * -1;
+                    Cluster currentCluster = clusters[current];
+                    Cluster candidateCluster = clusters[candidate];
 
+                    float n_points_to_iterate_over_multiplier = 0.25f;
+                    int n_points_to_iterate_over = Math.Max((int)(1 / n_points_to_iterate_over_multiplier), (int)(currentCluster.points.Count * n_points_to_iterate_over_multiplier));
+                    if (n_points_to_iterate_over > currentCluster.points.Count)
+                    {
+                        n_points_to_iterate_over = currentCluster.points.Count;
+                    }
                     for (int i = 0; i < n_points_to_iterate_over; ++i)
                     {
-                        Graph.GraphPoint point = clusters[current].points[i];
+                        Graph.GraphPoint point = currentCluster.points[i];
 
-                        float cost = CostDifference(point.Position, clusters[current], clusters[current].center, clusters[candidate], clusters[candidate].center);
+                        float cost = CostDifference(point.Position, currentCluster, candidateCluster);
                         if (cost < maximum_cost)
                         {
                             maximum_cost = cost;
@@ -346,6 +488,7 @@ namespace CellexalVR.AnalysisLogic
                 }
                 if (maximum_cost < 0)
                 {
+                    print(maximum_cost);
                     clusters[max_candidate_index].points.Add(clusters[max_current_index].points[max_point_index]);
                     clusters[max_candidate_index].projectedPositions.Add(clusters[max_current_index].projectedPositions[max_point_index]);
 
@@ -368,24 +511,48 @@ namespace CellexalVR.AnalysisLogic
             return clusters;
         }
 
-        private List<VelocityPathNode> NextNodesFromKMeans(List<Graph.GraphPoint> candidates)
+        /// <summary>
+        /// Finds the next node(s) using K-Means clustering to decide wether the candidate points' velocities branch into two directions or not.
+        /// </summary>
+        /// <param name="candidates">The candidate points to find the next node(s) from.</param>
+        /// <param name="sphereRadius">The radius of the sphere that is used to find candidates.</param>
+        /// <param name="squaredThreshold">A threshold of velocities to ignore.</param>
+        /// <returns>A list of <see cref="VelocityPathNode"/> to evaluate later.</returns>
+        private List<VelocityPathNode> NextNodesFromKMeans(List<Graph.GraphPoint> candidates, float sphereRadius, float squaredThreshold, float stepThreshold)
         {
             Cluster startingCluster = new Cluster() { points = candidates };
             Vector3 barycenter = CalculateBarycenter(startingCluster, useProjectedPositions: false);
-            float sphereRadius = 0.0025f;
             List<Vector3> projectedPositions = new List<Vector3>();
+            int startingNumberOfPoints = candidates.Count;
             for (int i = 0; i < candidates.Count; ++i)
             {
-                projectedPositions.Add(FindLineSphereIntersection(barycenter, sphereRadius, candidates[i].Position, velocities[candidates[i]]));
+                var point = candidates[i];
+                if (velocities[point].sqrMagnitude > squaredThreshold)
+                {
+                    projectedPositions.Add(FindLineSphereIntersection(barycenter, sphereRadius, point.Position, velocities[point]));
+                }
+                else
+                {
+                    candidates.RemoveAt(i);
+                    i--;
+                }
             }
+
             startingCluster.center = barycenter;
             startingCluster.projectedPositions = projectedPositions;
 
-            List<Cluster> clusters = KMeans(startingCluster, barycenter, sphereRadius);
+            List<Cluster> clusters = KMeans(startingCluster);
             float twoClusterVariance = 0f;
+            if (clusters[0].points.Count == 0 || clusters[1].points.Count == 0)
+            {
+                // prediction: one cluster
+                VelocityPathNode newNode = NextNodeFromAverageVelocities(candidates, barycenter, sphereRadius, squaredThreshold, stepThreshold);
+                return new List<VelocityPathNode>() { newNode };
+            }
+
             foreach (Cluster cluster in clusters)
             {
-                twoClusterVariance += cluster.ClusterVariance();
+                twoClusterVariance += Cluster.ClusterVariance(cluster.projectedPositions, CalculateBarycenter(cluster));
                 // always move the next cluster's center atleast 1 radius away
                 Vector3 distance = startingCluster.center - cluster.center;
                 if (distance.magnitude < sphereRadius)
@@ -395,23 +562,29 @@ namespace CellexalVR.AnalysisLogic
                 }
 
             }
-            float oneClusterVariance = Cluster.ClusterVariance(candidates, barycenter);
+            float oneClusterVariance = Cluster.ClusterVariance(projectedPositions, CalculateBarycenter(startingCluster));
             if (oneClusterVariance < twoClusterVariance)
             {
                 // prediction: one cluster
-                VelocityPathNode newNode = NextNodeFromAverageVelocities(candidates, 0f);
+                VelocityPathNode newNode = NextNodeFromAverageVelocities(candidates, barycenter, sphereRadius, squaredThreshold, stepThreshold);
                 return new List<VelocityPathNode>() { newNode };
             }
             else
             {
                 // prediction: two clusters
-                VelocityPathNode newNode1 = NextNodeFromAverageVelocities(clusters[0].points, 0f);
-                VelocityPathNode newNode2 = NextNodeFromAverageVelocities(clusters[1].points, 0f);
+                VelocityPathNode newNode1 = NextNodeFromAverageVelocities(clusters[0].points, CalculateBarycenter(clusters[0], false), sphereRadius, squaredThreshold, stepThreshold);
+                VelocityPathNode newNode2 = NextNodeFromAverageVelocities(clusters[1].points, CalculateBarycenter(clusters[1], false), sphereRadius, squaredThreshold, stepThreshold);
                 return new List<VelocityPathNode>() { newNode1, newNode2 };
             }
 
         }
 
+        /// <summary>
+        /// Coroutine that tracks velocities along their average vector in an attempt to create a path along them.
+        /// </summary>
+        /// <param name="selection">An initial selection of points to start the path at.</param>
+        /// <param name="threshold">A threshold of velocites to ignore.</param>
+        /// <param name="stepThreshold">A threshold of how far each iteration must at least move the <see cref="VelocityPathNode"/> between iterations.</param>
         public IEnumerator CalculatePath(List<Graph.GraphPoint> selection, float threshold = 0.002f, float stepThreshold = 0.000005f)
         {
             if (selection.Count == 0)
@@ -426,16 +599,10 @@ namespace CellexalVR.AnalysisLogic
                 // throw new Exception($"Velocity not loaded on graph {graph.GraphName}");
                 yield break;
             }
-
-            //System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
-            //stopwatch.Start();
+            calculatingPath = true;
             VelocityPathNode currentPathNode = CalculateNodeFromSelection(selection);
-            //print($"original selection contains: {selection.Count} cells");
-            //print($"center: {sphere.center}, {sphere.radius}");
             float squaredThreshold = threshold * threshold;
             Queue<VelocityPathNode> candidateQueue = new Queue<VelocityPathNode>();
-            //List<Graph.GraphPoint> candidates = new List<Graph.GraphPoint>();
-            //candidates.AddRange(selection);
             candidateQueue.Enqueue(currentPathNode);
             int iteration = 0;
             graph.octreeRoot.Group = -1;
@@ -449,32 +616,33 @@ namespace CellexalVR.AnalysisLogic
 
             while (candidateQueue.Count > 0)
             {
-#if UNITY_EDITOR
-                //gizmoSphereCenters.Add(graph.transform.TransformPoint(pathNode.center));
-                //gizmoSphereRadiuses.Add(pathNode.radius);
-                //gizmoSphereColours.Add(CellexalConfig.Config.SelectionToolColors[iteration % CellexalConfig.Config.SelectionToolColors.Length]);
-#endif
-
-                /*
                 // choose next node based on average velocity
-                VelocityPathNode nextNode = NextNodeFromAverageVelocities(candidates, squaredThreshold);
+                currentPathNode = candidateQueue.Dequeue();
+                VelocityPathNode nextNode = NextNodeFromAverageVelocities(currentPathNode.points, currentPathNode.center, 0.035f, squaredThreshold, stepThreshold);
                 Vector3 average = currentPathNode.center - nextNode.center;
                 if (average.magnitude < stepThreshold)
                 {
-                    //print($"average: {average.magnitude}. average below step threshold, breaking out of loop");
+                    calculatingPath = false;
                     yield break;
                 }
                 currentPathNode.AddNextNode(nextNode);
-                currentPathNode = nextNode;
-                */
+                yield return null;
 
+                /*
                 // select new node(s) based on K-Means clustering using k = 2 vs k = 1
                 currentPathNode = candidateQueue.Dequeue();
-                List<VelocityPathNode> nextNodes = NextNodesFromKMeans(currentPathNode.points);
+                List<VelocityPathNode> nextNodes = NextNodesFromKMeans(currentPathNode.points, currentPathNode.radius, squaredThreshold);
                 foreach (VelocityPathNode nextNode in nextNodes)
                 {
                     var nextCandidates = graph.MinkowskiDetection(nextNode.center, nextNode.radius, -1);
                     nextNode.points.AddRange(nextCandidates);
+
+                    graph.ResetColors();
+                    foreach (var gp in nextCandidates)
+                    {
+                        graph.ColorGraphPointSelectionColor(gp, 1, false);
+                    }
+
                     if (nextCandidates.Count > 1)
                     {
                         candidateQueue.Enqueue(nextNode);
@@ -489,54 +657,32 @@ namespace CellexalVR.AnalysisLogic
                     }
                     yield return null;
                 }
-                //candidates.Clear();
-                // grow sphere slightly to make up for CalculateSphereFromSelection making it slightly smaller
-                //candidates.AddRange(graph.MinkowskiDetection(currentPathNode.center, currentPathNode.radius * 1.1f, iteration));
-                //foreach (Graph.GraphPoint point in candidates)
-                //{
-                //    referenceManager.selectionManager.AddGraphpointToSelection(point, iteration, false);
-                //}
-                //if (candidates.Count > 0)
-                //{
-                //    currentPathNode = CalculateNodeFromSelection(candidates);
-                //    currentPathCenters.Add(currentPathNode.center);
-                //    var newLine = Instantiate(linePrefab, graph.transform);
-                //    newLine.enabled = true;
-                //    newLine.SetPositions(new Vector3[] { currentPathCenters[iteration], currentPathCenters[iteration + 1] });
-                //    newLine.sharedMaterial = materials[Math.Min((int)(average.magnitude / 0.002f), materials.Count - 1)];
-                //    currentPath.Add(newLine);
-                //}
-                //print($"found {candidates.Count} candidates");
-                //print($"center: {sphere.center}, radius: {sphere.radius}, moved: {average.magnitude}");
+
+                 */
+                nextNode.points.AddRange(graph.MinkowskiDetection(nextNode.center, nextNode.radius, iteration));
+                if (nextNode.points.Count > 0)
+                {
+                    candidateQueue.Enqueue(nextNode);
+                    currentPathCenters.Add(nextNode.center);
+                    var newLine = Instantiate(linePrefab, graph.transform);
+                    newLine.enabled = true;
+                    newLine.SetPositions(new Vector3[] { currentPathCenters[iteration], currentPathCenters[iteration + 1] });
+                    newLine.sharedMaterial = materials[Math.Min((int)(average.magnitude / 0.002f), materials.Count - 1)];
+                    currentPath.Add(newLine);
+                }
+                else
+                {
+                    calculatingPath = false;
+                    yield break;
+                }
                 iteration++;
                 if (iteration >= maxPathLength)
                 {
+                    calculatingPath = false;
                     yield break;
                 }
-                yield return null;
             }
-            //stopwatch.Stop();
-            //print($"loop: {stopwatch.Elapsed}");
-
+            calculatingPath = false;
         }
-
-#if UNITY_EDITOR
-        private List<Vector3> gizmoSphereCenters = new List<Vector3>();
-        private List<float> gizmoSphereRadiuses = new List<float>();
-        private List<Color> gizmoSphereColours = new List<Color>();
-
-        private void OnDrawGizmos()
-        {
-            for (int i = 0; i < gizmoSphereCenters.Count; ++i)
-            {
-                Gizmos.color = gizmoSphereColours[i];
-                Gizmos.DrawWireSphere(gizmoSphereCenters[i], gizmoSphereRadiuses[i]);
-                if (i < gizmoSphereCenters.Count - 1)
-                {
-                    Gizmos.DrawLine(gizmoSphereCenters[i], gizmoSphereCenters[i + 1]);
-                }
-            }
-        }
-#endif
     }
 }

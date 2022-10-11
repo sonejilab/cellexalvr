@@ -785,6 +785,14 @@ namespace CellexalVR.General
         public string DumpSelectionToTextFile(Dictionary<int, int> points, string filePath = "")
         {
             filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            if (File.Exists(filePath + ".time"))
+            {
+                File.Delete(filePath + ".time");
+            }
             using (StreamWriter file = new StreamWriter(filePath))
             {
                 CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
@@ -834,6 +842,14 @@ namespace CellexalVR.General
             else
             {
                 filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                if (File.Exists(filePath + ".time"))
+                {
+                    File.Delete(filePath + ".time");
+                }
                 using (StreamWriter file = new StreamWriter(filePath))
                 {
                     CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));

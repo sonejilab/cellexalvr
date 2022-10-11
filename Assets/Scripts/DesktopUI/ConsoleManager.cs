@@ -472,14 +472,21 @@ namespace CellexalVR.DesktopUI
         [ConsoleCommand("consoleManager", aliases: new string[] { "arguments", "args" })]
         public void ParameterInfo(string command)
         {
-            string parameterInfoString = ParameterInfosToString(commands[command].GetParameters());
-            if (parameterInfoString == "")
+            if (!commands.ContainsKey(command))
             {
-                AppendOutput("Command has no arguments");
+                AppendOutput($"Command {command} is not a defined.");
             }
             else
             {
-                AppendOutput(parameterInfoString);
+                string parameterInfoString = ParameterInfosToString(commands[command].GetParameters());
+                if (parameterInfoString == "")
+                {
+                    AppendOutput("Command has no arguments");
+                }
+                else
+                {
+                    AppendOutput(parameterInfoString);
+                }
             }
             CellexalEvents.CommandFinished.Invoke(true);
         }
