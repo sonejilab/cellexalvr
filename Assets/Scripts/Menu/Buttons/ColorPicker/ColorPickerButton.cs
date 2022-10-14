@@ -13,7 +13,12 @@ namespace Assets.Scripts.Menu.ColorPicker
 
         public override void Click()
         {
-            colorPicker.Open();
+            colorPicker.Open(this);
+        }
+
+        public void SetColor(Color newColor)
+        {
+            gameObject.GetComponent<Renderer>().material.color = newColor;
         }
     }
 }
