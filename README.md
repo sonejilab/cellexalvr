@@ -47,7 +47,8 @@ CellexalVR
 ## Cloning the project
 ### Unity Versions
 * If you not only want to run a working build of CellexalVR but want to edit and make a your own executable you will need to download and install Unity as well. The different Unity versions are many times backwards compatible but not always so we still recommend that you install the version we list below.  
-* [Unity 2019.1.8f1](https://unity3d.com/get-unity/download/archive)
+* [Unity 2021.3.0f1](https://unity3d.com/get-unity/download/archive) 
+* or [Unity 2019.1.8f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [1a29d79](https://github.com/sonejilab/cellexalvr/commit/1a29d798ccbb5974cad9419dd40265ae86b5f5e6)
 * or [Unity 2018.2.11f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [3535f45](https://github.com/shambam/cellexalvr/commit/3535f4519b8f8efa2edc37f587a2f543a972e8bb)
 * or [Unity 2017.3.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [5c9324f](https://github.com/shambam/cellexalvr/commit/5c9324f745c802c3b070b9efdcd2a9e0b0428c2a)
 * or [Unity 5.6.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [0dd8cf8](https://github.com/shambam/cellexalvr/commit/0dd8cf8f2d382f604dd5cca9ba50c2ec73086284)
