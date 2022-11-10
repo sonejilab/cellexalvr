@@ -47,11 +47,13 @@ CellexalVR
 ## Cloning the project
 ### Unity Versions
 * If you not only want to run a working build of CellexalVR but want to edit and make a your own executable you will need to download and install Unity as well. The different Unity versions are many times backwards compatible but not always so we still recommend that you install the version we list below.  
-* [Unity 2021.3.0f1](https://unity3d.com/get-unity/download/archive) 
-* or [Unity 2019.1.8f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [1a29d79](https://github.com/sonejilab/cellexalvr/commit/1a29d798ccbb5974cad9419dd40265ae86b5f5e6)
-* or [Unity 2018.2.11f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [3535f45](https://github.com/shambam/cellexalvr/commit/3535f4519b8f8efa2edc37f587a2f543a972e8bb)
-* or [Unity 2017.3.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [5c9324f](https://github.com/shambam/cellexalvr/commit/5c9324f745c802c3b070b9efdcd2a9e0b0428c2a)
-* or [Unity 5.6.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit before [0dd8cf8](https://github.com/shambam/cellexalvr/commit/0dd8cf8f2d382f604dd5cca9ba50c2ec73086284)
+* [Unity 2021.3.0f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit [1a29d79](https://github.com/sonejilab/cellexalvr/commit/1a29d798ccbb5974cad9419dd40265ae86b5f5e6) or later.
+* or [Unity 2019.1.8f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit between [9790228](https://github.com/sonejilab/cellexalvr/commit/97902283c2158b6758e2faab303231e0e8011edd) and [5693e91](https://github.com/sonejilab/cellexalvr/commit/5693e91b21d6984400911be99225bcb6daa0ff5b)
+* or [Unity 2018.2.11f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit between [e54e6e4](https://github.com/sonejilab/cellexalvr/commit/e54e6e475342daf3ab03d78a2dca9fcfe61a8eae) and [2bc5a4c](https://github.com/sonejilab/cellexalvr/commit/2bc5a4c98949a76b615791ac1e9913ce2a01aa42)
+* or [Unity 2017.3.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit between [bef690a](https://github.com/sonejilab/cellexalvr/commit/bef690a46b6ed9d16b7ad1d3fc7ab2164d936a12) and [f71e241](https://github.com/sonejilab/cellexalvr/commit/f71e241f891851fdf36d56692f9aa12a1e164ee9)
+* or [Unity 5.6.1f1](https://unity3d.com/get-unity/download/archive) if you are checking out a commit between the beginning of time and [cf7b0fb](https://github.com/sonejilab/cellexalvr/commit/cf7b0fbd86b972a2af65f86446d4469d001b1958).
+
+For any given commit, you can check the [ProjectVersion.txt](ProjectSettings/ProjectVersion.txt) file for which Unity version was used.
 
 ### Some examples and a more in depth guide of the project is available [here](https://cellexalvr.med.lu.se/programmers-guide).
 
