@@ -262,6 +262,7 @@ namespace CellexalVR.General
             if (switchTo)
             {
                 CellexalConfig.Config = CellexalConfig.savedConfigs[profileName];
+                currentProfileFullPath = configPath;
                 CellexalEvents.ConfigLoaded.Invoke();
             }
         }

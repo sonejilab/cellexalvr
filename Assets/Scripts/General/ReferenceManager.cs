@@ -1,4 +1,5 @@
-﻿using CellexalVR.AnalysisLogic;
+﻿using Assets.Scripts.Menu.SubMenus;
+using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
@@ -73,6 +74,7 @@ namespace CellexalVR.General
         public VelocitySubMenu velocitySubMenu;
         public GameObject selectionMenu;
         public FlybyMenu flybyMenu;
+        public ColorPickerSubMenu colorPickerSubMenu;
         //public TextMesh currentFlashedGeneText;
         //public TextMesh frontDescription;
         //public TextMesh rightDescription;
@@ -212,6 +214,7 @@ namespace CellexalVR.General
             velocitySubMenu = mainMenu.GetComponentInChildren<VelocitySubMenu>(true);
             selectionMenu = GameObject.Find("MenuHolder/Main Menu/Selection Tool Menu");
             flybyMenu = mainMenu.GetComponentInChildren<FlybyMenu>();
+            colorPickerSubMenu = mainMenu.GetComponentInChildren<ColorPickerSubMenu>(true);
             frontButtons = GameObject.Find("MenuHolder/Main Menu/Front Buttons");
             rightButtons = GameObject.Find("MenuHolder/Main Menu/Right Buttons");
             backButtons = GameObject.Find("MenuHolder/Main Menu/Back Buttons");

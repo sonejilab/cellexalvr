@@ -1,3 +1,4 @@
+using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 
@@ -31,7 +32,14 @@ namespace CellexalVR.Menu.Buttons.Selection
         public override void Click()
         {
             referenceManager.selectionToolCollider.SetSelectionToolEnabled(false);
-            selectionManager.ConfirmSelection();
+            if (PointCloudGenerator.instance.pointClouds.Count > 0)
+            {
+                selectionManager.ConfirmSelectionForBigFolder();
+            }
+            else
+            {
+                selectionManager.ConfirmSelection();
+            }
             referenceManager.multiuserMessageSender.SendMessageConfirmSelection();
             //controllerModelSwitcher.TurnOffActiveTool(true);
             // ctrlMdlSwitcher.SwitchToModel(ControllerModelSwitcher.Model.Menu);

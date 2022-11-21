@@ -722,7 +722,7 @@ namespace CellexalVR.DesktopUI
             {
                 referenceManager.configManager.SaveConfigFile(currentProfilePath);
             }
-
+            CellexalEvents.ConfigLoaded.Invoke();
             unsavedChangesPrompt.SetActive(false);
             settingsMenuGameObject.SetActive(false);
             colorPicker.gameObject.SetActive(false);

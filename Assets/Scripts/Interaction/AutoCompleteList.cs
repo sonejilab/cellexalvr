@@ -108,54 +108,61 @@ namespace CellexalVR.Interaction
             }
             // TODO: Make color by attr work from keyboard(?)
             string[] attributes = ReferenceManager.instance.cellManager.Attributes?.ToArray();
-            try
+            if (attributes != null)
             {
-                foreach (string attribute in attributes)
+                try
                 {
-                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
-                    if (attribute.Length > longestNameLength)
+                    foreach (string attribute in attributes)
                     {
-                        longestNameLength = attribute.Length;
+                        namesOfThings.Add(new Tuple<string, Definitions.Measurement>(attribute, Definitions.Measurement.ATTRIBUTE));
+                        if (attribute.Length > longestNameLength)
+                        {
+                            longestNameLength = attribute.Length;
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not read attributes. Caught error - " + e.StackTrace);
+                }
             }
-            catch (Exception e)
-            {
-                CellexalLog.Log("Could not read attributes. Caught error - " + e.StackTrace);
-            }
-
             string[] facs = referenceManager.cellManager.Facs;
-            try
+            if (facs != null)
             {
-                foreach (string f in facs)
+                try
                 {
-                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(f, Definitions.Measurement.FACS));
-                    if (f.Length > longestNameLength)
+                    foreach (string f in facs)
                     {
-                        longestNameLength = f.Length;
+                        namesOfThings.Add(new Tuple<string, Definitions.Measurement>(f, Definitions.Measurement.FACS));
+                        if (f.Length > longestNameLength)
+                        {
+                            longestNameLength = f.Length;
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not read facs. Caught error - " + e.StackTrace);
+                }
             }
-            catch (Exception e)
-            {
-                CellexalLog.Log("Could not read facs. Caught error - " + e.StackTrace);
-            }
-
             string[] numericalAttributes = referenceManager.cellManager.NumericalAttributes;
-            try
+            if (numericalAttributes != null)
             {
-                foreach (string n in numericalAttributes)
+                try
                 {
-                    namesOfThings.Add(new Tuple<string, Definitions.Measurement>(n, Definitions.Measurement.NUM));
-                    if (n.Length > longestNameLength)
+                    foreach (string n in numericalAttributes)
                     {
-                        longestNameLength = n.Length;
+                        namesOfThings.Add(new Tuple<string, Definitions.Measurement>(n, Definitions.Measurement.NUM));
+                        if (n.Length > longestNameLength)
+                        {
+                            longestNameLength = n.Length;
+                        }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                CellexalLog.Log("Could not read numerical attributes. Caught error - " + e.StackTrace);
+                catch (Exception e)
+                {
+                    CellexalLog.Log("Could not read numerical attributes. Caught error - " + e.StackTrace);
+                }
             }
 
             scoreMatrix = new int[longestNameLength + 1, longestNameLength + 1];

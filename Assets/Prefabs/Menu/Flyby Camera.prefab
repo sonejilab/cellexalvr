@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9189472901578576604
 Transform:
   m_ObjectHideFlags: 0
@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0.016339784, y: 0.6932497, z: -0.01697232, w: 0.7203123}
   m_LocalPosition: {x: -0.0415, y: 100.0005, z: -0.9342}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1598436524767683088}
   - {fileID: 8153471762495900437}
@@ -55,6 +56,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -114,6 +116,7 @@ Transform:
   m_LocalRotation: {x: 0.026650922, y: -0, z: -0.0000000037252903, w: 0.9996449}
   m_LocalPosition: {x: -0.01511, y: -0.00315, z: 0.00629}
   m_LocalScale: {x: 0.01996353, y: 0.011145338, z: 0.00075248274}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9189472901578576604}
   m_RootOrder: 3
@@ -137,6 +140,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -145,7 +149,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 66ff339b74bb07d4d9b23bd50d87b68f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -190,6 +194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8153471762495900437}
   - component: {fileID: 3747470528258433469}
+  - component: {fileID: 8418980429375337898}
   m_Layer: 10
   m_Name: Camera
   m_TagString: Untagged
@@ -207,6 +212,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.00319, y: -0.00402, z: 0.01672}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9189472901578576604}
   m_RootOrder: 1
@@ -244,7 +250,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 129335
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: 330630368cad84447be48ed80eb010c1, type: 2}
   m_TargetDisplay: 1
   m_TargetEye: 0
   m_HDR: 0
@@ -254,6 +260,39 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &8418980429375337898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3727642057229634541}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &4880862058029259859
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,6 +303,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1598436524767683088}
   - component: {fileID: 6935281164641889805}
+  - component: {fileID: 261514679422343129}
   m_Layer: 0
   m_Name: Camera Spot Light
   m_TagString: Untagged
@@ -281,6 +321,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9189472901578576604}
   m_RootOrder: 0
@@ -347,6 +388,26 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &261514679422343129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4880862058029259859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &5342143557003652130
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,6 +436,7 @@ Transform:
   m_LocalRotation: {x: 0.023570327, y: -0, z: -0.000000011175871, w: 0.99972224}
   m_LocalPosition: {x: -0.01548, y: -0.00304, z: 0.00557}
   m_LocalScale: {x: 0.01854, y: 0.010428916, z: 0.0060504586}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9189472901578576604}
   m_RootOrder: 2
@@ -398,6 +460,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -406,7 +469,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d9205699d92507645a99dc0f8f7dedb3, type: 2}
+  - {fileID: 2100000, guid: 906a6e6ebc173f143af1509da8a2e506, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -1,9 +1,8 @@
 ﻿using Assets.Scripts.Menu.ColorPicker;
+using Assets.Scripts.Menu.SubMenus;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace Assets.Scripts.Menu.Buttons.ColorPicker
 {
@@ -11,11 +10,18 @@ namespace Assets.Scripts.Menu.Buttons.ColorPicker
     {
         public ReferenceManager referenceManager;
         public CellexalButton finalizeChoiceButton;
+        public RemoveColorButton removeColorButton;
+        public ColorPickerSubMenu colorPickerSubMenu;
         public GameObject satvalBox;
         public GameObject satvalMarker;
+        public Sprite satvalMarkerUpperHalfSprite;
+        public Sprite satvalMarkerLowerHalfSprite;
+        public Sprite satvalMarkerUpperHalfHighlightSprite;
+        public Sprite satvalMarkerLowerHalfHighlightSprite;
         public GameObject hueSlider;
         public GameObject hueMarker;
-
+        public Sprite hueMarkerSprite;
+        public Sprite hueMarkerHighlightSprite;
 
         private float hue;
         private float sat;
@@ -23,7 +29,11 @@ namespace Assets.Scripts.Menu.Buttons.ColorPicker
         private ColorPickerButton buttonToUpdate;
         private GameObject rightController;
         private bool triggerPressed = false;
+        private bool stickToSatValBox = false;
+        private bool stickToHueBox = false;
         private Material satvalBoxShader;
+        private SpriteRenderer satvalMarkerRenderer;
+        private SpriteRenderer hueMarkerRenderer;
         private Vector3 satValBoxLowerLeft = new Vector3(-0.46f, 0f, -0.14f);
         private Vector3 satValBoxUpperRight = new Vector3(0.14f, 0f, 0.46f);
         private Vector3 huesliderBoxLowerLeft = new Vector3(0.16f, 0f, -0.14f);
@@ -42,6 +52,9 @@ namespace Assets.Scripts.Menu.Buttons.ColorPicker
         private void Start()
         {
             rightController = referenceManager.rightController.gameObject.gameObject;
+            satvalMarkerRenderer = satvalMarker.GetComponent<SpriteRenderer>();
+            satvalBoxShader = satvalBox.GetComponent<Renderer>().material;
+            hueMarkerRenderer = hueMarker.GetComponent<SpriteRenderer>();
         }
 
         private void OnEnable()
@@ -84,27 +97,41 @@ namespace Assets.Scripts.Menu.Buttons.ColorPicker
 
                 // the raycast hit in local coordinates
                 Vector3 hitCoord = transform.InverseTransformPoint(hit.point);
-                if (CoordInsideBox(hitCoord, satValBoxLowerLeft, satValBoxUpperRight))
+                if (!stickToHueBox && (stickToSatValBox || CoordInsideBox(hitCoord, satValBoxLowerLeft, satValBoxUpperRight)))
                 {
                     // hit sat/val box
                     if (triggerPressed)
                     {
+                        hitCoord = Clamp(hitCoord, satValBoxLowerLeft, satValBoxUpperRight);
+                        stickToSatValBox = true;
                         satvalMarker.transform.localPosition = new Vector3(hitCoord.x, 1.1f, hitCoord.z);
-                        sat = hitCoord.x - satValBoxLowerLeft.x / (satValBoxUpperRight.x - satValBoxLowerLeft.x);
-                        val = hitCoord.z - satValBoxLowerLeft.z / (satValBoxUpperRight.z - satValBoxLowerLeft.z);
+                        sat = (hitCoord.x - satValBoxLowerLeft.x) / (satValBoxUpperRight.x - satValBoxLowerLeft.x);
+                        val = (hitCoord.z - satValBoxLowerLeft.z) / (satValBoxUpperRight.z - satValBoxLowerLeft.z);
                         UpdateColor();
                     }
+                    else
+                    {
+                        stickToSatValBox = false;
+                    }
+                    SetSatValBoxMarkerSprite(triggerPressed);
                 }
-                else if (CoordInsideBox(hitCoord, huesliderBoxLowerLeft, huesliderBoxUpperRight))
+                else if (stickToHueBox || CoordInsideBox(hitCoord, huesliderBoxLowerLeft, huesliderBoxUpperRight))
                 {
                     // hit hue slider
                     if (triggerPressed)
                     {
+                        hitCoord = Clamp(hitCoord, huesliderBoxLowerLeft, huesliderBoxUpperRight);
+                        stickToHueBox = true;
                         hueMarker.transform.localPosition = new Vector3(0.2f, 0.8f, hitCoord.z);
-                        hue = hitCoord.z - huesliderBoxLowerLeft.z / (huesliderBoxUpperRight.z - huesliderBoxLowerLeft.z);
-                        satvalBoxShader.SetFloat("Hue", hue);
+                        hue = 1 - (hitCoord.z - huesliderBoxLowerLeft.z) / (huesliderBoxUpperRight.z - huesliderBoxLowerLeft.z);
+                        satvalBoxShader.SetFloat("_Hue", hue);
                         UpdateColor();
                     }
+                    else
+                    {
+                        stickToHueBox = false;
+                    }
+                    SetHueMarkerSprite(triggerPressed);
                 }
             }
             else
@@ -113,28 +140,116 @@ namespace Assets.Scripts.Menu.Buttons.ColorPicker
             }
         }
 
+
+        private void SetSatValBoxMarkerSprite(bool triggerPressed)
+        {
+            if (triggerPressed)
+            {
+                if (val > 0.5f)
+                {
+                    satvalMarkerRenderer.sprite = satvalMarkerUpperHalfHighlightSprite;
+                }
+                else
+                {
+                    satvalMarkerRenderer.sprite = satvalMarkerLowerHalfHighlightSprite;
+                }
+            }
+            else
+            {
+                if (val > 0.5f)
+                {
+                    satvalMarkerRenderer.sprite = satvalMarkerUpperHalfSprite;
+                }
+                else
+                {
+                    satvalMarkerRenderer.sprite = satvalMarkerLowerHalfSprite;
+                }
+            }
+        }
+
+        private void SetHueMarkerSprite(bool triggerPressed)
+        {
+            if (triggerPressed)
+            {
+                hueMarkerRenderer.sprite = hueMarkerHighlightSprite;
+            }
+            else
+            {
+                hueMarkerRenderer.sprite = hueMarkerSprite;
+            }
+        }
+
         private bool CoordInsideBox(Vector3 coord, Vector3 lowerLeft, Vector3 upperRight)
         {
             return coord.x >= lowerLeft.x && coord.z >= lowerLeft.z && coord.x <= upperRight.x && coord.z <= upperRight.z;
+        }
+
+        /// <summary>
+        /// Element-wise clamping of a vector.
+        /// </summary>
+        /// <param name="v">The vector to clamp.</param>
+        /// <param name="min">The minimum x, y and z values to clamp between.</param>
+        /// <param name="max">The maximum x, y and z values to clamp between.</param>
+        /// <returns>A new <see cref="Vector3"/> clamped between <paramref name="min"/> and <paramref name="max"/></returns>
+        private Vector3 Clamp(Vector3 v, Vector3 min, Vector3 max)
+        {
+            return new Vector3(Mathf.Clamp(v.x, min.x, max.x), Mathf.Clamp(v.y, min.y, max.y), Mathf.Clamp(v.z, min.z, max.z));
         }
 
         private void UpdateColor()
         {
             Color newColor = Color.HSVToRGB(hue, sat, val);
             buttonToUpdate.SetColor(newColor);
-            finalizeChoiceButton.GetComponent<Renderer>().material.color = newColor;
+            finalizeChoiceButton.meshStandardColor = newColor;
         }
 
         public void Open(ColorPickerButton openingButton)
         {
+            if (buttonToUpdate)
+            {
+                // clear already bound button
+                CellexalConfig.Config.SelectionToolColors[buttonToUpdate.index] = Color.HSVToRGB(hue, sat, val);
+                buttonToUpdate.highlightGameObject.SetActive(false);
+            }
             gameObject.SetActive(true);
             buttonToUpdate = openingButton;
+            Color.RGBToHSV(openingButton.meshStandardColor, out hue, out sat, out val);
+            float satvalMarkerX = sat * (satValBoxUpperRight.x - satValBoxLowerLeft.x) + satValBoxLowerLeft.x;
+            float satvalMarkerZ = val * (satValBoxUpperRight.z - satValBoxLowerLeft.z) + satValBoxLowerLeft.z;
+            float hueMarkerZ = ((1 - hue) * (huesliderBoxUpperRight.z - huesliderBoxLowerLeft.z)) + huesliderBoxLowerLeft.z;
+            satvalMarker.transform.localPosition = new Vector3(satvalMarkerX, 1.1f, satvalMarkerZ);
+            hueMarker.transform.localPosition = new Vector3(0.2f, 0.8f, hueMarkerZ);
+            if (!satvalBoxShader)
+            {
+                satvalMarkerRenderer = satvalMarker.GetComponent<SpriteRenderer>();
+                satvalBoxShader = satvalBox.GetComponent<Renderer>().material;
+            }
+            SetSatValBoxMarkerSprite(false);
+            satvalBoxShader.SetFloat("_Hue", hue);
         }
+
 
         public void Close()
         {
             gameObject.SetActive(false);
         }
 
+        public void FinalizeChoice()
+        {
+            buttonToUpdate.highlightGameObject.SetActive(false);
+            CellexalConfig.Config.SelectionToolColors[buttonToUpdate.index] = Color.HSVToRGB(hue, sat, val);
+            referenceManager.configManager.SaveConfigFile(referenceManager.configManager.currentProfileFullPath);
+            CellexalEvents.ConfigLoaded.Invoke();
+            finalizeChoiceButton.controllerInside = false;
+            Close();
+        }
+
+        public void RemoveColor()
+        {
+            colorPickerSubMenu.RemoveSelectionColorButton(buttonToUpdate);
+            buttonToUpdate = null;
+            removeColorButton.controllerInside = false;
+            Close();
+        }
     }
 }
