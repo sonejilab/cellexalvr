@@ -1,10 +1,8 @@
-﻿using Assets.Scripts.Menu.ColorPicker;
-using Assets.Scripts.Menu.SubMenus;
+﻿using CellexalVR.Menu.SubMenus;
 using CellexalVR.General;
-using CellexalVR.Menu.Buttons;
 using UnityEngine;
 
-namespace Assets.Scripts.Menu.Buttons.ColorPicker
+namespace CellexalVR.Menu.Buttons.ColorPicker
 {
     public class ColorPickerPopout : MonoBehaviour
     {
@@ -208,7 +206,7 @@ namespace Assets.Scripts.Menu.Buttons.ColorPicker
             if (buttonToUpdate)
             {
                 // clear already bound button
-                CellexalConfig.Config.SelectionToolColors[buttonToUpdate.index] = Color.HSVToRGB(hue, sat, val);
+                CellexalConfig.Config.SelectionToolColors[buttonToUpdate.colorPickerButtonBase.selectionToolColorIndex] = Color.HSVToRGB(hue, sat, val);
                 buttonToUpdate.highlightGameObject.SetActive(false);
             }
             gameObject.SetActive(true);
@@ -237,9 +235,10 @@ namespace Assets.Scripts.Menu.Buttons.ColorPicker
         public void FinalizeChoice()
         {
             buttonToUpdate.highlightGameObject.SetActive(false);
-            CellexalConfig.Config.SelectionToolColors[buttonToUpdate.index] = Color.HSVToRGB(hue, sat, val);
-            referenceManager.configManager.SaveConfigFile(referenceManager.configManager.currentProfileFullPath);
-            CellexalEvents.ConfigLoaded.Invoke();
+            buttonToUpdate.colorPickerButtonBase.FinalizeChoice();
+            //CellexalConfig.Config.SelectionToolColors[buttonToUpdate.colorPickerButtonBase.selectionToolColorIndex] = Color.HSVToRGB(hue, sat, val);
+            //referenceManager.configManager.SaveConfigFile(referenceManager.configManager.currentProfileFullPath);
+            //CellexalEvents.ConfigLoaded.Invoke();
             finalizeChoiceButton.controllerInside = false;
             Close();
         }

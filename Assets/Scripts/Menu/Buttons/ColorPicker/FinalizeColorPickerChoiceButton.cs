@@ -1,8 +1,4 @@
-﻿using CellexalVR.Menu.Buttons;
-using System.Collections;
-using UnityEngine;
-
-namespace Assets.Scripts.Menu.Buttons.ColorPicker
+﻿namespace CellexalVR.Menu.Buttons.ColorPicker
 {
     public class FinalizeColorPickerChoiceButton : CellexalButton
     {

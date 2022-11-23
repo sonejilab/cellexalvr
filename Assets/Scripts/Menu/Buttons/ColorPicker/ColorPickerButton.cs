@@ -1,14 +1,13 @@
-﻿using Assets.Scripts.Menu.Buttons.ColorPicker;
-using System.Collections;
+﻿using CellexalVR.DesktopUI;
 using UnityEngine;
 
-namespace Assets.Scripts.Menu.ColorPicker
+namespace CellexalVR.Menu.Buttons.ColorPicker
 {
-    public class ColorPickerButton : CellexalVR.Menu.Buttons.CellexalButton
+    public class ColorPickerButton : CellexalButton
     {
         public ColorPickerPopout colorPicker;
         public GameObject highlightGameObject;
-        [HideInInspector] public int index;
+        public ColorPickerButtonBase colorPickerButtonBase;
 
         protected override string Description => "Click to open the color picker and choose a new color";
 
@@ -22,6 +21,7 @@ namespace Assets.Scripts.Menu.ColorPicker
         {
             meshStandardColor = newColor;
             gameObject.GetComponent<Renderer>().material.color = newColor;
+            colorPickerButtonBase.Color = newColor;
         }
     }
 }
