@@ -253,7 +253,7 @@ namespace CellexalVR.DesktopUI
         /// <summary>
         /// Sets the values of the buttons in the menu to accurately depict what the current internal values are.
         /// </summary>
-        private void SetValues()
+        public void SetValues()
         {
             usernameText.text = "Current user: " + CellexalUser.Username;
             requireTouchpadToClickToggle.isOn = CellexalConfig.Config.RequireTouchpadClickToInteract;

@@ -13,7 +13,12 @@ namespace CellexalVR.Menu.SubMenus
         public GameObject addSelelectionColorButton;
         public ColorPickerButton geneExpressionHighButton;
         public ColorPickerButton geneExpressionMidButton;
+        public ColorPickerButton geneExpressionZeroButton;
+        public ColorPickerButton geneExpressionDefaultButton;
         public ColorPickerButton geneExpressionLowButton;
+        public ColorPickerButton heatmapHighButton;
+        public ColorPickerButton heatmapMidButton;
+        public ColorPickerButton heatmapLowButton;
         public ColorPickerButton networksPositiveHighButton;
         public ColorPickerButton networksPositiveLowButton;
         public ColorPickerButton networksNegativeHighButton;
@@ -64,7 +69,12 @@ namespace CellexalVR.Menu.SubMenus
 
             geneExpressionHighButton.SetColor(CellexalConfig.Config.GraphHighExpressionColor);
             geneExpressionMidButton.SetColor(CellexalConfig.Config.GraphMidExpressionColor);
-            geneExpressionLowButton.SetColor(CellexalConfig.Config.HeatmapLowExpressionColor);
+            geneExpressionLowButton.SetColor(CellexalConfig.Config.GraphLowExpressionColor);
+            geneExpressionZeroButton.SetColor(CellexalConfig.Config.GraphZeroExpressionColor);
+            geneExpressionDefaultButton.SetColor(CellexalConfig.Config.GraphDefaultColor);
+            heatmapHighButton.SetColor(CellexalConfig.Config.HeatmapHighExpressionColor);
+            heatmapMidButton.SetColor(CellexalConfig.Config.HeatmapMidExpressionColor);
+            heatmapLowButton.SetColor(CellexalConfig.Config.HeatmapLowExpressionColor);
             networksPositiveHighButton.SetColor(CellexalConfig.Config.NetworkLineColorPositiveHigh);
             networksPositiveLowButton.SetColor(CellexalConfig.Config.NetworkLineColorPositiveLow);
             networksNegativeHighButton.SetColor(CellexalConfig.Config.NetworkLineColorNegativeHigh);
@@ -85,6 +95,7 @@ namespace CellexalVR.Menu.SubMenus
                 newButton.GetComponent<Renderer>().material.color = col;
                 newButton.meshStandardColor = col;
                 newButton.enabled = true;
+                newButton.name = $"Selection Color {index}";
                 newButton.gameObject.SetActive(true);
                 newButton.GetComponent<Renderer>().enabled = gameObject.GetComponent<Renderer>().enabled;
                 newButton.GetComponent<Collider>().enabled = gameObject.GetComponent<Collider>().enabled;
@@ -97,6 +108,7 @@ namespace CellexalVR.Menu.SubMenus
                 buttons[index].GetComponent<Renderer>().material.color = col;
                 buttons[index].meshStandardColor = col;
                 buttons[index].colorPickerButtonBase.selectionToolColorIndex = index;
+                buttons[index].name = $"Selection Color {index}";
             }
 
         }

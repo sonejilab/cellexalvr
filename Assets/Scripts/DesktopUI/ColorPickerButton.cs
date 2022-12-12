@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace CellexalVR.DesktopUI
 {
@@ -9,11 +10,20 @@ namespace CellexalVR.DesktopUI
     public class ColorPickerButton : ColorPickerButtonBase
     {
         public GameObject parentGroup;
-        public UnityEngine.UI.Image image;
+        public Image image;
+        public override Color Color
+        {
+            get => base.Color;
+            set
+            {
+                base.Color = value;
+                image.color = value;
+            }
+        }
 
         private void Awake()
         {
-            image = gameObject.GetComponent<UnityEngine.UI.Image>();
+            image = gameObject.GetComponent<Image>();
         }
 
 

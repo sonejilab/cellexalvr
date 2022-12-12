@@ -29,6 +29,7 @@ namespace CellexalVR.Menu.SubMenus
         private bool active;
 
         protected MenuToggler menuToggler;
+        [SerializeField]
         protected List<Tab> tabs = new List<Tab>();
         protected Vector3 tabButtonPos = new Vector3(-0.309f, 1f, 0.325f);
         protected Vector3 tabButtonPosOriginal = new Vector3(-0.309f, 1f, 0.325f);
@@ -299,7 +300,7 @@ namespace CellexalVR.Menu.SubMenus
             pageNrText.text = "p. " + (currentPage + 1) + "/" + (pageCounter + 1);
             for (int i = 0; i < tabs.Count; i++)
             {
-                tabs[i].gameObject.SetActive((int) (i / 4) == currentPage);
+                tabs[i].gameObject.SetActive((int)(i / 4) == currentPage);
             }
 
             if (currentPage == pageCounter)

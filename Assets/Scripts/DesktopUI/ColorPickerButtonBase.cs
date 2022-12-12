@@ -33,7 +33,7 @@ namespace CellexalVR.DesktopUI
         /// The reason for this split functionality is that the <see cref="FinalizeChoice"/> method calls some relatively performance heavy functions,
         /// while this property could be called once every frame to constantly update the visuals of the button.
         /// </remarks>
-        public Color Color
+        public virtual Color Color
         {
             get { return color; }
             set
@@ -71,8 +71,25 @@ namespace CellexalVR.DesktopUI
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+
+                if (gradient)
+                {
+                    // Find out what type of component the gradient is rendering with
+                    UnityEngine.UI.Image image = gradient.GetComponentInChildren<UnityEngine.UI.Image>(true);
+                    if (image)
+                    {
+                        gradientMaterial = image.material;
+                    }
+
+                    MeshRenderer meshRenderer = gradient.GetComponentInChildren<MeshRenderer>(true);
+                    if (meshRenderer)
+                    {
+                        gradientMaterial = meshRenderer.sharedMaterial;
+                    }
+                }
             }
         }
+
         protected void Start()
         {
             colorPicker = referenceManager.colorPicker;

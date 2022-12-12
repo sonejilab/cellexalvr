@@ -236,6 +236,7 @@ namespace CellexalVR.Menu.Buttons.ColorPicker
         {
             buttonToUpdate.highlightGameObject.SetActive(false);
             buttonToUpdate.colorPickerButtonBase.FinalizeChoice();
+            referenceManager.settingsMenu.SetValues();
             //CellexalConfig.Config.SelectionToolColors[buttonToUpdate.colorPickerButtonBase.selectionToolColorIndex] = Color.HSVToRGB(hue, sat, val);
             //referenceManager.configManager.SaveConfigFile(referenceManager.configManager.currentProfileFullPath);
             //CellexalEvents.ConfigLoaded.Invoke();

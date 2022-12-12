@@ -9,7 +9,7 @@ namespace CellexalVR.Menu.Buttons.ColorPicker
         public GameObject highlightGameObject;
         public ColorPickerButtonBase colorPickerButtonBase;
 
-        protected override string Description => "Click to open the color picker and choose a new color";
+        protected override string Description => gameObject.name;
 
         public override void Click()
         {
