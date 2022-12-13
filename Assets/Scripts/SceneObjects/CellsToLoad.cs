@@ -40,12 +40,14 @@ namespace CellexalVR.SceneObjects
             return graphsLoaded;
         }
 
-        
+
         internal void ResetPosition()
         {
             transform.parent = defaultParent;
             transform.localPosition = defaultPosition;
             transform.localRotation = defaultRotation;
+            gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            gameObject.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         }
 
         internal void SavePosition(Transform parent)

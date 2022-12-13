@@ -24,7 +24,7 @@ namespace CellexalVR.Interaction
             var total = 0f;
             for (int i = 0; i < moveTime; ++i)
             {
-                dAngle[i] = Mathf.Sin(Mathf.PI * ((float) i / moveTime));
+                dAngle[i] = Mathf.Sin(Mathf.PI * ((float)i / moveTime));
                 total += Mathf.Abs(dAngle[i]);
             }
 
@@ -32,6 +32,16 @@ namespace CellexalVR.Interaction
             {
                 dAngle[i] *= 90 / total;
             }
+        }
+
+        private void OnDisable()
+        {
+            transform.localRotation = Quaternion.identity;
+            StopAllCoroutines();
+            coroutineRunning = false;
+            lidOpen = false;
+            desiredState = false;
+            controllersInside = 0;
         }
 
         private void Update()
@@ -61,8 +71,9 @@ namespace CellexalVR.Interaction
             if (other.gameObject.CompareTag("GameController"))/*other.transform.parent.name == "[VRTK][AUTOGEN][Controller][CollidersContainer]"*/
             {
                 controllersInside--;
-                if (controllersInside == 0)
+                if (controllersInside <= 0)
                 {
+                    controllersInside = 0;
                     desiredState = false;
                     if (!coroutineRunning && lidOpen)
                     {

@@ -20,6 +20,7 @@ namespace CellexalVR.General
 
         private int nfolder = 0;
         private List<string> directories = new List<string>();
+        private Dictionary<string, CellsToLoad> folderBoxes = new Dictionary<string, CellsToLoad>();
         private string dataDirectory;
 
         // 6 is the number of boxes on each "floor"
@@ -111,36 +112,52 @@ namespace CellexalVR.General
             nfolder = 0;
             foreach (string directory in directories)
             {
-                int forwardSlashIndex = directory.LastIndexOf('/');
-                int backwardSlashIndex = directory.LastIndexOf('\\');
-                string croppedDirectoryName;
+                //int forwardSlashIndex = directory.LastIndexOf('/');
+                //int backwardSlashIndex = directory.LastIndexOf('\\');
+                string croppedDirectoryName = Path.GetFileName(directory);
+
 
                 // Handle both forwardslash and backwardslash
-                if (backwardSlashIndex > forwardSlashIndex)
-                {
-                    croppedDirectoryName = directory.Substring(backwardSlashIndex + 1);
-                }
+                //if (backwardSlashIndex > forwardSlashIndex)
+                //{
+                //    croppedDirectoryName = directory.Substring(backwardSlashIndex + 1);
+                //}
 
-                else
-                {
-                    croppedDirectoryName = directory.Substring(forwardSlashIndex + 1);
-                }
+                //else
+                //{
+                //    croppedDirectoryName = directory.Substring(forwardSlashIndex + 1);
+                //}
 
                 if (croppedDirectoryName.ToLower().Contains(filter))
                 {
                     Vector3 heightVector = new Vector3(0f, 1 + nfolder / 6, 0f);
-                    GameObject newFolder = Instantiate(folderPrefab, folderBaseCoords[nfolder % 6] + heightVector,
-                        Quaternion.identity);
-                    newFolder.transform.parent = transform;
-                    newFolder.transform.LookAt(transform.position + heightVector - new Vector3(0f, 1f, 0f));
-                    newFolder.transform.Rotate(0, -90f, 0);
-                    newFolder.GetComponentInChildren<CellsToLoad>().SavePosition(newFolder.transform);
+                    Vector3 position = folderBaseCoords[nfolder % 6] + heightVector;
                     nfolder++;
+                    if (!folderBoxes.ContainsKey(croppedDirectoryName))
+                    {
+                        GameObject newFolder = Instantiate(folderPrefab);
+                        newFolder.transform.parent = transform;
+                        CellsToLoad cellsToload = newFolder.GetComponentInChildren<CellsToLoad>();
+                        cellsToload.SavePosition(newFolder.transform);
 
-                    // Set text on folder box
-                    newFolder.GetComponentInChildren<TextMeshPro>().text = croppedDirectoryName;
-                    newFolder.GetComponentInChildren<CellsToLoad>().Directory = croppedDirectoryName;
-                    newFolder.gameObject.name = croppedDirectoryName + "_box";
+                        // Set text on folder box
+                        newFolder.GetComponentInChildren<TextMeshPro>().text = croppedDirectoryName;
+                        cellsToload.Directory = croppedDirectoryName;
+                        newFolder.name = croppedDirectoryName + "_box";
+                        folderBoxes[croppedDirectoryName] = cellsToload;
+                    }
+
+                    CellsToLoad box = folderBoxes[croppedDirectoryName];
+                    GameObject parent = box.transform.parent.gameObject;
+                    parent.SetActive(true);
+                    parent.transform.position = position;
+                    parent.transform.LookAt(transform.position + heightVector - new Vector3(0f, 1f, 0f));
+                    parent.transform.Rotate(0, -90f, 0);
+
+                }
+                else
+                {
+                    folderBoxes[croppedDirectoryName].transform.parent.gameObject.SetActive(false);
                 }
             }
         }
@@ -212,12 +229,13 @@ namespace CellexalVR.General
         /// </summary>
         public void DestroyFolders()
         {
-            foreach (Transform child in transform)
+            foreach (CellsToLoad cellsToLoad in folderBoxes.Values)
             {
-                Destroy(child.gameObject);
+                Destroy(cellsToLoad.transform.parent.gameObject);
             }
             directories.Clear();
+            folderBoxes.Clear();
         }
-        
+
     }
 }
