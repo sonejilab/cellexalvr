@@ -127,7 +127,7 @@ namespace CellexalVR.Interaction
                         Collider collider = selectionToolColliders[i];
                         Color removalColor = Color.white;
                         removalColor.a = 0.1f;
-                        collider.GetComponent<Renderer>().material.color = removalColor;
+                        selectionToolMaterial.color = removalColor;
                     }
 
                     return;
@@ -138,7 +138,7 @@ namespace CellexalVR.Interaction
                 for (int i = 0; i < selectionToolColliders.Length / 2; i++)
                 {
                     Collider collider = selectionToolColliders[i];
-                    collider.GetComponent<Renderer>().material.color = col;
+                    selectionToolMaterial.color = col;
                 }
 
                 controllerMaterial.SetColor("_Tint", col);
@@ -186,7 +186,7 @@ namespace CellexalVR.Interaction
             UpdateShapeIcons();
             CellexalEvents.ConfigLoaded.AddListener(() => RequireToggleToClick = CellexalConfig.Config.RequireTouchpadClickToInteract);
 
-            CurrentColorIndex = 0;
+            //CurrentColorIndex = 0;
         }
 
         private void OnTriggerClick()
@@ -311,12 +311,12 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void UpdateColors()
         {
-            currentColorIndex = 0;
             Colors = CellexalConfig.Config.SelectionToolColors;
             for (int i = 0; i < Colors.Length; i++)
             {
                 Colors[i].a = 1;
             }
+            CurrentColorIndex = 0;
 
             if (!CrossSceneInformation.Ghost)
             {

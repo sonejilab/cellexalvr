@@ -107,7 +107,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4096447071949723797}
   - component: {fileID: 23500764613227826}
-  - component: {fileID: 3366941642938246887}
   - component: {fileID: 2724534083761719212}
   m_Layer: 2
   m_Name: Folder Name
@@ -178,14 +177,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!222 &3366941642938246887
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1092379344175472}
-  m_CullTransparentMesh: 0
 --- !u!114 &2724534083761719212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,8 +392,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1299708079048448}
-  m_LocalRotation: {x: 0.0000015944244, y: -0.0000007152558, z: 0.00000087916857,
-    w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.158, y: 0.111, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -14,7 +14,7 @@ namespace CellexalVR.Menu.Buttons.Facs
 
         private CellManager cellManager;
         private string indexName;
-        
+
 
         protected override string Description
         {
@@ -30,6 +30,7 @@ namespace CellexalVR.Menu.Buttons.Facs
 
         public override void Click()
         {
+            referenceManager.graphManager.ResetGraphsColor();
             cellManager.ColorByIndex(indexName);
             TurnOff();
             referenceManager.multiuserMessageSender.SendMessageColorByIndex(indexName);

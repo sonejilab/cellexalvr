@@ -450,7 +450,7 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Resets all graphpoints' in all graphs colors to white. Also clears selection and removes annotations.
+        /// Resets all graphpoints' in all graphs colors to white.
         /// </summary>
         [ConsoleCommand("graphManager", aliases: new string[] { "resetcolor", "rc" })]
         public void ResetGraphsColor()

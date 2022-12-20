@@ -1,4 +1,5 @@
-﻿using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using UnityEngine;
@@ -56,7 +57,7 @@ namespace CellexalVR.Tools
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("HeatBoard") || other.CompareTag("Network") || other.CompareTag("SubGraph")
-                || other.CompareTag("FacsGraph") || other.CompareTag("FilterBlock"))
+                || other.CompareTag("FacsGraph") || other.CompareTag("FilterBlock") || other.CompareTag("BoxPlotGrid"))
             {
                 controllerInside = true;
                 objectToDelete = other.gameObject;
@@ -109,6 +110,10 @@ namespace CellexalVR.Tools
                 case "FacsGraph":
                     referenceManager.graphManager.DeleteGraph(obj.gameObject.name, obj.tag);
                     break;
+                case "BoxPlotGrid":
+                    obj.GetComponentInParent<BoxPlotGrid>().Remove();
+                    break;
+
             }
         }
 
