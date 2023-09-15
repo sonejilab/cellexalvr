@@ -263,22 +263,13 @@ namespace CellexalVR.AnalysisLogic
             {
                 string function = "make.cellexalvr.heatmap.list";
                 string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
-                string timeSelectionPath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt.time").UnFixFilePath();
-                string groupingFilePath;
-                if (File.Exists(timeSelectionPath))
-                {
-                    groupingFilePath = timeSelectionPath;
-                    referenceManager.inputReader.ReadSelectionFile(groupingFilePath);
-                }
-                else
-                {
-                    groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
-                }
 
                 string topGenesNr = nrOfGenes.ToString();
                 string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
+                // the check for the txt.time file needs to wait for the R to create it.
+                string groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
                 string args = CellexalUser.UserSpecificFolder + " " + groupingFilePath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
-
+                
                 string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
 
                 if (!Directory.Exists(heatmapDirectory))
@@ -326,8 +317,17 @@ namespace CellexalVR.AnalysisLogic
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
             heatmap.selectionNr = selectionNr;
+            // R might have created a txt.time selection file
             heatmap.selectionFile =
-                (CellexalUser.UserSpecificFolder + "/selection" + selectionNr + ".txt").FixFilePath();
+                (CellexalUser.UserSpecificFolder + "/selection" + selectionNr + ".txt.time").FixFilePath();
+            if (!File.Exists(heatmap.selectionFile))
+            {
+                heatmap.selectionFile = (CellexalUser.UserSpecificFolder + "/selection" + selectionNr + ".txt").FixFilePath();
+            }
+            else
+            {
+                selection = referenceManager.inputReader.ReadSelectionFile(heatmap.selectionFile);
+            }
             heatmapList.Add(heatmap);
             Dataset.instance.heatmaps.Add(heatmap);
             heatmap.directory = outputFilePath;

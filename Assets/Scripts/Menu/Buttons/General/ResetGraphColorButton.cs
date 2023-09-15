@@ -19,6 +19,7 @@ namespace CellexalVR.Menu.Buttons.General
             }
         }
 
+
         private void Start()
         {
             graphManager = referenceManager.graphManager;
@@ -44,5 +45,6 @@ namespace CellexalVR.Menu.Buttons.General
         {
             SetButtonActivated(false);
         }
+
     }
 }

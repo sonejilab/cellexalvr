@@ -708,6 +708,7 @@ namespace CellexalVR.AnalysisLogic
             //string dataFolder = CellexalUser.UserSpecificFolder;
             List<Graph.GraphPoint> selection = new List<Graph.GraphPoint>();
             List<Vector2Int> indices = new List<Vector2Int>();
+
             if (!File.Exists(path))
             {
                 CellexalLog.Log("Could not find file:" + path);
