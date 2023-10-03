@@ -269,7 +269,7 @@ namespace CellexalVR.AnalysisLogic
                 // the check for the txt.time file needs to wait for the R to create it.
                 string groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
                 string args = CellexalUser.UserSpecificFolder + " " + groupingFilePath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
-                
+
                 string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
 
                 if (!Directory.Exists(heatmapDirectory))
@@ -306,6 +306,8 @@ namespace CellexalVR.AnalysisLogic
                 //yield return ScarfManager.instance.RunMarkerSearch("RNA_leiden_cluster", 0.25f);
                 yield return ScarfManager.instance.GetMarkers("RNA_leiden_cluster");
             }
+            // wait for files to be saved on disk so File.Exists() can find them
+            yield return new WaitForSeconds(1f);
             // stopwatch.Stop();
             // CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
 
@@ -326,7 +328,7 @@ namespace CellexalVR.AnalysisLogic
             }
             else
             {
-                selection = referenceManager.inputReader.ReadSelectionFile(heatmap.selectionFile);
+                selection = referenceManager.inputReader.ReadSelectionFile(heatmap.selectionFile, false);
             }
             heatmapList.Add(heatmap);
             Dataset.instance.heatmaps.Add(heatmap);
@@ -755,6 +757,7 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.sessionHistoryList.AddEntry(heatmap.directory + " from " + heatmap.selectionFile,
                     Definitions.HistoryEvent.HEATMAP);
             }
+            referenceManager.floor.StopPulse();
         }
 
         /// <summary>

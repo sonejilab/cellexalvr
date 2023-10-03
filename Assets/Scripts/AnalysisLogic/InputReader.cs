@@ -760,11 +760,18 @@ namespace CellexalVR.AnalysisLogic
                 {
                     Graph.GraphPoint graphPoint = graphManager.FindGraphPoint(words[2], words[0]);
                     selection.Add(graphPoint);
+                    numPointsAdded++;
                     if (select)
                     {
                         selectionManager.AddGraphpointToSelection(graphPoint,
                             group, false, groupColor);
-                        numPointsAdded++;
+                    }
+                    else
+                    {
+                        foreach (Graph graph in graphManager.Graphs)
+                        {
+                            graph.FindGraphPoint(graphPoint.Label).ColorSelectionColor(group, false);
+                        }
                     }
                 }
             }

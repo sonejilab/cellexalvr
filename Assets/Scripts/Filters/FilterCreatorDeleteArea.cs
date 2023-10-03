@@ -1,12 +1,11 @@
-﻿using UnityEngine;
+﻿using CellexalVR.General;
+using UnityEngine;
 
 namespace CellexalVR.Filters
 {
 
     public class FilterCreatorDeleteArea : MonoBehaviour
     {
-        public FilterManager filterManager;
-
         private void OnTriggerEnter(Collider other)
         {
             // the colliders that can be grabbed are on child gameobjects
@@ -19,7 +18,7 @@ namespace CellexalVR.Filters
                 filterCreatorBlock.DisconnectAllPorts();
 
                 Destroy(filterCreatorBlock.gameObject);
-                filterManager.UpdateFilterFromFilterCreator();
+                ReferenceManager.instance.filterManager.UpdateFilterFromFilterCreator();
             }
         }
     }

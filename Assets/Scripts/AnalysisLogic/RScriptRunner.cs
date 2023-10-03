@@ -250,8 +250,9 @@ namespace CellexalVR.AnalysisLogic
                         result = RunFromCmd(path, args, true);
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    CellexalLog.Log(e.Source, e.Message, e.StackTrace);
                     // Command Failed. Removing lock file on input.R 
                     File.Delete(inputFilePath + ".input.lock");
                 }
