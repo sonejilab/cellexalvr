@@ -770,7 +770,12 @@ namespace CellexalVR.AnalysisLogic
                     {
                         foreach (Graph graph in graphManager.Graphs)
                         {
-                            graph.FindGraphPoint(graphPoint.Label).ColorSelectionColor(group, false);
+
+                            Graph.GraphPoint gp = graph.FindGraphPoint(graphPoint.Label);
+                            if (gp is not null)
+                            {
+                                gp.ColorSelectionColor(group, false);
+                            }
                         }
                     }
                 }

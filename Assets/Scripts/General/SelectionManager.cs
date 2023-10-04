@@ -407,7 +407,10 @@ namespace CellexalVR.General
             foreach (Graph graph in graphManager.Graphs)
             {
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
-                gp.ColorSelectionColor(info.fromGroup, !info.newNode);
+                if (gp is not null)
+                {
+                    gp.ColorSelectionColor(info.fromGroup, !info.newNode);
+                }
             }
             referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(info.toGroup.ToString(), -1, selectionToolCollider.Colors[info.toGroup]);
 

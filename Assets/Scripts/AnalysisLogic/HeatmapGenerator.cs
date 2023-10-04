@@ -300,14 +300,17 @@ namespace CellexalVR.AnalysisLogic
                 {
                     yield return null;
                 }
+
+                while (!File.Exists(outputFilePath))
+                {
+                    yield return null;
+                }
             }
             else
             {
                 //yield return ScarfManager.instance.RunMarkerSearch("RNA_leiden_cluster", 0.25f);
                 yield return ScarfManager.instance.GetMarkers("RNA_leiden_cluster");
             }
-            // wait for files to be saved on disk so File.Exists() can find them
-            yield return new WaitForSeconds(1f);
             // stopwatch.Stop();
             // CellexalLog.Log("Heatmap R script finished in " + stopwatch.Elapsed.ToString());
 

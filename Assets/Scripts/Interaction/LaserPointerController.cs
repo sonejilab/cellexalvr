@@ -46,12 +46,12 @@ namespace CellexalVR.Interaction
             layerMaskMenu = 1 << menuLayer;
             layerMaskEnv = 1 << environmentButtonLayer | 1 << keyboardLayer;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
-            var rightInteractor = referenceManager.rightController.gameObject.GetComponent<XRDirectInteractor>();
-            var leftInteractor = referenceManager.leftController.gameObject.GetComponent<XRDirectInteractor>();
-            rightInteractor.selectEntered.AddListener(ToggleRightLaserInteractorOff);
-            rightInteractor.selectExited.AddListener(ToggleRightLaserInteractorOn);
-            leftInteractor.selectEntered.AddListener(ToggleLeftLaserInteractorOff);
-            leftInteractor.selectExited.AddListener(ToggleLeftLaserInteractorOn);
+            //var rightInteractor = referenceManager.rightController.gameObject.GetComponent<XRDirectInteractor>();
+            //var leftInteractor = referenceManager.leftController.gameObject.GetComponent<XRDirectInteractor>();
+            //rightInteractor.selectEntered.AddListener(ToggleRightLaserInteractorOff);
+            //rightInteractor.selectExited.AddListener(ToggleRightLaserInteractorOn);
+            //leftInteractor.selectEntered.AddListener(ToggleLeftLaserInteractorOff);
+            //leftInteractor.selectExited.AddListener(ToggleLeftLaserInteractorOn);
 
         }
 
@@ -65,25 +65,25 @@ namespace CellexalVR.Interaction
             rayEndPoint.SetActive(true);
         }
 
-        private void ToggleRightLaserInteractorOn(SelectExitEventArgs args)
-        {
-            leftLaser.interactionLayers = LayerMask.NameToLayer("Everything");
-        }
+        //private void ToggleRightLaserInteractorOn(SelectExitEventArgs args)
+        //{
+        //    leftLaser.interactionLayers = LayerMask.NameToLayer("Everything");
+        //}
 
-        private void ToggleRightLaserInteractorOff(SelectEnterEventArgs args)
-        {
-            rightLaser.interactionLayers = LayerMask.NameToLayer("Nothing");
-        }
+        //private void ToggleRightLaserInteractorOff(SelectEnterEventArgs args)
+        //{
+        //    rightLaser.interactionLayers = LayerMask.NameToLayer("Nothing");
+        //}
 
-        private void ToggleLeftLaserInteractorOn(SelectExitEventArgs args)
-        {
-            leftLaser.interactionLayers = LayerMask.NameToLayer("Everything");
-        }
+        //private void ToggleLeftLaserInteractorOn(SelectExitEventArgs args)
+        //{
+        //    leftLaser.interactionLayers = LayerMask.NameToLayer("Everything");
+        //}
 
-        private void ToggleLeftLaserInteractorOff(SelectEnterEventArgs args)
-        {
-            leftLaser.interactionLayers = LayerMask.NameToLayer("Nothing");
-        }
+        //private void ToggleLeftLaserInteractorOff(SelectEnterEventArgs args)
+        //{
+        //    leftLaser.interactionLayers = LayerMask.NameToLayer("Nothing");
+        //}
 
         private void Update()
         {

@@ -134,7 +134,8 @@ namespace CellexalVR.AnalysisLogic
         /// <returns></returns>
         public Cell[] GetCells(string attribute)
         {
-            return cells.Values.Where(x => x.Attributes.ContainsKey(attribute.ToLower())).ToArray();
+            attribute = attribute.ToLower();
+            return cells.Values.Where(x => x.Attributes.ContainsKey(attribute)).ToArray();
         }
 
         /// <summary>
