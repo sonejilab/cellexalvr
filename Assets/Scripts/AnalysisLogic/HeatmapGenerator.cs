@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.AnalysisLogic;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.General;
@@ -392,8 +391,8 @@ namespace CellexalVR.AnalysisLogic
                 int group = graphpoint.Group;
                 var cell = referenceManager.cellManager.GetCell(graphpoint.Label);
                 heatmap.cells[i] = cell;
-                var attributes = cell.Attributes;
-                heatmap.AddAttributeWidth(attributes, cellWidth, cell);
+                string firstAttribute = ReferenceManager.instance.cellManager.GetAttributes(cell).First();
+                heatmap.AddAttributeWidth(firstAttribute, cellWidth, cell);
                 heatmap.groupingColors[group] = graphpoint.GetColor();
                 if (lastGroup == -1)
                 {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Config xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <ConfigDir>Config\</ConfigDir>
-  <RscriptexePath>C:/Program Files/R/R-4.0.2/bin/x64/Rscript.exe</RscriptexePath>
-  <RequireTouchpadClickToInteract>false</RequireTouchpadClickToInteract>
+  <ConfigDir>Config</ConfigDir>
+  <RscriptexePath>C:\Program Files\R\R-4.1.3\bin\x64\Rscript.exe</RscriptexePath>
+  <RequireTouchpadClickToInteract>true</RequireTouchpadClickToInteract>
   <ControllerModel>Set Automatically</ControllerModel>
   <GraphLoadingCellsPerFrameStartCount>200</GraphLoadingCellsPerFrameStartCount>
   <GraphLoadingCellsPerFrameIncrement>15</GraphLoadingCellsPerFrameIncrement>
@@ -11,159 +11,147 @@
   <GraphGrabbableCollidersExtensionThresehold>0.05</GraphGrabbableCollidersExtensionThresehold>
   <SelectionToolColors>
     <Color>
-      <r>0.2494589</r>
-      <g>0.6271417</g>
-      <b>0.112310335</b>
+      <r>0.87781024</r>
+      <g>0.8842105</g>
+      <b>0.06515236</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.600746751</r>
-      <g>0.257293016</g>
-      <b>0.645612</b>
+      <r>0.2296986</r>
+      <g>0.9157895</g>
+      <b>0.163878143</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.9165257</r>
-      <g>0.838099957</g>
-      <b>0.347315</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>1</r>
+      <r>0.9157895</r>
       <g>0</g>
-      <b>0.000599861145</b>
+      <b>0.7628026</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.06772894</r>
-      <g>0.234228328</g>
-      <b>0.6491109</b>
+      <r>0.9157895</r>
+      <g>0.4273837</g>
+      <b>0.221717432</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.60073626</r>
-      <g>0.188001916</g>
-      <b>0.08220603</b>
+      <r>0.7263158</r>
+      <g>0.682010353</g>
+      <b>0.183490321</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.004496732</r>
-      <g>0.6212953</g>
-      <b>0.108879745</b>
+      <r>0.113626719</r>
+      <g>0.787602544</g>
+      <b>0.659473956</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.853367865</r>
-      <g>0.13474229</g>
-      <b>0.35850203</b>
+      <r>0.4394889</r>
+      <g>0.8800451</g>
+      <b>0.838275135</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.945585251</r>
-      <g>0.9835645</g>
-      <b>0.428821445</b>
+      <r>0.258571833</r>
+      <g>0.571126163</g>
+      <b>0.5502883</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.195194885</r>
-      <g>0.5792716</g>
-      <b>0.171544224</b>
+      <r>0.8550285</r>
+      <g>0.793246</g>
+      <b>0.2691201</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.114900753</r>
-      <g>0.77968365</g>
-      <b>0.6776546</b>
+      <r>0.7498953</r>
+      <g>0.6551212</g>
+      <b>0.12629813</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.546956539</r>
-      <g>0.937495649</g>
-      <b>0.209465355</b>
+      <r>0.9685542</r>
+      <g>0.512379348</g>
+      <b>0.179091483</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.8029051</r>
-      <g>0.222619146</g>
-      <b>0.212378174</b>
+      <r>0.986692667</r>
+      <g>0.357991248</g>
+      <b>0.254974574</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.252001047</r>
-      <g>0.6554858</g>
-      <b>0.7735921</b>
+      <r>0.5566257</r>
+      <g>0.5074013</g>
+      <b>0.2112841</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.20351766</r>
-      <g>0.530515969</g>
-      <b>0.5443876</b>
+      <r>0.7126534</r>
+      <g>0.13020508</g>
+      <b>0.174544036</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.53071</r>
-      <g>0.0671984</g>
-      <b>0.335943133</b>
+      <r>0.104208067</r>
+      <g>0.704570651</g>
+      <b>0.925851345</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.301051378</r>
-      <g>0.523048937</g>
-      <b>0.6722291</b>
+      <r>0.6563257</r>
+      <g>0.506162047</g>
+      <b>0.111384906</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.0481908619</r>
-      <g>0.103177585</g>
-      <b>0.81786406</b>
+      <r>0.442195445</r>
+      <g>0.166666955</g>
+      <b>0.5710091</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.741248369</r>
-      <g>0.437192857</g>
-      <b>0.1232039</b>
+      <r>0.0171948429</r>
+      <g>0.73410213</g>
+      <b>0.5079416</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.426804066</r>
-      <g>0.262181222</g>
-      <b>0.744967</b>
+      <r>0.281864971</r>
+      <g>0.6274078</g>
+      <b>0.214882478</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.5672952</r>
-      <g>0.2863066</g>
-      <b>0.242735922</b>
+      <r>0.541005552</r>
+      <g>0.08693758</g>
+      <b>0.204006732</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.7109755</r>
-      <g>0.237348959</g>
-      <b>0.212589</b>
+      <r>0.200281784</r>
+      <g>0.146599531</g>
+      <b>0.890147269</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0.709736943</r>
-      <g>0.269172966</g>
-      <b>0.629502535</b>
+      <r>0.296625644</r>
+      <g>0.874007</g>
+      <b>0.2456497</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>0</r>
-      <g>0.403921574</g>
-      <b>1</b>
+      <r>0.3865396</r>
+      <g>0.3561787</g>
+      <b>0.547177732</b>
       <a>1</a>
     </Color>
     <Color>
-      <r>1</r>
-      <g>0.627451</g>
-      <b>0</b>
-      <a>1</a>
-    </Color>
-    <Color>
-      <r>0</r>
-      <g>0.7529412</g>
-      <b>0.03529412</b>
+      <r>0.279351443</r>
+      <g>0.7535981</g>
+      <b>0.7545911</b>
       <a>1</a>
     </Color>
   </SelectionToolColors>
@@ -188,8 +176,8 @@
   </GraphLowExpressionColor>
   <GraphMidExpressionColor>
     <r>0.798216</r>
-    <g>0.280197</g>
-    <b>0.469538</b>
+    <g>0.280197024</g>
+    <b>0.761627257</b>
     <a>1</a>
   </GraphMidExpressionColor>
   <GraphHighExpressionColor>
@@ -198,7 +186,7 @@
     <b>0.131326</b>
     <a>1</a>
   </GraphHighExpressionColor>
-  <GraphMostExpressedMarker>true</GraphMostExpressedMarker>
+  <GraphMostExpressedMarker>false</GraphMostExpressedMarker>
   <AttributeColors>
     <Color>
       <r>1</r>
@@ -221,21 +209,21 @@
   </AttributeColors>
   <NumberOfHeatmapColors>30</NumberOfHeatmapColors>
   <HeatmapLowExpressionColor>
-    <r>0.267004</r>
-    <g>0.004874</g>
-    <b>0.329415</b>
+    <r>0.050383</r>
+    <g>0.029803</g>
+    <b>0.527975</b>
     <a>1</a>
   </HeatmapLowExpressionColor>
   <HeatmapMidExpressionColor>
-    <r>0.127568</r>
-    <g>0.566949</g>
-    <b>0.550556</b>
+    <r>0.798216</r>
+    <g>0.280197</g>
+    <b>0.469538</b>
     <a>1</a>
   </HeatmapMidExpressionColor>
   <HeatmapHighExpressionColor>
-    <r>0.993248</r>
-    <g>0.906157</g>
-    <b>0.143936</b>
+    <r>0.940015</r>
+    <g>0.975158</g>
+    <b>0.131326</b>
     <a>1</a>
   </HeatmapHighExpressionColor>
   <HeatmapAlgorithm>wilcox</HeatmapAlgorithm>
@@ -282,8 +270,8 @@
   </VelocityParticlesHighColor>
   <ConsoleMaxBufferLines>256</ConsoleMaxBufferLines>
   <ShowNotifications>true</ShowNotifications>
-  <GraphPointQuality>Standard</GraphPointQuality>
-  <GraphPointSize>Standard</GraphPointSize>
+  <GraphPointQuality>Low</GraphPointQuality>
+  <GraphPointSize>Small</GraphPointSize>
   <SkyboxTintColor>
     <r>0.389473677</r>
     <g>0.389473677</g>

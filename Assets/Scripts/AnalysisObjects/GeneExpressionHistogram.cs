@@ -1,14 +1,11 @@
-﻿using CellexalVR.General;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.General;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-using CellexalVR.Filters;
-using AnalysisLogic;
-using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {

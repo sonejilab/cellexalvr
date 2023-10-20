@@ -405,9 +405,9 @@ namespace CellexalVR.AnalysisObjects
             attributeWidths = new List<Tuple<int, float, int>>();
             for (int i = 0; i < cells.Length; ++i)
             {
-                var cell = cells[i];
-                var attributes = cell.Attributes;
-                AddAttributeWidth(attributes, cellWidth, cell);
+                Cell cell = cells[i];
+                string firstAttribute = ReferenceManager.instance.cellManager.GetAttributes(cell).First();
+                AddAttributeWidth(firstAttribute, cellWidth, cell);
             }
 
             attributeWidths.Add(new Tuple<int, float, int>(layout.lastAttribute, layout.attributeWidth * cellWidth, layout.attributeWidth));
@@ -416,12 +416,12 @@ namespace CellexalVR.AnalysisObjects
         /// <summary>
         /// Helper function to add attribute width and colour.
         /// </summary>
-        public void AddAttributeWidth(Dictionary<string, int> attributes, float cellWidth, Cell cell)
+        public void AddAttributeWidth(string attributeName, float cellWidth, Cell cell)
         {
             int attribute;
-            if (attributes.Count > 0)
+            if (attributeName != "")
             {
-                attribute = attributes.First().Value;
+                attribute = ReferenceManager.instance.cellManager.AttributesNames.IndexOf(attributeName);
                 attributeColors[attribute] = referenceManager.selectionManager.GetColor(attribute);
             }
             else

@@ -1,10 +1,10 @@
-﻿using CellexalVR.SceneObjects;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.Extensions;
 using CellexalVR.General;
+using CellexalVR.SceneObjects;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using Assets.Scripts.AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {

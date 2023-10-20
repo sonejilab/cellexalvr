@@ -1,8 +1,5 @@
-﻿using AnalysisLogic;
-using Assets.Scripts.AnalysisLogic;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
-using CellexalVR.Interaction;
 using CellexalVR.Spatial;
 using System;
 using System.Collections;

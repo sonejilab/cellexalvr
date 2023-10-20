@@ -1,12 +1,6 @@
-﻿using System.Collections;
+﻿using CellexalVR.AnalysisLogic;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using AnalysisLogic;
-using CellexalVR.AnalysisObjects;
-using CellexalVR.General;
-using CellexalVR.AnalysisLogic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -57,7 +51,7 @@ namespace CellexalVR.Spatial
             slicer = GameObject.Find("SlicePlane");
         }
 
-        protected override void OnUpdate() {}
+        protected override void OnUpdate() { }
 
         /// <summary>
         /// Slice from a plane. 

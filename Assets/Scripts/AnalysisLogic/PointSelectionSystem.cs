@@ -1,5 +1,4 @@
-﻿using AnalysisLogic;
-using CellexalVR.Interaction;
+﻿using CellexalVR.Interaction;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;

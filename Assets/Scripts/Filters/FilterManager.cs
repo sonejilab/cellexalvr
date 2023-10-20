@@ -409,7 +409,7 @@ namespace CellexalVR.Filters
             foreach (string attribute in attributes)
             {
                 //print($"filter {attribute}");
-                if (!cellManager.Attributes.Contains(attribute, StringComparer.CurrentCultureIgnoreCase))
+                if (!cellManager.AttributesNames.Contains(attribute, StringComparer.CurrentCultureIgnoreCase))
                 {
                     //print("invalid");
                     resultBlock.SetLoadingTextState(FilterCreatorResultBlock.LoadingTextState.INVALID_FILTER);

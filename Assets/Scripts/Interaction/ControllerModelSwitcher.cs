@@ -75,8 +75,17 @@ namespace CellexalVR.Interaction
             staticMaterialsCache = new Dictionary<Color, Material>();
             staticMaterialsCache[animatedPulseMaterial.color] = animatedPulseMaterial;
 
+            // check if any devices connected before MonoBehaviour.Awake was invoked, this seems to happen in builds but not in the editor.
+            List<UnityEngine.XR.InputDevice> devicesAlreadyConnected = new List<UnityEngine.XR.InputDevice>();
+            InputDevices.GetDevices(devicesAlreadyConnected);
+            CellexalLog.Log($"Detected {devicesAlreadyConnected.Count} devices already connected");
+            foreach (UnityEngine.XR.InputDevice device in devicesAlreadyConnected)
+            {
+                OnDeviceConnected(device);
+            }
             InputDevices.deviceConnected += OnDeviceConnected;
             InputDevices.deviceDisconnected += OnDeviceDisconnected;
+            CellexalEvents.ConfigLoaded.AddListener(OnConfigLoaded);
         }
 
         /// <summary>
@@ -193,17 +202,33 @@ namespace CellexalVR.Interaction
         {
             CellexalLog.Log($"Device connected. Name: {device.name}, role: {device.characteristics}, manufacturer: {device.manufacturer}");
 
-            if ((device.characteristics & InputDeviceCharacteristics.Controller) != 0)
+            if ((device.characteristics & InputDeviceCharacteristics.Controller) == InputDeviceCharacteristics.Controller)
             {
+                CellexalLog.Log("Device is controller");
+                CellexalLog.Log($"device.characteristics: {((uint)device.characteristics)}. InputDeviceCharacteristics.Left: {((uint)InputDeviceCharacteristics.Left)}. InputDeviceCharacteristics.Right: {((uint)InputDeviceCharacteristics.Right)} ");
+
+                if (!CellexalConfig.configLoaded)
+                {
+                    // if the config has not yet been read, abort.
+                    // the controller models will be set when its read instead.
+                    return;
+                }
+
                 ControllerBrand desiredBrand = CellexalConfig.Config.ControllerModel.ToBrand();
 
-                if ((device.characteristics & InputDeviceCharacteristics.Left) != 0)
+                if ((device.characteristics & InputDeviceCharacteristics.Left) == InputDeviceCharacteristics.Left)
                 {
+                    CellexalLog.Log("Device is left controller");
                     SwitchControllerBaseModel(desiredBrand, true, false);
                 }
-                else if ((device.characteristics & InputDeviceCharacteristics.Right) != 0)
+                else if ((device.characteristics & InputDeviceCharacteristics.Right) == InputDeviceCharacteristics.Right)
                 {
+                    CellexalLog.Log("Device is right controller");
                     SwitchControllerBaseModel(desiredBrand, false, true);
+                }
+                else
+                {
+                    CellexalLog.Log($"Controller connected but was neither left nor right! Characteristics: {device.characteristics}");
                 }
             }
         }
@@ -215,6 +240,20 @@ namespace CellexalVR.Interaction
         private void OnDeviceDisconnected(UnityEngine.XR.InputDevice device)
         {
             CellexalLog.Log($"Device disconnected. Name: {device.name}, role: {device.characteristics}, manufacturer: {device.manufacturer}");
+        }
+
+        /// <summary>
+        /// Calls <see cref="OnDeviceConnected"/> for all connected devices.
+        /// Needed because <see cref="OnDeviceConnected"/> can not do its job until the config has been loaded.
+        /// </summary>
+        private void OnConfigLoaded()
+        {
+            List<UnityEngine.XR.InputDevice> devicesAlreadyConnected = new List<UnityEngine.XR.InputDevice>();
+            InputDevices.GetDevices(devicesAlreadyConnected);
+            foreach (UnityEngine.XR.InputDevice device in devicesAlreadyConnected)
+            {
+                OnDeviceConnected(device);
+            }
         }
 
         private void OnTriggerEnter(Collider other)

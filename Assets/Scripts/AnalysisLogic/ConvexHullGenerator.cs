@@ -1293,7 +1293,7 @@ namespace CellexalVR.AnalysisLogic
 
             GameObject debugParent = Instantiate(new GameObject(), graph.transform);
 
-            string[] attributes = referenceManager.cellManager.Attributes.ToArray();
+            string[] attributes = referenceManager.cellManager.AttributesNames.ToArray();
             //string[] attributes = new string[] { "Tissue@Bladder", "Tissue@Embryonic-Mesenchyme" };
 
             foreach (string attribute in attributes)
@@ -1304,15 +1304,24 @@ namespace CellexalVR.AnalysisLogic
                 Color attributeColor = CellexalConfig.Config.SelectionToolColors[attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
                 attributeColor.a = 0.5f;
 
-                //pos.Clear();
-                foreach (CellexalVR.AnalysisLogic.Cell cell in referenceManager.cellManager.GetCells())
+                pos.Clear();
+                //foreach (CellexalVR.AnalysisLogic.Cell cell in referenceManager.cellManager.GetCells())
+                //{
+                //    if (cell.Attributes.ContainsKey(lowerAttribute))
+                //    {
+                //        Vector3 pos3d = graph.points[cell.Label].Position;
+                //        pos[attribute].Add(new Vector2(pos3d.x, pos3d.y));
+                //    }
+                //}
+
+                foreach (KeyValuePair<string, HashSet<Cell>> kvp in ReferenceManager.instance.cellManager.Attributes)
                 {
-                    if (cell.Attributes.ContainsKey(lowerAttribute))
+                    foreach (Cell cell in kvp.Value)
                     {
-                        Vector3 pos3d = graph.points[cell.Label].Position;
-                        pos[attribute].Add(new Vector2(pos3d.x, pos3d.y));
+                        pos[kvp.Key].Add(graph.points[cell.Label].Position);
                     }
                 }
+
                 if (filter)
                     FilterOutliers(pos[attribute], 3.5f);
 
@@ -1443,18 +1452,27 @@ namespace CellexalVR.AnalysisLogic
             //string[] debugAttributes = new string[] { "celltype@Epiblast", "celltype@Primitive.Streak", "celltype@NA", "celltype@ExE.ectoderm" };
             //foreach (string attribute in debugAttributes)
 
-            foreach (string attribute in referenceManager.cellManager.Attributes)
+            foreach (string attribute in referenceManager.cellManager.AttributesNames)
             {
                 string lowerAttribute = attribute.ToLower();
 
                 pos.Clear();
-                foreach (CellexalVR.AnalysisLogic.Cell cell in cells)
+                //foreach (CellexalVR.AnalysisLogic.Cell cell in cells)
+                //{
+                //    if (cell.Attributes.ContainsKey(lowerAttribute))
+                //    {
+                //        pos.Add(graph.points[cell.Label].Position);
+                //    }
+                //}
+
+                foreach (KeyValuePair<string, HashSet<Cell>> kvp in ReferenceManager.instance.cellManager.Attributes)
                 {
-                    if (cell.Attributes.ContainsKey(lowerAttribute))
+                    foreach (Cell cell in kvp.Value)
                     {
                         pos.Add(graph.points[cell.Label].Position);
                     }
                 }
+
                 if (filter)
                     FilterOutliers(pos, 5f);
 

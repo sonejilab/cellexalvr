@@ -380,6 +380,7 @@ namespace CellexalVR.DesktopUI
         {
             unsavedChanges = true;
             ControllerBrand brand = controllerModelDropdown.options[controllerModelDropdown.value].text.ToBrand();
+            CellexalConfig.Config.ControllerModel = controllerModelDropdown.options[controllerModelDropdown.value].text;
             referenceManager.controllerModelSwitcher.SwitchControllerBaseModel(brand);
         }
 

@@ -1,7 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.Interaction;
-using AnalysisLogic;
+﻿using CellexalVR.Interaction;
+using UnityEngine;
 
 namespace CellexalVR.Spatial
 {

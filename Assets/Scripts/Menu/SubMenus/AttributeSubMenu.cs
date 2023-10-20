@@ -38,7 +38,6 @@ namespace CellexalVR.Menu.SubMenus
         {
             base.CreateButtons(categoriesAndNames);
 
-            ReferenceManager.instance.cellManager.Attributes = new List<string>();
             int buttonIndex = 0;
             foreach (KeyValuePair<string, List<string>> kvp in categoriesAndNamesDict)
             {

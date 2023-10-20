@@ -61,8 +61,7 @@ MonoBehaviour:
       m_Calls: []
   actionAsset: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
-  actionReference: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f,
-    type: 3}
+  actionReference: {fileID: 0}
   size: 0
   spread: 0
   alpha: 0

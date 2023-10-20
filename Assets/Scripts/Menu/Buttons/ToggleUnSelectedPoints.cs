@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.AnalysisLogic;
-using AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.Menu.Buttons
 {

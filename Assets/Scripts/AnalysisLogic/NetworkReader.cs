@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.AnalysisLogic;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;

@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 1865869582214080}
   m_LocalRotation: {x: 0.70055956, y: -0.007472198, z: 0.007336502, w: 0.7135171}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.9999999, y: 1.0000002, z: 0.9999999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -125,9 +125,9 @@ MonoBehaviour:
   deleteTool: {fileID: 0}
   minimizeTool: {fileID: 0}
   drawTool: {fileID: 0}
-  webBrowser: {fileID: 0}
   screenshotCamera: {fileID: 0}
   teleportLaser: {fileID: 0}
+  velocityPathTool: {fileID: 0}
   mainMenu: {fileID: 0}
   frontButtons: {fileID: 0}
   rightButtons: {fileID: 0}
@@ -144,6 +144,7 @@ MonoBehaviour:
   velocitySubMenu: {fileID: 0}
   selectionMenu: {fileID: 0}
   flybyMenu: {fileID: 0}
+  colorPickerSubMenu: {fileID: 0}
   menuRotator: {fileID: 0}
   minimizedObjectHandler: {fileID: 0}
   menuToggler: {fileID: 0}
@@ -189,7 +190,6 @@ MonoBehaviour:
   autoCompleteList: {fileID: 0}
   coloringOptionsList: {fileID: 0}
   folderKeyboard: {fileID: 0}
-  webBrowserKeyboard: {fileID: 0}
   sessionHistoryList: {fileID: 0}
   referenceModelKeyboard: {fileID: 0}
   filterBlockBoard: {fileID: 0}

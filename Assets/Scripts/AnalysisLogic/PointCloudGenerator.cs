@@ -1,17 +1,15 @@
-﻿using System;
+﻿using CellexalVR.General;
+using CellexalVR.Interaction;
+using CellexalVR.Spatial;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using AnalysisLogic;
-using CellexalVR.General;
-using CellexalVR.Interaction;
-using Unity.Mathematics;
-using UnityEngine;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 using UnityEngine.VFX;
-using CellexalVR.Spatial;
 
 namespace CellexalVR.AnalysisLogic
 {

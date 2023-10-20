@@ -1,7 +1,4 @@
-﻿using AnalysisLogic;
-using CellexalVR.AnalysisLogic;
-using CellexalVR.General;
-using UnityEngine;
+﻿using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.Menu.Buttons.Slicing
 {

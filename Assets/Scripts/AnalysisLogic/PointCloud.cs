@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using CellexalVR;
-using CellexalVR.General;
+﻿using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Spatial;
-using CellexalVR.AnalysisLogic;
+using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Collections;
 using Unity.Entities;
@@ -12,9 +11,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.VFX;
-using DG.Tweening;
 
-namespace AnalysisLogic
+namespace CellexalVR.AnalysisLogic
 {
     /// <summary>
     /// A point cloud is graph that has the same functionality as <see cref="Graph"/> but is built using a visual effects graph.
@@ -372,7 +370,7 @@ namespace AnalysisLogic
             vfx.pause = false;
             PointCloudGenerator.instance.creatingGraph = false;
         }
-        
+
         /// <summary>
         /// Creates a position texture map based on the given positions. 
         /// </summary>

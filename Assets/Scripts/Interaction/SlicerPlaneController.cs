@@ -1,8 +1,6 @@
-using AnalysisLogic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.Interaction
 {

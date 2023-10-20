@@ -2,7 +2,7 @@
 using CellexalVR.General;
 using System.Collections.Generic;
 
-namespace Assets.Scripts.AnalysisLogic
+namespace CellexalVR.AnalysisLogic
 {
     /// <summary>
     /// Represents a loaded dataset, as well as everything that has been created from the original graphs.

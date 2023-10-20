@@ -155,8 +155,7 @@ namespace CellexalVR.General
         {
             if (LogFilePath != "")
             {
-                Log("Changing user to " + CellexalUser.Username,
-                    "Goodbye.");
+                Log("Changing user to " + CellexalUser.Username);
             }
             InitNewLog();
         }
@@ -179,7 +178,7 @@ namespace CellexalVR.General
 
         private void Awake()
         {
-            CellexalLog.InitNewLog();
+            //CellexalLog.InitNewLog();
             CellexalEvents.UsernameChanged.AddListener(CellexalLog.UsernameChanged);
             //CellexalEvents.GraphsLoaded.AddListener(CellexalLog.InitNewLog);
 

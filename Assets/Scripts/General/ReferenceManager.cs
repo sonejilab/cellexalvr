@@ -186,7 +186,7 @@ namespace CellexalVR.General
             h5ReaderAnnotatorScriptManager = GameObject.Find("H5ReaderTestObjectManager").GetComponent<H5ReaderAnnotatorScriptManager>();
             rightController = GameObject.Find("CellexalOpenXRRig/Camera Offset/RightHand Controller").GetComponent<ActionBasedController>();
             leftController = GameObject.Find("CellexalOpenXRRig/Camera Offset/LeftHand Controller").GetComponent<ActionBasedController>();
-            controllerModelSwitcher = leftController.GetComponent<ControllerModelSwitcher>();
+            controllerModelSwitcher = GameObject.Find("CellexalOpenXRRig").GetComponent<ControllerModelSwitcher>();
 
             headset = GameObject.Find("CellexalOpenXRRig/Camera Offset/Main Camera");
             controllerMenuCollider = leftController.GetComponent<BoxCollider>();

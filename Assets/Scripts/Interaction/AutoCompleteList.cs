@@ -107,7 +107,7 @@ namespace CellexalVR.Interaction
                 namesOfThings.Add(new Tuple<string, Definitions.Measurement>(name, Definitions.Measurement.GENE));
             }
             // TODO: Make color by attr work from keyboard(?)
-            string[] attributes = ReferenceManager.instance.cellManager.Attributes?.ToArray();
+            string[] attributes = ReferenceManager.instance.cellManager.AttributesNames?.ToArray();
             if (attributes != null)
             {
                 try

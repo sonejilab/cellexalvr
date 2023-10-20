@@ -13,8 +13,6 @@ using CellexalVR.Extensions;
 using CellexalVR.AnalysisLogic.H5reader;
 using UnityEngine.XR.Interaction.Toolkit;
 using Unity.Entities;
-using CellexalVR.AnalysisLogic;
-using Assets.Scripts.AnalysisLogic;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -25,7 +23,8 @@ namespace CellexalVR.AnalysisLogic
     {
         #region Properties
 
-        public List<string> Attributes { get; set; }
+        public List<string> AttributesNames { get; set; }
+        public Dictionary<string, HashSet<Cell>> Attributes { get; set; }
         public string[] Facs { get; set; }
         public string[] Facs_values { get; set; }
         public string[] NumericalAttributes { get; set; }
@@ -128,17 +127,6 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Returns cells that belongs to a certain attribute.
-        /// </summary>
-        /// <param name="attribute"></param>
-        /// <returns></returns>
-        public Cell[] GetCells(string attribute)
-        {
-            attribute = attribute.ToLower();
-            return cells.Values.Where(x => x.Attributes.ContainsKey(attribute)).ToArray();
-        }
-
-        /// <summary>
         /// Returns cell that belong to a certain selection group.
         /// </summary>
         /// <param name="group"></param>
@@ -197,6 +185,15 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
         }
+
+        public void HighlightAttribute(string attribute, bool highlight)
+        {
+            foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+            {
+                graph.HighlightAttribute(attribute, highlight);
+            }
+        }
+
 
         /// <summary>
         /// Creates a new selection.
@@ -527,7 +524,7 @@ namespace CellexalVR.AnalysisLogic
         public void DeleteCells()
         {
             cells.Clear();
-            Attributes = null;
+            AttributesNames = null;
             Facs = null;
         }
 
@@ -551,35 +548,40 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
+            foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+            {
+                graph.ColorByAttribute(attributeType, color);
+            }
+
             //World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<TextureHandler>().ColorCluster(attributeType, color);
 
             CellexalLog.Log("Colored graphs by " + attributeType);
             RScriptRunner.WriteToServer("# colored graphs by " + attributeType);
             int numberOfCells = 0;
 
-            foreach (Cell cell in cells.Values)
-            {
-                cell.ColorByAttribute(attributeType, colIndex, color);
-                if (cell.GraphPoints.Count == 0) continue;
-                Graph.GraphPoint gp = cell.GraphPoints[0];
-                if (cell.Attributes.ContainsKey(attributeType.ToLower()))
-                {
-                    numberOfCells++;
-                    if (color && !selectionList.ContainsKey(gp))
-                    {
-                        selectionList.Add(gp, colIndex);
-                    }
+            //foreach (Cell cell in cells.Values)
+            //{
+            //    cell.ColorByAttribute(attributeType, colIndex, color);
+            //    if (cell.GraphPoints.Count == 0) continue;
+            //    Graph.GraphPoint gp = cell.GraphPoints[0];
+            //if (cell.Attributes.ContainsKey(attributeType.ToLower()))
+            //{
+            //    numberOfCells++;
+            //    if (color && !selectionList.ContainsKey(gp))
+            //    {
+            //        selectionList.Add(gp, colIndex);
+            //    }
 
-                    if (!color)
-                    {
-                        selectionList.Remove(gp);
-                    }
+            //    if (!color)
+            //    {
+            //        selectionList.Remove(gp);
+            //    }
 
 
-                }
-            }
+            //}
+            //}
 
-            int attributeIndex = Attributes.IndexOf(attributeType);
+            int attributeIndex = AttributesNames.IndexOf(attributeType);
             Color attributeColor =
                 CellexalConfig.Config.SelectionToolColors[
                     attributeIndex % CellexalConfig.Config.SelectionToolColors.Length];
@@ -714,13 +716,33 @@ namespace CellexalVR.AnalysisLogic
         {
             try
             {
-                cells[cellname].AddAttribute(attributeType, group);
+                Attributes[attributeType].Add(cells[cellname]);
             }
             catch (Exception e)
             {
                 // could not find cell
                 // CellexalLog.Log($"Could not find cell : {cellname}"); // if many points are missing this logging them becomes very laggy...
             }
+        }
+
+        /// <summary>
+        /// Get all attributes that a cell belongs to.
+        /// </summary>
+        /// <param name="cellname">The cell to get attributes for.</param>
+        /// <returns>An <see cref="IEnumerable{string}"/> containing all attributes the cell belongs to.</returns>
+        public IEnumerable<string> GetAttributes(string cellname)
+        {
+            return GetAttributes(cells[cellname]);
+        }
+
+        /// <summary>
+        /// Get all attributes that a cell belongs to.
+        /// </summary>
+        /// <param name="cell">The cell to get attributes for.</param>
+        /// <returns>An <see cref="IEnumerable{string}"/> containing all attributes the cell belongs to.</returns>
+        public IEnumerable<string> GetAttributes(Cell cell)
+        {
+            return Attributes.Keys.Where((attribute) => Attributes[attribute].Contains(cell));
         }
 
         internal void AddFacs(string cellName, string facs, float value)

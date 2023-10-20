@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using CellexalVR.AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.SubMenus;
-using CellexalVR.AnalysisLogic;
 using Unity.Entities;
 using UnityEngine;
 
@@ -53,7 +51,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
         {
             if (CurrentMode == Mode.SINGLE)
             {
-                cellManager.ColorByAttribute(Attribute, !colored, colIndex:colIndex);
+                cellManager.ColorByAttribute(Attribute, !colored, colIndex: colIndex);
                 ReferenceManager.instance.multiuserMessageSender.SendMessageColorByAttribute(Attribute, !colored, colIndex);
 
                 colored = !colored;
@@ -161,7 +159,7 @@ namespace CellexalVR.Menu.Buttons.Attributes
             }
 
             colIndex = colorIndex;
-            ReferenceManager.instance.cellManager.Attributes.Add(Attribute);
+            ReferenceManager.instance.cellManager.AttributesNames.Add(Attribute);
             // sometimes this is done before Awake() it seems, so we use GetComponent() here
             Color color = CellexalConfig.Config.SelectionToolColors[colorIndex];
             GetComponent<Renderer>().material.color = color;

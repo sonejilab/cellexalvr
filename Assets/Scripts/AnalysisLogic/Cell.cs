@@ -13,8 +13,6 @@ namespace CellexalVR.AnalysisLogic
     public class Cell
     {
         public List<Graph.GraphPoint> GraphPoints;
-
-        public Dictionary<string, int> Attributes { get; private set; }
         public Dictionary<string, float> Facs { get; private set; }
         public Dictionary<string, string> FacsValue { get; private set; }
         public Dictionary<string, float> NumericalAttributes { get; private set; }
@@ -38,7 +36,6 @@ namespace CellexalVR.AnalysisLogic
             this.graphManager = graphManager;
             this.Label = label;
             GraphPoints = new List<Graph.GraphPoint>();
-            Attributes = new Dictionary<string, int>();
             Facs = new Dictionary<string, float>();
             FacsValue = new Dictionary<string, string>();
             NumericalAttributes = new Dictionary<string, float>();
@@ -55,17 +52,6 @@ namespace CellexalVR.AnalysisLogic
             GraphPoints.Add(g);
         }
 
-        /// <summary>
-        /// Adds an attribute to this cell.
-        /// </summary>
-        /// <param name="attributeType"> The type of the attribute. </param>
-        /// <param name="color"> The color that should be used for this attribute. This corresponds to an index in <see cref="GraphManager.AttributeMaterials"/>. </param>
-        public void AddAttribute(string attributeType, int color)
-        {
-            Attributes[attributeType.ToLower()] = color;
-        }
-
-
         public void ColorByCluster(int cluster, bool color)
         {
             foreach (Graph.GraphPoint g in GraphPoints)
@@ -81,61 +67,6 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
         }
-
-        /// <summary>
-        /// Colors all graphpoints that represents this cell if this cell is of an attribute.
-        /// </summary>
-        /// <param name="attributeType"> The attribute to color by. </param>
-        /// <param name="color"> True if the graphpoints should be colored, false  if they should be white. (True means show this attribute, false means hide basically) </param>
-        public void ColorByAttribute(string attributeType, bool color)
-        {
-            if (!Attributes.ContainsKey(attributeType.ToLower())) return;
-            foreach (Graph.GraphPoint g in GraphPoints)
-            {                    
-                if (color)
-                {
-                    g.ColorSelectionColor(Attributes[attributeType.ToLower()], false);
-                }
-
-                else
-                {
-                    g.ResetColor();
-                }
-            }
-        }
-
-        public void ColorByAttribute(string attributeType, int group, bool color)
-        {
-            if (!Attributes.ContainsKey(attributeType.ToLower())) return;
-            foreach (Graph.GraphPoint g in GraphPoints)
-            {
-                if (color)
-                {
-                    g.ColorSelectionColor(group, false);
-                }
-
-                else
-                {
-                    g.ResetColor();
-                }
-            }
-        }
-
-        [Obsolete]
-        public bool EvaluateAttributeLogic(Tuple<string, AttributeLogic>[] attributes)
-        {
-            foreach (var attribute in attributes)
-            {
-                string attributeName = attribute.Item1.ToLower();
-                if (attribute.Item2 == AttributeLogic.YES && !Attributes.ContainsKey(attributeName))
-                    return false;
-                if (attribute.Item2 == AttributeLogic.NO && Attributes.ContainsKey(attributeName))
-                    return false;
-            }
-            return true;
-        }
-
-
 
         /// <summary>
         /// Saves the current gene expression of this cell is colored by

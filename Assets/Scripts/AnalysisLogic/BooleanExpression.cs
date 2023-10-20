@@ -1025,7 +1025,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 // equivalent to:
                 // if (include && attr.contains || !include && !attr.contains)
-                return cell.Attributes.ContainsKey(attribute) == include;
+                return ReferenceManager.instance.cellManager.Attributes[attribute].Contains(cell) == include;
             }
 
             public override void GetGenes(ref List<string> result, bool onlyPercent = false) { }

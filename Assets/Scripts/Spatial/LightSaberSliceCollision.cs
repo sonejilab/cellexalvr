@@ -1,9 +1,5 @@
-using AnalysisLogic;
-using CellexalVR.General;
 using CellexalVR.AnalysisLogic;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using CellexalVR.General;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;

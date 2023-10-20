@@ -183,7 +183,7 @@ namespace CellexalVR.AnalysisObjects
             //// reservered colors
             //graphpointColors[255] = Color.white;
 
-            graphPointColors = new Texture2D(256, 1, TextureFormat.ARGB32, false);
+            graphPointColors = new Texture2D(256, 1, TextureFormat.RGBA32, false);
             int pixel = 0;
             for (int i = 0; i < halfNbrOfExpressionColors; ++i)
             {
@@ -946,7 +946,7 @@ namespace CellexalVR.AnalysisObjects
             //newGraph.textureHeights[lodGroup] = nbrOfClusters;
             //Texture2D texture = new Texture2D(newGraph.textureWidth, newGraph.textureHeight, TextureFormat.ARGB32, false);
             Texture2D texture = new Texture2D(nbrOfMaxPointsPerClusters, nbrOfClusters,
-                TextureFormat.ARGB32,
+                TextureFormat.RGBA32,
                 false, true);
 
             texture.filterMode = FilterMode.Point;
@@ -1206,7 +1206,7 @@ namespace CellexalVR.AnalysisObjects
             foreach (string attribute in attributesToColor)
             {
                 // int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(attribute, (s1, s2) => s1.ToLower() == s2.ToLower());
-                int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(attribute);
+                int attributeIndex = referenceManager.cellManager.AttributesNames.IndexOf(attribute);
                 referenceManager.cellManager.ColorByAttribute(attribute, true, true, attributeIndex);
             }
             graphManager.Graphs.Add(subGraph);

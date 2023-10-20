@@ -13,6 +13,10 @@ namespace CellexalVR.General
         public static Config Config { get; set; }
 
         public static Dictionary<string, Config> savedConfigs { get; set; }
+
+        public static bool configLoaded = false;
+
+
     }
 
     /// <summary>
@@ -60,6 +64,7 @@ namespace CellexalVR.General
         public string GraphPointQuality { get; set; }
         public string GraphPointSize { get; set; }
         public Color SkyboxTintColor { get; set; }
+
 
         public Config() { }
 
@@ -172,6 +177,7 @@ namespace CellexalVR.General
             configPaths = new List<string>();
             ReadConfigFiles(configDir);
             CellexalConfig.Config = CellexalConfig.savedConfigs["default"];
+            CellexalConfig.configLoaded = true;
             CellexalEvents.ConfigLoaded.Invoke();
         }
 

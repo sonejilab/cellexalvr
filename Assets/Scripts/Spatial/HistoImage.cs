@@ -1,14 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.VFX;
-using System.Collections.Generic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading;
 using Unity.Mathematics;
-using AnalysisLogic;
-using CellexalVR.AnalysisLogic;
-using UnityEditor;
+using UnityEngine;
+using UnityEngine.VFX;
 
 namespace CellexalVR.Spatial
 {

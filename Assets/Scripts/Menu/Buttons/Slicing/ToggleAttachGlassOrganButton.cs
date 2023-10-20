@@ -1,9 +1,8 @@
 ﻿using CellexalVR.AnalysisLogic;
-using CellexalVR.Spatial;
-using UnityEngine;
-using DG.Tweening;
-using AnalysisLogic;
 using CellexalVR.Interaction;
+using CellexalVR.Spatial;
+using DG.Tweening;
+using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.Slicing
 {

@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Slicing;
-using CellexalVR.AnalysisLogic;
+using DG.Tweening;
+using System.Linq;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.VFX;
-using DG.Tweening;
-using UnityEngine.InputSystem;
-using CellexalVR.General;
 
 namespace CellexalVR.Spatial
 {

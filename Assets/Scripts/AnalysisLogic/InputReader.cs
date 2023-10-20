@@ -15,7 +15,6 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 //using Parquet;
-using Assets.Scripts.AnalysisLogic;
 
 namespace CellexalVR.AnalysisLogic
 {
@@ -244,9 +243,16 @@ namespace CellexalVR.AnalysisLogic
                 StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
                 attributeReader = gameObject.AddComponent<AttributeReader>();
                 attributeReader.referenceManager = referenceManager;
-                StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
-                while (!attributeFileRead)
-                    yield return null;
+                if (File.Exists(Path.Join(fullPath, "a.meta.cell")))
+                {
+                    yield return StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
+                }
+                else if (File.Exists(Path.Join(fullPath, "b.meta.cell")))
+                {
+                    attributeReader.ReadCondensedAttributeFile(fullPath);
+                }
+                //while (!attributeFileRead)
+                //    yield return null;
                 ReadFacsFiles(fullPath);
                 ReadNumericalData(fullPath);
                 ReadFilterFiles(CellexalUser.UserSpecificFolder);

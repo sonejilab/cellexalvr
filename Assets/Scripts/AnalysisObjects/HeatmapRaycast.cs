@@ -394,12 +394,13 @@ namespace CellexalVR.Interaction
             heatmap.highlightQuad.transform.localPosition = new Vector3(highlightMarkerX, highlightMarkerY, -0.001f);
             heatmap.highlightQuad.transform.localScale = new Vector3(highlightMarkerWidth, highlightMarkerHeight, 1f);
             heatmap.highlightQuad.SetActive(true);
-            if (attribute >= cellManager.Attributes.Count || attribute < 0) return;
-            if (heatmap.barInfoText.text == cellManager.Attributes[attribute]) return;
+            if (attribute >= cellManager.AttributesNames.Count || attribute < 0) return;
+            if (heatmap.barInfoText.text == cellManager.AttributesNames[attribute]) return;
             ResetHeatmapHighlight(false);
-            cellsToHighlight = cellManager.GetCells(cellManager.Attributes[attribute]);
-            cellManager.HighlightCells(cellsToHighlight, true, attribute);
-            heatmap.barInfoText.text = attribute >= 0 ? cellManager.Attributes[attribute] : "No attribute";
+            //cellsToHighlight = cellManager.GetCells(cellManager.Attributes[attribute]);
+            //cellManager.HighlightCells(cellsToHighlight, true, attribute);
+            cellManager.HighlightAttribute(cellManager.AttributesNames[attribute], true);
+            heatmap.barInfoText.text = attribute >= 0 ? cellManager.AttributesNames[attribute] : "No attribute";
             heatmap.enlargedGeneText.gameObject.SetActive(false);
         }
 
@@ -635,11 +636,7 @@ namespace CellexalVR.Interaction
         private void ResetHeatmapHighlight(bool resetText = true)
         {
             currentHighlightedGroup = -1;
-            if (cellsToHighlight != null && cellsToHighlight.Length > 0)
-            {
-                cellManager.HighlightCells(cellsToHighlight, false, -1);
-                cellsToHighlight = new Cell[0];
-            }
+            cellManager.HighlightAttribute("", false);
             if (resetText) heatmap.ResetHeatmapHighlight();
         }
 

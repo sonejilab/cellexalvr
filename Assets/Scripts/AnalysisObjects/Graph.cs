@@ -51,7 +51,9 @@ namespace CellexalVR.AnalysisObjects
         public Dictionary<int, int> textureWidths = new Dictionary<int, int>();
         public Dictionary<int, int> textureHeights = new Dictionary<int, int>();
         public Texture2D[] textures;
+        public Dictionary<(int, string), Texture2D> attributeMasks = new Dictionary<(int, string), Texture2D>();
         private bool textureChanged;
+        private bool attributeHighlighted = false;
 
         public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
@@ -1081,6 +1083,44 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        public void HighlightAttribute(string attribute, bool highlight)
+        {
+            for (int lodGroup = 0; lodGroup < lodGroups; ++lodGroup)
+            {
+                Texture2D texture = textures[lodGroup];
+                Unity.Collections.NativeArray<Color32> rawTextureData = texture.GetRawTextureData<Color32>();
+
+                if (highlight)
+                {
+                    Unity.Collections.NativeArray<Color32> maskRawData = attributeMasks[(lodGroup, attribute)].GetRawTextureData<Color32>();
+
+                    if (rawTextureData.Length != maskRawData.Length)
+                    {
+                        CellexalError.SpawnError("Could not highlight attribute",
+                            "The graph's graphpoint texture was not the same length as the generated attribute mask. Did you replace any files in the dataset without deleting the \"Generated\" folder?");
+                        return;
+                    }
+
+                    for (int i = 0; i < rawTextureData.Length; ++i)
+                    {
+                        byte rawMaskDataR = maskRawData[i].r;
+                        Color32 currentColor = rawTextureData[i];
+                        rawTextureData[i] = new Color32(currentColor.r, (byte)(rawMaskDataR == 0 ? 190 : 38), currentColor.b, currentColor.a);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < rawTextureData.Length; ++i)
+                    {
+                        Color32 currentColor = rawTextureData[i];
+                        rawTextureData[i] = new Color32(currentColor.r, 0, currentColor.b, currentColor.a);
+                    }
+                }
+                texture.Apply();
+            }
+            attributeHighlighted = highlight;
+        }
+
         /// <summary>
         /// Toggles all graphpoint cluster gameobjects active/inactive.
         /// </summary>
@@ -1390,6 +1430,51 @@ namespace CellexalVR.AnalysisObjects
                 // graphPointClusters[graphPointClusters.Count - 1].GetComponent<Renderer>().sharedMaterial.mainTexture = texture2;
             }
         }
+
+        public void ColorByAttribute(string attribute, bool color)
+        {
+            for (int i = 0; i < lodGroups; ++i)
+            {
+                ApplyAttributeMask(attributeMasks[(i, attribute)], i, color);
+            }
+        }
+
+        private void ApplyAttributeMask(Texture2D mask, int lodGroup, bool color)
+        {
+            Texture2D destTexture = textures[lodGroup];
+            Unity.Collections.NativeArray<Color32> destRawData = destTexture.GetRawTextureData<Color32>();
+            Unity.Collections.NativeArray<Color32> maskRawData = mask.GetRawTextureData<Color32>();
+
+            if (destRawData.Length != maskRawData.Length)
+            {
+                CellexalError.SpawnError("Could not color by attribute",
+                    "The graph's graphpoint texture was not the same length as the generated attribute mask. Did you replace any files in the dataset without deleting the \"Generated\" folder?");
+                return;
+            }
+
+            if (color)
+            {
+
+                for (int i = 0; i < destRawData.Length; ++i)
+                {
+                    byte rawMaskDataR = maskRawData[i].r;
+                    Color32 currentColor = destRawData[i];
+                    destRawData[i] = new Color32(rawMaskDataR == 0 ? currentColor.r : rawMaskDataR, currentColor.g, currentColor.b, currentColor.a);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < destRawData.Length; ++i)
+                {
+                    byte rawMaskDataR = maskRawData[i].r;
+                    Color32 currentColor = destRawData[i];
+                    destRawData[i] = new Color32(rawMaskDataR == 0 ? currentColor.r : (byte)255, currentColor.g, currentColor.b, currentColor.a);
+                }
+
+            }
+            destTexture.Apply();
+        }
+
 
         /// <summary>
         /// Finds all <see cref="GraphPoint"/> that are inside the selection tool. This is done by traversing the generated Octree and dismissing subtrees using Minkowski differences.

@@ -1,25 +1,20 @@
-﻿using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Attributes;
 using CellexalVR.Menu.Buttons.Facs;
+using CellexalVR.Menu.Buttons.Selection;
+using CellexalVR.SceneObjects;
 using CellexalVR.Spatial;
 using CellexalVR.Tools;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using CellexalVR.AnalysisLogic;
-using CellexalVR.DesktopUI;
-using CellexalVR.SceneObjects;
-using UnityEditor;
+using Unity.Entities;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
-using CellexalVR.Menu.Buttons.Selection;
-using AnalysisLogic;
-using Unity.Entities;
-using System.Linq;
 
 namespace CellexalVR.Multiuser
 {

@@ -52,6 +52,7 @@ MonoBehaviour:
   averageVelocityArrowPrefab: {fileID: 1384495715582512, guid: 0ed92af6f64448944b3046b46b6aa52a,
     type: 3}
   averageVelocityMaterials: []
+  isCreating: 0
 --- !u!1 &1136056702234574
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,6 +357,7 @@ MonoBehaviour:
   selectionNr: 0
   heatmapsCreated: 0
   selectionManager: {fileID: 0}
+  startPositions: []
 --- !u!1 &7096989317925957970
 GameObject:
   m_ObjectHideFlags: 0
@@ -1475,7 +1477,7 @@ PrefabInstance:
         type: 3}
       propertyPath: actionReference
       value: 
-      objectReference: {fileID: -2258996918771001736, guid: c348712bda248c246b8c49b3db54643f,
+      objectReference: {fileID: 83097790271614945, guid: c348712bda248c246b8c49b3db54643f,
         type: 3}
     - target: {fileID: 2840207807988252874, guid: 9c800878c52ccc94196080a9929d9da0,
         type: 3}
@@ -2376,6 +2378,11 @@ PrefabInstance:
         type: 3}
       propertyPath: referenceManager
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5681418495715969725, guid: 9c800878c52ccc94196080a9929d9da0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5720053099662667448, guid: 9c800878c52ccc94196080a9929d9da0,
         type: 3}
@@ -3751,3 +3758,22 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8326409388930816328}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2253886055165888323 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7839131245906517515, guid: 9c800878c52ccc94196080a9929d9da0,
+    type: 3}
+  m_PrefabInstance: {fileID: 8326409388930816328}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1459116892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2253886055165888323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8d557ad2d32eef418a483b3967071a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  images: []
