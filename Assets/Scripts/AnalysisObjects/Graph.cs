@@ -15,6 +15,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 using DG.Tweening;
 using CellexalVR.Spatial;
 using System.Threading.Tasks;
+using Unity.Jobs;
+using Unity.Collections;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -53,7 +55,10 @@ namespace CellexalVR.AnalysisObjects
         public Texture2D[] textures;
         public Dictionary<(int, string), Texture2D> attributeMasks = new Dictionary<(int, string), Texture2D>();
         private bool textureChanged;
-        private bool attributeHighlighted = false;
+        private Coroutine runningHighlightCoroutine;
+        private Coroutine waitingHighlightCoroutine;
+        private JobHandle runningJobHandle;
+        private NativeArray<Color32> emptyColorArray;
 
         public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
@@ -151,6 +156,12 @@ namespace CellexalVR.AnalysisObjects
             selectionToolLayerMask = 1 << LayerMask.NameToLayer("SelectionToolLayer");
             nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
             startPosition = transform.position;
+            emptyColorArray = new NativeArray<Color32>(0, Allocator.Persistent);
+        }
+
+        private void OnApplicationQuit()
+        {
+            emptyColorArray.Dispose();
         }
 
         private void Update()
@@ -1083,42 +1094,88 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Highlights, or un-highlights, all graphpoints that belong to an attribute.
+        /// </summary>
+        /// <param name="attribute">The name of the attribute, should be in the full format e.g. "<c>type@attribute</c>".</param>
+        /// <param name="highlight">True if graphpoints belonging should be highlighted, false if un-highlighting.</param>
         public void HighlightAttribute(string attribute, bool highlight)
         {
+            if (runningHighlightCoroutine is null)
+            {
+                runningHighlightCoroutine = StartCoroutine(HighlightAttributeCoroutine(attribute, highlight));
+            }
+            else
+            {
+                if (waitingHighlightCoroutine is not null)
+                {
+                    StopCoroutine(waitingHighlightCoroutine);
+                }
+
+                waitingHighlightCoroutine = StartCoroutine(HighlightAttributeCoroutine(attribute, highlight));
+            }
+        }
+
+        /// <summary>
+        /// Coroutine used in <see cref="HighlightAttribute(string, bool)"/>.
+        /// </summary>
+        private IEnumerator HighlightAttributeCoroutine(string attribute, bool highlight)
+        {
+            if (runningHighlightCoroutine is not null)
+            {
+                yield return runningHighlightCoroutine;
+                runningHighlightCoroutine = waitingHighlightCoroutine;
+                waitingHighlightCoroutine = null;
+            }
+
             for (int lodGroup = 0; lodGroup < lodGroups; ++lodGroup)
             {
                 Texture2D texture = textures[lodGroup];
-                Unity.Collections.NativeArray<Color32> rawTextureData = texture.GetRawTextureData<Color32>();
+                NativeArray<Color32> rawTextureData = texture.GetRawTextureData<Color32>();
+                NativeArray<Color32> maskRawData = highlight ? attributeMasks[(lodGroup, attribute)].GetRawTextureData<Color32>() : emptyColorArray;
 
+                if (highlight && rawTextureData.Length != maskRawData.Length)
+                {
+                    CellexalError.SpawnError("Could not highlight attribute",
+                        "The graph's graphpoint texture was not the same length as the generated attribute mask. Did you replace any files in the dataset without deleting the \"Generated\" folder?");
+                    yield break;
+                }
+
+                HighlightAttributeMultiJob job = new HighlightAttributeMultiJob
+                {
+                    maskTextureData = maskRawData,
+                    destTextureData = rawTextureData,
+                    highlight = highlight
+                };
+                runningJobHandle = job.Schedule(rawTextureData.Length, 10000, runningJobHandle);
+                yield return new WaitUntil(() => runningJobHandle.IsCompleted);
+                runningJobHandle.Complete();
+                texture.Apply();
+            }
+            runningHighlightCoroutine = null;
+        }
+
+        protected struct HighlightAttributeMultiJob : IJobParallelFor
+        {
+            [ReadOnly]
+            public bool highlight;
+            [ReadOnly]
+            public NativeArray<Color32> maskTextureData;
+            public NativeArray<Color32> destTextureData;
+
+            public void Execute(int index)
+            {
+                Color32 currentColor = destTextureData[index];
                 if (highlight)
                 {
-                    Unity.Collections.NativeArray<Color32> maskRawData = attributeMasks[(lodGroup, attribute)].GetRawTextureData<Color32>();
-
-                    if (rawTextureData.Length != maskRawData.Length)
-                    {
-                        CellexalError.SpawnError("Could not highlight attribute",
-                            "The graph's graphpoint texture was not the same length as the generated attribute mask. Did you replace any files in the dataset without deleting the \"Generated\" folder?");
-                        return;
-                    }
-
-                    for (int i = 0; i < rawTextureData.Length; ++i)
-                    {
-                        byte rawMaskDataR = maskRawData[i].r;
-                        Color32 currentColor = rawTextureData[i];
-                        rawTextureData[i] = new Color32(currentColor.r, (byte)(rawMaskDataR == 0 ? 190 : 38), currentColor.b, currentColor.a);
-                    }
+                    byte rawMaskDataR = maskTextureData[index].r;
+                    destTextureData[index] = new Color32(currentColor.r, (byte)(rawMaskDataR == 0 ? 190 : 38), currentColor.b, currentColor.a);
                 }
                 else
                 {
-                    for (int i = 0; i < rawTextureData.Length; ++i)
-                    {
-                        Color32 currentColor = rawTextureData[i];
-                        rawTextureData[i] = new Color32(currentColor.r, 0, currentColor.b, currentColor.a);
-                    }
+                    destTextureData[index] = new Color32(currentColor.r, 0, currentColor.b, currentColor.a);
                 }
-                texture.Apply();
             }
-            attributeHighlighted = highlight;
         }
 
         /// <summary>
@@ -1431,6 +1488,11 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Color, or un-color, all graphpoints that belong to an attribute.
+        /// </summary>
+        /// <param name="attribute">The name of the attribute, should be in the full format e.g. "<c>type@attribute</c>".</param>
+        /// <param name="color">True if graphpoints belonging should be colored, false if un-coloring.</param>
         public void ColorByAttribute(string attribute, bool color)
         {
             for (int i = 0; i < lodGroups; ++i)

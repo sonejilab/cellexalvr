@@ -683,7 +683,7 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 0; i < heatmap.layout.textureGraphics.Count; ++i)
             {
                 //Texture2D texture = Instantiate(heatmapTexture) as Texture2D;
-                Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, true);
+                Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
                 yield return null;
                 texture.LoadImage(File.ReadAllBytes(heatmapFilePath + "_" + i + ".png"));
                 texture.filterMode = FilterMode.Point;

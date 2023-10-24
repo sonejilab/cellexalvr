@@ -2,6 +2,7 @@
 <Config xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ConfigDir>\Config</ConfigDir>
   <RscriptexePath>REPLACE THIS TEXT WITH PATH TO R EXECUTABLE</RscriptexePath>
+  <ControllerModel>Set Automatically</ControllerModel>
   <GraphLoadingCellsPerFrameStartCount>200</GraphLoadingCellsPerFrameStartCount>
   <GraphLoadingCellsPerFrameIncrement>15</GraphLoadingCellsPerFrameIncrement>
   <GraphClustersPerFrameStartCount>5</GraphClustersPerFrameStartCount>

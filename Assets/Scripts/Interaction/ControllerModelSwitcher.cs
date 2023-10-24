@@ -204,8 +204,8 @@ namespace CellexalVR.Interaction
 
             if ((device.characteristics & InputDeviceCharacteristics.Controller) == InputDeviceCharacteristics.Controller)
             {
-                CellexalLog.Log("Device is controller");
-                CellexalLog.Log($"device.characteristics: {((uint)device.characteristics)}. InputDeviceCharacteristics.Left: {((uint)InputDeviceCharacteristics.Left)}. InputDeviceCharacteristics.Right: {((uint)InputDeviceCharacteristics.Right)} ");
+                //CellexalLog.Log("Device is controller");
+                //CellexalLog.Log($"device.characteristics: {((uint)device.characteristics)}. InputDeviceCharacteristics.Left: {((uint)InputDeviceCharacteristics.Left)}. InputDeviceCharacteristics.Right: {((uint)InputDeviceCharacteristics.Right)} ");
 
                 if (!CellexalConfig.configLoaded)
                 {
@@ -218,12 +218,12 @@ namespace CellexalVR.Interaction
 
                 if ((device.characteristics & InputDeviceCharacteristics.Left) == InputDeviceCharacteristics.Left)
                 {
-                    CellexalLog.Log("Device is left controller");
+                    //CellexalLog.Log("Device is left controller");
                     SwitchControllerBaseModel(desiredBrand, true, false);
                 }
                 else if ((device.characteristics & InputDeviceCharacteristics.Right) == InputDeviceCharacteristics.Right)
                 {
-                    CellexalLog.Log("Device is right controller");
+                    //CellexalLog.Log("Device is right controller");
                     SwitchControllerBaseModel(desiredBrand, false, true);
                 }
                 else

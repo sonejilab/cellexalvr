@@ -44,6 +44,7 @@ namespace CellexalVR.AnalysisLogic
         private GraphGenerator graphGenerator;
         private string currentPath;
         public Dictionary<string, H5Reader> h5readers = new Dictionary<string, H5Reader>();
+        private Thread rServerThread;
 
         [Tooltip("Automatically loads the Bertie dataset")]
         public bool debug;
@@ -81,6 +82,12 @@ namespace CellexalVR.AnalysisLogic
             currentPath = "";
             facsGraphCounter = 0;
             RScriptRunner.SetReferenceManager(referenceManager);
+        }
+
+        private void OnApplicationQuit()
+        {
+            // TODO: quit R server properly
+            //rServerThread.Join();
         }
 
 
@@ -316,11 +323,11 @@ namespace CellexalVR.AnalysisLogic
                           CellexalUser.UserSpecificFolder + " " + pid;
             CellexalLog.Log("Running start server script at " + rScriptFilePath + " with the arguments " + args);
             string value = null;
-            Thread t = new Thread(
+            rServerThread = new Thread(
                 () => { value = RScriptRunner.RunFromCmd(rScriptFilePath, args, true); });
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            t.Start();
+            rServerThread.Start();
             while (!File.Exists(serverName + ".pid"))
             {
                 if (value != null && !value.Equals(string.Empty))
