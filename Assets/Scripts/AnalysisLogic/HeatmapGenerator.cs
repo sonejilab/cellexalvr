@@ -332,6 +332,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 selection = referenceManager.inputReader.ReadSelectionFile(heatmap.selectionFile, false);
             }
+            //print((selectionNr, heatmap.selectionFile));
             heatmapList.Add(heatmap);
             Dataset.instance.heatmaps.Add(heatmap);
             heatmap.directory = outputFilePath;

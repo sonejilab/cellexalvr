@@ -110,18 +110,19 @@ namespace CellexalVR.Menu.SubMenus
                     categoriesAndNamesDict["Unnamed"].Add(names[i]);
                 }
             }
-            orderedNamesCategoriesAndNamesDict = new Dictionary<string, List<string>>();
+            //orderedNamesCategoriesAndNamesDict = new Dictionary<string, List<string>>();
             Tab newTab = null;
             int buttonIndex = 0;
             string prevCat = "";
             foreach (KeyValuePair<string, List<string>> kvp in categoriesAndNamesDict)
             {
-                string cat = kvp.Key;
-                int maxLen = kvp.Value.Max(x => x.Length);
-                orderedNames = kvp.Value.OrderBy(x => x.PadLeft(maxLen, '0')).ToArray();
-                for (int i = 0; i < orderedNames.Length; i++, buttonIndex++)
+                string category = kvp.Key;
+                List<string> names = kvp.Value;
+                //int maxLen = kvp.Value.Max(x => x.Length);
+                //orderedNames = kvp.Value.OrderBy(x => x.PadLeft(maxLen, '0')).ToArray();
+                for (int i = 0; i < names.Count; i++, buttonIndex++)
                 {
-                    if (buttonIndex % buttonsPerTab == 0 || !cat.Equals(prevCat))
+                    if (buttonIndex % buttonsPerTab == 0 || !category.Equals(prevCat))
                     {
                         if (tabs.Count > 0 && tabs.Count % 4 == 0)
                         {
@@ -132,9 +133,9 @@ namespace CellexalVR.Menu.SubMenus
                         }
 
                         newTab = AddTab(tabPrefab);
-                        if (cat != "Unnamed")
+                        if (category != "Unnamed")
                         {
-                            newTab.tabButton.GetComponentInChildren<TextMeshPro>().text = cat;
+                            newTab.tabButton.GetComponentInChildren<TextMeshPro>().text = category;
                         }
 
                         buttonIndex = 0;
@@ -144,8 +145,8 @@ namespace CellexalVR.Menu.SubMenus
                     newButton.gameObject.SetActive(true);
                     cellexalButtons.Add(newButton);
                     newTab.AddButton(newButton);
-                    prevCat = cat;
-                    orderedNamesCategoriesAndNamesDict[cat] = orderedNames.ToList();
+                    prevCat = category;
+                    //orderedNamesCategoriesAndNamesDict[cat] = orderedNames.ToList();
                 }
             }
 

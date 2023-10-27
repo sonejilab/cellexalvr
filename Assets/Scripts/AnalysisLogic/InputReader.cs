@@ -250,13 +250,10 @@ namespace CellexalVR.AnalysisLogic
                 StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
                 attributeReader = gameObject.AddComponent<AttributeReader>();
                 attributeReader.referenceManager = referenceManager;
-                if (File.Exists(Path.Join(fullPath, "a.meta.cell")))
+                string attributeFilePath = Path.Join(fullPath, "a.meta.cell");
+                if (File.Exists(attributeFilePath))
                 {
-                    yield return StartCoroutine(attributeReader.ReadAttributeFilesCoroutine(fullPath));
-                }
-                else if (File.Exists(Path.Join(fullPath, "b.meta.cell")))
-                {
-                    attributeReader.ReadCondensedAttributeFile(fullPath);
+                    attributeReader.ReadCondensedAttributeFile(attributeFilePath);
                 }
                 //while (!attributeFileRead)
                 //    yield return null;

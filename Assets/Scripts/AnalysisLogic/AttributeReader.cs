@@ -161,8 +161,7 @@ namespace CellexalVR.AnalysisLogic
 
         public void ReadCondensedAttributeFile(string fullPath)
         {
-            string filePath = Path.Join(fullPath, "b.meta.cell");
-            using FileStream metaCellFileStream = new FileStream(filePath, FileMode.Open);
+            using FileStream metaCellFileStream = new FileStream(fullPath, FileMode.Open);
             using StreamReader metaCellStreamReader = new StreamReader(metaCellFileStream);
 
             List<string> categories = new List<string>();
@@ -307,7 +306,8 @@ namespace CellexalVR.AnalysisLogic
             ReferenceManager.instance.attributeSubMenu.CreateButtons(attributes.ToArray());
 
             // save all textures as .png so we don't have to recalculate them next time
-            string generatedDirectoryPath = Path.Join(fullPath, "Generated");
+            string parentDir = Path.GetDirectoryName(fullPath);
+            string generatedDirectoryPath = Path.Join(parentDir, "Generated");
             if (!Directory.Exists(generatedDirectoryPath))
             {
                 Directory.CreateDirectory(generatedDirectoryPath);

@@ -1203,11 +1203,11 @@ namespace CellexalVR.AnalysisObjects
                 yield return null;
             }
 
+            subGraph.CopyAttributeMasks(g);
+
             foreach (string attribute in attributesToColor)
             {
-                // int attributeIndex = referenceManager.cellManager.Attributes.IndexOf(attribute, (s1, s2) => s1.ToLower() == s2.ToLower());
-                int attributeIndex = referenceManager.cellManager.AttributesNames.IndexOf(attribute);
-                referenceManager.cellManager.ColorByAttribute(attribute, true, true, attributeIndex);
+                subGraph.ColorByAttribute(attribute, true);
             }
             graphManager.Graphs.Add(subGraph);
             graphManager.attributeSubGraphs.Add(subGraph);

@@ -1017,7 +1017,7 @@ namespace CellexalVR.AnalysisLogic
 
             public AttributeExpr(string attribute, bool include)
             {
-                this.attribute = attribute.ToLower();
+                this.attribute = attribute;
                 this.include = include;
             }
 

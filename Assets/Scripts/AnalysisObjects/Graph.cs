@@ -1537,6 +1537,40 @@ namespace CellexalVR.AnalysisObjects
             destTexture.Apply();
         }
 
+        /// <summary>
+        /// Copies the attribute mask data from another graph and reformats it to this graph's meshs' clustering.
+        /// </summary>
+        /// <param name="graph">The graph to coopy from.</param>
+        public void CopyAttributeMasks(Graph graph)
+        {
+            Dictionary<(int, string), Texture2D> masksToCopy = graph.attributeMasks;
+            foreach (KeyValuePair<(int lodGroup, string attribute), Texture2D> kvp in masksToCopy)
+            {
+                int lodGroup = kvp.Key.lodGroup;
+                string attribute = kvp.Key.attribute;
+                int textureWidth = kvp.Value.width;
+                byte attributeRedChannel = (byte)(CellexalConfig.Config.GraphNumberOfExpressionColors + ReferenceManager.instance.cellManager.AttributesNames.IndexOf(attribute));
+                HashSet<AnalysisLogic.Cell> attributesHasSet = ReferenceManager.instance.cellManager.Attributes[attribute];
+                //NativeArray<Color32> sourceData = kvp.Value.GetRawTextureData<Color32>();
+                Texture2D destTexture = new Texture2D(textureWidths[lodGroup], textureHeights[lodGroup], TextureFormat.RGBA32, false);
+                attributeMasks[(lodGroup, attribute)] = destTexture;
+                NativeArray<Color32> destData = destTexture.GetRawTextureData<Color32>();
+                foreach (GraphPoint graphPoint in points.Values)
+                {
+                    int rawTextureDataIndex = graphPoint.textureCoord[lodGroup].y * graph.textureWidths[lodGroup] + graphPoint.textureCoord[lodGroup].x;
+                    if (attributesHasSet.Contains(ReferenceManager.instance.cellManager.GetCell(graphPoint.Label)))
+                    {
+                        destData[rawTextureDataIndex] = new Color32(attributeRedChannel, 0, 0, 255);
+                    }
+                    else
+                    {
+                        destData[rawTextureDataIndex] = new Color32(0, 0, 0, 255);
+                    }
+                }
+                destTexture.Apply();
+            }
+        }
+
 
         /// <summary>
         /// Finds all <see cref="GraphPoint"/> that are inside the selection tool. This is done by traversing the generated Octree and dismissing subtrees using Minkowski differences.
