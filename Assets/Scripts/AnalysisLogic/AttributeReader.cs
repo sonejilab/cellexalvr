@@ -18,6 +18,32 @@ namespace CellexalVR.AnalysisLogic
     {
         public ReferenceManager referenceManager;
 
+        private string textureMetaDataFilePath = "texture_meta_data.txt";
+        private string textureMetaDataNumberOfExpressionsKey = "number_of_expression_colors";
+
+        private void Awake()
+        {
+            CellexalEvents.ConfigLoaded.AddListener(OnConfigLoaded);
+        }
+
+        private void OnConfigLoaded()
+        {
+            string generatedDirectoryPath = Path.Join(Dataset.instance.sourceFolder, "Generated");
+            Dictionary<(Graph graph, int lodGroup, string attribute), Texture2D> textures = new Dictionary<(Graph, int, string), Texture2D>();
+            List<string> attributes = ReferenceManager.instance.cellManager.AttributesNames;
+            foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+            {
+                for (int lodGroup = 0; lodGroup < graph.lodGroups; ++lodGroup)
+                {
+                    foreach (string attribute in attributes)
+                    {
+                        textures[(graph, lodGroup, attribute)] = graph.attributeMasks[(lodGroup, attribute)];
+                    }
+                }
+            }
+            UpdateTextureColors(generatedDirectoryPath, textures, attributes);
+        }
+
         //summertwerk
         /// <summary>
         /// Reads all attributes from current h5 file
@@ -161,8 +187,21 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
+        /// <summary>
+        /// Reads a condensed attribute file. This will create a folder `Generated` in the dataset's folder and save the generated textures there.
+        /// If such a folder already exists, this function will still read the file for cell's attributes, but will instead use whatever textures are on the disk.
+        /// </summary>
+        /// <param name="fullPath">The path to the condensed attribute file.</param>
         public void ReadCondensedAttributeFile(string fullPath)
         {
+            // File format should be
+            // CellID       CATEGORY_1  CATEGORY_2 ...
+            // CELLNAME_1   ATTRIBUTE_1 ATTRIBUTE_2
+            // CELLNAME_2   ATTRIBUTE_3 ATTRIBUTE_4
+            // ...
+
+            System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
             string parentDir = Path.GetDirectoryName(fullPath);
             string generatedDirectoryPath = Path.Join(parentDir, "Generated");
             bool generatedDataExists = Directory.Exists(generatedDirectoryPath);
@@ -282,32 +321,7 @@ namespace CellexalVR.AnalysisLogic
                     CellexalLog.Log("Created directory " + generatedDirectoryPath);
                 }
 
-                // recolor attribute masks to the color that corresponds to that attribute
-                for (int i = 0; i < attributes.Count; ++i)
-                {
-                    string attribute = attributes[i];
-                    foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
-                    {
-                        for (int lodGroup = 0; lodGroup < graph.lodGroups; ++lodGroup)
-                        {
-                            Texture2D texture = textures[(graph, lodGroup, attribute)];
-                            NativeArray<Color32> rawColorData = texture.GetRawTextureData<Color32>();
-                            byte redValue = (byte)(CellexalConfig.Config.GraphNumberOfExpressionColors + i);
-                            for (int j = 0; j < rawColorData.Length; ++j)
-                            {
-                                if (rawColorData[j].r == 255)
-                                {
-                                    rawColorData[j] = new Color32(redValue, 0, 0, 255);
-                                }
-                            }
-                            texture.Apply();
-                            byte[] pngData = texture.EncodeToPNG();
-                            string filename = graph.GraphName + "_LOD" + lodGroup + "_" + attribute + ".png";
-
-                            File.WriteAllBytes(Path.Join(generatedDirectoryPath, filename), pngData);
-                        }
-                    }
-                }
+                UpdateTextureColors(generatedDirectoryPath, textures, attributes);
 
                 CellexalLog.Log($"Saved {textures.Count} attribute masks in {generatedDirectoryPath}");
             }
@@ -356,6 +370,105 @@ namespace CellexalVR.AnalysisLogic
                 }
                 CellexalLog.Log($"Loaded {ReferenceManager.instance.cellManager.AttributesNames.Count} attributes from already generated textures");
             }
+            stopwatch.Stop();
+            CellexalLog.Log($"Loaded attribute information in {stopwatch.Elapsed}");
+        }
+
+        /// <summary>
+        /// Updates the textures of all attribute masks on disk with the correct colors.
+        /// </summary>
+        /// <param name="generatedDirectoryPath">Path to the <c>Generated</c> directory where the textures are stored.</param>
+        /// <param name="textures">A dictionary of all textures that should be updated.</param>
+        /// <param name="attributes">A list of which attributes to update.</param>
+        private void UpdateTextureColors(string generatedDirectoryPath, Dictionary<(Graph graph, int lodGroup, string attribute), Texture2D> textures, List<string> attributes)
+        {
+            // check meta data file for previous number of expression colors used for the generated textures
+            string fullMetaDataFilePath = Path.Join(generatedDirectoryPath, textureMetaDataFilePath);
+            int numberofExpressionColorsLineNumber = -1;
+            string[] allLines = new string[0];
+            if (File.Exists(fullMetaDataFilePath))
+            {
+                allLines = File.ReadAllLines(fullMetaDataFilePath);
+                for (int i = 0; i < allLines.Length; ++i)
+                {
+                    string[] keyAndValue = allLines[i].Split("=");
+
+                    if (keyAndValue.Length == 2)
+                    {
+                        if (keyAndValue[0] == textureMetaDataNumberOfExpressionsKey)
+                        {
+                            if (int.TryParse(keyAndValue[1], out int numberOfExpressionColors))
+                            {
+                                if (numberOfExpressionColors == CellexalConfig.Config.GraphNumberOfExpressionColors)
+                                {
+                                    CellexalLog.Log("Using previously generated attribute masks textures.");
+                                    return;
+                                }
+                                else
+                                {
+                                    CellexalLog.Log("Updating attribute mask textures due to different number of expression colors as last time.");
+                                    numberofExpressionColorsLineNumber = i;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                CellexalLog.Log($"Bad value found in texture meta data file on line {i + 1}. Found {keyAndValue[1]}, expected an integer. Updating textures and overwriting.");
+                                numberofExpressionColorsLineNumber = i;
+                                break;
+                            }
+                        }
+                    }
+                    if (i == allLines.Length - 1)
+                    {
+                        CellexalLog.Log($"Key {textureMetaDataNumberOfExpressionsKey} not found in texture meta data file. Updating textures and writing value to file.");
+                    }
+                }
+            }
+
+            // recolor attribute masks to the color that corresponds to that attribute
+            for (int i = 0; i < attributes.Count; ++i)
+            {
+                string attribute = attributes[i];
+                foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+                {
+                    for (int lodGroup = 0; lodGroup < graph.lodGroups; ++lodGroup)
+                    {
+                        Texture2D texture = textures[(graph, lodGroup, attribute)];
+                        NativeArray<Color32> rawColorData = texture.GetRawTextureData<Color32>();
+                        byte redValue = (byte)(CellexalConfig.Config.GraphNumberOfExpressionColors + i);
+                        for (int j = 0; j < rawColorData.Length; ++j)
+                        {
+                            if (rawColorData[j].r != 0)
+                            {
+                                rawColorData[j] = new Color32(redValue, 0, 0, 255);
+                            }
+                        }
+                        texture.Apply();
+                        byte[] pngData = texture.EncodeToPNG();
+                        string filename = graph.GraphName + "_LOD" + lodGroup + "_" + attribute + ".png";
+
+                        File.WriteAllBytes(Path.Join(generatedDirectoryPath, filename), pngData);
+                    }
+                }
+            }
+
+            // write the new number of expression colors to meta data file
+            string newLine = $"{textureMetaDataNumberOfExpressionsKey}={CellexalConfig.Config.GraphNumberOfExpressionColors}";
+            if (numberofExpressionColorsLineNumber != -1)
+            {
+                // if we found the line with the old value, overwrite it
+                allLines[numberofExpressionColorsLineNumber] = newLine;
+            }
+            else
+            {
+                // if we did not find the line with the old value, append it as a new line
+                string[] appendedAllLines = new string[allLines.Length + 1];
+                Array.Copy(allLines, appendedAllLines, allLines.Length);
+                appendedAllLines[allLines.Length] = newLine;
+                allLines = appendedAllLines;
+            }
+            File.WriteAllLines(fullMetaDataFilePath, allLines);
         }
 
         /// <summary>
