@@ -1,8 +1,8 @@
-﻿using CellexalVR.AnalysisLogic;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;
 using CellexalVR.Extensions;
 using CellexalVR.Filters;
+using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.SubMenus;
 using CellexalVR.Multiuser;
@@ -13,10 +13,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using TMPro;
 using UnityEngine;
 
-namespace CellexalVR.General
+namespace CellexalVR.AnalysisLogic
 {
 
     /// <summary>
@@ -63,6 +62,8 @@ namespace CellexalVR.General
         private int historyIndexOffset;
         private MultiuserMessageSender multiuserMessageSender;
         private FilterManager filterManager;
+
+        private List<Selection> selections = new List<Selection>();
 
         public bool RObjectUpdating { get; private set; }
 
@@ -604,18 +605,22 @@ namespace CellexalVR.General
             if (selectedCells.Count == 0)
             {
                 print("empty selection confirmed");
+                return;
             }
 
             // create .txt file with latest selection
             lastSelectedCells.Clear();
             // Ensure points are unique. Because distinct keeps first occurence but we want to keep last we need to reverse the list before using it and then reverse back.
-            IEnumerable<Graph.GraphPoint> uniqueCells = selectedCells.Reverse<Graph.GraphPoint>().Distinct().Reverse();
+            //IEnumerable<Graph.GraphPoint> uniqueCells = selectedCells.Reverse<Graph.GraphPoint>().Distinct().Reverse();
             // Remove line below if the cells should be in the same order as they were selected no matter which group.  
-            IEnumerable<Graph.GraphPoint> sortedUniqueCells = uniqueCells.OrderBy(x => x.Group);
-            DumpSelectionToTextFile(sortedUniqueCells.ToList());
+            //IEnumerable<Graph.GraphPoint> sortedUniqueCells = uniqueCells.OrderBy(x => x.Group);
+            //DumpSelectionToTextFile(sortedUniqueCells.ToList());
+            selections.Add(new Selection(0));
+            selections[0].SetPoints(selectedCells);
+            selections[0].SaveSelectionToDisk();
 
             List<int> groups = new List<int>();
-            foreach (Graph.GraphPoint gp in sortedUniqueCells)
+            foreach (Graph.GraphPoint gp in selectedCells)
             {
                 if (!groups.Contains(gp.Group))
                 {
@@ -629,7 +634,7 @@ namespace CellexalVR.General
                 //gp.RecolorSelectionColor(gp.group, false);
                 foreach (Graph graph in graphManager.Graphs)
                 {
-                    Graph.GraphPoint graphPoint = graphManager.FindGraphPoint(graph.GraphName, gp.Label);
+                    Graph.GraphPoint graphPoint = graph.FindGraphPoint(gp.Label);
                     if (graphPoint != null)
                     {
                         graphPoint.ColorSelectionColor(gp.Group, false);

@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
 
 namespace CellexalVR.Menu.Buttons
@@ -7,6 +6,7 @@ namespace CellexalVR.Menu.Buttons
     public class RecolorSelectionButton : CellexalButton
     {
         private SelectionManager selectionManager;
+
 
         protected override string Description
         {

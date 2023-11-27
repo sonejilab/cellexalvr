@@ -32,8 +32,8 @@ namespace CellexalVR.AnalysisLogic
         public IEnumerator ReadMDSFiles(string path, string[] mdsFiles,
             GraphGenerator.GraphType type = GraphGenerator.GraphType.MDS, bool server = true)
         {
+            nrOfLODGroups = ReferenceManager.instance.graphGenerator.nrOfLODGroups;
             //nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
-            nrOfLODGroups = 1;
             //  Read each .mds file
             //  The file format should be
             //  cell_id  axis_name1   axis_name2   axis_name3
@@ -197,6 +197,20 @@ namespace CellexalVR.AnalysisLogic
                 // Improves performance a lot when analysing larger graphs.
                 int n = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
                 yield return StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
+
+                int nPoints = 0;
+                foreach (Graph g in referenceManager.graphManager.Graphs)
+                {
+                    foreach (Graph.GraphPoint gp in g.points.Values)
+                    {
+                        nPoints++;
+                        if (!gp.textureCoord[0].Equals(gp.textureCoord[1]))
+                        {
+                            print(gp.Label);
+                        }
+                    }
+                }
+                print(nPoints);
 
                 if (nrOfLODGroups > 1)
                 {

@@ -1,8 +1,6 @@
-﻿using CellexalVR.AnalysisObjects;
-using CellexalVR.General;
-using CellexalVR.Interaction;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.AnalysisObjects;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace CellexalVR.SceneObjects

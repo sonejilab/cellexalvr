@@ -513,7 +513,7 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            tuples.Sort((lhs, rhs) => lhs.str.Equals(rhs.str) ? lhs.i.Value.CompareTo(rhs.i) : lhs.str.CompareTo(rhs.i));
+            tuples.Sort((lhs, rhs) => lhs.str.Equals(rhs.str) ? lhs.i.Value.CompareTo(rhs.i) : lhs.str.CompareTo(rhs.str));
 
             // reassemble the list of attributes in the sorted order
             for (int i = 0; i < tuples.Count; ++i)

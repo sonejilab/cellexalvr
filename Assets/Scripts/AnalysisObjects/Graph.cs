@@ -368,7 +368,7 @@ namespace CellexalVR.AnalysisObjects
             public Vector3 Position;
             public GameObject cluster;
             public int index;
-            public Vector2Int[] textureCoord = new Vector2Int[2];
+            public Vector2Int[] textureCoord = new Vector2Int[ReferenceManager.instance.graphGenerator.nrOfLODGroups];
             public Graph parent;
             private int group;
 
@@ -1291,8 +1291,9 @@ namespace CellexalVR.AnalysisObjects
                 }
 
                 Color32 finalColor = new Color32(redChannel, greenChannel, blueChannel, 255);
-                textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] { finalColor });
+                //textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1, new Color32[] { finalColor });
+                NativeArray<Color32> rawData = textures[g].GetRawTextureData<Color32>();
+                rawData[graphPoint.textureCoord[g].y * textureWidths[g] + graphPoint.textureCoord[g].x] = finalColor;
                 // textures[g].Apply();
             }
 

@@ -1,5 +1,5 @@
-﻿using CellexalVR.Filters;
-using CellexalVR.General;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.Filters;
 using CellexalVR.Menu.SubMenus;
 using TMPro;
 using UnityEngine;

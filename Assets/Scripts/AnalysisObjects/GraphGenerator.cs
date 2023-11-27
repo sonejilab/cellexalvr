@@ -40,7 +40,7 @@ namespace CellexalVR.AnalysisObjects
         public Mesh meshToUse;
         public string DirectoryName { get; set; }
         public bool isCreating;
-        public int nrOfLODGroups = 1;
+        public int nrOfLODGroups = 3;
 
         public enum GraphType
         {
@@ -1191,6 +1191,7 @@ namespace CellexalVR.AnalysisObjects
 
             subGraph.maxCoordValues = g.ScaleCoordinates(g.maxCoordValues);
             subGraph.minCoordValues = g.ScaleCoordinates(g.minCoordValues);
+            print(nrOfLODGroups);
             StartCoroutine(SliceClusteringLOD(nrOfLODGroups));
             foreach (BoxCollider col in g.GetComponents<BoxCollider>())
             {
