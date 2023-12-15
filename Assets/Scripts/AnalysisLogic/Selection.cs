@@ -12,17 +12,21 @@ using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
-    public class Selection
+    public class Selection : IDisposable
     {
         public static string parentSelectionDirectory;
 
         public readonly int id;
-
         public int size;
-
-        public readonly List<(int groupIndex, int groupSize)> groupSizes;
-
+        public readonly List<int> groups;
+        public readonly List<Color> colors;
+        public readonly Dictionary<int, int> groupSizes;
         public bool pointsLoaded;
+
+        /// <summary>
+        /// Array to go from a group number to an index in <see cref="groups"/>.
+        /// </summary>
+        private int[] reverseGroupIndices;
 
         private NativeArray<GraphPointData> nativePointData;
 
@@ -60,7 +64,8 @@ namespace CellexalVR.AnalysisLogic
         public Selection(int id)
         {
             this.id = id;
-            this.groupSizes = new List<(int, int)>();
+            this.groups = new List<int>();
+            this.groupSizes = new Dictionary<int, int>();
             SetPoints(new List<Graph.GraphPoint>());
         }
 
@@ -72,7 +77,8 @@ namespace CellexalVR.AnalysisLogic
         public Selection(int id, IEnumerable<Graph.GraphPoint> points)
         {
             this.id = id;
-            this.groupSizes = new List<(int, int)>();
+            this.groups = new List<int>();
+            this.groupSizes = new Dictionary<int, int>();
             SetPoints(points);
         }
 
@@ -80,6 +86,11 @@ namespace CellexalVR.AnalysisLogic
         /// Destructor.
         /// </summary>
         ~Selection()
+        {
+            nativePointData.Dispose();
+        }
+
+        public void Dispose()
         {
             nativePointData.Dispose();
         }
@@ -123,19 +134,37 @@ namespace CellexalVR.AnalysisLogic
             nativePointData = new NativeArray<GraphPointData>(_points.Count, Allocator.Persistent);
             for (int i = 0; i < _points.Count; ++i)
             {
-                nativePointData[i] = new GraphPointData() { group = _points[i].Group, texCoord = _points[i].textureCoord[0] };
+                nativePointData[i] = new GraphPointData() { group = _points[i].Group, texCoord = _points[i].textureCoord };
             }
-            NativeArray<int> nativeGroupSizes = new NativeArray<int>(CellexalConfig.Config.GraphNumberOfExpressionColors, Allocator.Temp);
+            NativeArray<int> nativeGroupSizes = new NativeArray<int>(CellexalConfig.Config.GraphNumberOfExpressionColors, Allocator.TempJob);
 
             CalculatePointsMetaDataJob calcMetaJob = new CalculatePointsMetaDataJob()
             {
                 points = nativePointData,
                 groupSizes = nativeGroupSizes
             };
+
             JobHandle calcMetaHandle = calcMetaJob.Schedule(nativePointData.Length, 1000);
             calcMetaHandle.Complete();
-            nativeGroupSizes.Dispose();
 
+            for (int i = 0; i < nativeGroupSizes.Length; ++i)
+            {
+                if (nativeGroupSizes[i] > 0)
+                {
+                    this.groups.Add(i);
+                    this.groupSizes[i] = nativeGroupSizes[i];
+                }
+            }
+
+            reverseGroupIndices = new int[groups[^1] + 1]; // the last element in groups is also the highest group number
+            Array.Fill(reverseGroupIndices, -1);
+
+            for (int i = 0; i < groups.Count; ++i)
+            {
+                reverseGroupIndices[groups[i]] = i;
+            }
+
+            nativeGroupSizes.Dispose();
             size = _points.Count;
         }
 
@@ -145,7 +174,7 @@ namespace CellexalVR.AnalysisLogic
             [ReadOnly]
             public NativeArray<GraphPointData> points;
 
-            [WriteOnly]
+            [NativeDisableParallelForRestriction]
             public NativeArray<int> groupSizes;
 
             public void Execute(int index)
@@ -170,6 +199,7 @@ namespace CellexalVR.AnalysisLogic
 
         public void SaveSelectionToDisk()
         {
+            UnityEngine.Profiling.Profiler.BeginSample("SaveSelectionToDisk");
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
             // find relevant folder
@@ -198,145 +228,136 @@ namespace CellexalVR.AnalysisLogic
 
             // create group-specific texture dictionary
             // maps a combination of a graph, lod group and selection group to the corresponding texture and its raw texture data array
-            Dictionary<(Graph graph, int lodGroup, int group), Texture2D> textures = new();
-            Dictionary<(Graph graph, int lodGroup, int group), NativeArray<Color32>> rawTextureData = new();
+            Dictionary<(Graph graph, int group), Texture2D> textures = new();
+            Dictionary<(Graph graph, int group), NativeArray<Color32>> rawTextureData = new();
 
 
             // create dictionary for texture with groups combined
-            Dictionary<(Graph graph, int lodGroup), Texture2D> allGroupsCombinedTextures = new();
-            Dictionary<(Graph graph, int lodGroup), NativeArray<Color32>> allGroupsCombinedRawTextureData = new();
+            Dictionary<Graph, Texture2D> allGroupsCombinedTextures = new();
+            Dictionary<Graph, NativeArray<Color32>> allGroupsCombinedRawTextureData = new();
 
             // save color32 arrays for each color for later
-            NativeArray<Color32> colors = new NativeArray<Color32>(this.groupSizes.Count, Allocator.TempJob);
+            NativeArray<Color32> colors = new NativeArray<Color32>(groups.Count, Allocator.TempJob);
             for (int i = 0; i < colors.Length; ++i)
             {
-                byte redChannel = (byte)(CellexalConfig.Config.GraphNumberOfExpressionColors + this.groupSizes[i].groupIndex);
+                byte redChannel = (byte)(CellexalConfig.Config.GraphNumberOfExpressionColors + groups[i]);
                 colors[i] = new Color32(redChannel, 0, 0, 255);
             }
 
             // initialise textures
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
-                for (int lodGroup = 0; lodGroup < graph.lodGroups; ++lodGroup)
+                for (int i = 0; i < colors.Length; ++i)
                 {
-                    for (int group = 0; group < colors.Length; ++group)
-                    {
-                        textures[(graph, lodGroup, group)] = new Texture2D(graph.textureWidths[lodGroup], graph.textureHeights[lodGroup], TextureFormat.RGBA32, false);
-
-                        allGroupsCombinedTextures[(graph, lodGroup)] = new Texture2D(graph.textureWidths[lodGroup], graph.textureHeights[lodGroup], TextureFormat.RGBA32, false);
-                    }
+                    textures[(graph, groups[i])] = new Texture2D(graph.textureWidth, graph.textureHeight, TextureFormat.RGBA32, false);
+                    textures[(graph, groups[i])].Apply();
                 }
+                allGroupsCombinedTextures[graph] = new Texture2D(graph.textureWidth, graph.textureHeight, TextureFormat.RGBA32, false);
+                allGroupsCombinedTextures[graph].Apply();
             }
 
             // fill all textures with black pixels
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
                 // all textures for a graph are the same size, using a for loop is slow but necessary once
-                NativeArray<Color32> sourceArray = textures[(graph, 0, 0)].GetRawTextureData<Color32>();
+                NativeArray<Color32> sourceArray = textures[(graph, groups[0])].GetRawTextureData<Color32>();
                 for (int i = 0; i < sourceArray.Length; ++i)
                 {
                     sourceArray[i] = new Color32(0, 0, 0, 255);
                 }
+                rawTextureData[(graph, groups[0])] = sourceArray;
 
                 // copy the pixels in the texture to all other textures
-                for (int lodGroup = 0; lodGroup < graph.lodGroups; ++lodGroup)
+                for (int i = 1; i < colors.Length; ++i)
                 {
-                    for (int group = 0; group < colors.Length; ++group)
-                    {
 
-                        (Graph graph, int lodGroup, int group) key = (graph, lodGroup, group);
-                        NativeArray<Color32> data = textures[key].GetRawTextureData<Color32>();
+                    (Graph graph, int group) key = (graph, groups[i]);
+                    NativeArray<Color32> data = textures[key].GetRawTextureData<Color32>();
 
-                        NativeArray<Color32>.Copy(sourceArray, data);
+                    NativeArray<Color32>.Copy(sourceArray, data);
 
-                        rawTextureData[key] = data;
-
-                    }
-
-                    (Graph graph, int lodGroup) combinedTextureKey = (graph, lodGroup);
-                    NativeArray<Color32> combinedData = allGroupsCombinedTextures[combinedTextureKey].GetRawTextureData<Color32>();
-
-                    NativeArray<Color32>.Copy(sourceArray, combinedData);
-                    allGroupsCombinedRawTextureData[combinedTextureKey] = combinedData;
-
+                    rawTextureData[key] = data;
                 }
+
+                NativeArray<Color32> combinedData = allGroupsCombinedTextures[graph].GetRawTextureData<Color32>();
+
+                NativeArray<Color32>.Copy(sourceArray, combinedData);
+                allGroupsCombinedRawTextureData[graph] = combinedData;
             }
 
             // find groups that are included in this selection
             int graphPointsPerBatch = 1000;
             NativeArray<GraphPointData>[] pointData = new NativeArray<GraphPointData>[colors.Length]; // jagged 2d array that groups together points by their group (color)
-            int[] groupSizes = new int[colors.Length];
-            int[] pointsProcessed = new int[colors.Length];
-            List<JobHandle> handles = new List<JobHandle>();
+            int[] pointsToProcess = new int[colors.Length];
+            List<JobHandle> handles = new List<JobHandle>(this.size / graphPointsPerBatch);
 
             for (int i = 0; i < pointData.Length; ++i)
             {
-                pointData[i] = new NativeArray<GraphPointData>(Points.Count, Allocator.TempJob);
-                groupSizes[i] = 0;
-                pointsProcessed[i] = 0;
+                pointData[i] = new NativeArray<GraphPointData>(groupSizes[groups[i]], Allocator.TempJob);
+                pointsToProcess[i] = 0;
             }
 
+            UnityEngine.Profiling.Profiler.BeginSample("Executing WriteToSelectionTextureJob");
             // batch up graphpoints in the selection and schedule a job for each batch
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
-                for (int lodGroup = 0; lodGroup < graph.lodGroups; ++lodGroup)
+                int selectionIndex = 0;
+
+                while (selectionIndex < Points.Count)
                 {
-                    int selectionIndex = 0;
+                    int batchLength = Math.Min(Points.Count - selectionIndex, graphPointsPerBatch);
 
-                    while (selectionIndex < Points.Count)
+                    for (int i = 0; i < batchLength; ++i, ++selectionIndex)
                     {
-                        int batchLength = Math.Min(Points.Count - selectionIndex, graphPointsPerBatch);
+                        Graph.GraphPoint point = graph.FindGraphPoint(Points[selectionIndex].Label);
+                        int groupIndex = reverseGroupIndices[point.Group];
+                        pointData[groupIndex][pointsToProcess[groupIndex]] = new GraphPointData() { texCoord = point.textureCoord, group = groupIndex };
+                        pointsToProcess[groupIndex]++;
+                    }
 
-                        for (int i = 0; i < batchLength; ++i, ++selectionIndex)
+                    // schedule a job for each group that has had points added to it
+                    // this should normally only schedule 1-2 jobs per iteration, since points in the Points list should be mostly grouped by their group already
+                    for (int i = 0; i < pointsToProcess.Length; ++i)
+                    {
+                        if (pointsToProcess[i] > 0)
                         {
-                            Graph.GraphPoint point = graph.FindGraphPoint(Points[selectionIndex].Label);
-                            pointData[point.Group][groupSizes[point.Group]] = new GraphPointData() { texCoord = point.textureCoord[lodGroup], group = point.Group };
-                            groupSizes[point.Group]++;
-                        }
 
-                        // schedule a job for each group that has had points added to it
-                        // this should normally only schedule 1-2 jobs per iteration, since points in the Points list should be mostly grouped by their group already
-                        for (int i = 0; i < colors.Length; ++i)
-                        {
-                            if (pointsProcessed[i] < groupSizes[i])
+                            WriteToSelectionTextureJob job = new WriteToSelectionTextureJob()
                             {
-
-                                WriteToSelectionTextureJob job = new WriteToSelectionTextureJob()
-                                {
-                                    points = new NativeSlice<GraphPointData>(pointData[i], pointsProcessed[i], groupSizes[i] - pointsProcessed[i]),
-                                    texture = rawTextureData[(graph, lodGroup, i)],
-                                    colors = colors,
-                                    textureWidth = graph.textureWidths[lodGroup]
-                                };
-                                pointsProcessed[i] = groupSizes[i];
-                                handles.Add(job.Schedule());
-                            }
+                                points = new NativeSlice<GraphPointData>(pointData[i], pointsToProcess[i], groupSizes[groups[i]] - pointsToProcess[i]),
+                                texture = rawTextureData[(graph, groups[i])],
+                                colors = colors,
+                                textureWidth = graph.textureWidth
+                            };
+                            pointsToProcess[i] = 0;
+                            handles.Add(job.Schedule());
                         }
                     }
-                    // combine batches to one jobhandle, and complete it
-                    NativeArray<JobHandle> handlesNativeArray = new NativeArray<JobHandle>(handles.ToArray(), Allocator.TempJob);
-                    JobHandle allHandles = JobHandle.CombineDependencies(handlesNativeArray);
-                    allHandles.Complete();
-                    handlesNativeArray.Dispose();
                 }
+                // combine batches to one jobhandle, and complete it
+                NativeArray<JobHandle> handlesNativeArray = new NativeArray<JobHandle>(handles.ToArray(), Allocator.TempJob);
+                JobHandle allHandles = JobHandle.CombineDependencies(handlesNativeArray);
+                allHandles.Complete();
+                handlesNativeArray.Dispose();
             }
+            UnityEngine.Profiling.Profiler.EndSample();
 
-            // remove textures that have not been updated, save the ones that were updated
-            foreach (KeyValuePair<(Graph graph, int lodGroup, int group), Texture2D> kvp in textures)
+            // save textures
+            foreach (KeyValuePair<(Graph graph, int group), Texture2D> kvp in textures)
             {
                 Texture2D texture = kvp.Value;
                 byte[] png = texture.EncodeToPNG();
-                string fileName = $"{kvp.Key.graph.GraphName}_LOD{kvp.Key.lodGroup}_{kvp.Key.group}.png";
+                string fileName = $"{kvp.Key.graph.GraphName}_{kvp.Key.group}.png";
                 string savedTextureFilePath = Path.Combine(currentSelectionDirectory, fileName);
                 File.WriteAllBytes(savedTextureFilePath, png);
             }
 
             // save combined texture
-            foreach (KeyValuePair<(Graph graph, int lodGroup), Texture2D> kvp in allGroupsCombinedTextures)
+            foreach (KeyValuePair<Graph, Texture2D> kvp in allGroupsCombinedTextures)
             {
                 Texture2D texture = kvp.Value;
                 byte[] png = texture.EncodeToPNG();
-                string fileName = $"{kvp.Key.graph.GraphName}_LOD{kvp.Key.lodGroup}_combined.png";
+                string fileName = $"{kvp.Key.GraphName}_combined.png";
                 string savedTextureFilePath = Path.Combine(currentSelectionDirectory, fileName);
                 File.WriteAllBytes(savedTextureFilePath, png);
             }
@@ -349,6 +370,7 @@ namespace CellexalVR.AnalysisLogic
             colors.Dispose();
             stopwatch.Stop();
             CellexalLog.Log($"Saved selection to disk in {stopwatch.Elapsed}");
+            UnityEngine.Profiling.Profiler.EndSample();
         }
 
         private struct GraphPointData

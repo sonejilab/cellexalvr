@@ -193,24 +193,7 @@ namespace CellexalVR.AnalysisLogic
 
                 CreateFromCoordinates(names, xcoords, ycoords, zcoords);
 
-                // If high quality mesh is used. Use LOD groups to swap to low q when further away.
-                // Improves performance a lot when analysing larger graphs.
-                int n = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
                 yield return StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
-
-                int nPoints = 0;
-                foreach (Graph g in referenceManager.graphManager.Graphs)
-                {
-                    foreach (Graph.GraphPoint gp in g.points.Values)
-                    {
-                        nPoints++;
-                        if (!gp.textureCoord[0].Equals(gp.textureCoord[1]))
-                        {
-                            print(gp.Label);
-                        }
-                    }
-                }
-                print(nPoints);
 
                 if (nrOfLODGroups > 1)
                 {
@@ -503,7 +486,6 @@ namespace CellexalVR.AnalysisLogic
             transform1.parent = parent.transform;
             transform1.localPosition = new Vector3(0, 0, 0);
             combGraph.lodGroups = nrOfLODGroups;
-            combGraph.textures = new Texture2D[nrOfLODGroups];
             GraphSlice gs = combGraph.gameObject.AddComponent<Spatial.GraphSlice>();
             yield return null;
 
@@ -530,17 +512,6 @@ namespace CellexalVR.AnalysisLogic
                     for (int i = 0; i < nrOfLODGroups; i++)
                     {
                         referenceManager.graphGenerator.isCreating = true;
-                        // referenceManager.graphGenerator.AddLODGroup(combGraph, i);
-                        //
-                        // combGraph.maxCoordValues = maxCoords;
-                        // combGraph.minCoordValues = minCoords;
-                        // referenceManager.graphGenerator.SliceClustering(lodGroup: i);
-                        // while (referenceManager.graphGenerator.isCreating)
-                        // {
-                        //     yield return null;
-                        // }
-
-                        //gs.zCoord = gp.WorldPosition.z;
                         combGraph.maxCoordValues = maxCoords;
                         combGraph.minCoordValues = minCoords;
                         StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
@@ -550,8 +521,6 @@ namespace CellexalVR.AnalysisLogic
                             yield return null;
                         }
 
-                        //gs.zCoord = gp.WorldPosition.z;
-
                         if (nrOfLODGroups > 1)
                         {
                             combGraph.gameObject.AddComponent<LODGroup>();
@@ -560,7 +529,6 @@ namespace CellexalVR.AnalysisLogic
 
                         combGraph = referenceManager.graphGenerator.CreateGraph(GraphGenerator.GraphType.SPATIAL);
                         combGraph.lodGroups = nrOfLODGroups;
-                        combGraph.textures = new Texture2D[nrOfLODGroups];
                         yield return null;
                         referenceManager.graphManager.Graphs.Add(combGraph);
                         referenceManager.graphManager.originalGraphs.Add(combGraph);
@@ -586,7 +554,7 @@ namespace CellexalVR.AnalysisLogic
                         referenceManager.graphGenerator.AddLODGroup(combGraph, i);
                         combGraph.maxCoordValues = maxCoords;
                         combGraph.minCoordValues = minCoords;
-                        referenceManager.graphGenerator.SliceClustering(lodGroup: i);
+                        referenceManager.graphGenerator.SliceClustering();
                         while (referenceManager.graphGenerator.isCreating)
                         {
                             yield return null;

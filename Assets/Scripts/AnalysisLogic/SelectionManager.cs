@@ -119,6 +119,14 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.GraphsReset.AddListener(Clear);
         }
 
+        private void OnApplicationQuit()
+        {
+            foreach (Selection selection in selections)
+            {
+                selection.Dispose();
+            }
+        }
+
         public void RemoveGraphpointFromSelection(Graph.GraphPoint graphPoint)
         {
 
@@ -615,9 +623,9 @@ namespace CellexalVR.AnalysisLogic
             // Remove line below if the cells should be in the same order as they were selected no matter which group.  
             //IEnumerable<Graph.GraphPoint> sortedUniqueCells = uniqueCells.OrderBy(x => x.Group);
             //DumpSelectionToTextFile(sortedUniqueCells.ToList());
-            selections.Add(new Selection(0));
-            selections[0].SetPoints(selectedCells);
-            selections[0].SaveSelectionToDisk();
+            Selection newSelection = new Selection(0, selectedCells);
+            selections.Add(newSelection);
+            newSelection.SaveSelectionToDisk();
 
             List<int> groups = new List<int>();
             foreach (Graph.GraphPoint gp in selectedCells)
@@ -645,9 +653,7 @@ namespace CellexalVR.AnalysisLogic
                 gp.unconfirmedInSelection = false;
             }
 
-            //previousSelectionMenu.CreateButton(selectedCells);
-            // clear the list since we are done with it
-            selectedCells.Clear();
+            selectedCells = new List<Graph.GraphPoint>(); // the old list is now in newSelection, so we have to make a new one
             selectionHistory.Clear();
             historyIndexOffset = 0;
             CellexalEvents.SelectionConfirmed.Invoke();

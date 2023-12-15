@@ -29,16 +29,13 @@ namespace CellexalVR.AnalysisLogic
         private void OnConfigLoaded()
         {
             string generatedDirectoryPath = Path.Join(Dataset.instance.sourceFolder, "Generated");
-            Dictionary<(Graph graph, int lodGroup, string attribute), Texture2D> textures = new Dictionary<(Graph, int, string), Texture2D>();
+            Dictionary<(Graph graph, string attribute), Texture2D> textures = new Dictionary<(Graph, string), Texture2D>();
             List<string> attributes = ReferenceManager.instance.cellManager.AttributesNames;
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
-                for (int lodGroup = 0; lodGroup < graph.lodGroups; ++lodGroup)
+                foreach (string attribute in attributes)
                 {
-                    foreach (string attribute in attributes)
-                    {
-                        textures[(graph, lodGroup, attribute)] = graph.attributeMasks[(lodGroup, attribute)];
-                    }
+                    textures[(graph, attribute)] = graph.attributeMasks[attribute];
                 }
             }
             UpdateTextureColors(generatedDirectoryPath, textures, attributes);
@@ -220,25 +217,22 @@ namespace CellexalVR.AnalysisLogic
 
             // create empty texture prefabs that can be cloned with Instantiate() later to make the actual textures
             // key: (Graph, lod group, attribute) where attributes are on the format "[category]@[attribute]"
-            Dictionary<(Graph graph, int lodGroup, string attribute), Texture2D> textures = new Dictionary<(Graph, int, string), Texture2D>();
+            Dictionary<(Graph graph, string attribute), Texture2D> textures = new Dictionary<(Graph, string), Texture2D>();
             // key: (Graph, lod group)
-            Dictionary<(Graph graph, int lodGroup), Texture2D> texturePrefabs = new Dictionary<(Graph, int), Texture2D>();
+            Dictionary<Graph, Texture2D> texturePrefabs = new Dictionary<Graph, Texture2D>();
 
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
-                for (int group = 0; group < graph.lodGroups; ++group)
-                {
-                    Texture2D texture = new Texture2D(graph.textureWidths[group], graph.textureHeights[group], TextureFormat.RGBA32, false);
-                    texture.Apply();
-                    Unity.Collections.NativeArray<Color32> rawTextureData = texture.GetRawTextureData<Color32>();
+                Texture2D texture = new Texture2D(graph.textureWidth, graph.textureHeight, TextureFormat.RGBA32, false);
+                texture.Apply();
+                Unity.Collections.NativeArray<Color32> rawTextureData = texture.GetRawTextureData<Color32>();
 
-                    // fill the new texture with a black solid background
-                    for (int i = 0; i < texture.width * texture.height; ++i)
-                    {
-                        rawTextureData[i] = new Color32(0, 0, 0, 255);
-                    }
-                    texturePrefabs[(graph, group)] = texture;
+                // fill the new texture with a black solid background
+                for (int i = 0; i < texture.width * texture.height; ++i)
+                {
+                    rawTextureData[i] = new Color32(0, 0, 0, 255);
                 }
+                texturePrefabs[graph] = texture;
             }
 
             CellManager cellManager = ReferenceManager.instance.cellManager;
@@ -285,24 +279,21 @@ namespace CellexalVR.AnalysisLogic
                     string attribute = kvp.Key;
                     foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
                     {
-                        for (int group = 0; group < graph.lodGroups; ++group)
+                        foreach (Cell cell in kvp.Value)
                         {
-                            foreach (Cell cell in kvp.Value)
+                            string cellName = cell.Label;
+                            (Graph, string) key = (graph, attribute);
+                            if (!textures.ContainsKey(key))
                             {
-                                string cellName = cell.Label;
-                                (Graph, int, string) key = (graph, group, attribute);
-                                if (!textures.ContainsKey(key))
-                                {
-                                    // if texture doesnt exist yet, create it
-                                    textures[key] = Instantiate(texturePrefabs[(graph, group)]);
-                                    graph.attributeMasks[(group, attribute)] = textures[key];
-                                }
-                                Graph.GraphPoint graphPoint = graph.FindGraphPoint(cellName);
-                                if (graphPoint is not null)
-                                {
-                                    Vector2Int textureCoord = graphPoint.textureCoord[group];
-                                    textures[key].SetPixel(textureCoord.x, textureCoord.y, Color.white);
-                                }
+                                // if texture doesnt exist yet, create it
+                                textures[key] = Instantiate(texturePrefabs[graph]);
+                                graph.attributeMasks[attribute] = textures[key];
+                            }
+                            Graph.GraphPoint graphPoint = graph.FindGraphPoint(cellName);
+                            if (graphPoint is not null)
+                            {
+                                Vector2Int textureCoord = graphPoint.textureCoord;
+                                textures[key].SetPixel(textureCoord.x, textureCoord.y, Color.white);
                             }
                         }
                     }
@@ -331,28 +322,24 @@ namespace CellexalVR.AnalysisLogic
                 // generated data exists, read texture from what's on the disk
                 foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
                 {
-                    for (int group = 0; group < graph.lodGroups; ++group)
+
+                    //  grep graph name + lod group
+                    string fileNamePrefix = graph.name + "_";
+                    string[] filePaths = Directory.GetFiles(generatedDirectoryPath, fileNamePrefix + "*");
+
+                    foreach (string filePath in filePaths)
                     {
+                        string fileName = Path.GetFileNameWithoutExtension(filePath);
+                        string attribute = fileName[fileNamePrefix.Length..];
+                        Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
 
-                        //  grep graph name + lod group
-                        string fileNamePrefix = graph.name + "_LOD" + group + "_";
-                        string[] filePaths = Directory.GetFiles(generatedDirectoryPath, fileNamePrefix + "*");
-
-                        foreach (string filePath in filePaths)
+                        if (!texture.LoadImage(File.ReadAllBytes(filePath)))
                         {
-                            string fileName = Path.GetFileNameWithoutExtension(filePath);
-                            string attribute = fileName[fileNamePrefix.Length..];
-                            // texture format:
-                            Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
-
-                            if (!texture.LoadImage(File.ReadAllBytes(filePath)))
-                            {
-                                CellexalLog.Log($"Failed to load texture from {filePath}");
-                            }
-                            NativeArray<Color32> rawData = texture.GetRawTextureData<Color32>();
-                            handles.Add(new ConvertARGBToRGBAJob() { data = rawData }.Schedule(rawData.Length, 10000));
-                            graph.attributeMasks[(group, attribute)] = texture;
+                            CellexalLog.Log($"Failed to load texture from {filePath}");
                         }
+                        NativeArray<Color32> rawData = texture.GetRawTextureData<Color32>();
+                        handles.Add(new ConvertARGBToRGBAJob() { data = rawData }.Schedule(rawData.Length, 10000));
+                        graph.attributeMasks[attribute] = texture;
                     }
                 }
 
@@ -380,7 +367,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="generatedDirectoryPath">Path to the <c>Generated</c> directory where the textures are stored.</param>
         /// <param name="textures">A dictionary of all textures that should be updated.</param>
         /// <param name="attributes">A list of which attributes to update.</param>
-        private void UpdateTextureColors(string generatedDirectoryPath, Dictionary<(Graph graph, int lodGroup, string attribute), Texture2D> textures, List<string> attributes)
+        private void UpdateTextureColors(string generatedDirectoryPath, Dictionary<(Graph graph, string attribute), Texture2D> textures, List<string> attributes)
         {
             // check meta data file for previous number of expression colors used for the generated textures
             string fullMetaDataFilePath = Path.Join(generatedDirectoryPath, textureMetaDataFilePath);
@@ -432,24 +419,21 @@ namespace CellexalVR.AnalysisLogic
                 string attribute = attributes[i];
                 foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
                 {
-                    for (int lodGroup = 0; lodGroup < graph.lodGroups; ++lodGroup)
+                    Texture2D texture = textures[(graph, attribute)];
+                    NativeArray<Color32> rawColorData = texture.GetRawTextureData<Color32>();
+                    byte redValue = (byte)(CellexalConfig.Config.GraphNumberOfExpressionColors + i);
+                    for (int j = 0; j < rawColorData.Length; ++j)
                     {
-                        Texture2D texture = textures[(graph, lodGroup, attribute)];
-                        NativeArray<Color32> rawColorData = texture.GetRawTextureData<Color32>();
-                        byte redValue = (byte)(CellexalConfig.Config.GraphNumberOfExpressionColors + i);
-                        for (int j = 0; j < rawColorData.Length; ++j)
+                        if (rawColorData[j].r != 0)
                         {
-                            if (rawColorData[j].r != 0)
-                            {
-                                rawColorData[j] = new Color32(redValue, 0, 0, 255);
-                            }
+                            rawColorData[j] = new Color32(redValue, 0, 0, 255);
                         }
-                        texture.Apply();
-                        byte[] pngData = texture.EncodeToPNG();
-                        string filename = graph.GraphName + "_LOD" + lodGroup + "_" + attribute + ".png";
-
-                        File.WriteAllBytes(Path.Join(generatedDirectoryPath, filename), pngData);
                     }
+                    texture.Apply();
+                    byte[] pngData = texture.EncodeToPNG();
+                    string filename = graph.GraphName + "_" + attribute + ".png";
+
+                    File.WriteAllBytes(Path.Join(generatedDirectoryPath, filename), pngData);
                 }
             }
 

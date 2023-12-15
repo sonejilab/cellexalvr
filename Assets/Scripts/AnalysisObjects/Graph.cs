@@ -17,6 +17,7 @@ using CellexalVR.Spatial;
 using System.Threading.Tasks;
 using Unity.Jobs;
 using Unity.Collections;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -45,19 +46,18 @@ namespace CellexalVR.AnalysisObjects
         public Dictionary<string, GraphPoint> points = new Dictionary<string, GraphPoint>();
         public Dictionary<string, GraphPoint> subSelectionPoints = new Dictionary<string, GraphPoint>();
         public ReferenceManager referenceManager;
-        public int lodGroups = 2;
+        public int lodGroups;
         public bool scaled;
 
         public Dictionary<int, List<GameObject>> lodGroupClusters = new Dictionary<int, List<GameObject>>();
         public List<GameObject> lodGroupParents = new List<GameObject>();
-        public Dictionary<int, int> textureWidths = new Dictionary<int, int>();
-        public Dictionary<int, int> textureHeights = new Dictionary<int, int>();
-        public Texture2D[] textures;
-        public Dictionary<(int, string), Texture2D> attributeMasks = new Dictionary<(int, string), Texture2D>();
+        public int textureWidth;
+        public int textureHeight;
+        public Texture2D texture;
+        public Dictionary<string, Texture2D> attributeMasks = new Dictionary<string, Texture2D>();
         private bool textureChanged;
         private Coroutine runningHighlightCoroutine;
         private Coroutine waitingHighlightCoroutine;
-        private JobHandle runningJobHandle;
         private NativeArray<Color32> emptyColorArray;
 
         public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
@@ -166,13 +166,9 @@ namespace CellexalVR.AnalysisObjects
 
         private void Update()
         {
-            if (textureChanged && textures != null)
+            if (textureChanged && texture is not null)
             {
-                foreach (Texture2D texture in textures)
-                {
-                    texture.Apply();
-                }
-
+                texture.Apply();
                 textureChanged = false;
             }
 
@@ -368,7 +364,7 @@ namespace CellexalVR.AnalysisObjects
             public Vector3 Position;
             public GameObject cluster;
             public int index;
-            public Vector2Int[] textureCoord = new Vector2Int[ReferenceManager.instance.graphGenerator.nrOfLODGroups];
+            public Vector2Int textureCoord = new Vector2Int();
             public Graph parent;
             private int group;
 
@@ -419,9 +415,9 @@ namespace CellexalVR.AnalysisObjects
                 Position -= parent.scaledOffset;
             }
 
-            public void SetTextureCoord(Vector2Int newPos, int lodGroup = 0)
+            public void SetTextureCoord(Vector2Int newPos)
             {
-                textureCoord[lodGroup] = newPos;
+                textureCoord = newPos;
             }
 
             public void ColorGeneExpression(int i, bool outline)
@@ -840,11 +836,6 @@ namespace CellexalVR.AnalysisObjects
                         {
                             nodeSizes.Add(c.size);
                             nodePositions.Add(c.center);
-                            //print("adding nodes");
-                            //foreach (OctreeNode onc in on.children)
-                            //{
-
-                            //}
                         }
                     }
 
@@ -857,12 +848,6 @@ namespace CellexalVR.AnalysisObjects
 
             public void DrawDebugLines(Vector3 gameobjectPos)
             {
-                //if (children.Length != 0)
-                //{
-                //    Gizmos.color = Color.red;
-                //    Gizmos.DrawWireSphere(gameobjectPos + center, 0.03f);
-                //    Gizmos.color = Color.white;
-                //}
                 foreach (var child in children)
                 {
                     Gizmos.DrawLine(gameobjectPos + center, gameobjectPos + child.center);
@@ -988,25 +973,25 @@ namespace CellexalVR.AnalysisObjects
                 {
                     octreeRoot.DrawDebugCubesRecursive(transform.position, 0, graphManager.drawDebugCubesOnLevel);
                 }
-            }
-            if (graphManager.drawSelectionToolDebugLines)
-            {
-                Gizmos.color = Color.green;
-                DrawDebugCube(Color.green, transform.TransformPoint(debugGizmosMin), transform.TransformPoint(debugGizmosMax), true);
-            }
-            if (graphManager.drawDebugRaycast)
-            {
-                octreeRoot.DrawDebugRaycasts(transform.position, debugGizmosPos);
-            }
-            if (graphManager.drawDebugRejectionApprovedCubes)
-            {
-                DrawRejectionApproveCubes(octreeRoot);
-            }
-            if (graphManager.drawDebugGroups)
-            {
-                octreeRoot.DrawDebugGroups(transform.position);
-            }
+                if (graphManager.drawSelectionToolDebugLines)
+                {
+                    Gizmos.color = Color.green;
+                    DrawDebugCube(Color.green, transform.TransformPoint(debugGizmosMin), transform.TransformPoint(debugGizmosMax), true);
+                }
+                if (graphManager.drawDebugRaycast)
+                {
+                    octreeRoot.DrawDebugRaycasts(transform.position, debugGizmosPos);
+                }
+                if (graphManager.drawDebugRejectionApprovedCubes)
+                {
+                    DrawRejectionApproveCubes(octreeRoot);
+                }
+                if (graphManager.drawDebugGroups)
+                {
+                    octreeRoot.DrawDebugGroups(transform.position);
+                }
 
+            }
         }
 #endif
 
@@ -1074,23 +1059,18 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         public void ResetColors(bool resetGroup = true)
         {
-            for (int g = 0; g < lodGroups; g++)
+            for (int i = 0; i < textureWidth; ++i)
             {
-                for (int i = 0; i < textureWidths[g]; ++i)
+                for (int j = 0; j < textureHeight; ++j)
                 {
-                    for (int j = 0; j < textureHeights[g]; ++j)
-                    {
-                        textures[g].SetPixel(i, j, Color.red);
-                        // texture2.SetPixel(i, j, Color.red);
-                    }
+                    texture.SetPixel(i, j, Color.red);
                 }
+            }
 
-                textures[g].Apply();
-                // texture2.Apply();
-                if (resetGroup)
-                {
-                    octreeRoot.Group = -1;
-                }
+            texture.Apply();
+            if (resetGroup)
+            {
+                octreeRoot.Group = -1;
             }
         }
 
@@ -1128,37 +1108,42 @@ namespace CellexalVR.AnalysisObjects
                 waitingHighlightCoroutine = null;
             }
 
-            for (int lodGroup = 0; lodGroup < lodGroups; ++lodGroup)
+            NativeArray<Color32> rawTextureData = texture.GetRawTextureData<Color32>();
+            NativeArray<Color32> maskRawData = highlight ? attributeMasks[attribute].GetRawTextureData<Color32>() : emptyColorArray;
+
+            if (highlight && rawTextureData.Length != maskRawData.Length)
             {
-                Texture2D texture = textures[lodGroup];
-                NativeArray<Color32> rawTextureData = texture.GetRawTextureData<Color32>();
-                NativeArray<Color32> maskRawData = highlight ? attributeMasks[(lodGroup, attribute)].GetRawTextureData<Color32>() : emptyColorArray;
+                CellexalError.SpawnError("Could not highlight attribute",
+                    "The graph's graphpoint texture was not the same length as the generated attribute mask. Did you replace any files in the dataset without deleting the \"Generated\" folder?");
+                yield break;
+            }
 
-                if (highlight && rawTextureData.Length != maskRawData.Length)
-                {
-                    CellexalError.SpawnError("Could not highlight attribute",
-                        "The graph's graphpoint texture was not the same length as the generated attribute mask. Did you replace any files in the dataset without deleting the \"Generated\" folder?");
-                    yield break;
-                }
-
+            JobHandle handle;
+            if (highlight)
+            {
                 HighlightAttributeMultiJob job = new HighlightAttributeMultiJob
                 {
                     maskTextureData = maskRawData,
                     destTextureData = rawTextureData,
-                    highlight = highlight
                 };
-                runningJobHandle = job.Schedule(rawTextureData.Length, 10000, runningJobHandle);
-                yield return new WaitUntil(() => runningJobHandle.IsCompleted);
-                runningJobHandle.Complete();
-                texture.Apply();
+                handle = job.Schedule(rawTextureData.Length, 10000);
             }
+            else
+            {
+                ResetHighlightAttributeMultiJob job = new ResetHighlightAttributeMultiJob
+                {
+                    destTextureData = rawTextureData
+                };
+                handle = job.Schedule(rawTextureData.Length, 10000);
+            }
+            yield return new WaitUntil(() => handle.IsCompleted);
+            handle.Complete();
+            texture.Apply();
             runningHighlightCoroutine = null;
         }
 
         protected struct HighlightAttributeMultiJob : IJobParallelFor
         {
-            [ReadOnly]
-            public bool highlight;
             [ReadOnly]
             public NativeArray<Color32> maskTextureData;
             public NativeArray<Color32> destTextureData;
@@ -1166,16 +1151,32 @@ namespace CellexalVR.AnalysisObjects
             public void Execute(int index)
             {
                 Color32 currentColor = destTextureData[index];
-                if (highlight)
-                {
-                    byte rawMaskDataR = maskTextureData[index].r;
-                    destTextureData[index] = new Color32(currentColor.r, (byte)(rawMaskDataR == 0 ? 190 : 38), currentColor.b, currentColor.a);
-                }
-                else
-                {
-                    destTextureData[index] = new Color32(currentColor.r, 0, currentColor.b, currentColor.a);
-                }
+                byte rawMaskDataR = maskTextureData[index].r;
+                destTextureData[index] = new Color32(currentColor.r, (byte)(rawMaskDataR == 0 ? 190 : 38), currentColor.b, currentColor.a);
             }
+        }
+
+        protected struct ResetHighlightAttributeMultiJob : IJobParallelFor
+        {
+            public NativeArray<Color32> destTextureData;
+
+            public void Execute(int index)
+            {
+                Color32 currentColor = destTextureData[index];
+                destTextureData[index] = new Color32(currentColor.r, 0, currentColor.b, currentColor.a);
+            }
+
+        }
+
+        public void HighlightSelectionGroup(Selection selection, int group)
+        {
+            if (!selection.groups.Contains(group))
+            {
+                CellexalLog.Log($"Attempted to highlight group that is not part of selection.");
+                return;
+            }
+
+
         }
 
         /// <summary>
@@ -1196,27 +1197,23 @@ namespace CellexalVR.AnalysisObjects
 
         public Color GetGraphPointColor(GraphPoint gp)
         {
-            int group = (int)(255 * textures[0].GetPixel(gp.textureCoord[0].x, gp.textureCoord[0].y).r);
+            int group = (int)(255 * texture.GetPixel(gp.textureCoord.x, gp.textureCoord.y).r);
             return graphGenerator.graphPointColors.GetPixel(group, 0);
         }
 
         public void Party()
         {
-            for (int g = 0; g < lodGroups; g++)
+            for (int i = 0; i < textureWidth; ++i)
             {
-                for (int i = 0; i < textureWidths[g]; ++i)
+                for (int j = 0; j < textureHeight; ++j)
                 {
-                    for (int j = 0; j < textureHeights[g]; ++j)
-                    {
-                        // green channel above 0.9
-                        textures[g].SetPixel(i, j, Color.green);
-                    }
+                    // green channel above 0.9
+                    texture.SetPixel(i, j, Color.green);
                 }
-
-                textures[g].Apply();
             }
-        }
 
+            texture.Apply();
+        }
 
         /// <summary>
         /// Clears the circles from previous colouring so it doesn't stack.
@@ -1238,22 +1235,17 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="color">The graphpoint's new color.</param>
         public void ColorGraphPointGeneExpression(GraphPoint graphPoint, int i, bool outline)
         {
-            for (int g = 0; g < lodGroups; g++)
+            Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
+            //byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
+            // TODO CELLEXAL: make the most expressed a percent of the total or something that isn't a hard coded 27
+            if (i == -1)
             {
-                Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
-                //byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);
-                // TODO CELLEXAL: make the most expressed a percent of the total or something that isn't a hard coded 27
-                if (i == -1)
-                {
-                    i = 255;
-                }
-
-                Color32 finalColor = new Color32((byte)i, tex.g, tex.b, 255);
-                textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] { finalColor });
-                // texture2.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
-                //     new Color32[] {finalColor});
+                i = 255;
             }
+
+            Color32 finalColor = new Color32((byte)i, tex.g, tex.b, 255);
+            texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
+                new Color32[] { finalColor });
 
             if (i > 27 && CellexalConfig.Config.GraphMostExpressedMarker)
             {
@@ -1275,27 +1267,23 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="outline">True if the graph point should get an outline as well, false otherwise.</param>
         public void ColorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
-            for (int g = 0; g < lodGroups; g++)
+            byte greenChannel = (byte)(outline ? 4 : 0);
+            byte blueChannel = (byte)(outline ? 38 : 0);
+            byte redChannel;
+            if (i == -1)
             {
-                Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
-                byte greenChannel = (byte)(outline ? 4 : 0);
-                byte blueChannel = (byte)(outline ? 38 : 0);
-                byte redChannel;
-                if (i == -1)
-                {
-                    redChannel = 255;
-                }
-                else
-                {
-                    redChannel = (byte)(nbrOfExpressionColors + i);
-                }
-
-                Color32 finalColor = new Color32(redChannel, greenChannel, blueChannel, 255);
-                //textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1, new Color32[] { finalColor });
-                NativeArray<Color32> rawData = textures[g].GetRawTextureData<Color32>();
-                rawData[graphPoint.textureCoord[g].y * textureWidths[g] + graphPoint.textureCoord[g].x] = finalColor;
-                // textures[g].Apply();
+                redChannel = 255;
             }
+            else
+            {
+                redChannel = (byte)(nbrOfExpressionColors + i);
+            }
+
+            Color32 finalColor = new Color32(redChannel, greenChannel, blueChannel, 255);
+            //textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1, new Color32[] { finalColor });
+            NativeArray<Color32> rawData = texture.GetRawTextureData<Color32>();
+            rawData[graphPoint.textureCoord.y * textureWidth + graphPoint.textureCoord.x] = finalColor;
+            // textures[g].Apply();
 
             textureChanged = true;
         }
@@ -1306,23 +1294,20 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="toggle"></param>
         private void MakePointTransparent(GraphPoint graphPoint, bool active)
         {
-            for (int g = 0; g < lodGroups; g++)
+            Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
+            byte greenChannel;
+            if (tex.g == 190 && tex.r != 254)
             {
-                Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
-                byte greenChannel;
-                if (tex.g == 190 && tex.r != 254)
-                {
-                    greenChannel = (byte)(active ? 190 : 0);
-                }
-                else
-                {
-                    greenChannel = (byte)(active ? 190 : tex.g);
-                }
-
-                Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
-                textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] { finalColor });
+                greenChannel = (byte)(active ? 190 : 0);
             }
+            else
+            {
+                greenChannel = (byte)(active ? 190 : tex.g);
+            }
+
+            Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
+            texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
+                new Color32[] { finalColor });
 
             textureChanged = true;
         }
@@ -1334,14 +1319,11 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="toggle"></param>
         public void MakePointUnCullable(GraphPoint graphPoint, bool culling)
         {
-            for (int g = 0; g < lodGroups; g++)
-            {
-                Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
-                byte blueChannel = (byte)(culling ? 4 : 0);
-                Color32 finalColor = new Color32(tex.r, tex.g, blueChannel, 255);
-                textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] { finalColor });
-            }
+            Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
+            byte blueChannel = (byte)(culling ? 4 : 0);
+            Color32 finalColor = new Color32(tex.r, tex.g, blueChannel, 255);
+            texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
+                new Color32[] { finalColor });
 
             textureChanged = true;
         }
@@ -1349,24 +1331,21 @@ namespace CellexalVR.AnalysisObjects
 
         private void HighlightGraphPoint(GraphPoint graphPoint, bool active)
         {
-            for (int g = 0; g < lodGroups; g++)
+            Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
+            // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
+            byte greenChannel;
+            if (!isTransparent && tex.r != 254)
             {
-                Color32 tex = textures[g].GetPixel(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y);
-                // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
-                byte greenChannel;
-                if (!isTransparent && tex.r != 254)
-                {
-                    greenChannel = (byte)(active ? 38 : 0);
-                }
-                else
-                {
-                    greenChannel = (byte)(active ? 38 : 190);
-                }
-
-                Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
-                textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                    new Color32[] { finalColor });
+                greenChannel = (byte)(active ? 38 : 0);
             }
+            else
+            {
+                greenChannel = (byte)(active ? 38 : 190);
+            }
+
+            Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
+            texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
+                new Color32[] { finalColor });
 
             textureChanged = true;
         }
@@ -1377,18 +1356,15 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="graphPoint">The graphpoint to recolor.</param>
         private void ResetGraphPointColor(GraphPoint graphPoint)
         {
-            for (int g = 0; g < lodGroups; g++)
+            if (isTransparent)
             {
-                if (isTransparent)
-                {
-                    textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                        new Color32[] { new Color32(254, 0, 0, 255) });
-                }
-                else
-                {
-                    textures[g].SetPixels32(graphPoint.textureCoord[g].x, graphPoint.textureCoord[g].y, 1, 1,
-                        new Color32[] { new Color32(255, 0, 0, 255) });
-                }
+                texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
+                    new Color32[] { new Color32(254, 0, 0, 255) });
+            }
+            else
+            {
+                texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
+                    new Color32[] { new Color32(255, 0, 0, 255) });
             }
 
             textureChanged = true;
@@ -1412,81 +1388,71 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="expressions">An arraylist with <see cref="CellExpressionPair"/>.</param>
         public void ColorByGeneExpression(ArrayList expressions)
         {
-            for (int g = 0; g < lodGroups; g++)
+            // expression values are saved in the textures red channel
+            // cells that have 0 (or whatever the lowest is) expression are not in the results
+            // fill entire background with the lowest expression color
+            for (int i = 0; i < textureWidth; ++i)
             {
-                // expression values are saved in the textures red channel
-                // cells that have 0 (or whatever the lowest is) expression are not in the results
-                // fill entire background with the lowest expression color
-                for (int i = 0; i < textureWidths[g]; ++i)
+                for (int j = 0; j < textureHeight; ++j)
                 {
-                    for (int j = 0; j < textureHeights[g]; ++j)
-                    {
-                        //texture.SetPixel(i, j, Color.black);
-
-                        // print(g + textures.Length);
-                        Color32 tex = textures[g].GetPixel(i, j);
-                        textures[g].SetPixels32(i, j, 1, 1,
-                            new Color32[] { new Color32(254, 190, tex.b, 255) });
-                        // Color32 tex2 = texture2.GetPixel(i, j);
-                        // texture2.SetPixels32(i, j, 1, 1,
-                        //     new Color32[] {new Color32(254, 190, tex2.b, 255)});
-                    }
+                    Color32 tex = texture.GetPixel(i, j);
+                    texture.SetPixels32(i, j, 1, 1,
+                        new Color32[] { new Color32(254, 190, tex.b, 255) });
                 }
-                //MakeAllPointsTransparent(true);
-
-                int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
-                Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
-                for (byte i = 0; i < nbrOfExpressionColors - 3; ++i)
-                {
-                    colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
-                }
-
-                for (byte i = (byte)(nbrOfExpressionColors - 3); i < nbrOfExpressionColors; ++i)
-                {
-                    colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
-                }
-
-                int topExpressedThreshold = (int)(nbrOfExpressionColors - nbrOfExpressionColors / 10f);
-                if (CellexalConfig.Config.GraphMostExpressedMarker)
-                {
-                    ClearTopExprCircles();
-                }
-
-                foreach (CellExpressionPair pair in expressions)
-                {
-                    // If this is a subgraph it does not contain all cells...
-                    if (points.ContainsKey(pair.Cell))
-                    {
-                        referenceManager.cellManager.GetCell(pair.Cell).ExpressionValue = pair.Expression;
-                        //print(referenceManager.cellManager.GetCell(pair.Cell).ExpressionValue);
-                        Vector2Int pos = points[pair.Cell].textureCoord[g];
-                        int expressionColorIndex = pair.Color;
-                        if (pair.Color >= nbrOfExpressionColors)
-                        {
-                            expressionColorIndex = nbrOfExpressionColors - 1;
-                        }
-
-                        if (CellexalConfig.Config.GraphMostExpressedMarker && pair.Color >= topExpressedThreshold &&
-                            !minimized)
-                        {
-                            var circle = Instantiate(movingOutlineCircle);
-                            circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
-                            circle.transform.position = points[pair.Cell].WorldPosition;
-                            circle.transform.parent = transform;
-                            topExprCircles.Add(circle);
-                        }
-
-                        Color32 tex = textures[g].GetPixel(pos.x, pos.y);
-                        Color32 finalCol = new Color32(colorValues[expressionColorIndex][0].r, 0, tex.b, 1);
-                        textures[g].SetPixels32(pos.x, pos.y, 1, 1, new Color32[] { finalCol });
-                    }
-                }
-
-                textures[g].Apply();
-                // texture2.Apply();
-                lodGroupClusters[g][0].GetComponent<Renderer>().sharedMaterial.mainTexture = textures[g];
-                // graphPointClusters[graphPointClusters.Count - 1].GetComponent<Renderer>().sharedMaterial.mainTexture = texture2;
             }
+
+            int nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
+            Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
+            for (byte i = 0; i < nbrOfExpressionColors - 3; ++i)
+            {
+                colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
+            }
+
+            for (byte i = (byte)(nbrOfExpressionColors - 3); i < nbrOfExpressionColors; ++i)
+            {
+                colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
+            }
+
+            int topExpressedThreshold = (int)(nbrOfExpressionColors - nbrOfExpressionColors / 10f);
+            if (CellexalConfig.Config.GraphMostExpressedMarker)
+            {
+                ClearTopExprCircles();
+            }
+
+            foreach (CellExpressionPair pair in expressions)
+            {
+                // If this is a subgraph it does not contain all cells...
+                if (points.ContainsKey(pair.Cell))
+                {
+                    referenceManager.cellManager.GetCell(pair.Cell).ExpressionValue = pair.Expression;
+                    //print(referenceManager.cellManager.GetCell(pair.Cell).ExpressionValue);
+                    Vector2Int pos = points[pair.Cell].textureCoord;
+                    int expressionColorIndex = pair.Color;
+                    if (pair.Color >= nbrOfExpressionColors)
+                    {
+                        expressionColorIndex = nbrOfExpressionColors - 1;
+                    }
+
+                    if (CellexalConfig.Config.GraphMostExpressedMarker && pair.Color >= topExpressedThreshold &&
+                        !minimized)
+                    {
+                        var circle = Instantiate(movingOutlineCircle);
+                        circle.GetComponent<MovingOutlineCircle>().camera = referenceManager.headset.transform;
+                        circle.transform.position = points[pair.Cell].WorldPosition;
+                        circle.transform.parent = transform;
+                        topExprCircles.Add(circle);
+                    }
+
+                    Color32 tex = texture.GetPixel(pos.x, pos.y);
+                    Color32 finalCol = new Color32(colorValues[expressionColorIndex][0].r, 0, tex.b, 1);
+                    texture.SetPixels32(pos.x, pos.y, 1, 1, new Color32[] { finalCol });
+                }
+            }
+
+            texture.Apply();
+            // texture2.Apply();
+            lodGroupClusters[0][0].GetComponent<Renderer>().sharedMaterial.mainTexture = texture;
+            // graphPointClusters[graphPointClusters.Count - 1].GetComponent<Renderer>().sharedMaterial.mainTexture = texture2;
         }
 
         /// <summary>
@@ -1496,15 +1462,12 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="color">True if graphpoints belonging should be colored, false if un-coloring.</param>
         public void ColorByAttribute(string attribute, bool color)
         {
-            for (int i = 0; i < lodGroups; ++i)
-            {
-                ApplyAttributeMask(attributeMasks[(i, attribute)], i, color);
-            }
+            ApplyAttributeMask(attributeMasks[attribute], color);
         }
 
-        private void ApplyAttributeMask(Texture2D mask, int lodGroup, bool color)
+        private void ApplyAttributeMask(Texture2D mask, bool color)
         {
-            Texture2D destTexture = textures[lodGroup];
+            Texture2D destTexture = texture;
             Unity.Collections.NativeArray<Color32> destRawData = destTexture.GetRawTextureData<Color32>();
             Unity.Collections.NativeArray<Color32> maskRawData = mask.GetRawTextureData<Color32>();
 
@@ -1544,21 +1507,19 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="graph">The graph to coopy from.</param>
         public void CopyAttributeMasks(Graph graph)
         {
-            Dictionary<(int, string), Texture2D> masksToCopy = graph.attributeMasks;
-            foreach (KeyValuePair<(int lodGroup, string attribute), Texture2D> kvp in masksToCopy)
+            Dictionary<string, Texture2D> masksToCopy = graph.attributeMasks;
+            foreach (KeyValuePair<string, Texture2D> kvp in masksToCopy)
             {
-                int lodGroup = kvp.Key.lodGroup;
-                string attribute = kvp.Key.attribute;
-                int textureWidth = kvp.Value.width;
+                string attribute = kvp.Key;
                 byte attributeRedChannel = (byte)(CellexalConfig.Config.GraphNumberOfExpressionColors + ReferenceManager.instance.cellManager.AttributesNames.IndexOf(attribute));
                 HashSet<AnalysisLogic.Cell> attributesHasSet = ReferenceManager.instance.cellManager.Attributes[attribute];
                 //NativeArray<Color32> sourceData = kvp.Value.GetRawTextureData<Color32>();
-                Texture2D destTexture = new Texture2D(textureWidths[lodGroup], textureHeights[lodGroup], TextureFormat.RGBA32, false);
-                attributeMasks[(lodGroup, attribute)] = destTexture;
+                Texture2D destTexture = new Texture2D(this.textureWidth, textureHeight, TextureFormat.RGBA32, false);
+                attributeMasks[attribute] = destTexture;
                 NativeArray<Color32> destData = destTexture.GetRawTextureData<Color32>();
                 foreach (GraphPoint graphPoint in points.Values)
                 {
-                    int rawTextureDataIndex = graphPoint.textureCoord[lodGroup].y * graph.textureWidths[lodGroup] + graphPoint.textureCoord[lodGroup].x;
+                    int rawTextureDataIndex = graphPoint.textureCoord.y * graph.textureWidth + graphPoint.textureCoord.x;
                     if (attributesHasSet.Contains(ReferenceManager.instance.cellManager.GetCell(graphPoint.Label)))
                     {
                         destData[rawTextureDataIndex] = new Color32(attributeRedChannel, 0, 0, 255);
