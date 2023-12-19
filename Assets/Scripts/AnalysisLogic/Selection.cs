@@ -2,6 +2,7 @@
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Unity.Burst;
@@ -12,8 +13,24 @@ using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
-    public class Selection : IDisposable
+
+    /// <summary>
+    /// A confirmed selection of <see cref="Graph.GraphPoint"/>.
+    /// Selections are created through the <see cref="SelectionManager"/> and once done, an object of this class is created.
+    /// </summary>
+    public class Selection : IEnumerable<Graph.GraphPoint>
     {
+        private static int _nextID = 0;
+        private static int GetNextID
+        {
+            get
+            {
+                int id = _nextID;
+                _nextID++;
+                return id;
+            }
+        }
+
         public static string parentSelectionDirectory;
 
         public readonly int id;
@@ -22,13 +39,13 @@ namespace CellexalVR.AnalysisLogic
         public readonly List<Color> colors;
         public readonly Dictionary<int, int> groupSizes;
         public bool pointsLoaded;
+        public Dictionary<(Graph graph, int group), Texture2D> groupMasks;
+        public Dictionary<Graph, Texture2D> allGroupsCombinedMask;
 
         /// <summary>
         /// Array to go from a group number to an index in <see cref="groups"/>.
         /// </summary>
         private int[] reverseGroupIndices;
-
-        private NativeArray<GraphPointData> nativePointData;
 
         private List<Graph.GraphPoint> _points;
         /// <summary>
@@ -60,10 +77,9 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Creates a new empty selection.
         /// </summary>
-        /// <param name="id">This selection's id.</param>
-        public Selection(int id)
+        public Selection()
         {
-            this.id = id;
+            this.id = GetNextID;
             this.groups = new List<int>();
             this.groupSizes = new Dictionary<int, int>();
             SetPoints(new List<Graph.GraphPoint>());
@@ -72,27 +88,34 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Creates a new selection from a collection of selected points.
         /// </summary>
-        /// <param name="id">The selection's id.</param>
         /// <param name="points">The collection to of points this selection should include.</param>
-        public Selection(int id, IEnumerable<Graph.GraphPoint> points)
+        public Selection(IEnumerable<Graph.GraphPoint> points)
         {
-            this.id = id;
+            this.id = GetNextID;
             this.groups = new List<int>();
             this.groupSizes = new Dictionary<int, int>();
             SetPoints(points);
         }
 
-        /// <summary>
-        /// Destructor.
-        /// </summary>
-        ~Selection()
+        public IEnumerator<Graph.GraphPoint> GetEnumerator()
         {
-            nativePointData.Dispose();
+            return new SelectionEnum(Points);
         }
 
-        public void Dispose()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            nativePointData.Dispose();
+            return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Indexer definition.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Graph.GraphPoint this[int index]
+        {
+            get => Points[index];
+            set => Points[index] = value;
         }
 
         /// <summary>
@@ -131,7 +154,7 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            nativePointData = new NativeArray<GraphPointData>(_points.Count, Allocator.Persistent);
+            NativeArray<GraphPointData> nativePointData = new NativeArray<GraphPointData>(_points.Count, Allocator.Persistent);
             for (int i = 0; i < _points.Count; ++i)
             {
                 nativePointData[i] = new GraphPointData() { group = _points[i].Group, texCoord = _points[i].textureCoord };
@@ -146,6 +169,7 @@ namespace CellexalVR.AnalysisLogic
 
             JobHandle calcMetaHandle = calcMetaJob.Schedule(nativePointData.Length, 1000);
             calcMetaHandle.Complete();
+            nativePointData.Dispose();
 
             for (int i = 0; i < nativeGroupSizes.Length; ++i)
             {
@@ -185,7 +209,7 @@ namespace CellexalVR.AnalysisLogic
 
         public List<Graph.GraphPoint> LoadSelectionFromDisk()
         {
-            _points = ReferenceManager.instance.inputReader.ReadSelectionFile(savedSelectionFilePath, false);
+            SetPoints(ReferenceManager.instance.inputReader.ReadSelectionFile(savedSelectionFilePath, false));
             pointsLoaded = true;
             return null;
         }
@@ -228,12 +252,12 @@ namespace CellexalVR.AnalysisLogic
 
             // create group-specific texture dictionary
             // maps a combination of a graph, lod group and selection group to the corresponding texture and its raw texture data array
-            Dictionary<(Graph graph, int group), Texture2D> textures = new();
+            groupMasks = new Dictionary<(Graph graph, int group), Texture2D>();
             Dictionary<(Graph graph, int group), NativeArray<Color32>> rawTextureData = new();
 
 
             // create dictionary for texture with groups combined
-            Dictionary<Graph, Texture2D> allGroupsCombinedTextures = new();
+            allGroupsCombinedMask = new Dictionary<Graph, Texture2D>();
             Dictionary<Graph, NativeArray<Color32>> allGroupsCombinedRawTextureData = new();
 
             // save color32 arrays for each color for later
@@ -249,18 +273,18 @@ namespace CellexalVR.AnalysisLogic
             {
                 for (int i = 0; i < colors.Length; ++i)
                 {
-                    textures[(graph, groups[i])] = new Texture2D(graph.textureWidth, graph.textureHeight, TextureFormat.RGBA32, false);
-                    textures[(graph, groups[i])].Apply();
+                    groupMasks[(graph, groups[i])] = new Texture2D(graph.textureWidth, graph.textureHeight, TextureFormat.RGBA32, false);
+                    groupMasks[(graph, groups[i])].Apply();
                 }
-                allGroupsCombinedTextures[graph] = new Texture2D(graph.textureWidth, graph.textureHeight, TextureFormat.RGBA32, false);
-                allGroupsCombinedTextures[graph].Apply();
+                allGroupsCombinedMask[graph] = new Texture2D(graph.textureWidth, graph.textureHeight, TextureFormat.RGBA32, false);
+                allGroupsCombinedMask[graph].Apply();
             }
 
             // fill all textures with black pixels
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
                 // all textures for a graph are the same size, using a for loop is slow but necessary once
-                NativeArray<Color32> sourceArray = textures[(graph, groups[0])].GetRawTextureData<Color32>();
+                NativeArray<Color32> sourceArray = groupMasks[(graph, groups[0])].GetRawTextureData<Color32>();
                 for (int i = 0; i < sourceArray.Length; ++i)
                 {
                     sourceArray[i] = new Color32(0, 0, 0, 255);
@@ -272,14 +296,14 @@ namespace CellexalVR.AnalysisLogic
                 {
 
                     (Graph graph, int group) key = (graph, groups[i]);
-                    NativeArray<Color32> data = textures[key].GetRawTextureData<Color32>();
+                    NativeArray<Color32> data = groupMasks[key].GetRawTextureData<Color32>();
 
                     NativeArray<Color32>.Copy(sourceArray, data);
 
                     rawTextureData[key] = data;
                 }
 
-                NativeArray<Color32> combinedData = allGroupsCombinedTextures[graph].GetRawTextureData<Color32>();
+                NativeArray<Color32> combinedData = allGroupsCombinedMask[graph].GetRawTextureData<Color32>();
 
                 NativeArray<Color32>.Copy(sourceArray, combinedData);
                 allGroupsCombinedRawTextureData[graph] = combinedData;
@@ -310,6 +334,10 @@ namespace CellexalVR.AnalysisLogic
                     for (int i = 0; i < batchLength; ++i, ++selectionIndex)
                     {
                         Graph.GraphPoint point = graph.FindGraphPoint(Points[selectionIndex].Label);
+                        if (point is null)
+                        {
+                            continue;
+                        }
                         int groupIndex = reverseGroupIndices[point.Group];
                         pointData[groupIndex][pointsToProcess[groupIndex]] = new GraphPointData() { texCoord = point.textureCoord, group = groupIndex };
                         pointsToProcess[groupIndex]++;
@@ -326,6 +354,7 @@ namespace CellexalVR.AnalysisLogic
                             {
                                 points = new NativeSlice<GraphPointData>(pointData[i], pointsToProcess[i], groupSizes[groups[i]] - pointsToProcess[i]),
                                 texture = rawTextureData[(graph, groups[i])],
+                                combinedTexture = allGroupsCombinedRawTextureData[graph],
                                 colors = colors,
                                 textureWidth = graph.textureWidth
                             };
@@ -343,7 +372,7 @@ namespace CellexalVR.AnalysisLogic
             UnityEngine.Profiling.Profiler.EndSample();
 
             // save textures
-            foreach (KeyValuePair<(Graph graph, int group), Texture2D> kvp in textures)
+            foreach (KeyValuePair<(Graph graph, int group), Texture2D> kvp in groupMasks)
             {
                 Texture2D texture = kvp.Value;
                 byte[] png = texture.EncodeToPNG();
@@ -353,7 +382,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             // save combined texture
-            foreach (KeyValuePair<Graph, Texture2D> kvp in allGroupsCombinedTextures)
+            foreach (KeyValuePair<Graph, Texture2D> kvp in allGroupsCombinedMask)
             {
                 Texture2D texture = kvp.Value;
                 byte[] png = texture.EncodeToPNG();
@@ -402,13 +431,19 @@ namespace CellexalVR.AnalysisLogic
             [NativeDisableContainerSafetyRestriction]
             public NativeArray<Color32> texture;
 
+            [WriteOnly]
+            [NativeDisableContainerSafetyRestriction]
+            public NativeArray<Color32> combinedTexture;
+
             public void Execute()
             {
                 for (int i = 0; i < points.Length; ++i)
                 {
                     int group = points[i].group;
                     Vector2Int texCoord = points[i].texCoord;
-                    texture[texCoord.y * textureWidth + texCoord.x] = colors[group];
+                    int textureDataIndex = texCoord.y * textureWidth + texCoord.x;
+                    texture[textureDataIndex] = colors[group];
+                    combinedTexture[textureDataIndex] = colors[group];
                 }
             }
         }
@@ -494,7 +529,38 @@ namespace CellexalVR.AnalysisLogic
             file.Close();
             return filePath;
         }
+    }
 
+    /// <summary>
+    /// Enumerator class. Required for <see cref="Selection"/> to implement <see cref="IEnumerable"/>.
+    /// </summary>
+    public class SelectionEnum : IEnumerator<Graph.GraphPoint>
+    {
+        public List<Graph.GraphPoint> points;
 
+        private int position;
+
+        public SelectionEnum(List<Graph.GraphPoint> points)
+        {
+            this.points = points;
+            position = -1;
+        }
+
+        public Graph.GraphPoint Current => points[position];
+
+        object IEnumerator.Current => Current;
+
+        public void Dispose() { }
+
+        public bool MoveNext()
+        {
+            position++;
+            return position < points.Count;
+        }
+
+        public void Reset()
+        {
+            position = -1;
+        }
     }
 }

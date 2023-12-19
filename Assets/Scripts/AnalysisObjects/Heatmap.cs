@@ -46,7 +46,7 @@ namespace CellexalVR.AnalysisObjects
         public TextMeshPro highlightInfoText;
         public bool removable;
         public string directory;
-        public List<Graph.GraphPoint> selection;
+        public Selection selection;
 
         /// <summary>
         /// Item1: group number, Item2: group width in coordinates, Item3: number of cells in the group
@@ -355,7 +355,7 @@ namespace CellexalVR.AnalysisObjects
                 newGps.Add(cells[j].GraphPoints[0]);
             }
 
-            hm.selection = newGps;
+            hm.selection = new Selection(newGps);
             string[] newGenes = new string[selectedGeneBottom - selectedGeneTop + 1];
             for (int i = selectedGeneTop, j = 0; i <= selectedGeneBottom; ++i, ++j)
             {

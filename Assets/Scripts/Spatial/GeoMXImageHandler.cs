@@ -1,15 +1,14 @@
-﻿using CellexalVR.General;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.General;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
-using DG.Tweening;
-using TMPro;
-using CellexalVR.AnalysisLogic;
 using static CellexalVR.AnalysisObjects.Graph;
 
 namespace CellexalVR.Spatial
@@ -469,7 +468,7 @@ namespace CellexalVR.Spatial
             {
                 UnSelectScan(selectedScan.scanID);
             }
-            List<GraphPoint> gps = ReferenceManager.instance.selectionManager.GetLastSelection();
+            AnalysisLogic.Selection gps = ReferenceManager.instance.selectionManager.GetLastSelection();
 
             StartCoroutine(SpawnAOIImagesFromGraphPoints(gps));
             return;
@@ -479,9 +478,9 @@ namespace CellexalVR.Spatial
         /// Coroutine to spawn the aoi images <see cref="GeoMXAOISlide"/> linked to the given graph points. The graph points and aoi images have the same id.
         /// It first clears the previous images as well as the slide stacks if a previous selection was made.
         /// </summary>
-        /// <param name="gps"></param>
+        /// <param name="selection"></param>
         /// <returns></returns>
-        public IEnumerator SpawnAOIImagesFromGraphPoints(List<GraphPoint> gps)
+        public IEnumerator SpawnAOIImagesFromGraphPoints(AnalysisLogic.Selection selection)
         {
             foreach (GeoMXScanSlide scan in scanSlides.Values)
             {
@@ -503,7 +502,7 @@ namespace CellexalVR.Spatial
             CellexalEvents.LoadingImages.Invoke();
             HashSet<string> uniqueImages = new HashSet<string>();
             List<string> aoiIDs = new List<string>();
-            int[] groups = gps.Select(x => x.Group).Distinct().ToArray();
+            int[] groups = selection.Select(x => x.Group).Distinct().ToArray();
             ClearSlideStacks();
             int n = 0;
             foreach (int group in groups)
@@ -515,7 +514,7 @@ namespace CellexalVR.Spatial
                 stack.Group = group;
             }
             int i = 0;
-            foreach (GraphPoint gp in gps)
+            foreach (GraphPoint gp in selection)
             {
                 GeoMxCell geoMXCell = _cells[int.Parse(gp.Label)];
                 string path = $"{imagePath}\\{geoMXCell.ScanImageID}\\_lowq_{geoMXCell.AOIImageID}.png";

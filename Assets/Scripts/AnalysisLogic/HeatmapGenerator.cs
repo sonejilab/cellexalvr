@@ -56,7 +56,7 @@ namespace CellexalVR.AnalysisLogic
             string directory = (CellexalUser.UserSpecificFolder + "/Heatmap/" + heatmapNameLastPart).FixFilePath();
             CellexalLog.Log("Loading old heatmap from file " + directory);
             Heatmap heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
-            List<Graph.GraphPoint> selection = referenceManager.inputReader.ReadSelectionFile(fromSelectionFile, false);
+            Selection selection = referenceManager.inputReader.ReadSelectionFile(fromSelectionFile, false);
             heatmap.Init();
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
@@ -240,9 +240,9 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            List<Graph.GraphPoint> selection = selectionManager.GetLastSelection();
+            Selection selection = selectionManager.GetLastSelection();
 
-            if (selection.Count < 1)
+            if (selection.size < 1)
             {
                 CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
                 if (!(referenceManager.networkGenerator.GeneratingNetworks &&
@@ -355,9 +355,9 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Builds the heatmap texture.
         /// </summary>
-        /// <param name="selection">An array containing the <see cref="GraphPoint"/> that are in the heatmap</param>
+        /// <param name="selection">The selection that the heatmap was created from.</param>
         /// <param name="filepath">A path to the file containing the gene names</param>
-        public void BuildTexture(List<Graph.GraphPoint> selection, string filepath, Heatmap heatmap, bool newHeatmap = true)
+        public void BuildTexture(Selection selection, string filepath, Heatmap heatmap, bool newHeatmap = true)
         {
             if (selection == null)
             {
@@ -374,19 +374,19 @@ namespace CellexalVR.AnalysisLogic
 
             gameObject.SetActive(true);
             heatmap.GetComponent<Collider>().enabled = false;
-            heatmap.cells = new Cell[selection.Count];
+            heatmap.cells = new Cell[selection.size];
             heatmap.attributeWidths = new List<Tuple<int, float, int>>();
             heatmap.cellAttributes = new List<Tuple<Cell, int>>();
             heatmap.attributeColors = new Dictionary<int, UnityEngine.Color>();
             heatmap.groupWidths = new List<Tuple<int, float, int>>();
             heatmap.groupingColors = new Dictionary<int, UnityEngine.Color>();
-            float cellWidth = (float)heatmap.layout.heatmapWidth / selection.Count;
+            float cellWidth = (float)heatmap.layout.heatmapWidth / selection.size;
             int lastGroup = -1;
             int groupWidth = 0;
             heatmap.layout.attributeWidth = 0;
             heatmap.layout.lastAttribute = -1;
             // read the cells and their groups
-            for (int i = 0; i < selection.Count; ++i)
+            for (int i = 0; i < selection.size; ++i)
             {
                 Graph.GraphPoint graphpoint = selection[i];
                 int group = graphpoint.Group;

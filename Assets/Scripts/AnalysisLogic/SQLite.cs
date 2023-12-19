@@ -258,16 +258,16 @@ namespace SQLiter
         /// <param name="mode">The mode to sort the gene expressinos by.</param>
         public void QueryTopGenes(QueryTopGenesRankingMode mode)
         {
-            var list = referenceManager.selectionManager.GetLastSelection();
-            if (list.Count < 2)
+            var selection = referenceManager.selectionManager.GetLastSelection();
+            if (selection.size < 2)
             {
                 CellexalLog.Log("WARNING: Not querying for genes because list of cells is too short.");
                 return;
             }
             List<string> cellNames1 = new List<string>();
             List<string> cellNames2 = new List<string>();
-            int group1 = list[0].Group;
-            foreach (Graph.GraphPoint gp in list)
+            int group1 = selection.groups[0];
+            foreach (Graph.GraphPoint gp in selection)
             {
                 if (gp.Group == group1)
                 {

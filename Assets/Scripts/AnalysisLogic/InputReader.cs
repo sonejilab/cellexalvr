@@ -713,7 +713,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="select"></param>
         /// <returns></returns>
         [ConsoleCommand("inputReader", aliases: new string[] { "readselectionfile", "rsf" })]
-        public List<Graph.GraphPoint> ReadSelectionFile(string path, bool select = true)
+        public Selection ReadSelectionFile(string path, bool select = true)
         {
             //string dataFolder = CellexalUser.UserSpecificFolder;
             List<Graph.GraphPoint> selection = new List<Graph.GraphPoint>();
@@ -722,7 +722,7 @@ namespace CellexalVR.AnalysisLogic
             if (!File.Exists(path))
             {
                 CellexalLog.Log("Could not find file:" + path);
-                return new List<Graph.GraphPoint>();
+                return null;
             }
 
             FileStream fileStream = new FileStream(path, FileMode.Open);
@@ -757,7 +757,7 @@ namespace CellexalVR.AnalysisLogic
                     streamReader.Close();
                     fileStream.Close();
                     CellexalEvents.CommandFinished.Invoke(false);
-                    return new List<Graph.GraphPoint>();
+                    return null;
                 }
 
                 if (PointCloudGenerator.instance.pointClouds.Count > 0)
@@ -797,7 +797,8 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.SelectedFromFile.Invoke();
             streamReader.Close();
             fileStream.Close();
-            return selection;
+
+            return new Selection(selection);
         }
 
 

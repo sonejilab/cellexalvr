@@ -4,14 +4,11 @@ using CellexalVR.Extensions;
 using CellexalVR.Filters;
 using CellexalVR.General;
 using CellexalVR.Interaction;
-using CellexalVR.Menu.SubMenus;
 using CellexalVR.Multiuser;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -25,9 +22,6 @@ namespace CellexalVR.AnalysisLogic
     {
         public ReferenceManager referenceManager;
         public GameObject annotationTextPrefab;
-        //public GroupInfoDisplay groupInfoDisplay;
-        //public GroupInfoDisplay HUDGroupInfoDisplay;
-        //public GroupInfoDisplay FarGroupInfoDisplay;
         [HideInInspector]
         public bool selectionConfirmed = false;
         [HideInInspector]
@@ -37,23 +31,12 @@ namespace CellexalVR.AnalysisLogic
         public ushort hapticIntensity = 2000;
         public int groupCount;
 
-        private SelectionFromPreviousMenu previousSelectionMenu;
-        private ControllerModelSwitcher controllerModelSwitcher;
         private GraphManager graphManager;
-        // Open XR 
-        //private SteamVR_Controller.Device device;
         private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
-        // Open XR 
-        //private SteamVR_Controller.Device device;
-        private UnityEngine.XR.InputDevice device;
         private List<Graph.GraphPoint> selectedCells = new List<Graph.GraphPoint>();
         private List<Graph.GraphPoint> lastSelectedCells = new List<Graph.GraphPoint>();
-        private List<Tuple<string, string>> annotatedPoints = new List<Tuple<string, string>>();
         private bool selectionMade = false;
-        private GameObject grabbedObject;
-        private bool heatmapCreated = true;
         private SelectionToolCollider selectionToolCollider;
-        private int annotationCtr = 0;
 
         [HideInInspector]
         public string DataDir { get; set; }
@@ -103,13 +86,11 @@ namespace CellexalVR.AnalysisLogic
 
         void Awake()
         {
-            previousSelectionMenu = referenceManager.selectionFromPreviousMenu;
             graphManager = referenceManager.graphManager;
         }
 
         private void Start()
         {
-            controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             rightController = referenceManager.rightController;
             multiuserMessageSender = referenceManager.multiuserMessageSender;
             selectionToolCollider = referenceManager.selectionToolCollider;
@@ -117,14 +98,6 @@ namespace CellexalVR.AnalysisLogic
             //CellexalEvents.GraphsColoredByGene.AddListener(Clear);
             //CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
             CellexalEvents.GraphsReset.AddListener(Clear);
-        }
-
-        private void OnApplicationQuit()
-        {
-            foreach (Selection selection in selections)
-            {
-                selection.Dispose();
-            }
         }
 
         public void RemoveGraphpointFromSelection(Graph.GraphPoint graphPoint)
@@ -198,21 +171,6 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Adds a graphpoint to the current selection, and changes its color to the current color of the selection tool.
-        /// This method is called by a child object that holds the collider.
-        /// </summary>
-        public void AddGraphpointToSelection(Graph.GraphPoint graphPoint)
-        {
-            AddGraphpointToSelection(graphPoint, selectionToolCollider.CurrentColorIndex, true,
-                selectionToolCollider.Colors[selectionToolCollider.CurrentColorIndex]);
-
-
-            multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label,
-                selectionToolCollider.CurrentColorIndex,
-                selectionToolCollider.Colors[selectionToolCollider.CurrentColorIndex]);
-        }
-
-        /// <summary>
         /// Adds a graphpoint to the current selection, and changes its color.
         /// </summary>
         public void AddGraphpointToSelection(Graph.GraphPoint graphPoint, int newGroup, bool hapticFeedback)
@@ -224,19 +182,22 @@ namespace CellexalVR.AnalysisLogic
 
             else
             {
-                AddGraphpointToSelection(graphPoint, newGroup, hapticFeedback, selectionToolCollider.Colors[newGroup]);
-                multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup,
-                    selectionToolCollider.Colors[newGroup]);
-            }
+                AddGraphpoint(graphPoint, newGroup, hapticFeedback, selectionToolCollider.Colors[newGroup]);
+                multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, selectionToolCollider.Colors[newGroup]);
 
-            //Debug.Log("Adding gp to sel. Inform clients.");
+            }
         }
 
         /// <summary>
         /// Adds a graphpoint to the current selection, and changes its color.
         /// </summary>
-        public void AddGraphpointToSelection(Graph.GraphPoint graphPoint, int newGroup, bool hapticFeedback,
-            Color color)
+        public void AddGraphpointToSelection(Graph.GraphPoint graphPoint, int newGroup, bool hapticFeedback, Color color)
+        {
+            AddGraphpoint(graphPoint, newGroup, hapticFeedback, color);
+            multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, color);
+        }
+
+        private void AddGraphpoint(Graph.GraphPoint graphPoint, int newGroup, bool hapticFeedback, Color color)
         {
             if (graphPoint == null)
             {
@@ -254,17 +215,13 @@ namespace CellexalVR.AnalysisLogic
             foreach (Graph graph in graphManager.Graphs)
             {
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, graphPoint.Label);
-                // print($"graph: {graph.GraphName}, point: {graphPoint.Label}");
                 if (gp != null)
                 {
                     gp.ColorSelectionColor(newGroup, true);
                 }
             }
 
-            //graphPoint.Recolor(Colors[newGroup], newGroup);
             graphPoint.Group = newGroup;
-            // renderer.material.color = Colors[newGroup];
-            //multiuserMessageSender.SendMessageGraphPointChangedColor(graphPoint.GraphName, graphPoint.Label, color);
 
             bool newNode = !graphPoint.unconfirmedInSelection;
             graphPoint.unconfirmedInSelection = true;
@@ -281,24 +238,12 @@ namespace CellexalVR.AnalysisLogic
             {
                 // if this is a new selection we should reset some stuff
                 selectionMade = true;
-                //selectionToolMenu.SelectionStarted();
-                //try
-                //{
-                //    groupInfoDisplay.ResetGroupsInfo();
-                //    HUDGroupInfoDisplay.ResetGroupsInfo();
-                //    FarGroupInfoDisplay.ResetGroupsInfo();
-                //}
-                //catch (NullReferenceException e)
-                //{
-                //Debug.Log("Could not update group info display");
-                //}
                 // turn on the undo buttons
                 CellexalEvents.BeginningOfHistoryLeft.Invoke();
             }
 
             // The user might select cells that already have that color
-            //if (newGroup != oldGroup || newNode)
-            //{
+
             selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
             referenceManager.legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
             if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
@@ -312,19 +257,8 @@ namespace CellexalVR.AnalysisLogic
                 referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(oldGroup.ToString(), -1, Color.white);
             }
 
-            //try
-            //{
-            //    groupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-            //    HUDGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-            //    FarGroupInfoDisplay.ChangeGroupsInfo(newGroup, 1);
-            //}
-            //catch (NullReferenceException e)
-            //{
-            //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
-            //}
             if (newNode)
             {
-                multiuserMessageSender.SendMessageSelectedAdd(graphPoint.parent.GraphName, graphPoint.Label, newGroup, color);
                 if (selectedCells.Count == 0)
                 {
                     CellexalEvents.SelectionStarted.Invoke();
@@ -338,24 +272,15 @@ namespace CellexalVR.AnalysisLogic
                 // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
                 selectedCells.Remove(graphPoint);
                 selectedCells.Add(graphPoint);
-                //try
-                //{
-                //    groupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                //    HUDGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                //    FarGroupInfoDisplay.ChangeGroupsInfo(oldGroup, -1);
-                //}
-                //catch (NullReferenceException e)
-                //{
-                //Debug.Log("Tried to change infodisplays but could not. Perhaps none available..");
-                //}
+
             }
             if (hapticFeedback && selectionToolCollider.hapticFeedbackThisFrame)
             {
                 selectionToolCollider.hapticFeedbackThisFrame = false;
                 rightController.SendHapticImpulse(0.2f, 0.05f);
             }
-            //}
         }
+
         /// <summary>
         /// If selecting from client then graphpoint to be added needs to be found by searching since it has not collided with selection tool.
         /// </summary>
@@ -366,7 +291,7 @@ namespace CellexalVR.AnalysisLogic
         public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color)
         {
             Graph.GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
-            AddGraphpointToSelection(gp, newGroup, true, color);
+            AddGraphpoint(gp, newGroup, true, color);
         }
 
         /// <summary>
@@ -380,14 +305,8 @@ namespace CellexalVR.AnalysisLogic
         public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color, bool cube)
         {
             Graph.GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
-
-            AddGraphpointToSelection(gp, newGroup, true, color);
-            // foreach (Selectable sel in gp.lineBetweenCellsCubes)
-            // {
-            //     sel.GetComponent<Renderer>().material.color = color;
-            // }
+            AddGraphpoint(gp, newGroup, true, color);
         }
-
 
         /// <summary>
         /// Goes back one step in the history of selecting cells.
@@ -537,44 +456,6 @@ namespace CellexalVR.AnalysisLogic
             } while (color.Equals(nextColor));
         }
 
-        // more_cells   public void SingleSelect(Collider other)
-        // more_cells   {
-        // more_cells       Color transparentColor = new Color(selectedColor.r, selectedColor.g, selectedColor.b);
-        // more_cells       other.gameObject.GetComponent<Renderer>().material.color = transparentColor;
-        // more_cells       GraphPoint gp = other.GetComponent<CombinedGraph.CombinedGraphPoint>();
-        // more_cells       if (!selectedCells.Contains(gp))
-        // more_cells       {
-        // more_cells           selectedCells.Add(gp);
-        // more_cells       }
-        // more_cells       if (!selectionMade)
-        // more_cells       {
-        // more_cells           selectionMade = true;
-        // more_cells           //UpdateButtonIcons();
-        // more_cells       }
-        // more_cells   }
-
-        /// <summary>
-        /// Adds rigidbody to all selected cells, making them fall to the ground.
-        /// </summary>
-        // more_cells   public void ConfirmRemove()
-        // more_cells   {
-        // more_cells       //GetComponent<AudioSource>().Play();
-        // more_cells       foreach (GraphPoint other in selectedCells)
-        // more_cells       {
-        // more_cells           other.transform.parent = null;
-        // more_cells           other.gameObject.AddComponent<Rigidbody>();
-        // more_cells           other.GetComponent<Rigidbody>().useGravity = true;
-        // more_cells           other.GetComponent<Rigidbody>().isKinematic = false;
-        // more_cells           other.GetComponent<Collider>().isTrigger = false;
-        // more_cells           other.SetOutLined(false, -1);
-        // more_cells       }
-        // more_cells       selectionHistory.Clear();
-        // more_cells       CellexalEvents.SelectionCanceled.Invoke();
-        // more_cells       selectedCells.Clear();
-        // more_cells       selectionMade = false;
-        // more_cells       //selectionToolMenu.RemoveSelection();
-        // more_cells   }
-
         public void ConfirmSelectionForBigFolder()
         {
 
@@ -623,7 +504,7 @@ namespace CellexalVR.AnalysisLogic
             // Remove line below if the cells should be in the same order as they were selected no matter which group.  
             //IEnumerable<Graph.GraphPoint> sortedUniqueCells = uniqueCells.OrderBy(x => x.Group);
             //DumpSelectionToTextFile(sortedUniqueCells.ToList());
-            Selection newSelection = new Selection(0, selectedCells);
+            Selection newSelection = new Selection(selectedCells);
             selections.Add(newSelection);
             newSelection.SaveSelectionToDisk();
 
@@ -657,7 +538,6 @@ namespace CellexalVR.AnalysisLogic
             selectionHistory.Clear();
             historyIndexOffset = 0;
             CellexalEvents.SelectionConfirmed.Invoke();
-            heatmapCreated = false;
             selectionMade = false;
             selectionConfirmed = true;
 
@@ -729,10 +609,9 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Gets the last selection that was confirmed.
         /// </summary>
-        /// <returns> A List of all graphpoints that were selected. </returns>
-        public List<Graph.GraphPoint> GetLastSelection()
+        public Selection GetLastSelection()
         {
-            return lastSelectedCells;
+            return selections[^1];
         }
 
         /// <summary>

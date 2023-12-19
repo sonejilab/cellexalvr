@@ -49,14 +49,14 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("newGraphFromMarkers", aliases: new string[] { "newGraphFromMarkers", "ngfm" })]
         public void CreateMarkerGraph(bool selection = false)
         {
-            if (referenceManager.selectionManager.GetLastSelection().Count > 0)
+            if (referenceManager.selectionManager.GetLastSelection().size > 0)
             {
-                DumpSelectionToTextFile(referenceManager.selectionManager.GetLastSelection(), markers[0], markers[1], markers[2]);
+                DumpSelectionToTextFile(referenceManager.selectionManager.GetLastSelection().Points, markers[0], markers[1], markers[2]);
             }
             else
             {
-                List<Graph.GraphPoint> cellList = new List<Graph.GraphPoint>(referenceManager.graphManager.Graphs[0].points.Values);
-                DumpSelectionToTextFile(cellList, markers[0], markers[1], markers[2]);
+                // TODO: make a new graph from a selection object, or an entire graph instead of saving things to a file and using inputreader.ReadGraphFromMarkerFile()
+                DumpSelectionToTextFile(new List<Graph.GraphPoint>(referenceManager.graphManager.Graphs[0].points.Values), markers[0], markers[1], markers[2]);
             }
             referenceManager.inputReader.ReadGraphFromMarkerFile(CellexalUser.UserSpecificFolder, filePath);
             markers.Clear();
@@ -74,8 +74,8 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Dumping the selection with ids and facs values on the same format as the mds files so it can be read in by the inputreader.
         /// </summary>
-        /// <param name="points">The points to save to the file. Either a selection or all the points in the graph.</param>
-        public void DumpSelectionToTextFile(List<Graph.GraphPoint> points, string first_marker,
+        /// <param name="selection">The points to save to the file. Either a selection or all the points in the graph.</param>
+        public void DumpSelectionToTextFile(List<Graph.GraphPoint> selection, string first_marker,
                                             string second_marker, string third_marker)
         {
             this.filePath = CellexalUser.UserSpecificFolder + "\\" + first_marker + "_" + second_marker + "_" + third_marker + ".txt";
@@ -83,12 +83,12 @@ namespace CellexalVR.AnalysisLogic
             using (StreamWriter file = new StreamWriter(filePath))
             {
                 CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
-                CellexalLog.Log("\tSelection consists of  " + points.Count + " points");
+                CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
                 string header = "CellID\t" + first_marker + "\t" + second_marker + "\t" + third_marker;
                 file.WriteLine(header);
-                for (int i = 0; i < points.Count; i++)
+                for (int i = 0; i < selection.Count; i++)
                 {
-                    string label = points[i].Label;
+                    string label = selection[i].Label;
                     Cell cell = referenceManager.cellManager.GetCell(label);
                     // Add returns true if it was actually added,
                     // false if it was already there

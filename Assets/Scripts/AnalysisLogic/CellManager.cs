@@ -169,31 +169,29 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        public void HighlightCells(Cell[] cellsToHighlight, bool highlight, int group)
-        {
-            foreach (Graph graph in graphManager.Graphs)
-            {
-                graph.MakeAllPointsTransparent(highlight);
-            }
-
-            referenceManager.multiuserMessageSender.SendMessageHighlightCells(group, highlight);
-            foreach (Cell cell in cellsToHighlight)
-            {
-                foreach (Graph.GraphPoint gp in cell.GraphPoints)
-                {
-                    gp.HighlightGraphPoint(highlight);
-                }
-            }
-        }
-
-        public void HighlightAttribute(string attribute, bool highlight)
+        public void HighlightAttribute(string attribute)
         {
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
-                graph.HighlightAttribute(attribute, highlight);
+                graph.HighlightAttribute(attribute);
             }
         }
 
+        public void HighlightGroup(Selection selection, int group)
+        {
+            foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+            {
+                graph.HighlightSelectionGroup(selection, group);
+            }
+        }
+
+        public void ResetHighlight()
+        {
+            foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+            {
+                graph.ResetHighlight();
+            }
+        }
 
         /// <summary>
         /// Creates a new selection.

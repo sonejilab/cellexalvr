@@ -7,6 +7,7 @@ using System.Linq;
 using CellexalVR.DesktopUI;
 using System;
 using System.Threading;
+using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {
@@ -41,7 +42,7 @@ namespace CellexalVR.AnalysisObjects
         private GameObject velocityParticleSystemToGraph;
         private List<GameObject> particleSystems = new List<GameObject>();
         private int clusterCount = 0;
-        private List<Graph.GraphPoint> graphPoints;
+        private Selection graphPoints;
         private List<Vector3> centroids = new List<Vector3>();
         private List<Vector3> toGraphCentroids = new List<Vector3>();
         private List<Tuple<HashSet<Graph.GraphPoint>, Vector3>> clusters = new List<Tuple<HashSet<Graph.GraphPoint>, Vector3>>();
@@ -93,7 +94,7 @@ namespace CellexalVR.AnalysisObjects
         /// /// <param name="newGraph">New graph containing the points between the two graphs. </param>
         /// /// <param name="fromGraph">The graph the lines go from. </param>
         /// /// <param name="toGraph"> The graph to draw lines to. </param>
-        public void CreateGraphBetweenGraphs(List<Graph.GraphPoint> points, Graph newGraph, Graph fromGraph, Graph toGraph)
+        public void CreateGraphBetweenGraphs(Selection points, Graph newGraph, Graph fromGraph, Graph toGraph)
         {
             graph = newGraph;
             graphPoints = points;
@@ -170,7 +171,7 @@ namespace CellexalVR.AnalysisObjects
             }
 
             Thread t = new Thread(
-                () => { DoClustering(graphPoints, toGraphPoints, neighbourDistance, kernelBandwidth); });
+                () => { DoClustering(graphPoints.Points, toGraphPoints, neighbourDistance, kernelBandwidth); });
             t.Start();
             while (t.IsAlive)
             {

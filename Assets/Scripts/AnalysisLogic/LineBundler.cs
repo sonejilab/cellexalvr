@@ -35,11 +35,11 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Draws lines between the graph that was selected from to points in other graphs that share the same cell label.
         /// </summary>
-        /// <param name="points"> The graphpoints to draw the lines from. </param>
-        public IEnumerator DrawLinesBetweenGraphPoints(List<Graph.GraphPoint> points)
+        /// <param name="selection"> The graphpoints to draw the lines from. </param>
+        public IEnumerator DrawLinesBetweenGraphPoints(Selection selection)
         {
             ClearLinesBetweenGraphPoints();
-            var fromGraph = points[0].parent;
+            var fromGraph = selection[0].parent;
             var graphsToDrawBetween = graphManager.originalGraphs.Union(graphManager.facsGraphs.Union(graphManager.attributeSubGraphs)).ToList();
             foreach (Graph toGraph in graphsToDrawBetween.FindAll(x => x != fromGraph))
             {
@@ -54,14 +54,14 @@ namespace CellexalVR.AnalysisLogic
                 gbg.referenceManager = referenceManager;
                 gbg.lineBetweenTwoGraphPointsPrefab = lineBetweenTwoGraphPointsPrefab;
                 gbg.pointClusterPrefab = pointClusterPrefab;
-                gbg.CreateGraphBetweenGraphs(points, newGraph, fromGraph, toGraph);
+                gbg.CreateGraphBetweenGraphs(selection, newGraph, fromGraph, toGraph);
                 while (referenceManager.graphGenerator.isCreating)
                 {
                     yield return null;
                 }
                 if (gbg)
                 {
-                    linesBundled = points.Count > 500;
+                    linesBundled = selection.size > 500;
                     StartCoroutine(gbg.ClusterLines(bundle: linesBundled));
                 }
                 Interaction.GraphInteract graphInteract = gbg.GetComponent<Interaction.GraphInteract>();

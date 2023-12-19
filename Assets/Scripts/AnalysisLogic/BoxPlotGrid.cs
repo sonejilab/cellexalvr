@@ -93,7 +93,7 @@ namespace CellexalVR.AnalysisLogic
         /// Generates new box plots from a given selection.
         /// </summary>
         /// <param name="selection">A list of graphpoints to use for the boxplots.</param>
-        public void GenerateBoxPlots(List<Graph.GraphPoint> selection)
+        public void GenerateBoxPlots(Selection selection)
         {
             selectionNbr = referenceManager.selectionManager.fileCreationCtr - 1;
             string[] facsNames = referenceManager.cellManager.Facs;

@@ -369,9 +369,7 @@ namespace CellexalVR.Interaction
             heatmap.enlargedGeneText.gameObject.SetActive(false);
             if (currentHighlightedGroup == group) return;
             ResetHeatmapHighlight(false);
-            cellsToHighlight = cellManager.GetCells(group, heatmap.cells);
-            if (cellsToHighlight.Length <= 0) return;
-            cellManager.HighlightCells(cellsToHighlight, true, group);
+            cellManager.HighlightGroup(heatmap.selection, group);
             currentHighlightedGroup = group;
         }
 
@@ -399,7 +397,7 @@ namespace CellexalVR.Interaction
             ResetHeatmapHighlight(false);
             //cellsToHighlight = cellManager.GetCells(cellManager.Attributes[attribute]);
             //cellManager.HighlightCells(cellsToHighlight, true, attribute);
-            cellManager.HighlightAttribute(cellManager.AttributesNames[attribute], true);
+            cellManager.HighlightAttribute(cellManager.AttributesNames[attribute]);
             heatmap.barInfoText.text = attribute >= 0 ? cellManager.AttributesNames[attribute] : "No attribute";
             heatmap.enlargedGeneText.gameObject.SetActive(false);
         }
@@ -636,7 +634,7 @@ namespace CellexalVR.Interaction
         private void ResetHeatmapHighlight(bool resetText = true)
         {
             currentHighlightedGroup = -1;
-            cellManager.HighlightAttribute("", false);
+            cellManager.ResetHighlight();
             if (resetText) heatmap.ResetHeatmapHighlight();
         }
 
