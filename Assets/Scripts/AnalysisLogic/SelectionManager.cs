@@ -609,8 +609,13 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Gets the last selection that was confirmed.
         /// </summary>
+        /// <returns>An object of class <see cref="Selection"/>. Or null if no selections have been made this session.</returns>
         public Selection GetLastSelection()
         {
+            if (selections.Count == 0)
+            {
+                return null;
+            }
             return selections[^1];
         }
 

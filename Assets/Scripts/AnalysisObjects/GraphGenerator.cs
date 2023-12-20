@@ -353,11 +353,8 @@ namespace CellexalVR.AnalysisObjects
             Material graphPointMaterial = Instantiate(graphPointMaterialPrefab);
             for (int lodGroup = 0; lodGroup < lodGroups; lodGroup++)
             {
-                if (lodGroups > 0)
-                {
-                    AddLODGroup(newGraph, lodGroup);
-                    yield return StartCoroutine(MakeMeshesCoroutine(clusters, graphPointMaterial, lodGroup: lodGroup));
-                }
+                AddLODGroup(newGraph, lodGroup);
+                yield return StartCoroutine(MakeMeshesCoroutine(clusters, graphPointMaterial, lodGroup: lodGroup));
             }
 
         }

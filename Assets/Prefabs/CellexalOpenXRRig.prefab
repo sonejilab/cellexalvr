@@ -7020,6 +7020,7 @@ GameObject:
   m_Component:
   - component: {fileID: 293643168617273520}
   - component: {fileID: 1396211644}
+  - component: {fileID: 5671485051576042684}
   m_Layer: 9
   m_Name: Controller Interactor Collider
   m_TagString: Smaller Controller Collider
@@ -7055,6 +7056,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.017979778, y: 0.016043512, z: 0.07448353}
   m_Center: {x: 0, y: 0, z: 0.012758233}
+--- !u!54 &5671485051576042684
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2942443332443358214}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &3534462921840493570
 GameObject:
   m_ObjectHideFlags: 0

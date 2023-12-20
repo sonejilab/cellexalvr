@@ -49,7 +49,8 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("newGraphFromMarkers", aliases: new string[] { "newGraphFromMarkers", "ngfm" })]
         public void CreateMarkerGraph(bool selection = false)
         {
-            if (referenceManager.selectionManager.GetLastSelection().size > 0)
+            Selection lastSelection = referenceManager.selectionManager.GetLastSelection();
+            if (lastSelection is not null)
             {
                 DumpSelectionToTextFile(referenceManager.selectionManager.GetLastSelection().Points, markers[0], markers[1], markers[2]);
             }
