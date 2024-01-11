@@ -56,15 +56,13 @@ namespace CellexalVR.AnalysisLogic
             string directory = (CellexalUser.UserSpecificFolder + "/Heatmap/" + heatmapNameLastPart).FixFilePath();
             CellexalLog.Log("Loading old heatmap from file " + directory);
             Heatmap heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
-            Selection selection = referenceManager.inputReader.ReadSelectionFile(fromSelectionFile, false);
+            heatmap.selection = referenceManager.inputReader.ReadSelectionFile(fromSelectionFile, false);
             heatmap.Init();
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
-            heatmap.selectionNr = selectionNr;
             heatmapList.Add(heatmap);
             heatmap.directory = directory;
-            heatmap.selectionFile = fromSelectionFile;
-            BuildTexture(selection, heatmapName, heatmap);
+            BuildTexture(heatmap.selection, heatmapName, heatmap);
             heatmapNameLastPart = heatmapNameLastPart.Replace(".txt", "");
             GameObject existingHeatmap = GameObject.Find(heatmapNameLastPart);
             while (existingHeatmap != null)
@@ -170,7 +168,8 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Creating heatmap");
             CellexalEvents.CreatingHeatmap.Invoke();
             string heatmapName = "heatmap_" + System.DateTime.Now.ToString("HH-mm-ss");
-            StartCoroutine(GenerateHeatmapRoutine(heatmapName));
+            Selection selection = ReferenceManager.instance.selectionManager.GetLastSelection();
+            StartCoroutine(GenerateHeatmapRoutine(selection, heatmapName));
         }
 
         /// <summary>
@@ -188,7 +187,8 @@ namespace CellexalVR.AnalysisLogic
             statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
             CellexalLog.Log("Creating heatmap");
             CellexalEvents.CreatingHeatmap.Invoke();
-            StartCoroutine(GenerateHeatmapRoutine(heatmapName));
+            Selection selection = ReferenceManager.instance.selectionManager.GetLastSelection();
+            StartCoroutine(GenerateHeatmapRoutine(selection, heatmapName));
         }
 
         /// <summary>
@@ -228,7 +228,7 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Coroutine for creating a heatmap.
         /// </summary>
-        private IEnumerator GenerateHeatmapRoutine(string heatmapName)
+        private IEnumerator GenerateHeatmapRoutine(Selection selection, string heatmapName = "")
         {
             GeneratingHeatmaps = true;
             referenceManager.floor.StartPulse();
@@ -240,13 +240,11 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            Selection selection = selectionManager.GetLastSelection();
-
             if (selection.size < 1)
             {
                 CellexalLog.Log("can not create heatmap with less than 1 graphpoints, aborting");
                 if (!(referenceManager.networkGenerator.GeneratingNetworks &&
-                      File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
+                      File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R"))))
                 {
                     referenceManager.floor.StopPulse();
                 }
@@ -255,36 +253,43 @@ namespace CellexalVR.AnalysisLogic
                 yield break;
             }
 
-            string heatmapDirectory = (CellexalUser.UserSpecificFolder + @"\Heatmap").UnFixFilePath();
-            string outputFilePath = (heatmapDirectory + @"\\" + heatmapName + ".txt");
+            string heatmapDirectory = Path.Combine(CellexalUser.UserSpecificFolder, "Heatmap");
+            string outputFilePath = Path.Combine(heatmapDirectory, heatmapName + ".txt");
 
             if (!ScarfManager.instance.scarfActive)
             {
                 string function = "make.cellexalvr.heatmap.list";
-                string objectPath = (CellexalUser.UserSpecificFolder + "\\cellexalObj.RData").UnFixFilePath();
+                string objectPath = Path.Combine(CellexalUser.UserSpecificFolder, "cellexalObj.RData");
 
                 string topGenesNr = nrOfGenes.ToString();
                 string statsMethod = CellexalConfig.Config.HeatmapAlgorithm;
                 // the check for the txt.time file needs to wait for the R to create it.
-                string groupingFilePath = (CellexalUser.UserSpecificFolder + "\\selection" + (selectionManager.fileCreationCtr - 1) + ".txt").UnFixFilePath();
-                string args = CellexalUser.UserSpecificFolder + " " + groupingFilePath + " " + topGenesNr + " " + outputFilePath + " " + statsMethod;
+                string groupingFilePath = selection.savedSelectionFilePath;
+                string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash() + " " +
+                    groupingFilePath.MakeDoubleBackslash() + " " +
+                    topGenesNr + " " +
+                    outputFilePath.MakeDoubleBackslash() + " " +
+                    statsMethod;
 
-                string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_heatmap.R").FixFilePath();
+                string rScriptFilePath = Path.Combine(Application.streamingAssetsPath, "R", "make_heatmap.R");
 
                 if (!Directory.Exists(heatmapDirectory))
                 {
-                    CellexalLog.Log("Creating directory " + heatmapDirectory.FixFilePath());
+                    CellexalLog.Log("Creating directory " + heatmapDirectory);
                     Directory.CreateDirectory(heatmapDirectory);
                 }
+                string mainserverPidPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid");
+                string mainserverInputPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R");
+                string mainserverInputLockPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock");
 
-                bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                bool rServerReady = File.Exists(mainserverPidPath) &&
+                                    !File.Exists(mainserverInputPath) &&
+                                    !File.Exists(mainserverInputLockPath);
                 while (!rServerReady || !RScriptRunner.serverIdle)
                 {
-                    rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                                   !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                                   !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                    rServerReady = File.Exists(mainserverPidPath) &&
+                                    !File.Exists(mainserverInputPath) &&
+                                    !File.Exists(mainserverInputLockPath);
                     yield return null;
                 }
 
@@ -295,7 +300,7 @@ namespace CellexalVR.AnalysisLogic
                 var stopwatch = new System.Diagnostics.Stopwatch();
                 stopwatch.Start();
 
-                while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+                while (t.IsAlive || File.Exists(mainserverInputPath))
                 {
                     yield return null;
                 }
@@ -320,17 +325,15 @@ namespace CellexalVR.AnalysisLogic
             heatmap.Init();
             heatmap.transform.parent = transform;
             heatmap.transform.localPosition = heatmapPosition;
-            heatmap.selectionNr = selectionNr;
             // R might have created a txt.time selection file
-            heatmap.selectionFile =
-                (CellexalUser.UserSpecificFolder + "/selection" + selectionNr + ".txt.time").FixFilePath();
-            if (!File.Exists(heatmap.selectionFile))
+            string timelineFilePath = selection.savedSelectionFilePath + ".time";
+            if (selection.groups.Count == 1)
             {
-                heatmap.selectionFile = (CellexalUser.UserSpecificFolder + "/selection" + selectionNr + ".txt").FixFilePath();
-            }
-            else
-            {
-                selection = referenceManager.inputReader.ReadSelectionFile(heatmap.selectionFile, false);
+                // expect R to have created a .time file
+                if (File.Exists(timelineFilePath))
+                {
+                    heatmap.selection = referenceManager.inputReader.ReadSelectionFile(timelineFilePath, false);
+                }
             }
             //print((selectionNr, heatmap.selectionFile));
             heatmapList.Add(heatmap);
@@ -754,10 +757,10 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.HeatmapCreated.Invoke();
             CellexalEvents.ScriptFinished.Invoke();
             referenceManager.notificationManager.SpawnNotification("Heatmap finished.");
-            string sessionEntryName = heatmap.directory + " from " + heatmap.selectionFile;
+            string sessionEntryName = heatmap.directory + " from " + heatmap.selection.savedSelectionFilePath;
             if (!referenceManager.sessionHistoryList.Contains(sessionEntryName, Definitions.HistoryEvent.HEATMAP))
             {
-                referenceManager.sessionHistoryList.AddEntry(heatmap.directory + " from " + heatmap.selectionFile,
+                referenceManager.sessionHistoryList.AddEntry(heatmap.directory + " from " + heatmap.selection.savedSelectionFilePath,
                     Definitions.HistoryEvent.HEATMAP);
             }
             referenceManager.floor.StopPulse();
@@ -1127,7 +1130,6 @@ namespace CellexalVR.AnalysisLogic
         public void AddHeatmapToList(Heatmap heatmap)
         {
             heatmapList.Add(heatmap);
-            heatmap.selectionNr = selectionNr;
         }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
@@ -32,6 +33,8 @@ namespace CellexalVR.AnalysisLogic
         }
 
         public static string parentSelectionDirectory;
+        public string savedSelectionDirectory;
+        public string savedSelectionFilePath;
 
         public readonly int id;
         public int size;
@@ -50,6 +53,7 @@ namespace CellexalVR.AnalysisLogic
         private List<Graph.GraphPoint> _points;
         /// <summary>
         /// The points that this selection includes, in the order they were selected.
+        /// Do not modify the contents of this list directly.
         /// </summary>
         public List<Graph.GraphPoint> Points
         {
@@ -61,18 +65,17 @@ namespace CellexalVR.AnalysisLogic
                 }
                 else
                 {
-                    _points = LoadSelectionFromDisk();
+                    LoadSelectionFromDisk();
                     return _points;
                 }
             }
 
             private set
             {
-                _points = value;
+                SetPoints(value);
             }
         }
 
-        private string savedSelectionFilePath;
 
         /// <summary>
         /// Creates a new empty selection.
@@ -82,6 +85,7 @@ namespace CellexalVR.AnalysisLogic
             this.id = GetNextID;
             this.groups = new List<int>();
             this.groupSizes = new Dictionary<int, int>();
+            AssertDirectory(true);
             SetPoints(new List<Graph.GraphPoint>());
         }
 
@@ -94,7 +98,17 @@ namespace CellexalVR.AnalysisLogic
             this.id = GetNextID;
             this.groups = new List<int>();
             this.groupSizes = new Dictionary<int, int>();
+            AssertDirectory(true);
             SetPoints(points);
+        }
+
+        public Selection(string selectionFilePath)
+        {
+            this.id = GetNextID;
+            this.groups = new List<int>();
+            this.groupSizes = new Dictionary<int, int>();
+            AssertDirectory(false);
+            LoadSelectionFromDisk(selectionFilePath);
         }
 
         public IEnumerator<Graph.GraphPoint> GetEnumerator()
@@ -118,15 +132,20 @@ namespace CellexalVR.AnalysisLogic
             set => Points[index] = value;
         }
 
+        public override string ToString()
+        {
+            return $"Selection {id} ({size} points in {groups.Count} groups)";
+        }
+
         /// <summary>
         /// Sets this selections points. This overwrites any <see cref="Graph.GraphPoint"/> that were saved to this selection before.
         /// </summary>
         /// <param name="points">The points that should be set to this selection.</param>
-        /// <param name="copyIfList">Optional. If <paramref name="points"/> isa <see cref="List{Graph.GraphPoint}"/> and this argument is set to false, this <see cref="Selection"/> will use the reference to the <see cref="List{Graph.GraphPoint}">. If set to true, the contents will be copied to a new <see cref="List{Graph.GraphPoint}<"/></param>
+        /// <param name="copyIfList">Optional. If <paramref name="points"/> is a <see cref="List{Graph.GraphPoint}"/> and this argument is set to false, this <see cref="Selection"/> will use the reference to the <see cref="List{Graph.GraphPoint}"/>. If set to true, the contents will be copied to a new <see cref="List{Graph.GraphPoint}"/></param>
         /// <remarks>
         /// If <paramref name="points"/> is a <see cref="List{Graph.GraphPoint}"/> and <paramref name="copyIfList"/> is set to false, this function will use the reference to the <see cref="List{Graph.GraphPoint}"/> that was passed. 
         /// Otherwise, the contents will be copied to a new <see cref="List{Graph.GraphPoint}"/>.
-        /// This increases performance considerably when the <see cref="List{Graph.GraphPoint}"/> that is passed with <paramref name="points"/> is not needed in the calling function after this.
+        /// Not copying the <see cref="List{Graph.GraphPoint}"/> increases performance considerably when the <see cref="List{Graph.GraphPoint}"/> that is passed with <paramref name="points"/> is not needed in the calling function after this.
         /// </remarks>
         public void SetPoints(IEnumerable<Graph.GraphPoint> points, bool copyIfList = false)
         {
@@ -154,29 +173,18 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            NativeArray<GraphPointData> nativePointData = new NativeArray<GraphPointData>(_points.Count, Allocator.Persistent);
+            int[] groupSizesArray = new int[CellexalConfig.Config.GraphNumberOfExpressionColors];
             for (int i = 0; i < _points.Count; ++i)
             {
-                nativePointData[i] = new GraphPointData() { group = _points[i].Group, texCoord = _points[i].textureCoord };
+                groupSizesArray[_points[i].Group]++;
             }
-            NativeArray<int> nativeGroupSizes = new NativeArray<int>(CellexalConfig.Config.GraphNumberOfExpressionColors, Allocator.TempJob);
 
-            CalculatePointsMetaDataJob calcMetaJob = new CalculatePointsMetaDataJob()
+            for (int i = 0; i < groupSizesArray.Length; ++i)
             {
-                points = nativePointData,
-                groupSizes = nativeGroupSizes
-            };
-
-            JobHandle calcMetaHandle = calcMetaJob.Schedule(nativePointData.Length, 1000);
-            calcMetaHandle.Complete();
-            nativePointData.Dispose();
-
-            for (int i = 0; i < nativeGroupSizes.Length; ++i)
-            {
-                if (nativeGroupSizes[i] > 0)
+                if (groupSizesArray[i] > 0)
                 {
-                    this.groups.Add(i);
-                    this.groupSizes[i] = nativeGroupSizes[i];
+                    groups.Add(i);
+                    groupSizes[i] = groupSizesArray[i];
                 }
             }
 
@@ -188,7 +196,6 @@ namespace CellexalVR.AnalysisLogic
                 reverseGroupIndices[groups[i]] = i;
             }
 
-            nativeGroupSizes.Dispose();
             size = _points.Count;
         }
 
@@ -198,7 +205,6 @@ namespace CellexalVR.AnalysisLogic
             [ReadOnly]
             public NativeArray<GraphPointData> points;
 
-            [NativeDisableParallelForRestriction]
             public NativeArray<int> groupSizes;
 
             public void Execute(int index)
@@ -207,11 +213,217 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        public List<Graph.GraphPoint> LoadSelectionFromDisk()
+        public void AssertDirectory(bool deleteContents)
         {
-            SetPoints(ReferenceManager.instance.inputReader.ReadSelectionFile(savedSelectionFilePath, false));
-            pointsLoaded = true;
-            return null;
+            parentSelectionDirectory = Path.Combine(CellexalUser.UserSpecificFolder, "Selections");
+            if (!Directory.Exists(parentSelectionDirectory))
+            {
+                Directory.CreateDirectory(parentSelectionDirectory);
+                CellexalLog.Log($"Created directory {parentSelectionDirectory}");
+            }
+            savedSelectionDirectory = Path.Combine(parentSelectionDirectory, "Selection_" + id);
+            if (!Directory.Exists(savedSelectionDirectory))
+            {
+                Directory.CreateDirectory(savedSelectionDirectory);
+                CellexalLog.Log($"Created directory {savedSelectionDirectory}");
+            }
+            else if (deleteContents)
+            {
+                CellexalLog.Log($"Deleting all files in {savedSelectionDirectory}");
+                foreach (string filePath in Directory.GetFiles(savedSelectionDirectory))
+                {
+                    File.Delete(filePath);
+                }
+            }
+            savedSelectionFilePath = Path.Combine(savedSelectionDirectory, "selection.txt");
+        }
+
+        public void LoadSelectionFromDisk()
+        {
+            LoadSelectionFromDisk(savedSelectionFilePath);
+        }
+
+        public void LoadSelectionFromDisk(string filePath)
+        {
+            if (_points is not null)
+            {
+                _points.Clear();
+            }
+            else
+            {
+                _points = new List<Graph.GraphPoint>();
+            }
+
+            List<Vector2Int> indices = new List<Vector2Int>();
+
+
+            if (!File.Exists(filePath))
+            {
+                if (!Path.IsPathFullyQualified(filePath))
+                {
+                    string attemptedQualifiedFilePath = Path.Combine(savedSelectionDirectory, filePath);
+                    if (File.Exists(attemptedQualifiedFilePath))
+                    {
+                        goto selectionFileExists;
+                    }
+
+                    attemptedQualifiedFilePath = Path.Combine(parentSelectionDirectory, filePath);
+                    if (File.Exists(attemptedQualifiedFilePath))
+                    {
+                        goto selectionFileExists;
+                    }
+                }
+                CellexalLog.Log("Could not find file when reading selection file:" + filePath);
+                return;
+            }
+
+            selectionFileExists: // label used in if statement above when a file is found
+
+            using FileStream fileStream = new FileStream(filePath, FileMode.Open);
+            using StreamReader streamReader = new StreamReader(fileStream);
+            GraphManager graphManager = ReferenceManager.instance.graphManager;
+            int numPointsAdded = 0;
+            List<Graph.GraphPoint> readPoints = new List<Graph.GraphPoint>();
+            while (!streamReader.EndOfStream)
+            {
+                string line = streamReader.ReadLine();
+                string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                int group;
+                UnityEngine.Color groupColor;
+
+                try
+                {
+                    // group = int.Parse(words[3]);
+                    string colorString = words[1];
+                    ColorUtility.TryParseHtmlString(colorString, out groupColor);
+                    if (!CellexalConfig.Config.SelectionToolColors.Any(x => InputReader.CompareColor(x, groupColor)))
+                    {
+                        ReferenceManager.instance.settingsMenu.AddSelectionColor(groupColor);
+                        ReferenceManager.instance.settingsMenu.unsavedChanges = false;
+                    }
+                    group = ReferenceManager.instance.selectionToolCollider.GetColorIndex(groupColor);
+                }
+                catch (FormatException)
+                {
+                    CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1, filePath));
+                    streamReader.Close();
+                    fileStream.Close();
+                    CellexalEvents.CommandFinished.Invoke(false);
+                    return;
+                }
+
+                if (PointCloudGenerator.instance.pointClouds.Count > 0)
+                {
+                    Vector2Int tuple = new Vector2Int(int.Parse(words[0]), int.Parse(words[3]));
+                    indices.Add(tuple);
+                }
+                else
+                {
+                    Graph.GraphPoint graphPoint = graphManager.FindGraphPoint(words[2], words[0]);
+                    graphPoint.Group = group;
+                    readPoints.Add(graphPoint);
+                }
+                numPointsAdded++;
+            }
+
+            SetPoints(readPoints);
+
+            string currentDir = Path.GetDirectoryName(filePath);
+            if (currentDir != savedSelectionDirectory)
+            {
+                AssertDirectory(true);
+                File.Copy(filePath, savedSelectionFilePath);
+                if (GroupMaskFilesExist(currentDir))
+                {
+                    foreach (string mask in Directory.GetFiles(currentDir, "*.png"))
+                    {
+                        File.Copy(mask, savedSelectionDirectory);
+                    }
+                    LoadGroupMasksFromDisk();
+                }
+                else
+                {
+                    SaveGroupMasksToDisk();
+                }
+            }
+            else
+            {
+                if (GroupMaskFilesExist(currentDir))
+                {
+                    LoadGroupMasksFromDisk();
+                }
+                else
+                {
+                    SaveGroupMasksToDisk();
+                }
+            }
+
+            TextureHandler.instance?.AddPointsToSelection(indices);
+            CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
+            CellexalEvents.CommandFinished.Invoke(true);
+            CellexalEvents.SelectedFromFile.Invoke();
+            streamReader.Close();
+            fileStream.Close();
+        }
+
+        public void LoadGroupMasksFromDisk()
+        {
+            groupMasks = new Dictionary<(Graph graph, int group), Texture2D>();
+            allGroupsCombinedMask = new Dictionary<Graph, Texture2D>();
+            string[] files = Directory.GetFiles(savedSelectionDirectory, "*.png");
+            JobHandle[] handles = new JobHandle[files.Length];
+            for (int i = 0; i < files.Length; ++i)
+            {
+                string path = files[i];
+                string graphAndGroup = Path.GetFileNameWithoutExtension(path);
+                int lastUnderscoreIndex = graphAndGroup.LastIndexOf('_');
+                string graphName = graphAndGroup[..lastUnderscoreIndex];
+                string groupAsString = graphAndGroup[(lastUnderscoreIndex + 1)..];
+
+                Texture2D texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                if (!texture.LoadImage(File.ReadAllBytes(path)))
+                {
+                    CellexalLog.Log($"Failed to load selection group mask at {path}");
+                }
+                Graph graph = ReferenceManager.instance.graphManager.FindGraph(graphName);
+
+                // if it's the combined texture, the filename ends with "combined" instead of a group number
+                if (groupAsString.Equals("combined"))
+                {
+                    allGroupsCombinedMask[graph] = texture;
+                    NativeArray<Color32> data = texture.GetRawTextureData<Color32>();
+                    handles[i] = new Extensions.Jobs.ConvertARGBToRGBAJob() { data = data }.Schedule(data.Length, 10000);
+                    continue;
+                }
+
+                bool parsed = int.TryParse(groupAsString, out int group);
+                if (!parsed)
+                {
+                    CellexalLog.Log($"Bad group number in selection group mask in file: {path}");
+                    return;
+                }
+                else
+                {
+                    groupMasks[(graph, group)] = texture;
+                    NativeArray<Color32> data = texture.GetRawTextureData<Color32>();
+                    handles[i] = new Extensions.Jobs.ConvertARGBToRGBAJob() { data = data }.Schedule(data.Length, 10000);
+                }
+            }
+
+            foreach (JobHandle handle in handles)
+            {
+                handle.Complete();
+            }
+
+            foreach (Texture2D tex in allGroupsCombinedMask.Values)
+            {
+                tex.Apply();
+            }
+
+            foreach (Texture2D tex in groupMasks.Values)
+            {
+                tex.Apply();
+            }
         }
 
         public void UnloadSelection()
@@ -223,32 +435,14 @@ namespace CellexalVR.AnalysisLogic
 
         public void SaveSelectionToDisk()
         {
-            UnityEngine.Profiling.Profiler.BeginSample("SaveSelectionToDisk");
+            SaveSelectionTextFileToDisk();
+            SaveGroupMasksToDisk();
+        }
+
+        public void SaveGroupMasksToDisk()
+        {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            // find relevant folder
-            parentSelectionDirectory = Path.Combine(CellexalUser.UserSpecificFolder, "Selections"); // move this to selectionmanager
-            if (!Directory.Exists(parentSelectionDirectory))
-            {
-                Directory.CreateDirectory(parentSelectionDirectory);
-                CellexalLog.Log($"Created directory {parentSelectionDirectory}");
-            }
-            string currentSelectionDirectory = Path.Combine(parentSelectionDirectory, "Selection_" + id);
-            if (!Directory.Exists(currentSelectionDirectory))
-            {
-                Directory.CreateDirectory(currentSelectionDirectory);
-                CellexalLog.Log($"Created directory {currentSelectionDirectory}");
-            }
-            else
-            {
-                CellexalLog.Log($"Deleting all files in {currentSelectionDirectory}");
-                foreach (string filePath in Directory.GetFiles(currentSelectionDirectory))
-                {
-                    File.Delete(filePath);
-                }
-            }
-            // save selection as text file for R scripts
-            savedSelectionFilePath = DumpSelectionToTextFile(currentSelectionDirectory);
 
             // create group-specific texture dictionary
             // maps a combination of a graph, lod group and selection group to the corresponding texture and its raw texture data array
@@ -313,24 +507,27 @@ namespace CellexalVR.AnalysisLogic
             int graphPointsPerBatch = 1000;
             NativeArray<GraphPointData>[] pointData = new NativeArray<GraphPointData>[colors.Length]; // jagged 2d array that groups together points by their group (color)
             int[] pointsToProcess = new int[colors.Length];
+            int[] pointsProcessed = new int[colors.Length];
             List<JobHandle> handles = new List<JobHandle>(this.size / graphPointsPerBatch);
 
-            for (int i = 0; i < pointData.Length; ++i)
-            {
-                pointData[i] = new NativeArray<GraphPointData>(groupSizes[groups[i]], Allocator.TempJob);
-                pointsToProcess[i] = 0;
-            }
 
-            UnityEngine.Profiling.Profiler.BeginSample("Executing WriteToSelectionTextureJob");
             // batch up graphpoints in the selection and schedule a job for each batch
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
+                // reset variables
                 int selectionIndex = 0;
+                for (int i = 0; i < pointData.Length; ++i)
+                {
+                    pointData[i] = new NativeArray<GraphPointData>(groupSizes[groups[i]], Allocator.TempJob);
+                    pointsToProcess[i] = 0;
+                    pointsProcessed[i] = 0;
+                }
 
                 while (selectionIndex < Points.Count)
                 {
                     int batchLength = Math.Min(Points.Count - selectionIndex, graphPointsPerBatch);
 
+                    // create a batch of graphpoints
                     for (int i = 0; i < batchLength; ++i, ++selectionIndex)
                     {
                         Graph.GraphPoint point = graph.FindGraphPoint(Points[selectionIndex].Label);
@@ -339,12 +536,14 @@ namespace CellexalVR.AnalysisLogic
                             continue;
                         }
                         int groupIndex = reverseGroupIndices[point.Group];
-                        pointData[groupIndex][pointsToProcess[groupIndex]] = new GraphPointData() { texCoord = point.textureCoord, group = groupIndex };
+                        int pointsIndex = pointsProcessed[groupIndex] + pointsToProcess[groupIndex];
+                        pointData[groupIndex][pointsIndex] = new GraphPointData() { texCoord = point.textureCoord, group = groupIndex };
                         pointsToProcess[groupIndex]++;
                     }
 
                     // schedule a job for each group that has had points added to it
                     // this should normally only schedule 1-2 jobs per iteration, since points in the Points list should be mostly grouped by their group already
+                    // more jobs may be scheduled in one iteration if many small groups fit in one batch, determined by graphPointsPerBatch above. but (at least) one job per group is needed due to the design of WriteToSelectionTextureJob
                     for (int i = 0; i < pointsToProcess.Length; ++i)
                     {
                         if (pointsToProcess[i] > 0)
@@ -352,12 +551,13 @@ namespace CellexalVR.AnalysisLogic
 
                             WriteToSelectionTextureJob job = new WriteToSelectionTextureJob()
                             {
-                                points = new NativeSlice<GraphPointData>(pointData[i], pointsToProcess[i], groupSizes[groups[i]] - pointsToProcess[i]),
+                                points = new NativeSlice<GraphPointData>(pointData[i], pointsProcessed[i], pointsToProcess[i]),
                                 texture = rawTextureData[(graph, groups[i])],
                                 combinedTexture = allGroupsCombinedRawTextureData[graph],
                                 colors = colors,
                                 textureWidth = graph.textureWidth
                             };
+                            pointsProcessed[i] += pointsToProcess[i];
                             pointsToProcess[i] = 0;
                             handles.Add(job.Schedule());
                         }
@@ -369,7 +569,6 @@ namespace CellexalVR.AnalysisLogic
                 allHandles.Complete();
                 handlesNativeArray.Dispose();
             }
-            UnityEngine.Profiling.Profiler.EndSample();
 
             // save textures
             foreach (KeyValuePair<(Graph graph, int group), Texture2D> kvp in groupMasks)
@@ -377,7 +576,7 @@ namespace CellexalVR.AnalysisLogic
                 Texture2D texture = kvp.Value;
                 byte[] png = texture.EncodeToPNG();
                 string fileName = $"{kvp.Key.graph.GraphName}_{kvp.Key.group}.png";
-                string savedTextureFilePath = Path.Combine(currentSelectionDirectory, fileName);
+                string savedTextureFilePath = Path.Combine(savedSelectionDirectory, fileName);
                 File.WriteAllBytes(savedTextureFilePath, png);
             }
 
@@ -387,7 +586,7 @@ namespace CellexalVR.AnalysisLogic
                 Texture2D texture = kvp.Value;
                 byte[] png = texture.EncodeToPNG();
                 string fileName = $"{kvp.Key.GraphName}_combined.png";
-                string savedTextureFilePath = Path.Combine(currentSelectionDirectory, fileName);
+                string savedTextureFilePath = Path.Combine(savedSelectionDirectory, fileName);
                 File.WriteAllBytes(savedTextureFilePath, png);
             }
 
@@ -399,7 +598,6 @@ namespace CellexalVR.AnalysisLogic
             colors.Dispose();
             stopwatch.Stop();
             CellexalLog.Log($"Saved selection to disk in {stopwatch.Elapsed}");
-            UnityEngine.Profiling.Profiler.EndSample();
         }
 
         private struct GraphPointData
@@ -449,25 +647,61 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
+        /// Checks if group mask files exists in the target directory. This function only checks filenames, it does not guarantee that the contents of the group masks are correct.
+        /// </summary>
+        /// <param name="directory">The directory to look for group masks in.</param>
+        /// <returns>True if all file name matches this selection and currently loaded dataset's graphs and groups.</returns>
+        private bool GroupMaskFilesExist(string directory)
+        {
+            List<Graph> graphs = ReferenceManager.instance.graphManager.Graphs;
+            string[] pathsToLookFor = new string[graphs.Count * (groups.Count + 1)]; // add 1 per graph for the combined textures
+            string[] filesOnDisk = Directory.GetFiles(directory, "*.png");
+
+            if (pathsToLookFor.Length != filesOnDisk.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0, pathIndex = 0; i < graphs.Count; ++i)
+            {
+                for (int j = 0; j < groups.Count; ++j, ++pathIndex)
+                {
+                    pathsToLookFor[pathIndex] = $"{graphs[i].GraphName}_{groups[j]}.png";
+                }
+            }
+
+            Array.Sort(pathsToLookFor);
+            Array.Sort(filesOnDisk);
+
+            for (int i = 0; i < pathsToLookFor.Length; ++i)
+            {
+                if (!pathsToLookFor.Equals(filesOnDisk))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Saves this selection as a text file.
         /// </summary>
         /// <param name="directory">The directory to save the file in.</param>
-        /// <returns>A path to the file that was saved.</returns>
-        private string DumpSelectionToTextFile(string directory)
+        private void SaveSelectionTextFileToDisk()
         {
-            string filePath = Path.Combine(directory, "selection" + id + ".txt");
-            if (File.Exists(filePath))
+            if (File.Exists(savedSelectionFilePath))
             {
-                File.Delete(filePath);
+                File.Delete(savedSelectionFilePath);
             }
-            if (File.Exists(filePath + ".time"))
+            if (File.Exists(savedSelectionFilePath + ".time"))
             {
-                File.Delete(filePath + ".time");
+                File.Delete(savedSelectionFilePath + ".time");
             }
 
-            using StreamWriter file = new StreamWriter(filePath);
+            using StreamWriter file = new StreamWriter(savedSelectionFilePath);
 
-            CellexalLog.Log("Dumping selection data to " + filePath);
+            CellexalLog.Log("Dumping selection data to " + savedSelectionFilePath);
             CellexalLog.Log("\tSelection consists of  " + Points.Count + " points");
 
             // convert the currently set selection colors to hexadecimal strings
@@ -527,7 +761,6 @@ namespace CellexalVR.AnalysisLogic
 
             file.Flush();
             file.Close();
-            return filePath;
         }
     }
 

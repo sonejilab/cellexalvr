@@ -338,7 +338,7 @@ namespace CellexalVR.AnalysisLogic
                             CellexalLog.Log($"Failed to load texture from {filePath}");
                         }
                         NativeArray<Color32> rawData = texture.GetRawTextureData<Color32>();
-                        handles.Add(new ConvertARGBToRGBAJob() { data = rawData }.Schedule(rawData.Length, 10000));
+                        handles.Add(new CellexalVR.Extensions.Jobs.ConvertARGBToRGBAJob() { data = rawData }.Schedule(rawData.Length, 10000));
                         graph.attributeMasks[attribute] = texture;
                     }
                 }
@@ -506,21 +506,6 @@ namespace CellexalVR.AnalysisLogic
             }
 
             return attributes;
-        }
-
-        /// <summary>
-        /// Job to convert a texture from ARGB32 to RGBA32 format.
-        /// Used to convert texture that come from <see cref="ImageConversion.LoadImage(Texture2D, byte[])"/> which loads all `.png` files into ARGB32 format.
-        /// </summary>
-        private struct ConvertARGBToRGBAJob : IJobParallelFor
-        {
-            public NativeArray<Color32> data;
-
-            public void Execute(int index)
-            {
-                Color32 c = data[index];
-                data[index] = new Color32(c.g, c.b, c.a, c.r);
-            }
         }
     }
 }

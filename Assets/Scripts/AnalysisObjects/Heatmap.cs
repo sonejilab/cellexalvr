@@ -39,8 +39,6 @@ namespace CellexalVR.AnalysisObjects
         public GameObject confirmQuad;
         public GameObject movingQuadX;
         public GameObject movingQuadY;
-        public int selectionNr;
-        public string selectionFile;
         public TextMeshPro enlargedGeneText;
         public TextMeshPro highlightGeneText;
         public TextMeshPro highlightInfoText;
@@ -373,9 +371,9 @@ namespace CellexalVR.AnalysisObjects
 
             // need to dump selection to txt file for GO analysis script. But file creation counter should not increment
             // in case networks should be created on the selection that created the original heatmap.
-            string selectionFile = referenceManager.selectionManager.DumpSelectionToTextFile(newGps);
-            hm.selectionFile = selectionFile;
-            // referenceManager.selectionManager.fileCreationCtr--;
+            Selection newSelection = new Selection(newGps);
+            newSelection.SaveSelectionToDisk();
+            hm.selection = newSelection;
             hm.Init();
             try
             {
@@ -388,7 +386,6 @@ namespace CellexalVR.AnalysisObjects
             }
 
             heatmapGenerator.selectionNr += 1;
-            hm.selectionNr = heatmapGenerator.selectionNr;
         }
 
 

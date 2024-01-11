@@ -32,7 +32,7 @@ namespace CellexalVR.General
             var now = DateTime.Now;
             var time = now.ToString("yyyy-MM-dd-HH-mm-ss");
 
-            logDirectory = (Directory.GetCurrentDirectory() + "/Output/" + CellexalUser.Username + "/Logs/").FixFilePath();
+            logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Logs");
             if (!Directory.Exists(logDirectory))
             {
                 logThisLater.Add("\tCreated directory " + logDirectory);
@@ -47,7 +47,7 @@ namespace CellexalVR.General
                 File.Delete(files[i]);
             }
 
-            LogFilePath = logDirectory + "\\cellexal-log-" + time + ".txt";
+            LogFilePath = Path.Combine(logDirectory, "cellexal-log-" + time + ".txt");
             // this will most likely always happen
             if (!File.Exists(LogFilePath))
             {
@@ -72,8 +72,7 @@ namespace CellexalVR.General
             {
                 Log("The following was generated before the log file existed:");
                 LogBacklog();
-                Log("\tEnd of what was generated before the log file existed.");
-                logThisLater.Clear();
+                Log("End of what was generated before the log file existed.");
             }
 
             CellexalEvents.LogInitialized.Invoke();
@@ -109,10 +108,19 @@ namespace CellexalVR.General
             {
                 consoleManager.AppendOutput(message);
             }
-
-            logThisLater.Add(message);
+            if (logFilePath == "")
+            {
+                logThisLater.Add(message);
+            }
+            else
+            {
+                using (StreamWriter logWriter = new StreamWriter(new FileStream(LogFilePath, FileMode.Append, FileAccess.Write, FileShare.None)))
+                {
+                    logWriter.WriteLine(message);
+                    logWriter.Flush();
+                }
+            }
         }
-
 
         /// <summary>
         /// Logs multiple messages. This method will append a linebreak between each message.

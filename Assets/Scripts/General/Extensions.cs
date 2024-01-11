@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.Collections;
+using Unity.Jobs;
 using UnityEngine;
 
 namespace CellexalVR.Extensions
@@ -75,7 +77,7 @@ namespace CellexalVR.Extensions
                     return "attribute graph";
                 default:
                     return "";
-                
+
             }
         }
 
@@ -100,7 +102,7 @@ namespace CellexalVR.Extensions
         {
             if (numColors == 1)
             {
-                return new UnityEngine.Color[] {color1};
+                return new UnityEngine.Color[] { color1 };
             }
 
             if (numColors < 1)
@@ -173,9 +175,8 @@ namespace CellexalVR.Extensions
         /// <summary>
         /// Replaces forward and backward slashes with double backward slashes. Used for passing filepaths as arguments to things that parse escape characters.
         /// </summary>
-        /// <param name="s">The string to unfix.</param>
-        /// <returns>The unfixed string.</returns>
-        public static string UnFixFilePath(this string s)
+        /// <param name="s">The string to modify.</param>
+        public static string MakeDoubleBackslash(this string s)
         {
             string directorySeparatorChar = "\\\\";
             s = s.Replace("/", directorySeparatorChar);
@@ -234,6 +235,24 @@ namespace CellexalVR.Extensions
                     return "gene expression histogram";
                 default:
                     return "";
+            }
+        }
+    }
+
+    public static class Jobs
+    {
+        /// <summary>
+        /// Job to convert a texture from ARGB32 to RGBA32 format.
+        /// Used to convert texture that come from <see cref="ImageConversion.LoadImage(Texture2D, byte[])"/> which loads all `.png` files into ARGB32 format.
+        /// </summary>
+        public struct ConvertARGBToRGBAJob : IJobParallelFor
+        {
+            public NativeArray<Color32> data;
+
+            public void Execute(int index)
+            {
+                Color32 c = data[index];
+                data[index] = new Color32(c.g, c.b, c.a, c.r);
             }
         }
     }

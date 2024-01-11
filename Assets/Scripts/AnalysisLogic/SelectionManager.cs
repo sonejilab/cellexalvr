@@ -47,6 +47,7 @@ namespace CellexalVR.AnalysisLogic
         private FilterManager filterManager;
 
         private List<Selection> selections = new List<Selection>();
+        private Dictionary<string, Selection> selectionStringMapping = new Dictionary<string, Selection>();
 
         public bool RObjectUpdating { get; private set; }
 
@@ -98,6 +99,27 @@ namespace CellexalVR.AnalysisLogic
             //CellexalEvents.GraphsColoredByGene.AddListener(Clear);
             //CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
             CellexalEvents.GraphsReset.AddListener(Clear);
+        }
+
+        /// <summary>
+        /// Attempts to find a selection by a name or id.
+        /// </summary>
+        /// <param name="nameOrId">The name or id to look for.</param>
+        /// <returns>A selection matching the name or id, or null if no suitable selection was found.</returns>
+        public Selection FindSelectionByNameOrId(string nameOrId)
+        {
+            if (int.TryParse(nameOrId, out int id))
+            {
+                if (id >= 0 && id < selections.Count)
+                {
+                    return selections[id];
+                }
+            }
+            if (selectionStringMapping.ContainsKey(nameOrId))
+            {
+                return selectionStringMapping[nameOrId];
+            }
+            return null;
         }
 
         public void RemoveGraphpointFromSelection(Graph.GraphPoint graphPoint)
@@ -506,6 +528,7 @@ namespace CellexalVR.AnalysisLogic
             //DumpSelectionToTextFile(sortedUniqueCells.ToList());
             Selection newSelection = new Selection(selectedCells);
             selections.Add(newSelection);
+            selectionStringMapping[newSelection.ToString()] = newSelection;
             newSelection.SaveSelectionToDisk();
 
             List<int> groups = new List<int>();
@@ -545,6 +568,12 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
+        public void AddSelection(Selection selection)
+        {
+            selections.Add(selection);
+            selectionStringMapping[selection.ToString()] = selection;
+        }
+
         private IEnumerator UpdateRObjectGrouping()
         {
             RObjectUpdating = true;
@@ -554,9 +583,9 @@ namespace CellexalVR.AnalysisLogic
 
             //string function = "userGrouping";
             string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
-                                                                      + (fileCreationCtr - 1) + ".txt").UnFixFilePath();
+                                                                      + (fileCreationCtr - 1) + ".txt").MakeDoubleBackslash();
 
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + latestSelection;
+            string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash() + " " + latestSelection;
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
 
             // Wait for server to start up and not be busy
@@ -775,7 +804,7 @@ namespace CellexalVR.AnalysisLogic
 
                 if (!referenceManager.sessionHistoryList.Contains(filePath, Definitions.HistoryEvent.SELECTION))
                 {
-                    referenceManager.sessionHistoryList.AddEntry(filePath, Definitions.HistoryEvent.SELECTION);
+                    referenceManager.sessionHistoryList.AddEntry(selection.ToString(), Definitions.HistoryEvent.SELECTION);
                 }
 
                 //referenceManager.selectionFromPreviousMenu.ReadSelectionFiles();

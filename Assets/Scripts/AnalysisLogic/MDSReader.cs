@@ -76,12 +76,7 @@ namespace CellexalVR.AnalysisLogic
                         break;
                     case GraphGenerator.GraphType.FACS:
                         {
-                            string graphName = "";
-                            foreach (string s in referenceManager.newGraphFromMarkers.markers)
-                            {
-                                graphName += s + " - ";
-                            }
-
+                            string graphName = string.Join("_", referenceManager.newGraphFromMarkers.markers);
                             combGraph.GraphNumber = referenceManager.inputReader.facsGraphCounter;
                             combGraph.GraphName = graphName;
                             combGraph.tag = "FacsGraph";

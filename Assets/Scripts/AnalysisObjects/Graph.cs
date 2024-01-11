@@ -56,8 +56,8 @@ namespace CellexalVR.AnalysisObjects
         public Texture2D texture;
         public Dictionary<string, Texture2D> attributeMasks = new Dictionary<string, Texture2D>();
         private bool textureChanged;
-        private Coroutine runningHighlightCoroutine;
-        private Coroutine waitingHighlightCoroutine;
+        private Coroutine runningColoringCoroutine;
+        private Coroutine waitingColoringCoroutine;
         private NativeArray<Color32> emptyColorArray;
 
         public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
@@ -1075,22 +1075,50 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Highlights, or un-highlights, all graphpoints that belong to an attribute.
+        /// Colors this graph by a selection. GraphPoints that are not in this selection are not changed.
         /// </summary>
-        /// <param name="attribute">The name of the attribute, should be in the full format e.g. "<c>type@attribute</c>".</param>
-        /// <param name="highlight">True if graphpoints belonging should be highlighted, false if un-highlighting.</param>
+        /// <param name="selection">The selection to color by.</param>
+        public void ColorBySelection(Selection selection)
+        {
+            NativeArray<Color32> mask = selection.allGroupsCombinedMask[this].GetRawTextureData<Color32>();
+            AttemptStartCoroutine(() => ColorByMask(mask));
+        }
+
+        /// <summary>
+        /// Colors this graph by one group of a selection.
+        /// </summary>
+        /// <param name="selection">The selection containing the group to color by.</param>
+        /// <param name="group">The group's id, as defined by <see cref="Selection.groups"/>.</param>
+        public void ColorSelectionGroup(Selection selection, int group)
+        {
+            NativeArray<Color32> mask = selection.groupMasks[(this, group)].GetRawTextureData<Color32>();
+            AttemptStartCoroutine(() => ColorByMask(mask));
+        }
+
+        /// <summary>
+        /// Highlights, all graphpoints that belong to an attribute.
+        /// </summary>
+        /// <param name="attribute">The name of the attribute, should be in the full format "<c>type@attribute</c>".</param>
         public void HighlightAttribute(string attribute)
         {
             NativeArray<Color32> mask = attributeMasks[attribute].GetRawTextureData<Color32>();
             AttemptStartCoroutine(() => HighlightMask(mask, true));
         }
 
+        /// <summary>
+        /// Highlights a group from a <see cref="Selection"/>.
+        /// </summary>
+        /// <param name="selection">The selection containing the group.</param>
+        /// <param name="group">The group's number, as defined in <see cref="Selection.groups"/>.</param>
         public void HighlightSelectionGroup(Selection selection, int group)
         {
             NativeArray<Color32> mask = selection.groupMasks[(this, group)].GetRawTextureData<Color32>();
             AttemptStartCoroutine(() => HighlightMask(mask, true));
         }
 
+        /// <summary>
+        /// Resets all highlighted graphpoints, retaining their colour but un-highlighting them.
+        /// </summary>
         public void ResetHighlight()
         {
             AttemptStartCoroutine(() => HighlightMask(emptyColorArray, false));
@@ -1098,18 +1126,18 @@ namespace CellexalVR.AnalysisObjects
 
         private void AttemptStartCoroutine(Func<IEnumerator> coroutine)
         {
-            if (runningHighlightCoroutine is null)
+            if (runningColoringCoroutine is null)
             {
-                runningHighlightCoroutine = StartCoroutine(coroutine.Invoke());
+                runningColoringCoroutine = StartCoroutine(coroutine.Invoke());
             }
             else
             {
-                if (waitingHighlightCoroutine is not null)
+                if (waitingColoringCoroutine is not null)
                 {
-                    StopCoroutine(waitingHighlightCoroutine);
+                    StopCoroutine(waitingColoringCoroutine);
                 }
 
-                waitingHighlightCoroutine = StartCoroutine(coroutine.Invoke());
+                waitingColoringCoroutine = StartCoroutine(coroutine.Invoke());
             }
         }
 
@@ -1118,11 +1146,11 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         private IEnumerator HighlightMask(NativeArray<Color32> mask, bool highlight)
         {
-            if (runningHighlightCoroutine is not null)
+            if (runningColoringCoroutine is not null)
             {
-                yield return runningHighlightCoroutine;
-                runningHighlightCoroutine = waitingHighlightCoroutine;
-                waitingHighlightCoroutine = null;
+                yield return runningColoringCoroutine;
+                runningColoringCoroutine = waitingColoringCoroutine;
+                waitingColoringCoroutine = null;
             }
 
             NativeArray<Color32> rawTextureData = texture.GetRawTextureData<Color32>();
@@ -1155,7 +1183,7 @@ namespace CellexalVR.AnalysisObjects
             yield return new WaitUntil(() => handle.IsCompleted);
             handle.Complete();
             texture.Apply();
-            runningHighlightCoroutine = null;
+            runningColoringCoroutine = null;
         }
 
         protected struct HighlightMaskMultiJob : IJobParallelFor
@@ -1183,6 +1211,53 @@ namespace CellexalVR.AnalysisObjects
             }
 
         }
+
+        private IEnumerator ColorByMask(NativeArray<Color32> mask)
+        {
+            if (runningColoringCoroutine is not null)
+            {
+                yield return runningColoringCoroutine;
+                runningColoringCoroutine = waitingColoringCoroutine;
+                waitingColoringCoroutine = null;
+            }
+
+            NativeArray<Color32> rawTextureData = texture.GetRawTextureData<Color32>();
+
+            if (rawTextureData.Length != mask.Length)
+            {
+                CellexalError.SpawnError("Could not color by mask",
+                    "The graph's graphpoint texture was not the same length as the generated mask. Did you replace any files in the dataset without deleting the \"Generated\" folder?");
+                yield break;
+            }
+
+            JobHandle handle;
+            ColorByMaskJob job = new ColorByMaskJob
+            {
+                maskTextureData = mask,
+                destTextureData = rawTextureData,
+            };
+            handle = job.Schedule(rawTextureData.Length, 10000);
+
+            yield return new WaitUntil(() => handle.IsCompleted);
+            handle.Complete();
+            texture.Apply();
+            runningColoringCoroutine = null;
+        }
+
+        protected struct ColorByMaskJob : IJobParallelFor
+        {
+            [ReadOnly]
+            public NativeArray<Color32> maskTextureData;
+            public NativeArray<Color32> destTextureData;
+
+            public void Execute(int index)
+            {
+                Color32 currentColor = destTextureData[index];
+                byte rawMaskDataR = maskTextureData[index].r;
+                destTextureData[index] = new Color32(rawMaskDataR > 0 ? rawMaskDataR : currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+            }
+        }
+
 
         /// <summary>
         /// Toggles all graphpoint cluster gameobjects active/inactive.

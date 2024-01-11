@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
 using TMPro;
 using UnityEngine;
@@ -36,7 +37,11 @@ namespace CellexalVR.Menu.Buttons.Selection
             }
             else
             {
-                referenceManager.inputReader.ReadSelectionFile(Path);
+                AnalysisLogic.Selection selection = referenceManager.inputReader.ReadSelectionFile(Path);
+                foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+                {
+                    graph.ColorBySelection(selection);
+                }
             }
 
             ToggleOutline(!tempToggle);

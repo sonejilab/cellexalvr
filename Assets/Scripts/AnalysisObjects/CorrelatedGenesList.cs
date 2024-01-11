@@ -96,7 +96,7 @@ namespace CellexalVR.AnalysisObjects
 
         private IEnumerator CalculateCorrelatedGenesCoroutine(string nodeName, Extensions.Definitions.Measurement type)
         {
-            string outputFile = (CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt").UnFixFilePath();
+            string outputFile = (CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt").MakeDoubleBackslash();
             string facsTypeArg = (type == Extensions.Definitions.Measurement.FACS) ? "TRUE" : "FALSE";
             string args = CellexalUser.UserSpecificFolder + " " + nodeName + " " + outputFile + " " + facsTypeArg;
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_correlated_genes.R").FixFilePath();

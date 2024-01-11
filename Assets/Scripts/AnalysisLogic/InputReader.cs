@@ -537,7 +537,7 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Reads the files containg networks.
         /// </summary>
-        public void ReadNetworkFiles(int layoutSeed, string path, string selectionFile)
+        public void ReadNetworkFiles(int layoutSeed, string path, Selection selection)
         {
             if (!networkReader)
             {
@@ -545,7 +545,7 @@ namespace CellexalVR.AnalysisLogic
                 networkReader.referenceManager = referenceManager;
             }
 
-            StartCoroutine(networkReader.ReadNetworkFilesCoroutine(layoutSeed, path, selectionFile));
+            StartCoroutine(networkReader.ReadNetworkFilesCoroutine(layoutSeed, path, selection));
         }
 
 
@@ -715,115 +715,37 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("inputReader", aliases: new string[] { "readselectionfile", "rsf" })]
         public Selection ReadSelectionFile(string path, bool select = true)
         {
-            //string dataFolder = CellexalUser.UserSpecificFolder;
-            List<Graph.GraphPoint> selection = new List<Graph.GraphPoint>();
-            List<Vector2Int> indices = new List<Vector2Int>();
-
-            if (!File.Exists(path))
-            {
-                CellexalLog.Log("Could not find file:" + path);
-                return null;
-            }
-
-            FileStream fileStream = new FileStream(path, FileMode.Open);
-            StreamReader streamReader = new StreamReader(fileStream);
-            SelectionManager selectionManager = referenceManager.selectionManager;
-            selectionManager.CancelSelection();
-            GraphManager graphManager = referenceManager.graphManager;
-            int numPointsAdded = 0;
-            while (!streamReader.EndOfStream)
-            {
-                string line = streamReader.ReadLine();
-                string[] words = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-                int group;
-                UnityEngine.Color groupColor;
-
-                try
-                {
-                    // group = int.Parse(words[3]);
-                    string colorString = words[1];
-                    ColorUtility.TryParseHtmlString(colorString, out groupColor);
-                    if (!CellexalConfig.Config.SelectionToolColors.Any(x => CompareColor(x, groupColor)))
-                    {
-                        referenceManager.settingsMenu.AddSelectionColor(groupColor);
-                        referenceManager.settingsMenu.unsavedChanges = false;
-                    }
-                    group = referenceManager.selectionToolCollider.GetColorIndex(groupColor);
-                }
-                catch (FormatException)
-                {
-                    CellexalLog.Log(string.Format("Bad color on line {0} in file {1}.", numPointsAdded + 1,
-                        path));
-                    streamReader.Close();
-                    fileStream.Close();
-                    CellexalEvents.CommandFinished.Invoke(false);
-                    return null;
-                }
-
-                if (PointCloudGenerator.instance.pointClouds.Count > 0)
-                {
-                    Vector2Int tuple = new Vector2Int(int.Parse(words[0]), int.Parse(words[3]));
-                    indices.Add(tuple);
-                    numPointsAdded++;
-                }
-                else
-                {
-                    Graph.GraphPoint graphPoint = graphManager.FindGraphPoint(words[2], words[0]);
-                    selection.Add(graphPoint);
-                    numPointsAdded++;
-                    if (select)
-                    {
-                        selectionManager.AddGraphpointToSelection(graphPoint,
-                            group, false, groupColor);
-                    }
-                    else
-                    {
-                        foreach (Graph graph in graphManager.Graphs)
-                        {
-
-                            Graph.GraphPoint gp = graph.FindGraphPoint(graphPoint.Label);
-                            if (gp is not null)
-                            {
-                                gp.ColorSelectionColor(group, false);
-                            }
-                        }
-                    }
-                }
-            }
-
-            TextureHandler.instance?.AddPointsToSelection(indices);
-            CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
-            CellexalEvents.CommandFinished.Invoke(true);
-            CellexalEvents.SelectedFromFile.Invoke();
-            streamReader.Close();
-            fileStream.Close();
-
-            return new Selection(selection);
+            Selection selection = new Selection(path);
+            ReferenceManager.instance.selectionManager.AddSelection(selection);
+            return selection;
         }
 
 
         [ConsoleCommand("inputReader", aliases: new string[] { "selectfromprevious", "sfp" })]
         public void ReadAndSelectPreviousSelection(int index)
         {
-            string dataFolder = CellexalUser.UserSpecificFolder;
-            string[] files = Directory.GetFiles(dataFolder, "selection*.txt");
-            if (files.Length == 0)
+            string parentSelectionFolder = Path.Combine(CellexalUser.UserSpecificFolder, "Selections", $"Selection_{index}");
+            if (!Directory.Exists(parentSelectionFolder))
             {
-                CellexalLog.Log("No previous selections found.");
-                CellexalEvents.CommandFinished.Invoke(false);
-                return;
-            }
-            else if (index < 0 || index >= files.Length)
-            {
-                CellexalLog.Log(string.Format(
-                    "Index \'{0}\' is not within the range [0, {1}] when reading previous selection files.", index,
-                    files.Length - 1));
+                CellexalLog.Log($"No selection number {index} found at {parentSelectionFolder}.");
                 CellexalEvents.CommandFinished.Invoke(false);
                 return;
             }
 
-            string path = files[index];
-            ReadSelectionFile(path);
+            string file = Path.Combine(parentSelectionFolder, $"selection.txt");
+            if (!File.Exists(file))
+            {
+                CellexalLog.Log($"No selection file found at {file}");
+                CellexalEvents.CommandFinished.Invoke(false);
+                return;
+            }
+            Selection selection = ReadSelectionFile(file);
+
+            foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+            {
+                graph.ColorBySelection(selection);
+            }
+
         }
 
         /// <summary>

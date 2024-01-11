@@ -18,7 +18,7 @@ namespace CellexalVR.AnalysisLogic
     {
         public ReferenceManager referenceManager;
 
-        public IEnumerator ReadNetworkFilesCoroutine(int layoutSeed, string path, string selectionFile)
+        public IEnumerator ReadNetworkFilesCoroutine(int layoutSeed, string path, Selection selection)
         {
             CellexalLog.Log("Started reading network files");
             CellexalEvents.ScriptRunning.Invoke();
@@ -327,7 +327,7 @@ namespace CellexalVR.AnalysisLogic
                             nodes.Values.Count + " nodes");
             CellexalEvents.CommandFinished.Invoke(true);
             CellexalEvents.ScriptFinished.Invoke();
-            string sessionEntryName = networkDirectory + " from " + selectionFile;
+            string sessionEntryName = networkDirectory + " from " + selection.savedSelectionFilePath;
             if (!referenceManager.sessionHistoryList.Contains(sessionEntryName, Definitions.HistoryEvent.NETWORK))
             {
                 referenceManager.sessionHistoryList.AddEntry(sessionEntryName, Definitions.HistoryEvent.NETWORK,

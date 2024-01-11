@@ -42,7 +42,7 @@ namespace CellexalVR.AnalysisLogic
             //                "cellexalObj @usedObj$sessionName = NULL } \n " +
             //                "cellexalObj = sessionPath(cellexalObj, \"" + CellexalUser.UserSpecificFolder.UnFixFilePath() + "\")" ;
 
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath();
+            string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash();
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStart.R";
 
             // Wait for other processes to finish and for server to have started.
@@ -80,7 +80,7 @@ namespace CellexalVR.AnalysisLogic
         {
             saveButton.descriptionText.text = "Compiling report..";
             referenceManager.floor.StartPulse();
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath();
+            string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash();
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logStop.R";
 
             bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
@@ -133,10 +133,10 @@ namespace CellexalVR.AnalysisLogic
             heatmap.saveImageButton.SetButtonActivated(false);
             heatmap.statusText.text = "Saving Heatmap...";
             referenceManager.floor.StartPulse();
-            string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + heatmap.name + ".txt").UnFixFilePath();
-            string groupingsFilepath = heatmap.selectionFile.UnFixFilePath();
+            string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + heatmap.name + ".txt").MakeDoubleBackslash();
+            string groupingsFilepath = heatmap.selection.savedSelectionFilePath;
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\logHeatmap.R").FixFilePath();
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + genesFilePath + " " + heatmapImageFilePath.UnFixFilePath() + " " + groupingsFilepath;
+            string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash() + " " + genesFilePath + " " + heatmapImageFilePath.MakeDoubleBackslash() + " " + groupingsFilepath;
             bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
                     !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
                     !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
@@ -200,10 +200,10 @@ namespace CellexalVR.AnalysisLogic
             referenceManager.floor.StartPulse();
             goAnalysisRunning = true;
             heatmap.removable = true;
-            string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + heatmap.name + ".txt").UnFixFilePath();
+            string genesFilePath = (CellexalUser.UserSpecificFolder + "\\Heatmap\\" + heatmap.name + ".txt").MakeDoubleBackslash();
             string rScriptFilePath = (Application.streamingAssetsPath + @"\R\GOanalysis.R").FixFilePath();
-            string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + heatmap.selectionNr + ".txt").UnFixFilePath();
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + genesFilePath + " " + groupingsFilepath;
+            string groupingsFilepath = (CellexalUser.UserSpecificFolder + "\\selection" + heatmap.selection.id + ".txt").MakeDoubleBackslash();
+            string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash() + " " + genesFilePath + " " + groupingsFilepath;
 
             bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
                     !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
@@ -247,7 +247,7 @@ namespace CellexalVR.AnalysisLogic
             nc.saveImageButton.SetButtonActivated(false);
             nc.saveImageButton.descriptionText.text = "Saving image...";
             string groupingsFilepath = CellexalUser.UserSpecificFolder + "\\selection" + nc.selectionNr + ".txt";
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + networkImageFilePath.UnFixFilePath() + " " + groupingsFilepath.UnFixFilePath();
+            string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash() + " " + networkImageFilePath.MakeDoubleBackslash() + " " + groupingsFilepath.MakeDoubleBackslash();
             string rScriptFilePath = Application.streamingAssetsPath + @"\R\logNetwork.R";
 
             bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&

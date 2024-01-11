@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using TMPro;
@@ -25,7 +26,7 @@ namespace CellexalVR.Interaction
         private string Text { get; set; }
         private KeyboardHandler parentKeyboard;
         private string lastPartOfName;
-        
+
 
         protected override void Start()
         {
@@ -86,25 +87,29 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void HandleClick()
         {
-            
+
             string[] words;
             string selectionName;
             switch (Type)
             {
                 case Definitions.HistoryEvent.HEATMAP:
-                    words = NameOfThing.Split(new string[] {" from "}, StringSplitOptions.None);
+                    words = NameOfThing.Split(new string[] { " from " }, StringSplitOptions.None);
                     string heatmapName = words[0].FixFilePath();
                     selectionName = words[1].FixFilePath();
                     referenceManager.heatmapGenerator.LoadHeatmap(heatmapName, selectionName);
                     break;
                 case Definitions.HistoryEvent.NETWORK:
-                    words = NameOfThing.Split(new string[] {" from "}, StringSplitOptions.None);
+                    words = NameOfThing.Split(new string[] { " from " }, StringSplitOptions.None);
                     string networkName = words[0].FixFilePath();
                     selectionName = words[1].FixFilePath();
-                    referenceManager.inputReader.ReadNetworkFiles(ID, networkName, selectionName);
+                    referenceManager.inputReader.ReadNetworkFiles(ID, networkName, referenceManager.selectionManager.FindSelectionByNameOrId(selectionName));
                     break;
                 case Definitions.HistoryEvent.SELECTION:
-                    referenceManager.inputReader.ReadSelectionFile(NameOfThing);
+                    AnalysisLogic.Selection selection = referenceManager.inputReader.ReadSelectionFile(NameOfThing);
+                    foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+                    {
+                        graph.ColorBySelection(selection);
+                    }
                     break;
                 case Definitions.HistoryEvent.FACSGRAPH:
                     string[] markers = lastPartOfName.Replace(".txt", "").Split('_');

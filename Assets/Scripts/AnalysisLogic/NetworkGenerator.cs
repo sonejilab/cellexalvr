@@ -169,31 +169,32 @@ namespace CellexalVR.AnalysisLogic
             }
 
             // generate the files containing the network information
-            selectionNr = selectionManager.fileCreationCtr - 1;
-            //string function = "make.cellexalvr.network";
-            //string script = function + "(" + "cellexalObj, \"" + groupingFilePath + "\", \"" + networkResources + "\", method=\"" + networkMethod + "\")";
-            string groupingFilePath =
-                (CellexalUser.UserSpecificFolder + @"\selection" + selectionNr + ".txt").UnFixFilePath();
-            string outputFilePath =
-                (CellexalUser.UserSpecificFolder + @"\Resources\Networks" + selectionNr).UnFixFilePath();
+            Selection selection = ReferenceManager.instance.selectionManager.GetLastSelection();
+            string outputFilePath = Path.Combine(CellexalUser.UserSpecificFolder, "Resources", "Networks" + selectionNr);
             networkMethod = CellexalConfig.Config.NetworkAlgorithm;
-            string args = CellexalUser.UserSpecificFolder.UnFixFilePath() + " " + groupingFilePath + " " +
-                          outputFilePath + " " + networkMethod;
-            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\make_networks.R").FixFilePath();
+            string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash() + " " +
+                          selection.savedSelectionFilePath.MakeDoubleBackslash() + " " +
+                          outputFilePath.MakeDoubleBackslash() + " " +
+                          networkMethod;
+            string rScriptFilePath = Path.Combine(Application.streamingAssetsPath, "R", "make_networks.R");
             if (!Directory.Exists(outputFilePath))
             {
                 CellexalLog.Log("Creating directory " + outputFilePath.FixFilePath());
                 Directory.CreateDirectory(outputFilePath);
             }
 
-            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            string mainserverPidPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid");
+            string mainserverInputPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R");
+            string mainserverInputLockPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock");
+
+            bool rServerReady = File.Exists(mainserverPidPath) &&
+                                !File.Exists(mainserverInputPath) &&
+                                !File.Exists(mainserverInputLockPath);
             while (!rServerReady || !RScriptRunner.serverIdle)
             {
-                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                rServerReady = File.Exists(mainserverPidPath) &&
+                               !File.Exists(mainserverInputPath) &&
+                               !File.Exists(mainserverInputLockPath);
                 yield return null;
             }
 
@@ -214,7 +215,7 @@ namespace CellexalVR.AnalysisLogic
             CellexalLog.Log("Network R script finished in " + stopwatch.Elapsed.ToString());
             GeneratingNetworks = false;
             CellexalEvents.ScriptFinished.Invoke();
-            inputReader.ReadNetworkFiles(layoutSeed, outputFilePath, groupingFilePath);
+            inputReader.ReadNetworkFiles(layoutSeed, outputFilePath, selection);
         }
 
         /// <summary>
