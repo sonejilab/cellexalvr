@@ -112,8 +112,18 @@ namespace CellexalVR.AnalysisObjects
             newGraph.transform.position = startPositions[graphCount % 6];
             newGraph.referenceManager = referenceManager;
             isCreating = true;
+            StartCoroutine(WaitForGraphToBeCreated(newGraph));
             graphCount++;
             return newGraph;
+        }
+
+        private IEnumerator WaitForGraphToBeCreated(Graph graph)
+        {
+            while (isCreating)
+            {
+                yield return null;
+            }
+            CellexalEvents.GraphCreated.Invoke(graph);
         }
 
         /// <summary>

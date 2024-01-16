@@ -42,8 +42,8 @@ namespace CellexalVR.AnalysisLogic
         public readonly List<Color> colors;
         public readonly Dictionary<int, int> groupSizes;
         public bool pointsLoaded;
-        public Dictionary<(Graph graph, int group), Texture2D> groupMasks;
-        public Dictionary<Graph, Texture2D> allGroupsCombinedMask;
+        public Dictionary<(Graph graph, int group), Texture2D> groupMasks = new();
+        public Dictionary<Graph, Texture2D> allGroupsCombinedMask = new();
 
         /// <summary>
         /// Array to go from a group number to an index in <see cref="groups"/>.
@@ -53,7 +53,7 @@ namespace CellexalVR.AnalysisLogic
         private List<Graph.GraphPoint> _points;
         /// <summary>
         /// The points that this selection includes, in the order they were selected.
-        /// Do not modify the contents of this list directly.
+        /// Do not modify the contents of this list directly without calling <see cref="SetPoints(IEnumerable{Graph.GraphPoint}, bool)"/> afterwards.
         /// </summary>
         public List<Graph.GraphPoint> Points
         {
@@ -82,10 +82,12 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public Selection()
         {
-            this.id = GetNextID;
             this.groups = new List<int>();
             this.groupSizes = new Dictionary<int, int>();
-            AssertDirectory(true);
+            do
+            {
+                this.id = GetNextID;
+            } while (!AssertDirectory(false));
             SetPoints(new List<Graph.GraphPoint>());
         }
 
@@ -95,20 +97,100 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="points">The collection to of points this selection should include.</param>
         public Selection(IEnumerable<Graph.GraphPoint> points)
         {
-            this.id = GetNextID;
             this.groups = new List<int>();
             this.groupSizes = new Dictionary<int, int>();
-            AssertDirectory(true);
+            do
+            {
+                this.id = GetNextID;
+            } while (!AssertDirectory(false));
             SetPoints(points);
         }
 
         public Selection(string selectionFilePath)
         {
-            this.id = GetNextID;
             this.groups = new List<int>();
             this.groupSizes = new Dictionary<int, int>();
-            AssertDirectory(false);
-            LoadSelectionFromDisk(selectionFilePath);
+            parentSelectionDirectory = Path.Combine(CellexalUser.UserSpecificFolder, "Selections");
+            bool pathIsDirectory = File.GetAttributes(selectionFilePath) == FileAttributes.Directory;
+            string directoryPath = pathIsDirectory ? selectionFilePath : Path.GetDirectoryName(selectionFilePath);
+            if (directoryPath.Length >= parentSelectionDirectory.Length &&
+                directoryPath[..parentSelectionDirectory.Length].Equals(parentSelectionDirectory))
+            {
+                // get the selection directory name,
+                // e.g. if selectionFilePath = "C:/path/to/selections/Selection_0/selection.txt", we want selectionDirectoryName = "Selection_0"
+                string selectionDirectoryName;
+                if (pathIsDirectory)
+                {
+                    selectionDirectoryName = new DirectoryInfo(selectionFilePath).Name;
+                }
+                else
+                {
+                    selectionDirectoryName = Directory.GetParent(selectionFilePath).Name;
+                }
+
+                if (selectionDirectoryName[..10] == "Selection_")
+                {
+                    if (int.TryParse(selectionDirectoryName[10..], out int selectionID))
+                    {
+                        if (selectionID < _nextID)
+                        {
+                            // selection already exists in correct directory with a used or skipped id, assume it's ok to keep using the id
+                            // this could lead to multiple selection objects with the same id, but as they are pretty immutable that's probably fine
+                            this.id = selectionID;
+                            AssertDirectory(false);
+                            LoadSelectionFromDisk(selectionFilePath);
+                        }
+                        else
+                        {
+                            // selection already exists in correct directory with a so far unnused id
+                            // this probably means the selection directory is from a previous session of cellexalvr
+                            // just use that id so we don't rename any directories, AssertDirectory() will skip over existing directories for future selections
+                            this.id = selectionID;
+                            AssertDirectory(false);
+                            LoadSelectionFromDisk(selectionFilePath);
+                        }
+                    }
+                    else
+                    {
+                        // directory started with "Selection_" but whatever followed was not an integer (?!)
+                        // user probably renamed the directory, force a rename back to what we expect
+                        do
+                        {
+                            this.id = GetNextID;
+                        } while (!AssertDirectory(false));
+
+                        CellexalLog.Log($"Moving {directoryPath} to {savedSelectionDirectory}.");
+                        Directory.Move(directoryPath, savedSelectionDirectory);
+                    }
+                }
+                else
+                {
+                    // we are in the selection directory, but this directory did not start with "Selection_" (?!)
+                    // user probably renamed the directory, force a rename back to what we expect
+                    do
+                    {
+                        this.id = GetNextID;
+                    } while (!AssertDirectory(false));
+
+                    CellexalLog.Log($"Moving {directoryPath} to {savedSelectionDirectory}.");
+                    Directory.Move(directoryPath, savedSelectionDirectory);
+                }
+            }
+            else
+            {
+                // we are not in the selection folder, move the selection there and make sure the new selection folder is renamed properly if needed
+                do
+                {
+                    this.id = GetNextID;
+                } while (!AssertDirectory(false));
+
+                CellexalLog.Log($"Copying {directoryPath} to {savedSelectionDirectory}.");
+                DirectoryInfo dirInfo = new DirectoryInfo(directoryPath);
+                foreach (FileInfo file in dirInfo.GetFiles())
+                {
+                    file.CopyTo(Path.Combine(savedSelectionDirectory, file.Name));
+                }
+            }
         }
 
         public IEnumerator<Graph.GraphPoint> GetEnumerator()
@@ -142,12 +224,13 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         /// <param name="points">The points that should be set to this selection.</param>
         /// <param name="copyIfList">Optional. If <paramref name="points"/> is a <see cref="List{Graph.GraphPoint}"/> and this argument is set to false, this <see cref="Selection"/> will use the reference to the <see cref="List{Graph.GraphPoint}"/>. If set to true, the contents will be copied to a new <see cref="List{Graph.GraphPoint}"/></param>
+        /// <param name="saveToDisk">Optional. True if the selection should also be saved to the disk (default behaviour). False otherwise. Setting this to false can be useful if this selection is being loaded from the disk and the files are already generated.</param>
         /// <remarks>
         /// If <paramref name="points"/> is a <see cref="List{Graph.GraphPoint}"/> and <paramref name="copyIfList"/> is set to false, this function will use the reference to the <see cref="List{Graph.GraphPoint}"/> that was passed. 
         /// Otherwise, the contents will be copied to a new <see cref="List{Graph.GraphPoint}"/>.
         /// Not copying the <see cref="List{Graph.GraphPoint}"/> increases performance considerably when the <see cref="List{Graph.GraphPoint}"/> that is passed with <paramref name="points"/> is not needed in the calling function after this.
         /// </remarks>
-        public void SetPoints(IEnumerable<Graph.GraphPoint> points, bool copyIfList = false)
+        public void SetPoints(IEnumerable<Graph.GraphPoint> points, bool copyIfList = false, bool saveToDisk = true)
         {
             if (points is List<Graph.GraphPoint> pointsAsList)
             {
@@ -197,6 +280,11 @@ namespace CellexalVR.AnalysisLogic
             }
 
             size = _points.Count;
+
+            if (saveToDisk)
+            {
+                SaveGroupMasksToDisk();
+            }
         }
 
         [BurstCompatible]
@@ -213,15 +301,22 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        public void AssertDirectory(bool deleteContents)
+        /// <summary>
+        /// Asserts that a suitable directory exists, this function will create a directory if needed.
+        /// Directory name is based off this selection's <see cref="id"/>.
+        /// </summary>
+        /// <param name="deleteContents">Deletes all content in the directory this selection should use</param>
+        /// <returns>False if a directory exists, but <paramref name="deleteContents"/> is false. True otherwise. This makes the function usable for loops when looking for a suitable directory.</returns>
+        public bool AssertDirectory(bool deleteContents)
         {
             parentSelectionDirectory = Path.Combine(CellexalUser.UserSpecificFolder, "Selections");
+            savedSelectionDirectory = Path.Combine(parentSelectionDirectory, "Selection_" + id);
+            savedSelectionFilePath = Path.Combine(savedSelectionDirectory, "selection.txt");
             if (!Directory.Exists(parentSelectionDirectory))
             {
                 Directory.CreateDirectory(parentSelectionDirectory);
                 CellexalLog.Log($"Created directory {parentSelectionDirectory}");
             }
-            savedSelectionDirectory = Path.Combine(parentSelectionDirectory, "Selection_" + id);
             if (!Directory.Exists(savedSelectionDirectory))
             {
                 Directory.CreateDirectory(savedSelectionDirectory);
@@ -235,15 +330,20 @@ namespace CellexalVR.AnalysisLogic
                     File.Delete(filePath);
                 }
             }
-            savedSelectionFilePath = Path.Combine(savedSelectionDirectory, "selection.txt");
+            else
+            {
+                // directory already existed and we are told not to modify it!
+                return false;
+            }
+            return true;
         }
 
-        public void LoadSelectionFromDisk()
+        private void LoadSelectionFromDisk()
         {
             LoadSelectionFromDisk(savedSelectionFilePath);
         }
 
-        public void LoadSelectionFromDisk(string filePath)
+        private void LoadSelectionFromDisk(string filePath)
         {
             if (_points is not null)
             {
@@ -326,12 +426,11 @@ namespace CellexalVR.AnalysisLogic
                 numPointsAdded++;
             }
 
-            SetPoints(readPoints);
+            SetPoints(readPoints, saveToDisk: false);
 
             string currentDir = Path.GetDirectoryName(filePath);
             if (currentDir != savedSelectionDirectory)
             {
-                AssertDirectory(true);
                 File.Copy(filePath, savedSelectionFilePath);
                 if (GroupMaskFilesExist(currentDir))
                 {
@@ -439,19 +538,22 @@ namespace CellexalVR.AnalysisLogic
             SaveGroupMasksToDisk();
         }
 
-        public void SaveGroupMasksToDisk()
+        /// <summary>
+        /// Saves the group masks to the disk. This is automatically done by the constructor or when points are assigned with.
+        /// </summary>
+        /// <param name="graphToSave">Optional. If left out, all graphs that are currently loaded will be saved, otherwise, only the graph passed in this argument is saved.</param>
+        public void SaveGroupMasksToDisk(Graph graphToSave = null)
         {
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
+            List<Graph> graphs = graphToSave is null ? ReferenceManager.instance.graphManager.Graphs : new List<Graph>() { graphToSave };
             // create group-specific texture dictionary
             // maps a combination of a graph, lod group and selection group to the corresponding texture and its raw texture data array
-            groupMasks = new Dictionary<(Graph graph, int group), Texture2D>();
             Dictionary<(Graph graph, int group), NativeArray<Color32>> rawTextureData = new();
 
 
             // create dictionary for texture with groups combined
-            allGroupsCombinedMask = new Dictionary<Graph, Texture2D>();
             Dictionary<Graph, NativeArray<Color32>> allGroupsCombinedRawTextureData = new();
 
             // save color32 arrays for each color for later
@@ -463,7 +565,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             // initialise textures
-            foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+            foreach (Graph graph in graphs)
             {
                 for (int i = 0; i < colors.Length; ++i)
                 {
@@ -475,7 +577,7 @@ namespace CellexalVR.AnalysisLogic
             }
 
             // fill all textures with black pixels
-            foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+            foreach (Graph graph in graphs)
             {
                 // all textures for a graph are the same size, using a for loop is slow but necessary once
                 NativeArray<Color32> sourceArray = groupMasks[(graph, groups[0])].GetRawTextureData<Color32>();
@@ -512,7 +614,7 @@ namespace CellexalVR.AnalysisLogic
 
 
             // batch up graphpoints in the selection and schedule a job for each batch
-            foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+            foreach (Graph graph in graphs)
             {
                 // reset variables
                 int selectionIndex = 0;
@@ -535,7 +637,7 @@ namespace CellexalVR.AnalysisLogic
                         {
                             continue;
                         }
-                        int groupIndex = reverseGroupIndices[point.Group];
+                        int groupIndex = reverseGroupIndices[Points[selectionIndex].Group];
                         int pointsIndex = pointsProcessed[groupIndex] + pointsToProcess[groupIndex];
                         pointData[groupIndex][pointsIndex] = new GraphPointData() { texCoord = point.textureCoord, group = groupIndex };
                         pointsToProcess[groupIndex]++;
@@ -568,6 +670,11 @@ namespace CellexalVR.AnalysisLogic
                 JobHandle allHandles = JobHandle.CombineDependencies(handlesNativeArray);
                 allHandles.Complete();
                 handlesNativeArray.Dispose();
+
+                foreach (NativeArray<GraphPointData> arr in pointData)
+                {
+                    arr.Dispose();
+                }
             }
 
             // save textures
@@ -588,11 +695,6 @@ namespace CellexalVR.AnalysisLogic
                 string fileName = $"{kvp.Key.GraphName}_combined.png";
                 string savedTextureFilePath = Path.Combine(savedSelectionDirectory, fileName);
                 File.WriteAllBytes(savedTextureFilePath, png);
-            }
-
-            foreach (NativeArray<GraphPointData> arr in pointData)
-            {
-                arr.Dispose();
             }
 
             colors.Dispose();

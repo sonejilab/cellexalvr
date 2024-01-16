@@ -715,8 +715,7 @@ namespace CellexalVR.AnalysisLogic
         [ConsoleCommand("inputReader", aliases: new string[] { "readselectionfile", "rsf" })]
         public Selection ReadSelectionFile(string path, bool select = true)
         {
-            Selection selection = new Selection(path);
-            ReferenceManager.instance.selectionManager.AddSelection(selection);
+            Selection selection = ReferenceManager.instance.selectionManager.LoadSelectionFromDisk(path);
             return selection;
         }
 

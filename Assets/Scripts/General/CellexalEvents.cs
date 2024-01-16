@@ -7,26 +7,27 @@ namespace CellexalVR.General
     public static class CellexalEvents
     {
         public static UnityEvent GraphsLoaded = new UnityEvent();
+        public static UnityEvent<CellexalVR.AnalysisObjects.Graph> GraphCreated = new UnityEvent<CellexalVR.AnalysisObjects.Graph>();
         public static UnityEvent GraphsUnloaded = new UnityEvent();
         public static UnityEvent ScarfObjectLoaded = new UnityEvent();
         public static UnityEvent ScarfUMAPFinished = new UnityEvent();
         public static UnityEvent OutputRecieved = new UnityEvent();
-        
+
         public static UnityEvent PDFArticleRead = new UnityEvent();
 
         public static UnityEvent SelectionStarted = new UnityEvent();
         public static UnityEvent SelectionConfirmed = new UnityEvent();
         public static UnityEvent SelectionCanceled = new UnityEvent();
         public static UnityEvent SelectedFromFile = new UnityEvent();
-        
+
         public static UnityEvent AnnotationsCleared = new UnityEvent();
-        
+
 
         public static UnityEvent BeginningOfHistoryReached = new UnityEvent();
         public static UnityEvent BeginningOfHistoryLeft = new UnityEvent();
         public static UnityEvent EndOfHistoryLeft = new UnityEvent();
         public static UnityEvent EndOfHistoryReached = new UnityEvent();
-        
+
         public static UnityEvent CreatingHeatmap = new UnityEvent();
         public static UnityEvent HeatmapCreated = new UnityEvent();
         public static UnityEvent HeatmapBurned = new UnityEvent();

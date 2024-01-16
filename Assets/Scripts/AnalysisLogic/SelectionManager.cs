@@ -99,6 +99,7 @@ namespace CellexalVR.AnalysisLogic
             //CellexalEvents.GraphsColoredByGene.AddListener(Clear);
             //CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
             CellexalEvents.GraphsReset.AddListener(Clear);
+            CellexalEvents.GraphCreated.AddListener(AssertGroupMasksExist);
         }
 
         /// <summary>
@@ -813,6 +814,42 @@ namespace CellexalVR.AnalysisLogic
             }
 
             return filePath;
+        }
+
+        /// <summary>
+        /// Loads a <see cref="Selection"/> from the disk, if the <see cref="Selection"/> is already loaded, the loaded object is returned.
+        /// </summary>
+        /// <param name="path">The path to the <see cref="Selection"/>. May point to either the <c>selection.txt</c> file or the selection's directory.</param>
+        /// <returns>A <see cref="Selection"/> generated from the given path, or null if the path does not point to a valid <see cref="Selection"/>.</returns>
+        public Selection LoadSelectionFromDisk(string path)
+        {
+            foreach (Selection selection in selections)
+            {
+                if (selection.savedSelectionDirectory.Equals(path) || selection.savedSelectionFilePath.Equals(path))
+                {
+                    return selection;
+                }
+            }
+
+            Selection newSelection = new Selection(path);
+            AddSelection(newSelection);
+            return newSelection;
+        }
+
+        public void AssertGroupMasksExist(Graph graph)
+        {
+            if (selections.Count == 0)
+            {
+                return;
+            }
+
+            if (!selections[0].allGroupsCombinedMask.ContainsKey(graph))
+            {
+                foreach (Selection selection in selections)
+                {
+                    selection.SaveGroupMasksToDisk(graph);
+                }
+            }
         }
 
         /// <summary>
