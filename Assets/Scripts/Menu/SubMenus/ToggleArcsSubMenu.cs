@@ -48,7 +48,7 @@ namespace CellexalVR.Menu.SubMenus
         {
             StartCoroutine(SetControllers());
             CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
-            // attachPoint = Player.instance.rightHand.transform.Find("AttachPoint").gameObject;
+            attachPoint = GameObject.Find("CellexalOpenXRRig/Camera Offset/RightHand Controller/Tools/AttachPoint");
             base.Start();
         }
 

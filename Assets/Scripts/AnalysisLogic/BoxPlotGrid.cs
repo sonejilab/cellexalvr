@@ -26,7 +26,7 @@ namespace CellexalVR.AnalysisLogic
         private float colInc = 0.16f;
         private Vector3 boxPlotStartPos;
         private int layerMask;
-        private int selectionNbr;
+        private Selection selection;
         private BoxPlot hoveredBoxplot;
 
         private void OnValidate()
@@ -95,7 +95,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="selection">A list of graphpoints to use for the boxplots.</param>
         public void GenerateBoxPlots(Selection selection)
         {
-            selectionNbr = referenceManager.selectionManager.fileCreationCtr - 1;
+            this.selection = selection;
             string[] facsNames = referenceManager.cellManager.Facs;
 
             float globalMinValue = float.MaxValue;
@@ -218,7 +218,7 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public void RecolorSelection()
         {
-            referenceManager.inputReader.ReadAndSelectPreviousSelection(selectionNbr);
+            ReferenceManager.instance.graphManager.ColorAllGraphsBySelection(selection);
         }
     }
 }

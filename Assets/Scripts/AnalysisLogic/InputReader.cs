@@ -739,7 +739,6 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
             Selection selection = ReadSelectionFile(file);
-
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
                 graph.ColorBySelection(selection);

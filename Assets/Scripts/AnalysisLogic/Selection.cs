@@ -138,7 +138,6 @@ namespace CellexalVR.AnalysisLogic
                             // this could lead to multiple selection objects with the same id, but as they are pretty immutable that's probably fine
                             this.id = selectionID;
                             AssertDirectory(false);
-                            LoadSelectionFromDisk(selectionFilePath);
                         }
                         else
                         {
@@ -147,7 +146,7 @@ namespace CellexalVR.AnalysisLogic
                             // just use that id so we don't rename any directories, AssertDirectory() will skip over existing directories for future selections
                             this.id = selectionID;
                             AssertDirectory(false);
-                            LoadSelectionFromDisk(selectionFilePath);
+
                         }
                     }
                     else
@@ -191,6 +190,8 @@ namespace CellexalVR.AnalysisLogic
                     file.CopyTo(Path.Combine(savedSelectionDirectory, file.Name));
                 }
             }
+
+            LoadSelectionFromDisk(savedSelectionFilePath);
         }
 
         public IEnumerator<Graph.GraphPoint> GetEnumerator()
@@ -283,8 +284,10 @@ namespace CellexalVR.AnalysisLogic
 
             if (saveToDisk)
             {
-                SaveGroupMasksToDisk();
+                SaveSelectionToDisk();
             }
+            ReferenceManager.instance.selectionManager.UpdateRObjectGrouping(this);
+
         }
 
         [BurstCompatible]
@@ -459,6 +462,7 @@ namespace CellexalVR.AnalysisLogic
 
             TextureHandler.instance?.AddPointsToSelection(indices);
             CellexalLog.Log(string.Format("Added {0} points to selection", numPointsAdded));
+            ReferenceManager.instance.selectionManager.UnloadOldestSelection(this);
             CellexalEvents.CommandFinished.Invoke(true);
             CellexalEvents.SelectedFromFile.Invoke();
             streamReader.Close();

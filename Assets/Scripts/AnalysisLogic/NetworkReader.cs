@@ -156,8 +156,7 @@ namespace CellexalVR.AnalysisLogic
                         newCollider.isTrigger = true;
                     }
 
-                    var networkHandlerName =
-                        "NetworkHandler_" + graphName + "-" + (referenceManager.selectionManager.fileCreationCtr + 1);
+                    var networkHandlerName = $"NetworkHandler_{graphName}_{selection.id}";
                     GameObject existingHandler = GameObject.Find(networkHandlerName);
                     while (existingHandler != null)
                     {

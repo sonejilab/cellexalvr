@@ -374,7 +374,17 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-
+        /// <summary>
+        /// Colors all graphs by a selection.
+        /// </summary>
+        /// <param name="selection">The selection to color by.</param>
+        public void ColorAllGraphsBySelection(Selection selection)
+        {
+            foreach (Graph graph in Graphs)
+            {
+                graph.ColorBySelection(selection);
+            }
+        }
 
         /// <summary>
         /// Deletes all graphs and networks in the scene.

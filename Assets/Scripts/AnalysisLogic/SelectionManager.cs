@@ -21,15 +21,6 @@ namespace CellexalVR.AnalysisLogic
     public class SelectionManager : MonoBehaviour
     {
         public ReferenceManager referenceManager;
-        public GameObject annotationTextPrefab;
-        [HideInInspector]
-        public bool selectionConfirmed = false;
-        [HideInInspector]
-        public bool heatmapGrabbed = false;
-        [HideInInspector]
-        public int fileCreationCtr = 0;
-        public ushort hapticIntensity = 2000;
-        public int groupCount;
 
         private GraphManager graphManager;
         private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
@@ -48,6 +39,8 @@ namespace CellexalVR.AnalysisLogic
 
         private List<Selection> selections = new List<Selection>();
         private Dictionary<string, Selection> selectionStringMapping = new Dictionary<string, Selection>();
+        private Queue<Selection> loadedSelections = new Queue<Selection>();
+        private int maxLoadedSelections = 5;
 
         public bool RObjectUpdating { get; private set; }
 
@@ -481,10 +474,6 @@ namespace CellexalVR.AnalysisLogic
 
         public void ConfirmSelectionForBigFolder()
         {
-
-            DumpSelectionToTextFile(TextureHandler.instance.sps);
-
-
             TextureHandler.instance.sps.Clear();
 
             CellexalEvents.SelectionConfirmed.Invoke();
@@ -530,7 +519,6 @@ namespace CellexalVR.AnalysisLogic
             Selection newSelection = new Selection(selectedCells);
             selections.Add(newSelection);
             selectionStringMapping[newSelection.ToString()] = newSelection;
-            newSelection.SaveSelectionToDisk();
 
             List<int> groups = new List<int>();
             foreach (Graph.GraphPoint gp in selectedCells)
@@ -563,9 +551,8 @@ namespace CellexalVR.AnalysisLogic
             historyIndexOffset = 0;
             CellexalEvents.SelectionConfirmed.Invoke();
             selectionMade = false;
-            selectionConfirmed = true;
 
-            //selectionToolMenu.ConfirmSelection();
+            StartCoroutine(UpdateRObjectGroupingCoroutine(newSelection));
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
@@ -575,7 +562,13 @@ namespace CellexalVR.AnalysisLogic
             selectionStringMapping[selection.ToString()] = selection;
         }
 
-        private IEnumerator UpdateRObjectGrouping()
+
+        public void UpdateRObjectGrouping(Selection selection)
+        {
+            StartCoroutine(UpdateRObjectGroupingCoroutine(selection));
+        }
+
+        private IEnumerator UpdateRObjectGroupingCoroutine(Selection selection)
         {
             RObjectUpdating = true;
 
@@ -583,21 +576,20 @@ namespace CellexalVR.AnalysisLogic
             yield return null;
 
             //string function = "userGrouping";
-            string latestSelection = (CellexalUser.UserSpecificFolder + "\\selection"
-                                                                      + (fileCreationCtr - 1) + ".txt").MakeDoubleBackslash();
+            string latestSelection = selection.savedSelectionFilePath.MakeDoubleBackslash();
 
             string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash() + " " + latestSelection;
-            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\update_grouping.R").FixFilePath();
+            string rScriptFilePath = Path.Combine(Application.streamingAssetsPath, "R", "update_grouping.R");
 
             // Wait for server to start up and not be busy
-            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            bool rServerReady = File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid")) &&
+                                !File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R")) &&
+                                !File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock"));
             while (!rServerReady || !RScriptRunner.serverIdle)
             {
-                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                rServerReady = File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid")) &&
+                               !File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R")) &&
+                               !File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock"));
                 yield return null;
             }
 
@@ -606,7 +598,7 @@ namespace CellexalVR.AnalysisLogic
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             t.Start();
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            while (t.IsAlive || File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R")))
             {
                 yield return null;
             }
@@ -703,120 +695,6 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Dumps the current selection to a .txt file.
-        /// </summary>
-        public void DumpSelectionToTextFile()
-        {
-            DumpSelectionToTextFile(selectedCells);
-        }
-
-        public string DumpSelectionToTextFile(Dictionary<int, int> points, string filePath = "")
-        {
-            filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-            if (File.Exists(filePath + ".time"))
-            {
-                File.Delete(filePath + ".time");
-            }
-            using (StreamWriter file = new StreamWriter(filePath))
-            {
-                CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
-                CellexalLog.Log("\tSelection consists of  " + points.Values.Count + " points");
-                if (selectionHistory != null)
-                    CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
-
-                foreach (KeyValuePair<int, int> kvp in TextureHandler.instance.sps)
-                {
-                    file.Write(kvp.Key);
-                    file.Write("\t");
-                    Color c = SelectionToolCollider.instance.Colors[kvp.Value];
-                    int r = (int)(c.r * 255);
-                    int g = (int)(c.g * 255);
-                    int b = (int)(c.b * 255);
-                    // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
-                    file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
-                    file.Write("\t");
-                    //file.Write(graphName);
-                    //file.Write("\t");
-                    file.Write(kvp.Value);
-                    file.WriteLine();
-                }
-                return filePath;
-            }
-        }
-
-
-        /// <summary>
-        /// Dumps the confirmed selection to a text file in the output folder.
-        /// The file contains the cell id and the colour of the selection group and which graph it was selected from.
-        /// </summary>
-        /// <param name="selection"></param>
-        public string DumpSelectionToTextFile(List<Graph.GraphPoint> selection, string filePath = "")
-        {
-            if (filePath != "")
-            {
-                string savedSelectionsPath = CellexalUser.UserSpecificFolder + @"\SavedSelections\";
-                if (!Directory.Exists(savedSelectionsPath))
-                {
-                    Directory.CreateDirectory(savedSelectionsPath);
-                }
-
-                filePath = savedSelectionsPath + filePath + ".txt";
-            }
-
-            else
-            {
-                filePath = CellexalUser.UserSpecificFolder + "\\selection" + (fileCreationCtr++) + ".txt";
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-                if (File.Exists(filePath + ".time"))
-                {
-                    File.Delete(filePath + ".time");
-                }
-                using (StreamWriter file = new StreamWriter(filePath))
-                {
-                    CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
-                    CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
-                    if (selectionHistory != null)
-                        CellexalLog.Log("\tThere are " + selectionHistory.Count + " entries in the history");
-                    string graphName = selection[0].parent.GraphName;
-                    foreach (Graph.GraphPoint gp in selection)
-                    {
-                        file.Write(gp.Label);
-                        file.Write("\t");
-                        Color c = gp.GetColor();
-                        int r = (int)(c.r * 255);
-                        int g = (int)(c.g * 255);
-                        int b = (int)(c.b * 255);
-                        // writes the color as #RRGGBB where RR, GG and BB are hexadecimal values
-                        file.Write(string.Format("#{0:X2}{1:X2}{2:X2}", r, g, b));
-                        file.Write("\t");
-                        file.Write(graphName);
-                        file.Write("\t");
-                        file.Write(gp.Group);
-                        file.WriteLine();
-                    }
-                }
-
-                if (!referenceManager.sessionHistoryList.Contains(filePath, Definitions.HistoryEvent.SELECTION))
-                {
-                    referenceManager.sessionHistoryList.AddEntry(selection.ToString(), Definitions.HistoryEvent.SELECTION);
-                }
-
-                //referenceManager.selectionFromPreviousMenu.ReadSelectionFiles();
-
-                StartCoroutine(UpdateRObjectGrouping());
-            }
-
-            return filePath;
-        }
-
-        /// <summary>
         /// Loads a <see cref="Selection"/> from the disk, if the <see cref="Selection"/> is already loaded, the loaded object is returned.
         /// </summary>
         /// <param name="path">The path to the <see cref="Selection"/>. May point to either the <c>selection.txt</c> file or the selection's directory.</param>
@@ -834,6 +712,18 @@ namespace CellexalVR.AnalysisLogic
             Selection newSelection = new Selection(path);
             AddSelection(newSelection);
             return newSelection;
+        }
+
+        public void UnloadOldestSelection(Selection newestSelection)
+        {
+            loadedSelections.Enqueue(newestSelection);
+
+            if (loadedSelections.Count <= maxLoadedSelections)
+            {
+                return;
+            }
+
+            loadedSelections.Dequeue().UnloadSelection();
         }
 
         public void AssertGroupMasksExist(Graph graph)
