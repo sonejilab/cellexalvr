@@ -4,11 +4,14 @@ using CellexalVR.Extensions;
 using CellexalVR.Filters;
 using CellexalVR.General;
 using CellexalVR.Interaction;
+using CellexalVR.Menu.Buttons;
+using CellexalVR.Menu.SubMenus;
 using CellexalVR.Multiuser;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -20,12 +23,14 @@ namespace CellexalVR.AnalysisLogic
     /// </summary>
     public class SelectionManager : MonoBehaviour
     {
-        public ReferenceManager referenceManager;
-
         private GraphManager graphManager;
         private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        // the cells selected so far, maps a cell to its index in the selection. not all indices are always present, there will be gaps if cells have changed group.
         private List<Graph.GraphPoint> selectedCells = new List<Graph.GraphPoint>();
-        private List<Graph.GraphPoint> lastSelectedCells = new List<Graph.GraphPoint>();
+        private Queue<Graph.GraphPoint> cellsToMove = new Queue<Graph.GraphPoint>();
+        private int previousMoveIndex = -1;
+        private int movesCapacity = 10000000;
+        private int[] groupChanges;
         private bool selectionMade = false;
         private SelectionToolCollider selectionToolCollider;
 
@@ -36,7 +41,7 @@ namespace CellexalVR.AnalysisLogic
         private int historyIndexOffset;
         private MultiuserMessageSender multiuserMessageSender;
         private FilterManager filterManager;
-
+        private CellexalButton confirmSelectionButton;
         private List<Selection> selections = new List<Selection>();
         private Dictionary<string, Selection> selectionStringMapping = new Dictionary<string, Selection>();
         private Queue<Selection> loadedSelections = new Queue<Selection>();
@@ -70,29 +75,110 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        private void OnValidate()
+        private void Awake()
         {
-            if (gameObject.scene.IsValid())
-            {
-                referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-            }
-        }
-
-        void Awake()
-        {
-            graphManager = referenceManager.graphManager;
+            CellexalEvents.ConfigLoaded.AddListener(OnConfigLoaded);
         }
 
         private void Start()
         {
-            rightController = referenceManager.rightController;
-            multiuserMessageSender = referenceManager.multiuserMessageSender;
-            selectionToolCollider = referenceManager.selectionToolCollider;
-            filterManager = referenceManager.filterManager;
+            graphManager = ReferenceManager.instance.graphManager;
+            rightController = ReferenceManager.instance.rightController;
+            multiuserMessageSender = ReferenceManager.instance.multiuserMessageSender;
+            selectionToolCollider = ReferenceManager.instance.selectionToolCollider;
+            filterManager = ReferenceManager.instance.filterManager;
+            confirmSelectionButton = ReferenceManager.instance.selectionMenu.transform.Find("Confirm Selection Button").GetComponent<CellexalButton>();
             //CellexalEvents.GraphsColoredByGene.AddListener(Clear);
             //CellexalEvents.GraphsColoredByIndex.AddListener(Clear);
             CellexalEvents.GraphsReset.AddListener(Clear);
             CellexalEvents.GraphCreated.AddListener(AssertGroupMasksExist);
+        }
+
+        private void Update()
+        {
+            if (cellsToMove.Count > 0)
+            {
+                if (previousMoveIndex < 0 || previousMoveIndex >= selectedCells.Count)
+                {
+                    previousMoveIndex = selectedCells.Count / 2;
+                }
+
+                int moveCost = 0;
+                while (moveCost < movesCapacity && cellsToMove.Count > 0)
+                {
+                    Graph.GraphPoint point = cellsToMove.Dequeue();
+                    int index = PingPongSearch(selectedCells, point, previousMoveIndex);
+                    selectedCells.RemoveAt(index);
+                    selectedCells.Add(point);
+                    moveCost += selectedCells.Count;
+                }
+
+                if (cellsToMove.Count > 0)
+                {
+                    confirmSelectionButton.SetButtonActivated(false);
+                    ReferenceManager.instance.cellsEvaluatingText.text = cellsToMove.Count.ToString();
+                }
+                else
+                {
+                    confirmSelectionButton.SetButtonActivated(true);
+                    ReferenceManager.instance.cellsEvaluatingText.text = "";
+                }
+            }
+        }
+
+        /// <summary>
+        /// Searches a list for a graphpoint by starting at an index and searching forwards and backwards from that index.
+        /// </summary>
+        /// <param name="list">The list of graphpoints to search.</param>
+        /// <param name="point">The graphpoint to search for.</param>
+        /// <param name="startIndex">An index to guess where to start.</param>
+        /// <returns>The index of <paramref name="point"/>, if it is present in the list. -1 otherwise.</returns>
+        private int PingPongSearch(List<Graph.GraphPoint> list, Graph.GraphPoint point, int startIndex)
+        {
+            if (list[startIndex] == point)
+            {
+                return startIndex;
+            }
+
+            int range = 1;
+            int maxRange = list.Count / 2;
+            int forwardIndex = startIndex + range;
+            int backwardIndex = startIndex - range;
+            while (range <= maxRange)
+            {
+                if (forwardIndex >= list.Count)
+                {
+                    // loop around if we hit the end of the list
+                    forwardIndex -= list.Count;
+                }
+
+                if (list[forwardIndex] == point)
+                {
+                    return forwardIndex;
+                }
+
+                if (backwardIndex < 0)
+                {
+                    // loop around if we hit the start of the list
+                    backwardIndex += list.Count;
+                }
+
+                if (list[backwardIndex] == point)
+                {
+                    return backwardIndex;
+                }
+
+                forwardIndex++;
+                backwardIndex--;
+                range++;
+            }
+
+            return -1;
+        }
+
+        private void OnConfigLoaded()
+        {
+            groupChanges = new int[CellexalConfig.Config.SelectionToolColors.Length];
         }
 
         /// <summary>
@@ -119,7 +205,7 @@ namespace CellexalVR.AnalysisLogic
         public void RemoveGraphpointFromSelection(Graph.GraphPoint graphPoint)
         {
 
-            referenceManager.multiuserMessageSender.SendMessageSelectedRemove(graphPoint.parent.GraphName, graphPoint.Label);
+            ReferenceManager.instance.multiuserMessageSender.SendMessageSelectedRemove(graphPoint.parent.GraphName, graphPoint.Label);
             RemoveGraphpointFromSelection(graphPoint.parent.GraphName, graphPoint.Label);
         }
 
@@ -160,15 +246,16 @@ namespace CellexalVR.AnalysisLogic
 
             selectionHistory.Add(new HistoryListInfo(graphPoint, -1, oldGroup, newNode));
 
-            referenceManager.legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
-            if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
+            LegendManager legendManager = ReferenceManager.instance.legendManager;
+            legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
+            if (legendManager.currentLegend != legendManager.desiredLegend)
             {
-                referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
+                legendManager.ActivateLegend(legendManager.desiredLegend);
             }
 
             if (!newNode)
             {
-                referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(oldGroup.ToString(), -1, Color.white);
+                legendManager.selectionLegend.AddOrUpdateEntry(oldGroup.ToString(), -1, Color.white);
             }
 
             selectedCells.Remove(graphPoint);
@@ -193,7 +280,7 @@ namespace CellexalVR.AnalysisLogic
         {
             if (filterManager.currentFilter != null)
             {
-                referenceManager.filterManager.AddCellToEval(graphPoint, newGroup);
+                ReferenceManager.instance.filterManager.AddCellToEval(graphPoint, newGroup);
             }
 
             else
@@ -241,14 +328,8 @@ namespace CellexalVR.AnalysisLogic
 
             bool newNode = !graphPoint.unconfirmedInSelection;
             graphPoint.unconfirmedInSelection = true;
-            if (historyIndexOffset != 0)
-            {
-                // if we have undone some selected graphpoints, then they should be removed from the history
-                selectionHistory.RemoveRange(selectionHistory.Count - historyIndexOffset, historyIndexOffset);
-                historyIndexOffset = 0;
-                // turn off the redo buttons
-                CellexalEvents.EndOfHistoryReached.Invoke();
-            }
+            selectedCells.Add(graphPoint);
+            CullExcessHistory();
 
             if (!selectionMade)
             {
@@ -261,16 +342,17 @@ namespace CellexalVR.AnalysisLogic
             // The user might select cells that already have that color
 
             selectionHistory.Add(new HistoryListInfo(graphPoint, newGroup, oldGroup, newNode));
-            referenceManager.legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
-            if (referenceManager.legendManager.currentLegend != referenceManager.legendManager.desiredLegend)
+            LegendManager legendManager = ReferenceManager.instance.legendManager;
+            legendManager.desiredLegend = LegendManager.Legend.SelectionLegend;
+            if (legendManager.currentLegend != legendManager.desiredLegend)
             {
-                referenceManager.legendManager.ActivateLegend(referenceManager.legendManager.desiredLegend);
+                legendManager.ActivateLegend(legendManager.desiredLegend);
             }
 
-            referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(newGroup.ToString(), 1, color);
+            legendManager.selectionLegend.AddOrUpdateEntry(newGroup.ToString(), 1, color);
             if (!newNode)
             {
-                referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(oldGroup.ToString(), -1, Color.white);
+                legendManager.selectionLegend.AddOrUpdateEntry(oldGroup.ToString(), -1, Color.white);
             }
 
             if (newNode)
@@ -279,21 +361,103 @@ namespace CellexalVR.AnalysisLogic
                 {
                     CellexalEvents.SelectionStarted.Invoke();
                 }
-
-                selectedCells.Add(graphPoint);
             }
-
             else
             {
-                // If graphPoint was reselected. Remove it and add again so it is moved to the end of the list.
-                selectedCells.Remove(graphPoint);
-                selectedCells.Add(graphPoint);
-
+                cellsToMove.Enqueue(graphPoint);
             }
+
             if (hapticFeedback && selectionToolCollider.hapticFeedbackThisFrame)
             {
                 selectionToolCollider.hapticFeedbackThisFrame = false;
                 rightController.SendHapticImpulse(0.2f, 0.05f);
+            }
+        }
+
+        public void AddGraphPointsToSelection(IEnumerable<Graph.GraphPoint> points, int group)
+        {
+            AddGraphPointsToSelection(points, group, CellexalConfig.Config.SelectionToolColors[group]);
+        }
+
+        private void AddGraphPointsToSelection(IEnumerable<Graph.GraphPoint> points, int newGroup, Color color)
+        {
+            if (points.Count() == 0)
+            {
+                return;
+            }
+            Graph parentGraph = points.First().parent;
+            List<Graph.GraphPoint> pointsInOtherGraph = new List<Graph.GraphPoint>();
+            foreach (Graph graph in graphManager.Graphs)
+            {
+                if (graph != parentGraph)
+                {
+                    pointsInOtherGraph.Clear();
+                    pointsInOtherGraph.AddRange(points.Select((p) => graph.FindGraphPoint(p.Label)));
+                    graph.ColorGraphPointsSelectionColor(pointsInOtherGraph, newGroup, true);
+                }
+                else
+                {
+                    graph.ColorGraphPointsSelectionColor(points, newGroup, true);
+                }
+            }
+
+            CullExcessHistory();
+
+            if (!selectionMade)
+            {
+                // if this is a new selection we should reset some stuff
+                selectionMade = true;
+                // turn on the undo buttons
+                CellexalEvents.BeginningOfHistoryLeft.Invoke();
+            }
+            LegendManager legendManager = ReferenceManager.instance.legendManager;
+            if (legendManager.currentLegend != legendManager.desiredLegend)
+            {
+                legendManager.ActivateLegend(legendManager.desiredLegend);
+            }
+
+            for (int i = 0; i < groupChanges.Length; ++i)
+            {
+                groupChanges[i] = 0;
+            }
+
+            foreach (Graph.GraphPoint point in points)
+            {
+                int oldGroup = point.Group;
+                point.Group = newGroup;
+                bool newNode = !point.unconfirmedInSelection;
+                point.unconfirmedInSelection = true;
+                selectionHistory.Add(new HistoryListInfo(point, newGroup, oldGroup, newNode));
+                groupChanges[point.Group]++;
+                if (!newNode)
+                {
+                    groupChanges[oldGroup]--;
+                    cellsToMove.Enqueue(point);
+                }
+                else
+                {
+                    selectedCells.Add(point);
+                }
+            }
+
+            for (int i = 0; i < groupChanges.Length; ++i)
+            {
+                if (groupChanges[i] != 0)
+                {
+                    legendManager.selectionLegend.AddOrUpdateEntry(i.ToString(), groupChanges[i], CellexalConfig.Config.SelectionToolColors[i]);
+                }
+            }
+        }
+
+        private void CullExcessHistory()
+        {
+            if (historyIndexOffset != 0)
+            {
+                // if we have undone some selected graphpoints, then they should be removed from the history
+                selectionHistory.RemoveRange(selectionHistory.Count - historyIndexOffset, historyIndexOffset);
+                historyIndexOffset = 0;
+                // turn off the redo buttons
+                CellexalEvents.EndOfHistoryReached.Invoke();
             }
         }
 
@@ -306,7 +470,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="color">Colour that the graphpoint should be coloured by.</param>
         public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color)
         {
-            Graph.GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+            Graph.GraphPoint gp = ReferenceManager.instance.graphManager.FindGraphPoint(graphName, label);
             AddGraphpoint(gp, newGroup, true, color);
         }
 
@@ -320,7 +484,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="cube">If a cube should be coloured as well as the graphpoint.</param>
         public void DoClientSelectAdd(string graphName, string label, int newGroup, Color color, bool cube)
         {
-            Graph.GraphPoint gp = referenceManager.graphManager.FindGraphPoint(graphName, label);
+            Graph.GraphPoint gp = ReferenceManager.instance.graphManager.FindGraphPoint(graphName, label);
             AddGraphpoint(gp, newGroup, true, color);
         }
 
@@ -356,7 +520,7 @@ namespace CellexalVR.AnalysisLogic
                     gp.ColorSelectionColor(info.fromGroup, !info.newNode);
                 }
             }
-            referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(info.toGroup.ToString(), -1, selectionToolCollider.Colors[info.toGroup]);
+            ReferenceManager.instance.legendManager.selectionLegend.AddOrUpdateEntry(info.toGroup.ToString(), -1, selectionToolCollider.Colors[info.toGroup]);
 
             if (info.newNode)
             {
@@ -365,7 +529,7 @@ namespace CellexalVR.AnalysisLogic
             }
             else
             {
-                referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(info.fromGroup.ToString(), 1, selectionToolCollider.Colors[info.fromGroup]);
+                ReferenceManager.instance.legendManager.selectionLegend.AddOrUpdateEntry(info.fromGroup.ToString(), 1, selectionToolCollider.Colors[info.fromGroup]);
             }
 
             historyIndexOffset++;
@@ -400,7 +564,7 @@ namespace CellexalVR.AnalysisLogic
                 Graph.GraphPoint gp = graphManager.FindGraphPoint(graph.GraphName, info.graphPoint.Label);
                 gp.ColorSelectionColor(info.toGroup, info.toGroup != -1);
             }
-            referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(info.toGroup.ToString(), 1, selectionToolCollider.Colors[info.toGroup]);
+            ReferenceManager.instance.legendManager.selectionLegend.AddOrUpdateEntry(info.toGroup.ToString(), 1, selectionToolCollider.Colors[info.toGroup]);
 
             if (info.newNode)
             {
@@ -410,7 +574,7 @@ namespace CellexalVR.AnalysisLogic
 
             else
             {
-                referenceManager.legendManager.selectionLegend.AddOrUpdateEntry(info.fromGroup.ToString(), -1, selectionToolCollider.Colors[info.fromGroup]);
+                ReferenceManager.instance.legendManager.selectionLegend.AddOrUpdateEntry(info.fromGroup.ToString(), -1, selectionToolCollider.Colors[info.fromGroup]);
             }
 
             historyIndexOffset--;
@@ -509,30 +673,12 @@ namespace CellexalVR.AnalysisLogic
                 return;
             }
 
-            // create .txt file with latest selection
-            lastSelectedCells.Clear();
-            // Ensure points are unique. Because distinct keeps first occurence but we want to keep last we need to reverse the list before using it and then reverse back.
-            //IEnumerable<Graph.GraphPoint> uniqueCells = selectedCells.Reverse<Graph.GraphPoint>().Distinct().Reverse();
-            // Remove line below if the cells should be in the same order as they were selected no matter which group.  
-            //IEnumerable<Graph.GraphPoint> sortedUniqueCells = uniqueCells.OrderBy(x => x.Group);
-            //DumpSelectionToTextFile(sortedUniqueCells.ToList());
             Selection newSelection = new Selection(selectedCells);
             selections.Add(newSelection);
             selectionStringMapping[newSelection.ToString()] = newSelection;
 
-            List<int> groups = new List<int>();
             foreach (Graph.GraphPoint gp in selectedCells)
             {
-                if (!groups.Contains(gp.Group))
-                {
-                    groups.Add(gp.Group);
-                }
-
-                //if (gp.CustomColor)
-                //    gp.SetOutLined(false, gp.Material.color);
-                //else
-                //    gp.SetOutLined(false, gp.CurrentGroup);
-                //gp.RecolorSelectionColor(gp.group, false);
                 foreach (Graph graph in graphManager.Graphs)
                 {
                     Graph.GraphPoint graphPoint = graph.FindGraphPoint(gp.Label);
@@ -542,13 +688,12 @@ namespace CellexalVR.AnalysisLogic
                     }
                 }
 
-                lastSelectedCells.Add(gp);
                 gp.unconfirmedInSelection = false;
             }
 
-            selectedCells = new List<Graph.GraphPoint>(); // the old list is now in newSelection, so we have to make a new one
             selectionHistory.Clear();
             historyIndexOffset = 0;
+            selectedCells.Clear();
             CellexalEvents.SelectionConfirmed.Invoke();
             selectionMade = false;
 
@@ -614,12 +759,12 @@ namespace CellexalVR.AnalysisLogic
         public void SelectAll()
         {
             Graph g = graphManager.originalGraphs.Find(x => !x.GraphName.Contains("Slice"));
-            foreach (Cell c in referenceManager.cellManager.GetCells())
+            foreach (Cell c in ReferenceManager.instance.cellManager.GetCells())
             {
                 Graph.GraphPoint gp = g.FindGraphPoint(c.Label);
                 if (filterManager.currentFilter != null)
                 {
-                    referenceManager.filterManager.AddCellToEval(gp, selectionToolCollider.CurrentColorIndex);
+                    ReferenceManager.instance.filterManager.AddCellToEval(gp, selectionToolCollider.CurrentColorIndex);
                 }
                 else
                 {
@@ -646,7 +791,6 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public void Clear()
         {
-            lastSelectedCells.Clear();
             selectionHistory.Clear();
             selectedCells.Clear();
             historyIndexOffset = 0;
@@ -657,14 +801,9 @@ namespace CellexalVR.AnalysisLogic
         /// Get the current (not yet confirmed) selection.
         /// </summary>
         /// <returns> A List of all graphpoints currently selected. </returns>
-        public List<Graph.GraphPoint> GetCurrentSelection()
+        public int GetCurrentSelectionSize()
         {
-            return selectedCells;
-        }
-
-        private List<Graph.GraphPoint> GetCurrentSelectionGroup(int index)
-        {
-            return selectedCells.FindAll(gp => gp.Group == index);
+            return selectedCells.Count;
         }
 
         /// <summary>
@@ -749,7 +888,7 @@ namespace CellexalVR.AnalysisLogic
         {
             foreach (Graph.GraphPoint gp in selectedCells)
             {
-                foreach (Graph.GraphPoint g in referenceManager.cellManager.GetCell(gp.Label).GraphPoints)
+                foreach (Graph.GraphPoint g in ReferenceManager.instance.cellManager.GetCell(gp.Label).GraphPoints)
                 {
                     g.ColorSelectionColor(gp.Group, true);
                 }

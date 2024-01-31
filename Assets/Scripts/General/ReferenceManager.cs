@@ -14,6 +14,7 @@ using CellexalVR.Spatial;
 using CellexalVR.Tools;
 using CellexalVR.Tutorial;
 using SQLiter;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -69,6 +70,7 @@ namespace CellexalVR.General
         public ColorByCellStatMenu cellStatMenu;
         public GraphFromMarkersMenu createFromMarkerMenu;
         public SelectionFromPreviousMenu selectionFromPreviousMenu;
+        public TextMeshPro cellsEvaluatingText;
         public ColorByGeneMenu colorByGeneMenu;
         public FilterMenu filterMenu;
         public VelocitySubMenu velocitySubMenu;
@@ -209,6 +211,7 @@ namespace CellexalVR.General
             indexMenu = mainMenu.GetComponentInChildren<ColorByIndexMenu>(true);
             createFromMarkerMenu = mainMenu.GetComponentInChildren<GraphFromMarkersMenu>(true);
             selectionFromPreviousMenu = mainMenu.GetComponentInChildren<SelectionFromPreviousMenu>(true);
+            cellsEvaluatingText = mainMenu.transform.Find("Selection Tool Menu/Cells Evaluating Text").GetComponent<TextMeshPro>();
             colorByGeneMenu = mainMenu.GetComponentInChildren<ColorByGeneMenu>(true);
             filterMenu = mainMenu.GetComponentInChildren<FilterMenu>(true);
             velocitySubMenu = mainMenu.GetComponentInChildren<VelocitySubMenu>(true);

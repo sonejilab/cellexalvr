@@ -28,9 +28,14 @@ namespace CellexalVR.AnalysisLogic
 
         private void OnConfigLoaded()
         {
+            List<string> attributes = ReferenceManager.instance.cellManager.AttributesNames;
+            if (attributes is null)
+            {
+                return;
+            }
+
             string generatedDirectoryPath = Path.Join(Dataset.instance.sourceFolder, "Generated");
             Dictionary<(Graph graph, string attribute), Texture2D> textures = new Dictionary<(Graph, string), Texture2D>();
-            List<string> attributes = ReferenceManager.instance.cellManager.AttributesNames;
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
             {
                 foreach (string attribute in attributes)

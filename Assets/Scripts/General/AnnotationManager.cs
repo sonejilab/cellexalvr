@@ -225,7 +225,7 @@ namespace CellexalVR.General
                 using (StreamWriter file = new StreamWriter(filePath, true))
                 {
                     CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
-                    CellexalLog.Log("\tSelection consists of  " + selectionManager.GetCurrentSelection().Count +
+                    CellexalLog.Log("\tSelection consists of  " + selectionManager.GetCurrentSelectionSize() +
                                     " points");
                     if (selectionManager.selectionHistory != null)
                         CellexalLog.Log("\tThere are " + selectionManager.selectionHistory.Count +

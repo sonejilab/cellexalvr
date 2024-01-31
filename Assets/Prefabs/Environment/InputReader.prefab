@@ -139,6 +139,7 @@ MonoBehaviour:
   cellStatMenu: {fileID: 0}
   createFromMarkerMenu: {fileID: 0}
   selectionFromPreviousMenu: {fileID: 0}
+  cellsEvaluatingText: {fileID: 0}
   colorByGeneMenu: {fileID: 0}
   filterMenu: {fileID: 0}
   velocitySubMenu: {fileID: 0}

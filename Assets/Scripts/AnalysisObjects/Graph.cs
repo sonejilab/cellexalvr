@@ -1369,6 +1369,37 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
+        /// Colors a collection of graphpoints by one of the selection colors.
+        /// </summary>
+        /// <param name="points">The points to color.</param>
+        /// <param name="i">An integer betweeen 0 and the number of selection colors.</param>
+        /// <param name="outline">True if the graph point should get an outline as well, false otherwise.</param>
+        public void ColorGraphPointsSelectionColor(IEnumerable<GraphPoint> points, int i, bool outline)
+        {
+            byte greenChannel = (byte)(outline ? 4 : 0);
+            byte blueChannel = (byte)(outline ? 38 : 0);
+            byte redChannel;
+            if (i == -1)
+            {
+                redChannel = 255;
+            }
+            else
+            {
+                redChannel = (byte)(nbrOfExpressionColors + i);
+            }
+
+            Color32 finalColor = new Color32(redChannel, greenChannel, blueChannel, 255);
+            NativeArray<Color32> rawData = texture.GetRawTextureData<Color32>();
+            foreach (GraphPoint point in points)
+            {
+                rawData[point.textureCoord.y * textureWidth + point.textureCoord.x] = finalColor;
+            }
+
+            textureChanged = true;
+        }
+
+
+        /// <summary>
         /// Sets the green channel of the point so transparency will be activated in the shader.
         /// </summary>
         /// <param name="toggle"></param>

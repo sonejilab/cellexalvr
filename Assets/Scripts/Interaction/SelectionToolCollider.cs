@@ -240,17 +240,17 @@ namespace CellexalVR.Interaction
                 {
                     var closestPoints = graph.MinkowskiDetection(activeCollider.transform.position, boundsCenter,
                         boundsExtents, currentColorIndex);
-                    foreach (var point in closestPoints)
+                    if (CurrentMeshIndex > 3)
                     {
-                        if (CurrentMeshIndex > 3)
+                        foreach (var point in closestPoints)
                         {
                             selectionManager.RemoveGraphpointFromSelection(point);
                         }
 
-                        else
-                        {
-                            selectionManager.AddGraphpointToSelection(point, currentColorIndex, true);
-                        }
+                    }
+                    else
+                    {
+                        selectionManager.AddGraphPointsToSelection(closestPoints, currentColorIndex);
                     }
                 }
 
