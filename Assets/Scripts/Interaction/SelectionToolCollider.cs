@@ -250,7 +250,14 @@ namespace CellexalVR.Interaction
                     }
                     else
                     {
-                        selectionManager.AddGraphPointsToSelection(closestPoints, currentColorIndex);
+                        if (ReferenceManager.instance.filterManager.currentFilter is not null)
+                        {
+                            ReferenceManager.instance.filterManager.AddCellsToEval(closestPoints, currentColorIndex);
+                        }
+                        else
+                        {
+                            selectionManager.AddGraphPointsToSelection(closestPoints, currentColorIndex);
+                        }
                     }
                 }
 

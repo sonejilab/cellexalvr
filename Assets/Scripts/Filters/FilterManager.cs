@@ -202,6 +202,19 @@ namespace CellexalVR.Filters
             queuedCells.Add(new Tuple<Graph.GraphPoint, int>(graphPoint, group));
         }
 
+        /// <summary>
+        /// Adds multiple cells to evaluate later with the current filter.
+        /// </summary>
+        /// <param name="points">The points to evaluate later.</param>
+        /// <param name="group">The group to give the points if they pass the filter.</param>
+        public void AddCellsToEval(IEnumerable<Graph.GraphPoint> points, int group)
+        {
+            foreach (Graph.GraphPoint point in points)
+            {
+                queuedCells.Add(new Tuple<Graph.GraphPoint, int>(point, group));
+            }
+        }
+
         private void Update()
         {
             if (!evaluating && currentFilter != null && queuedCells.Count > 0)
@@ -263,6 +276,8 @@ namespace CellexalVR.Filters
             CellManager cellManager = referenceManager.cellManager;
             SelectionManager selectionManager = referenceManager.selectionManager;
 
+            List<Graph.GraphPoint> pointsPassed = new List<Graph.GraphPoint>();
+            int prevGroup = -1;
             foreach (var t in cellsToEvaluate)
             {
                 Graph.GraphPoint gp = t.Item1;
@@ -281,10 +296,23 @@ namespace CellexalVR.Filters
                     else
                     {
                         Color newColor = selectionManager.GetColor(group);
-                        selectionManager.AddGraphpointToSelection(gp, group, false, newColor);
                         referenceManager.multiuserMessageSender.SendMessageSelectedAdd(gp.parent.GraphName, gp.Label, group, newColor);
+                        if (prevGroup != group && pointsPassed.Count > 0)
+                        {
+                            // group change! add the previous group to the selection
+                            ReferenceManager.instance.selectionManager.AddGraphPointsToSelection(pointsPassed, prevGroup);
+                            pointsPassed.Clear();
+                        }
+                        prevGroup = group;
+                        pointsPassed.Add(gp);
                     }
                 }
+
+            }
+            // add the remaining cells that passed to the selection
+            if (pointsPassed.Count > 0)
+            {
+                ReferenceManager.instance.selectionManager.AddGraphPointsToSelection(pointsPassed, prevGroup);
             }
 
             cellsToEvaluate.Clear();
