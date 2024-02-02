@@ -111,6 +111,7 @@ namespace CellexalVR.AnalysisLogic
                     selectedCells.RemoveAt(index);
                     selectedCells.Add(point);
                     moveCost += selectedCells.Count;
+                    previousMoveIndex = index;
                 }
 
                 if (cellsToMove.Count > 0)
@@ -693,7 +694,8 @@ namespace CellexalVR.AnalysisLogic
 
             selectionHistory.Clear();
             historyIndexOffset = 0;
-            selectedCells.Clear();
+            // list now lives in the selection object, create a new list object for this class to make sure we don't modify the old one
+            selectedCells = new List<Graph.GraphPoint>();
             CellexalEvents.SelectionConfirmed.Invoke();
             selectionMade = false;
 

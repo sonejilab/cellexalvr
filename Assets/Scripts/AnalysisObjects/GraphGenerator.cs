@@ -764,6 +764,7 @@ namespace CellexalVR.AnalysisObjects
                 triangles = graphPointMeshTriangles,
                 clusterOffsets = clusterOffsets,
                 clusterMaxSize = nbrOfMaxPointsPerClusters,
+                lodGroupModifier = lodGroupModifier,
                 // output
                 resultVertices = resultVertices,
                 resultTriangles = resultTriangles,
@@ -779,7 +780,6 @@ namespace CellexalVR.AnalysisObjects
             int maximumItemsPerFrame = CellexalConfig.Config.GraphClustersPerFrameStartCount;
             int maximumItemsPerFrameInc = CellexalConfig.Config.GraphClustersPerFrameIncrement;
             float maximumDeltaTime = 0.05f;
-
             for (int i = 0; i < nbrOfClusters; ++i)
             {
                 GameObject newPart;
@@ -913,6 +913,7 @@ namespace CellexalVR.AnalysisObjects
             [ReadOnly] public NativeArray<int> triangles;
             [ReadOnly] public NativeArray<int> clusterOffsets;
             [ReadOnly] public int clusterMaxSize;
+            [ReadOnly] public int lodGroupModifier;
 
             [WriteOnly]
             [NativeDisableParallelForRestriction]
@@ -946,10 +947,15 @@ namespace CellexalVR.AnalysisObjects
                 int triangleIndexOffset = clusterOffset * nbrOfTriangles;
                 float clusterUVY = (index + 0.5f) / clusterOffsets.Length;
 
+                if (lodGroupModifier == 0)
+                {
+                    lodGroupModifier = 1;
+                }
+
                 for (int i = 0; i < nbrOfPoints; ++i)
                 {
                     Vector3 pointPosition = positions[clusterOffset + i];
-                    float pointUVX = (i + 0.5f) / clusterMaxSize;
+                    float pointUVX = ((i * lodGroupModifier) + 0.5f) / clusterMaxSize;
 
                     for (int j = 0; j < nbrOfVertices; ++j)
                     {
@@ -1098,14 +1104,18 @@ namespace CellexalVR.AnalysisObjects
             List<Cell> subset = referenceManager.cellManager.SubSet(expr);
             foreach (Cell cell in subset)
             {
-                var point = g.FindGraphPoint(cell.Label).Position;
-                AddGraphPoint(cell, point.x, point.y, point.z);
+                Graph.GraphPoint point = g.FindGraphPoint(cell.Label);
+                if (point is null)
+                {
+                    continue;
+                }
+                Vector3 pos = g.FindGraphPoint(cell.Label).Position;
+                AddGraphPoint(cell, pos.x, pos.y, pos.z);
             }
 
             subGraph.maxCoordValues = g.ScaleCoordinates(g.maxCoordValues);
             subGraph.minCoordValues = g.ScaleCoordinates(g.minCoordValues);
-            print(nrOfLODGroups);
-            StartCoroutine(SliceClusteringLOD(nrOfLODGroups));
+            yield return StartCoroutine(SliceClusteringLOD(nrOfLODGroups));
             foreach (BoxCollider col in g.GetComponents<BoxCollider>())
             {
                 var newCol = subGraph.gameObject.AddComponent<BoxCollider>();

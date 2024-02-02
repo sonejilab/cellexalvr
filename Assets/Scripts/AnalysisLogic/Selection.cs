@@ -543,7 +543,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Saves the group masks to the disk. This is automatically done by the constructor or when points are assigned with.
+        /// Saves the group masks to the disk. This is automatically done by the constructor or when points are assigned with <see cref="SetPoints(IEnumerable{Graph.GraphPoint}, bool, bool)"/>.
         /// </summary>
         /// <param name="graphToSave">Optional. If left out, all graphs that are currently loaded will be saved, otherwise, only the graph passed in this argument is saved.</param>
         public void SaveGroupMasksToDisk(Graph graphToSave = null)
