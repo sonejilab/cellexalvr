@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CellexalVR.Interaction
 {
 
-    public class LegendRaycaster : MonoBehaviour
+    public class LegendRaycaster : CellexalRaycastable
     {
         [HideInInspector]
         public int savedGeneExpressionHistogramHitX = -1;
@@ -57,22 +57,18 @@ namespace CellexalVR.Interaction
             bool correctModel = referenceManager.rightLaser.enabled;
             if (correctModel)
             {
-                Raycast();
                 triggerClick = false;
                 triggerUp = false;
             }
         }
 
-        private void Raycast()
+        public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
         {
-            raycastingSource = referenceManager.rightLaser.transform;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward),
-                out var hit, 100f, layerMask);
-            if (hit.collider && hit.collider.gameObject == legendManager.gameObject)
+            if (hitInfo.collider && hitInfo.collider.gameObject == legendManager.gameObject)
             {
                 if (legendManager.desiredLegend == LegendManager.Legend.GeneExpressionLegend)
                 {
-                    var localPos = legendManager.WorldToRelativeHistogramPos(hit.point);
+                    var localPos = legendManager.WorldToRelativeHistogramPos(hitInfo.point);
                     if (localPos.x >= 0f && localPos.x <= 1f && localPos.y >= 0f && localPos.y <= 1f)
                     {
                         HandleHitGeneExpressionHistogram(localPos);

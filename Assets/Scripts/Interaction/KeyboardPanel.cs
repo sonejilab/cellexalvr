@@ -67,6 +67,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
+            base.Click();
             switch (keyType)
             {
                 case Type.Character:

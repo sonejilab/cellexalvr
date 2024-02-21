@@ -53,6 +53,7 @@ namespace CellexalVR.Interaction
 
         public override void Click()
         {
+            base.Click();
             webBrowser.OnNavigate("file:///" + Text);
         }
     }

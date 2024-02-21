@@ -25,6 +25,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
+            base.Click();
             if (!keyboardHandler.Text().Equals(string.Empty))
             {
                 keyboardHandler.OnAnnotate.Invoke(keyboardHandler.Text());

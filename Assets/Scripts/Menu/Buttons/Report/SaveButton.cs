@@ -36,34 +36,12 @@ namespace CellexalVR.Menu.Buttons.Report
             get { return "Compile Session Report"; }
         }
 
-        protected override void Update()
-        {
-            base.Update();
-            //if (changeSprite)
-            //{
-            //    if (elapsedTime < time)
-            //    {
-            //        elapsedTime += Time.deltaTime;
-            //    }
-            //    else
-            //    {
-            //        standardTexture = original;
-            //        changeSprite = false;
-            //    }
-            //}
-        }
-
         // Update is called once per frame
         public override void Click()
         {
             SetButtonActivated(false);
             StartCoroutine(referenceManager.reportManager.LogStop(this));
-            //elapsedTime = 0.0f;
-
-
         }
-
-
 
         void TurnOff()
         {

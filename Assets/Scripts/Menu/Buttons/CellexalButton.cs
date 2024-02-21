@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons.General;
 using CellexalVR.Menu.SubMenus;
 using UnityEditor;
@@ -11,15 +12,12 @@ namespace CellexalVR.Menu.Buttons
     /// <summary>
     /// Abstract general purpose class that represents a button on the menu.
     /// </summary>
-    public abstract class CellexalButton : MonoBehaviour
+    public abstract class CellexalButton : CellexalRaycastable
     {
         public ReferenceManager referenceManager;
         public TMPro.TextMeshPro descriptionText;
         public GameObject infoMenu;
         public GameObject activeOutline;
-
-        private int frameCount;
-        private readonly string laserColliderName = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         // all buttons must override this variable's get property
         /// <summary>
         /// A string that briefly explains what this button does.
@@ -29,7 +27,7 @@ namespace CellexalVR.Menu.Buttons
             get;
         }
 
-        // These are drawn in the inspector through CellexalButtonEditor.cs
+        // These are drawn in the inspector through CellexalButtonEditor
         [HideInInspector]
         public Color meshStandardColor = Color.black;
         [HideInInspector]
@@ -45,31 +43,22 @@ namespace CellexalVR.Menu.Buttons
         [HideInInspector]
         public int popupChoice = 0;
 
-        protected ActionBasedController rightController;
-        protected InputDevice device;
-
         protected SpriteRenderer spriteRenderer;
         protected MeshRenderer meshRenderer;
         [HideInInspector]
         public bool buttonActivated = true;
         public bool storedState;
         public bool controllerInside = false;
-        private Transform raycastingSource;
-        private int layerMaskNetwork;
-        private int layerMaskGraph;
-        private int layerMaskMenu;
-        private int layerMaskKeyboard;
-        private int layermaskEnvironmentButton;
-        private int layerMask;
-        private bool laserInside;
-        private bool TriggerPressed { get; set; }
-
 
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                if (!CellexalEvents.IsPersistentListenerAlreadyAdded(OnActivate, Click))
+                {
+                    UnityEditor.Events.UnityEventTools.AddPersistentListener(OnActivate, Click);
+                }
             }
         }
 
@@ -79,75 +68,24 @@ namespace CellexalVR.Menu.Buttons
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
             }
-            rightController = referenceManager.rightController;
             spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
             meshRenderer = gameObject.GetComponent<MeshRenderer>();
-            layerMaskNetwork = LayerMask.NameToLayer("NetworkLayer");
-            layerMaskKeyboard = 1 << LayerMask.NameToLayer("KeyboardLayer");
-            layerMaskMenu = 1 << LayerMask.NameToLayer("MenuLayer");
-            layermaskEnvironmentButton = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
-            layerMask = layerMaskMenu | layerMaskKeyboard | layerMaskNetwork | layermaskEnvironmentButton;
-            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
 
         }
 
-        protected virtual void Update()
+        public override void OnRaycastEnter()
         {
-            frameCount++;
-            if (CrossSceneInformation.Normal)
-            {
-                CheckForHit();
-            }
+            controllerInside = true;
+            SetHighlighted(true);
         }
 
-        private void OnTriggerClick()
+        public override void OnRaycastExit()
         {
-            // OpenXR
-            if (controllerInside)
+            controllerInside = false;
+            SetHighlighted(false);
+            if (descriptionText.text == Description)
             {
-                Click();
-            }
-        }
-
-        /// <summary>
-        /// Button sometimes stays active even though ontriggerexit should have been called.
-        /// To deactivate button again check every 10th frame if laser pointer collider is colliding.
-        /// </summary>
-        private void CheckForHit()
-        {
-            if (!buttonActivated) return;
-            if (frameCount % 10 == 0)
-            {
-                laserInside = false;
-                RaycastHit hit;
-                raycastingSource = referenceManager.laserPointerController.origin;
-                Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10, layerMask);
-                //if (hit.collider) print(hit.collider.transform.gameObject.name);
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.enabled && buttonActivated)
-                {
-                    laserInside = true;
-                    frameCount = 0;
-                    controllerInside = laserInside;
-                    SetHighlighted(laserInside);
-                    return;
-                }
-                if (!(hit.collider || hit.transform == transform))
-                {
-                    laserInside = false;
-                    controllerInside = laserInside;
-                    SetHighlighted(laserInside);
-                    //if (infoMenu) infoMenu.SetActive(inside);
-                }
-                controllerInside = laserInside;
-                SetHighlighted(laserInside);
-                //summertwerk
-
-                if (descriptionText.text == Description && !laserInside)
-                {
-                    descriptionText.text = "";
-                }
-
-                frameCount = 0;
+                descriptionText.text = "";
             }
         }
 
@@ -191,7 +129,6 @@ namespace CellexalVR.Menu.Buttons
             }
 
             buttonActivated = activate;
-            controllerInside = false;
         }
 
         public void StoreState()
@@ -218,17 +155,6 @@ namespace CellexalVR.Menu.Buttons
             storedState = toggle;
         }
 
-        protected void OnTriggerEnter(Collider other)
-        {
-            if (!buttonActivated) return;
-            if (other.gameObject.name == laserColliderName)
-            {
-                descriptionText.text = Description;
-                controllerInside = true;
-                SetHighlighted(true);
-            }
-        }
-
         // In case OnTriggerExit doesnt get called by laser pointer we need to manually do the unhighlighting.
         protected void Exit()
         {
@@ -250,25 +176,6 @@ namespace CellexalVR.Menu.Buttons
             if (infoMenu)
             {
                 infoMenu.SetActive(false);
-            }
-        }
-
-        protected void OnTriggerExit(Collider other)
-        {
-            if (!buttonActivated || laserInside) return;
-            //print(name + " ontriggerexit");
-            if (other.gameObject.name == laserColliderName)
-            {
-                if (descriptionText.text == Description)
-                {
-                    descriptionText.text = "";
-                }
-                controllerInside = false;
-                SetHighlighted(false);
-                //if (infoMenu && !infoMenu.GetComponent<InfoMenu>().active)
-                //{
-                //    infoMenu.SetActive(false);
-                //}
             }
         }
 

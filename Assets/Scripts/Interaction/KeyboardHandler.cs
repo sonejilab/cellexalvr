@@ -148,13 +148,14 @@ namespace CellexalVR.Interaction
             materials.AddRange(mats);
         }
 
+
         /// <summary>
-        /// Displays a pulse.
+        /// Starts a pulse at the current laser coordinates, set by <see cref="UpdateLaserCoords(Vector2)"/>.
         /// </summary>
-        /// <param name="pos">The uv2 coordinates of the center of the pulse.</param>
-        public void Pulse(Vector2 pos)
+        public void Pulse()
         {
-            PulseAndLaserCoords = new Vector4(pos.x, pos.y, PulseAndLaserCoords.z, PulseAndLaserCoords.w);
+            // copy current laser coords (z and w) to the pulse coords (x and y).
+            PulseAndLaserCoords = new Vector4(PulseAndLaserCoords.z, PulseAndLaserCoords.w, PulseAndLaserCoords.z, PulseAndLaserCoords.w);
             if (isActiveAndEnabled)
             {
                 StartCoroutine(PulseCoroutine());
@@ -497,6 +498,7 @@ namespace CellexalVR.Interaction
             //    " keyboardAngleSizeNegative " + keyboardAngleSizeNegative + " angleFromZero " + angleFromZero +
             //    " keyboardYCoord " + keyboardYCoord + " laserCoords " + V2S(laserCoords));
         }
+#if UNITY_EDITOR
 
         private string V2S(Vector3 v)
         {
@@ -508,7 +510,6 @@ namespace CellexalVR.Interaction
             return "(" + v.x + ", " + v.y + ")";
         }
 
-#if UNITY_EDITOR
         private void OnValidate()
         {
             if (referenceManager == null && gameObject.scene.IsValid())

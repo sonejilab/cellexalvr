@@ -78,6 +78,7 @@ namespace CellexalVR.Interaction
 
         public override void Click()
         {
+            base.Click();
             HandleClick();
             referenceManager.multiuserMessageSender.SendMessageHandleHistoryPanelClick(NameOfThing);
         }

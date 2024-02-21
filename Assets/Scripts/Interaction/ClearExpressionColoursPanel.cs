@@ -25,6 +25,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
+            base.Click();
             referenceManager.multiuserMessageSender.SendMessageClearExpressionColours();
             graphManager.ClearExpressionColours();
         }

@@ -1,6 +1,5 @@
 ﻿using CellexalVR.General;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.Interaction
 {
@@ -24,14 +23,11 @@ namespace CellexalVR.Interaction
         public Material correlatedGenesPressedMaterial;
 
 
-        private ActionBasedController rightController;
-        private UnityEngine.XR.InputDevice device;
         private ClickablePanel lastHit = null;
         private ClickablePanel hitPanel;
         private bool grabbingObject = false;
 
         private ControllerModelSwitcher controllerModelSwitcher;
-        private XRRayInteractor laserPointer;
 
         private void OnValidate()
         {
@@ -43,9 +39,6 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
-            laserPointer = referenceManager.laserPointerController.rightLaser;
-            // laserPointer.PointerClick += PanelClick;
-
             if (referenceManager == null)
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
@@ -53,7 +46,6 @@ namespace CellexalVR.Interaction
 
             if (CrossSceneInformation.Normal)
             {
-                rightController = referenceManager.rightController;
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             }
 
@@ -171,13 +163,9 @@ namespace CellexalVR.Interaction
             CellexalEvents.ObjectGrabbed.AddListener(() => grabbingObject = true);
             CellexalEvents.ObjectUngrabbed.AddListener(() => grabbingObject = false);
 
-            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
-        private void Update()
-        {
-            Raycast();
-        }
+
 
         private void Raycast(bool click = false)
         {
@@ -217,7 +205,8 @@ namespace CellexalVR.Interaction
                     if (click)
                     {
                         hitPanel.Click();
-                        keyboardHandler.Pulse(uv2);
+                        // raycast refactor
+                        //keyboardHandler.Pulse(uv2);
                     }
 
                     lastHit = hitPanel;
@@ -254,11 +243,6 @@ namespace CellexalVR.Interaction
 
                 lastHit = null;
             }
-        }
-
-        private void OnTriggerClick()
-        {
-            Raycast(true);
         }
     }
 }

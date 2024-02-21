@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CellexalVR.General;
+using UnityEngine;
 namespace CellexalVR.Menu.Buttons.Report
 {
     /// <summary>
@@ -21,7 +22,7 @@ namespace CellexalVR.Menu.Buttons.Report
         public override void Click()
         {
             referenceManager.reportManager.GOanalysis(gameObject.GetComponentInParent<AnalysisObjects.Heatmap>());
-            rightController.SendHapticImpulse(0.8f, 0.3f);
+            ReferenceManager.instance.rightController.SendHapticImpulse(0.8f, 0.3f);
         }
 
 

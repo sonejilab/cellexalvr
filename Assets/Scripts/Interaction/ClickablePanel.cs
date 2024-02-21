@@ -6,11 +6,12 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// Abstract class that all panels around the keyboard should inherit.
     /// </summary>
-    public abstract class ClickablePanel : MonoBehaviour
+    public abstract class ClickablePanel : CellexalRaycastable
     {
         public ReferenceManager referenceManager;
         // vector used by the shader to display pulse when a panel is clicked and an animation where the laser is.
         protected static Vector4 PulseAndLaserCoords;
+
 
         public Vector2 CenterUV { get; set; }
         protected new Renderer renderer;
@@ -18,12 +19,14 @@ namespace CellexalVR.Interaction
         protected Material keyHighlightMaterial;
         protected Material keyPressedMaterial;
         private bool isPressed;
+        private KeyboardHandler keyboardHandler;
 
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                keyboardHandler = GetComponentInParent<KeyboardHandler>();
             }
         }
 
@@ -31,6 +34,16 @@ namespace CellexalVR.Interaction
         {
             renderer = gameObject.GetComponent<Renderer>();
             renderer.sharedMaterial = keyNormalMaterial;
+        }
+
+        protected virtual void OnEnable()
+        {
+            OnActivate.AddListener(Click);
+        }
+
+        protected virtual void OnDisable()
+        {
+            OnActivate.RemoveListener(Click);
         }
 
         /// <summary>
@@ -59,8 +72,26 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Called when the user points the controller towards this panel and presses the trigger.
         /// </summary>
-        public abstract void Click();
+        public virtual void Click()
+        {
+            keyboardHandler.Pulse();
+        }
 
+        public override void OnRaycastEnter()
+        {
+            SetHighlighted(true);
+        }
+
+        public override void OnRaycastExit()
+        {
+            SetHighlighted(false);
+            keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
+        }
+
+        public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
+        {
+            keyboardHandler.UpdateLaserCoords(keyboardHandler.ToUv2Coord(hitInfo.point));
+        }
 
         /// <summary>
         /// Sets this panel to highlighted or not highlighted.

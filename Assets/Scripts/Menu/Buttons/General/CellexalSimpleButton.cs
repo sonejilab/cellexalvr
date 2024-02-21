@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections;
-using UnityEngine;
-using UnityEngine.Events;
-
-namespace CellexalVR.Menu.Buttons.General
+﻿namespace CellexalVR.Menu.Buttons.General
 {
+    /// <summary>
+    /// A simple button that only executes the function set in the <see cref="CellexalVR.Interaction.CellexalRaycastable.OnActivate"/> event, which is set in the Unity editor.
+    /// </summary>
     public class CellexalSimpleButton : CellexalButton
     {
-
+        // set in the editor
         public string description;
         protected override string Description => description;
 
-        public UnityEvent OnClick;
-
-        public override void Click()
-        {
-            OnClick.Invoke();
-        }
+        public override void Click() { }
     }
 }

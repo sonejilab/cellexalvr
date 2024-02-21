@@ -77,6 +77,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
+            base.Click();
             parentKeyboard.SetAllOutputs(NameOfThing, Type);
             parentKeyboard.SubmitOutput(true);
             referenceManager.geneKeyboard.Clear();

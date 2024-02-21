@@ -110,29 +110,8 @@ namespace CellexalVR.Menu.Buttons
         public override void SetButtonActivated(bool activate)
         {
 
-            if (!activate)
-            {
-                descriptionText.text = "";
-                if (spriteRenderer != null)
-                {
-                    spriteRenderer.sprite = deactivatedTexture;
-                }
-                else if (meshRenderer != null)
-                {
-                    meshRenderer.material.color = meshDeactivatedColor;
-                }
-            }
-            if (activate && !toolActivated)
-            {
-                if (spriteRenderer != null)
-                {
-                    spriteRenderer.sprite = standardTexture;
-                }
-                else if (meshRenderer != null)
-                {
-                    meshRenderer.material.color = meshStandardColor;
-                }
-            }
+            base.SetButtonActivated(activate);
+
             if (toolActivated && activate)
             {
                 if (spriteRenderer != null)
@@ -144,8 +123,6 @@ namespace CellexalVR.Menu.Buttons
                     meshRenderer.material.color = meshActivatedColor;
                 }
             }
-            buttonActivated = activate;
-            controllerInside = false;
         }
 
         private void UpdateButton()

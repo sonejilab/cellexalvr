@@ -32,6 +32,7 @@ namespace CellexalVR.Interaction
 
         public override void Click()
         {
+            base.Click();
             Locked = !Locked;
             if (Locked)
             {

@@ -21,6 +21,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
+            base.Click();
             annotationManager.ClearAllAnnotations();
         }
     }

@@ -30,6 +30,7 @@ namespace CellexalVR.Interaction
 
         public override void Click()
         {
+            base.Click();
             if (operation == Operation.COLOR_BY)
             {
                 if (type == Definitions.Measurement.GENE)

@@ -1,4 +1,5 @@
 ﻿using CellexalVR.AnalysisObjects;
+using CellexalVR.General;
 
 namespace CellexalVR.Menu.Buttons.Networks
 {
@@ -25,7 +26,7 @@ namespace CellexalVR.Menu.Buttons.Networks
         public override void Click()
         {
             parent.SaveNetworkAsTextFile();
-            rightController.SendHapticImpulse(0.8f, 0.3f);
+            ReferenceManager.instance.rightController.SendHapticImpulse(0.8f, 0.3f);
         }
 
         private void TurnOn()

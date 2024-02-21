@@ -13,7 +13,7 @@ namespace CellexalVR.Interaction
     /// <summary>
     /// This class represents a heatmap. Contains methods for calling r-script, building texture and interaction methods etc.
     /// </summary>
-    public class HeatmapRaycast : MonoBehaviour
+    public class HeatmapRaycast : CellexalRaycastable
     {
         private ReferenceManager referenceManager;
         private GraphManager graphManager;
@@ -81,24 +81,18 @@ namespace CellexalVR.Interaction
             bool correctModel = referenceManager.rightLaser.enabled;
             if (correctModel)
             {
-                Raycast();
                 triggerDown = false;
                 triggerUp = false;
                 click = false;
             }
         }
 
-        private void Raycast(/*bool click = false, bool triggerDown = false, bool triggerUp = false*/)
+        public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
         {
-            raycastingSource = referenceManager.rightLaser.transform;
-            //Ray ray = new Ray(raycastingSource.position, raycastingSource.forward);
-            RaycastHit hit;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit,
-                Mathf.Infinity, layerMask);
-            if (hit.collider && hit.transform == transform)
+            if (hitInfo.collider && hitInfo.transform == transform)
             {
-                int hitx = (int)(hit.textureCoord.x * heatmap.layout.bitmapWidth);
-                int hity = (int)(hit.textureCoord.y * heatmap.layout.bitmapHeight);
+                int hitx = (int)(hitInfo.textureCoord.x * heatmap.layout.bitmapWidth);
+                int hity = (int)(hitInfo.textureCoord.y * heatmap.layout.bitmapHeight);
                 if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, heatmap.layout.geneListX, heatmap.layout.heatmapY,
                     heatmap.layout.geneListWidth, heatmap.layout.heatmapHeight))
                 {

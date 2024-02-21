@@ -42,6 +42,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public override void Click()
         {
+            base.Click();
             // the gene name is followed by some other text
             SetPressed(true);
             correlatedGenesList.CalculateCorrelatedGenes(listNode, listNode.Type);

@@ -99,5 +99,17 @@ namespace CellexalVR.General
         public static CommandFinishedEvent CommandFinished = new CommandFinishedEvent();
 
         //public static UnityEvent FlashGenesCategoryToggled
+
+        public static bool IsPersistentListenerAlreadyAdded(UnityEvent unityEvent, UnityAction action)
+        {
+            for (int i = 0; i < unityEvent.GetPersistentEventCount(); ++i)
+            {
+                if (unityEvent.GetPersistentMethodName(i).Equals(action.Method.Name))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

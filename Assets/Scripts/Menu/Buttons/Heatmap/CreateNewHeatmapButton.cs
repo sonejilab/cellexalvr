@@ -1,4 +1,5 @@
-﻿using CellexalVR.Interaction;
+﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 
 namespace CellexalVR.Menu.Buttons.Heatmap
 {
@@ -23,7 +24,7 @@ namespace CellexalVR.Menu.Buttons.Heatmap
         public override void Click()
         {
             heatmapRaycast.CreateNewHeatmapFromSelection();
-            rightController.SendHapticImpulse(0.8f, 0.3f);
+            ReferenceManager.instance.rightController.SendHapticImpulse(0.8f, 0.3f);
         }
     }
 }

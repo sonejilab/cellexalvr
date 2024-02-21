@@ -8,8 +8,6 @@ namespace CellexalVR.Menu.Buttons.Tools
     ///</summary>
     public class KeyboardButton : CellexalToolButton
     {
-        private bool activateKeyboard = false;
-
         protected override string Description
         {
             get { return "Toggle keyboard"; }
@@ -23,12 +21,8 @@ namespace CellexalVR.Menu.Buttons.Tools
         public override void Click()
         {
             base.Click();
-            //referenceManager.rightLaser.enabled = toolActivated;
             referenceManager.multiuserMessageSender.SendMessageActivateKeyboard(toolActivated);
             CellexalEvents.KeyboardToggled.Invoke();
         }
-
-
-
     }
 }
