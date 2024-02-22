@@ -11,15 +11,6 @@ namespace CellexalVR.Interaction
     {
         public TMPro.TextMeshPro text;
 
-        private KeyboardHandler keyboardHandler;
-
-        protected override void Start()
-        {
-            base.Start();
-            keyboardHandler = referenceManager.geneKeyboard;
-        }
-
-
         /// <summary>
         /// Click this panel, changing the mode of coloring used.
         /// </summary>

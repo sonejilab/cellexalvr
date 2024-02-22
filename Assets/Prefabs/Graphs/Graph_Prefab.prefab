@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 54762506670964714}
   - component: {fileID: 114490444003295042}
   - component: {fileID: -1707822992471283443}
+  - component: {fileID: 1193657049878173151}
   m_Layer: 8
   m_Name: Graph_Prefab
   m_TagString: Graph
@@ -74,7 +75,9 @@ MonoBehaviour:
   lodGroups: 2
   scaled: 0
   lodGroupParents: []
-  textures: []
+  textureWidth: 0
+  textureHeight: 0
+  texture: {fileID: 0}
   minCoordValues: {x: 3.4028235e+38, y: 3.4028235e+38, z: 3.4028235e+38}
   maxCoordValues: {x: -3.4028235e+38, y: -3.4028235e+38, z: -3.4028235e+38}
   topExprCircles: []
@@ -234,6 +237,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doScale: 0
+--- !u!114 &1193657049878173151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128814461414928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fbc49eed31a4d94d9dc5ba56fdb475f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1141931572521968
 GameObject:
   m_ObjectHideFlags: 0

@@ -111,23 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84891eb6027cad44fa56e1572bbf0a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1192524}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Tools.CullingCubeButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 0}
@@ -597,23 +583,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 906fca6071a796b4599e71d9560fd93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 397461147}
-        m_TargetAssemblyTypeName: Assets.Scripts.Menu.SubMenus.ChangePageButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -753,23 +725,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eccb8a9da8681504bbcd2918341faf54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 518783330}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Attributes.ChangeColorModeButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -897,23 +855,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84891eb6027cad44fa56e1572bbf0a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 743119292}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Tools.CullingCubeButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 0}
@@ -1211,23 +1155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 906fca6071a796b4599e71d9560fd93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 882782271}
-        m_TargetAssemblyTypeName: Assets.Scripts.Menu.SubMenus.ChangePageButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -1437,23 +1367,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 906fca6071a796b4599e71d9560fd93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1002293730}
-        m_TargetAssemblyTypeName: Assets.Scripts.Menu.SubMenus.ChangePageButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -1766,23 +1682,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dedfead3a727634daa7f0fea5600960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1348773807}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ToggleTransparencyButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 0}
@@ -2257,23 +2159,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 906fca6071a796b4599e71d9560fd93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2028280668}
-        m_TargetAssemblyTypeName: Assets.Scripts.Menu.SubMenus.ChangePageButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -3059,23 +2947,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f4953dcfc950a140850f5df85597986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114410785188367092}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Attributes.AttributeToSelectionButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -3288,22 +3162,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed68e3ca0fe13a745974ba70a724b4fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114602244028828242}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CellexalToolButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1372110229633764}
@@ -3519,22 +3380,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c14685fdf1bbb9f4ea66470bb46bcec9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114872182689437124}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Facs.AddMarkerButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114617178230091562}
   infoMenu: {fileID: 0}
@@ -3665,22 +3513,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1568f0eed36e8e4cb02a2c6a9a67f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114898161657048458}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CellexalToolButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1255926162230752}
@@ -3811,23 +3646,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23e4327d2dc42bc42bf280f45b5b7eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114441990728645604}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.ConfirmSelection,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -4050,23 +3871,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f826ebfe8d93f604ba7eccce136c58e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114067625380793294}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Attributes.ColorByBooleanExpressionButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114966449733859736}
   infoMenu: {fileID: 0}
@@ -4192,22 +3999,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114221628101554386}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114723503269570940}
   infoMenu: {fileID: 0}
@@ -4508,23 +4302,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2a1fb98e8726d944ba72e7055177531, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114899908663238478}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Networks.CreateNetworksButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -5076,22 +4856,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114772029144484886}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 0}
@@ -5318,23 +5085,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e54aef31cae2b459bc3d0536f6e959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114434416367922540}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Coloring.QueryTopDiffGenesButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114213541841952802}
   infoMenu: {fileID: 0}
@@ -5461,8 +5214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d25a46252602574cb5db27bd782f87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -5592,8 +5344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0341ee7e8adf67944974407e6b9b13a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -5723,23 +5474,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a6d3c4972b39748a5c5ea5a01b0735, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114393076343246612}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Tools.WebBrowserButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -5969,23 +5706,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b7e1f7007b81a746afc5f5dc4ef9b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114885538304353174}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Attributes.SwitchAttributeButtonMode,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -6454,22 +6177,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114310471967849680}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
   infoMenu: {fileID: 0}
@@ -6931,23 +6641,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7f23c0668206a4ebd2ec81a2202d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114078979655388520}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.ResetFolderButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114265250789757762}
   infoMenu: {fileID: 0}
@@ -7259,22 +6955,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114232591084138772}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.VideoButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1193675959566570}
@@ -7403,23 +7086,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a5b6d88add04f428f4c90a4de97492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114063413986201584}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Heatmap.CreateHeatmapButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -7843,23 +7512,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04017a9af00b3504195f8fce59ea9272, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114840763741215442}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.ClearAllLinesButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
   infoMenu: {fileID: 0}
@@ -7985,22 +7640,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 562900418154345596}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 0}
@@ -8304,22 +7946,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb4abd6789a12dd488529120fdc32b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114090698011810970}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CellexalToolButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1266251869070168}
@@ -8547,23 +8176,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9e54aef31cae2b459bc3d0536f6e959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114844405583639594}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Coloring.QueryTopDiffGenesButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114213541841952802}
   infoMenu: {fileID: 0}
@@ -8863,23 +8478,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5ec5e3780dbe54e84d063bfecb3234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114848010807314490}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Tools.ScreenshotButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 0}
@@ -9178,23 +8779,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36446c96a71fc034380a42cedbc0cdd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114816841475084020}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.ResetGraphPositionButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -9645,22 +9232,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114236420870067672}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.VideoButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1255926162230752}
@@ -9920,22 +9494,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114714154257486078}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.VideoButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1266251869070168}
@@ -10064,8 +9625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0341ee7e8adf67944974407e6b9b13a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -10195,23 +9755,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef7f23c0668206a4ebd2ec81a2202d8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114892154325539616}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.ResetFolderButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -10340,8 +9886,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0341ee7e8adf67944974407e6b9b13a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -10471,23 +10016,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bb32b92e0bd9642959a78812080a0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114779266340265874}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.RedoTenStepsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -10614,23 +10145,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b022ea873606bd1489fa96143dfed5ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114581304658753646}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Attributes.SelectAllAttributesButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -10893,22 +10410,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114051397015505936}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 0}
@@ -11758,8 +11262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d25a46252602574cb5db27bd782f87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -12350,23 +11853,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20d5c100d6e2324abed1e497da8030a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114928675690394348}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.RedoLastColorButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -12667,22 +12156,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114822701247076466}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.VideoButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1372110229633764}
@@ -12811,22 +12287,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc07443fcaffbc443919d6d34ff487b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114602457902576222}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Report.SaveButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -13581,23 +13044,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e0efd12aa6af694692704e74d2d1620, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114650220982238734}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Coloring.ColorByGeneButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114213541841952802}
   infoMenu: {fileID: 0}
@@ -14293,23 +13742,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7eea39fcfd3e846459889db4909cbf1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114270926517458098}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.RedoOneStepButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -14617,23 +14052,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb0df9bea2b85594088d393e477c407c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114686738710874032}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.TeleportHomeButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -14759,22 +14180,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114142523283967828}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
@@ -15205,23 +14613,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3ce942191440f84898442d0d6ccf168, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114449844775297844}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Attributes.CreateSubGraphButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -15347,23 +14741,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c335542d3dfb834988780ca63e6ea09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114236694050888550}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.FilterButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114723503269570940}
   infoMenu: {fileID: 0}
@@ -15663,22 +15043,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114885465945863514}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114213541841952802}
   infoMenu: {fileID: 0}
@@ -15806,8 +15173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0341ee7e8adf67944974407e6b9b13a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -15937,8 +15303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d25a46252602574cb5db27bd782f87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -16707,22 +16072,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114361442674976178}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114896500322753290}
   infoMenu: {fileID: 0}
@@ -16898,23 +16250,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f4f6a7b34905584699b8abdddc2ce4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114533938330440852}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.StartVelocityButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -17040,23 +16378,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d313eb08729064b47881516744159064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114383664595330198}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.UndoLastColorButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -17183,23 +16507,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cdecced2f46be64f833461892b018fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114369420505524848}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.ClearLastDrawnLineButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
   infoMenu: {fileID: 0}
@@ -17325,23 +16635,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d51aacf03369e42bd51e19bce5b1cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114172496197608476}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.ShowAxesButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -17467,23 +16763,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b88a92904691eb84bb4a53b725d04a5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114991876522548492}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.IncreaseVelocitySpeedButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -17814,22 +17096,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114655604021691030}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 0}
@@ -17959,22 +17228,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114024799565381718}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 0}
@@ -18104,23 +17360,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32e47db15a0489f4183a33cfc7449bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114911418118201658}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.ResetGraphColorButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -18295,22 +17537,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114069924723747538}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -18535,8 +17764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d25a46252602574cb5db27bd782f87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -18666,8 +17894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0341ee7e8adf67944974407e6b9b13a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -19175,23 +18402,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4272cf89ed536c4faf1c0856f7abc3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114177501928474952}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.LoadVelocityButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -19319,23 +18532,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 929d4cc512af077429448b5b6fa3aca5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114646860859487788}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.DecreaseVelocityThresholdButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -19555,23 +18754,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d8dbbb7b21d08942915142ffc4e97ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114939714336544458}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.DecreaseVelocitySpeedButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -19770,22 +18955,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b60dceeb938319446b9f67f9f89dc12b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114666324476336536}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CellexalToolButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
   infoMenu: {fileID: 0}
@@ -20369,23 +19541,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acb102ebae1c22b4990541d97f16e98d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114837375895024978}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Attributes.ColorByAttributeButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -20517,23 +19675,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c095addae5d0e4468a896cb22b122b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114682541420099044}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.RecolorSelectionButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -20930,22 +20074,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114792700669489424}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -21271,22 +20402,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114271343510052530}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 0}
@@ -21524,22 +20642,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114417597977430136}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1193675959566570}
@@ -21864,22 +20969,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114027097312478178}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -22008,22 +21100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114693027382561286}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.VideoButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1714992233657482}
@@ -22769,22 +21848,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114937350478692546}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114617178230091562}
   infoMenu: {fileID: 0}
@@ -23085,23 +22151,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfabe94400d5969458b4b7a2fe97968d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114746959485533288}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.IncreaseVelocityThresholdButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -23590,23 +22642,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f0e8aff31d48ca4c825fa6172f29a5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114420567217786492}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.UndoSelectionButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -23732,23 +22770,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8053eeb80c81a93448228254bd3075a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114205884878756998}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Facs.ColorByIndexButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114896500322753290}
   infoMenu: {fileID: 0}
@@ -23876,23 +22900,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d5568f3dfccac64e8fcc93b9ac52c25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114714596129798410}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.ClearLinesBetweenGraphPointsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -24018,8 +23028,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d25a46252602574cb5db27bd782f87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -24150,22 +23159,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114050304292591190}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114893317898167004}
   infoMenu: {fileID: 1714992233657482}
@@ -25262,23 +24258,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce14121115cc4444984e058cb1c93857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114918321053600416}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.DecreaseVelocityFrequencyButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -25405,8 +24387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0341ee7e8adf67944974407e6b9b13a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -25536,22 +24517,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114486670800516234}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -25960,23 +24928,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba0cb9d1b6223f45881aa6981f4ce27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114599127999368976}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.IncreaseVelocityFrequencyButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -26277,23 +25231,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fbf722f8b2482f45aee909c2a306fff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114745251056131860}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Facs.NewGraphFromMarkersButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114617178230091562}
   infoMenu: {fileID: 0}
@@ -26419,23 +25359,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ada233accda65e24f8a0c897b31141eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114286742134895836}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.StopVelocityButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -26561,22 +25487,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114490085813360184}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 0}
@@ -27214,22 +26127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114889598886241338}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 0}
@@ -28038,22 +26938,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 745848b450df4ba4a87d820611f75118, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114489614855371460}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ClearColoursButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114896500322753290}
   infoMenu: {fileID: 0}
@@ -28179,23 +27066,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a2c3dfa3aeedc7498e71a7dec5c8ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114494405381168142}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.UndoTenStepsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -28405,22 +27278,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114970042250339638}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 0}
@@ -28550,22 +27410,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51d6ae00c224abe44b30a8d36fb08dd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114591197909837524}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CellexalToolButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -28919,22 +27766,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114655309805646058}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -29063,22 +27897,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53d71c6943b373449f31e3cbb6a32e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114006553131206792}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Tools.KeyboardButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 1983049085576598}
@@ -29209,22 +28030,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f5e9fe505387841b885f62241589d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114748120487706590}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Tools.HelpToolButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -29434,23 +28242,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4c0c87ccfcdee84bbee1828b342d027, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114485788220981322}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.DrawLinesBetweenGraphPointsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -29896,22 +28690,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114321718683691352}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -30041,22 +28822,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114895026750595566}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114723503269570940}
   infoMenu: {fileID: 0}
@@ -30359,23 +29127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf4ae88403070446a52e0cda49b386b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114635551349822658}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.ShowLabelsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -30502,22 +29256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114517291539633880}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.VideoButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 1983049085576598}
@@ -30646,8 +29387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d25a46252602574cb5db27bd782f87d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -30950,23 +29690,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3ca9ce41324d74f817e20c42945b5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114860631915323830}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.UndoOneStepButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -31266,22 +29992,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114033261389514604}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114916025729530386}
   infoMenu: {fileID: 0}
@@ -31925,23 +30638,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e706e2d2067df124ba33f7667ba7246a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 468565721614247715}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Networks.ToggleArcsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 2206070012389300874}
   infoMenu: {fileID: 0}
@@ -32060,23 +30759,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1551663577208756177}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -32306,23 +30991,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8310139447943234711}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -32552,23 +31223,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3562798834887687899}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -33086,23 +31743,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c24fb191efbc46899038cb59756e1da4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 336061647171882797}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.SelectAnnotationButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 6069695128652222423}
   infoMenu: {fileID: 0}
@@ -33479,22 +32122,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1184321805300025170}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -33610,23 +32240,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cdd03d0d47a7574b81dbe198546d2b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8201066972046688359}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.FinalizeColorPickerChoiceButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -33766,23 +32382,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b90194cba6ed8f418d9797305a6ec75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5202071094087285470}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ChangeVelocityParticleButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -33908,23 +32510,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 421e532f8a048d040832aa0e1e90f81b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4587950504766856892}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.DecreaseAverageVelocityResolutionButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -34487,22 +33075,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bdd74fb46eb0dd4b84a444ba33ab83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3061283892360125406}
-        m_TargetAssemblyTypeName: ToggleLegendButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114302714280736786}
   infoMenu: {fileID: 0}
@@ -34745,23 +33320,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6318952699545529}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -34920,23 +33481,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60b6b1d57668567468c6c63ba18d9f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8934317393367244477}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.ToggleBundlesButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -35542,8 +34089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc79419bb53b91c46aff938a5a6ec244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -35677,23 +34223,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db6f07f085b865b4fbb0d7cc506153ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 106734370943569511}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.SelectAllButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -36435,23 +34967,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de961705eaee05642b24931559063e12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5605167643105044200}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ToggleAverageVelocityButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -36880,22 +35398,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2206430396694728988}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 2206070012389300874}
   infoMenu: {fileID: 0}
@@ -37640,23 +36145,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea045d17293c7da4f96d6c7d4d2e5952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2203183017739069660}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Networks.RefreshTabsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 2203292101363333966}
   infoMenu: {fileID: 0}
@@ -37784,23 +36275,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aea31800dd54f543999e0f9337c4b3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1438806175529496665}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ToggleGraphpointsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -38584,23 +37061,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d64e66e2672c214bb6e59542975b978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6186361909932662468}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Velocity.ToggleVelocityPathToolButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -38823,23 +37286,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 551acbd76de472548924f68aa9bb4636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6838891134242850710}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.RemoveColorButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -38966,23 +37415,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 902bfdadc1eec274d8670e2100a8cf58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8685854963006424660}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.FilterBoardToggleButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114723503269570940}
   infoMenu: {fileID: 0}
@@ -39206,22 +37641,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90e8effbcfeed843b25c4892a5c863e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 79054747918300655}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ResetFilterButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114723503269570940}
   infoMenu: {fileID: 0}
@@ -40542,23 +38964,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4280684257397194560}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -41108,23 +39516,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6781902017361721121}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -41282,23 +39676,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e706e2d2067df124ba33f7667ba7246a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4470162960073834652}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Networks.ToggleArcsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 2206070012389300874}
   infoMenu: {fileID: 0}
@@ -41429,22 +39809,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4795966353260303943}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1212175032835631098}
   infoMenu: {fileID: 0}
@@ -41655,22 +40022,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7842839717240275616}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -42581,23 +40935,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 646705847312692470}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -42756,23 +41096,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b5521f81b262634c9f7322f5a50a6a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6606687512498473272}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.VelocityConstantSynchedButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -42849,8 +41175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2704df78b44f42f4ab22d5a17bb21e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
       m_Calls: []
   referenceManager: {fileID: 0}
@@ -42985,23 +41310,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17fde121058ac774e81a094db7fb5590, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1578764222076608128}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Flyby.ResetFlybyPositionsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1212175032835631098}
   infoMenu: {fileID: 0}
@@ -43294,23 +41605,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af6b0459f7f157d4dbc3710909e89b73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5660823517668395017}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Facs.CreateBoxPlotsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114406627454955300}
   infoMenu: {fileID: 0}
@@ -43693,22 +41990,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1c68abfd87d4b8428eaa32f27ffa286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7343067391699286382}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SubMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114930544103102526}
   infoMenu: {fileID: 0}
@@ -43921,22 +42205,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d70c561d8acbac459a5d24d3b8586ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6067988477189130699}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.CloseMenuButton, Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 6069695128652222423}
   infoMenu: {fileID: 0}
@@ -44545,23 +42816,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 357bcf1246c230c4092033b7e7f5c87f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 6068669093559060779}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Selection.SelectionFromPreviousButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 6069695128652222423}
   infoMenu: {fileID: 0}
@@ -45451,23 +43708,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84902653d57430f47b5fd4331a02f7a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3182212252168547828}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.IncreaseAverageVelocityResolutionButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -46549,23 +44792,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2f87396b9750d4aae6d114a760033c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 191180894878424884}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.VelocityGraphpointColorsModeButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114029266455429018}
   infoMenu: {fileID: 0}
@@ -47212,23 +45441,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e706e2d2067df124ba33f7667ba7246a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7909923866503811013}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Networks.ToggleArcsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 2206070012389300874}
   infoMenu: {fileID: 0}
@@ -47361,23 +45576,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fe97ec4d02d4466ae2f4e38ba843fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5220975568876246289}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Networks.RemoveNetworkArcsButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 2206070012389300874}
   infoMenu: {fileID: 0}
@@ -47589,23 +45790,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7645721734698369865}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -48017,23 +46204,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 7600303387708984917}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -48351,23 +46524,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8302e35e38474b24cbbc3ff13ebb2de7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3295280467262965671}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.AddSelectionColorButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -48506,23 +46665,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23fc9fb39e14814c82d4670b4d06481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5961991972005843233}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Flyby.RenderFlybyButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1212175032835631098}
   infoMenu: {fileID: 0}
@@ -48649,23 +46794,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd604ef076f1cb5428a4ea6b6eaf038f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1583281978}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Flyby.ChangeFlybyQualityButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1212175032835631098}
   infoMenu: {fileID: 0}
@@ -49220,23 +47351,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99c340e8167e68048855db00c98c0428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 675998377962248125}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Flyby.RecordFlybyPositionButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1212175032835631098}
   infoMenu: {fileID: 0}
@@ -49730,23 +47847,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4671348150239661118}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -50159,23 +48262,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 414973838021494482}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -50360,23 +48449,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 477598150025978235}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}
@@ -50864,23 +48939,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2717dcfb7b35fe04cbcda05903c51aa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activatedBy: 1
-  OnClick:
+  OnActivate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8371506156330739217}
-        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.ColorPicker.ColorPickerButton,
-          Assembly-CSharp
-        m_MethodName: Click
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 388349153}
   infoMenu: {fileID: 0}

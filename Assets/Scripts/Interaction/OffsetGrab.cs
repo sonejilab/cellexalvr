@@ -30,6 +30,11 @@ namespace CellexalVR.Interaction
 
         protected override void OnSelectEntering(SelectEnterEventArgs args)
         {
+            if (args.interactorObject is XRRayInteractor && base.interactorsSelecting.Count == 1)
+            {
+                return;
+            }
+
             if (savedInteractor != null)
             {
                 var savedController = savedInteractor.transform.GetComponentInParent<ActionBasedController>();

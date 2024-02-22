@@ -3,16 +3,13 @@ using CellexalVR.General;
 namespace CellexalVR.Interaction
 {
     /// <summary>
-    /// Raycasts from the right controller onto a group of <see cref="PresetClickableTextPanel"/>.
+    /// Responds to raycasting from a <see cref="CellexalRaycast"/> onto a group of <see cref="PresetClickableTextPanel"/>.
+    /// Used for creating demo scenes.
     /// </summary>
-    public class PresetClickablePanelRaycaster : MonoBehaviour
+    public class PresetClickablePanelRaycaster : CellexalRaycastable
     {
         public ReferenceManager referenceManager;
 
-        // Open XR 
-        //private SteamVR_Controller.Device device;
-        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
-        private UnityEngine.XR.InputDevice device;
         private ClickablePanel lastHit = null;
         private bool hitDemoPanelLastFrame = false;
         private ControllerModelSwitcher controllerModelSwitcher;
@@ -28,53 +25,48 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
-            rightController = referenceManager.rightController;
             controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             panelLayerMask = 1 << LayerMask.NameToLayer("SelectableLayer");
-            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
         }
 
-        private void Update()
+        public override void OnRaycastEnter()
         {
-            Raycast();
+
         }
 
-        private void Raycast(bool triggerClick = false)
+        public override void OnRaycastExit()
         {
-            var raycastingSource = referenceManager.rightLaser.transform;
-            // Open XR
-            //device = SteamVR_Controller.Input((int)rightController.index);
-            var ray = new Ray(raycastingSource.position, referenceManager.rightController.transform.forward);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 10f, panelLayerMask))
+
+        }
+
+        public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
+        {
+            // if we hit something this frame.
+            if (!hitDemoPanelLastFrame)
             {
-                // if we hit something this frame.
-                if (!hitDemoPanelLastFrame)
+                hitDemoPanelLastFrame = true;
+                SetLaserActivated(true);
+            }
+            var hitPanel = hitInfo.collider.transform.gameObject.GetComponent<PresetClickableTextPanel>();
+            if (hitPanel != null)
+            {
+                if (lastHit != null && lastHit != hitPanel)
                 {
-                    hitDemoPanelLastFrame = true;
-                    SetLaserActivated(true);
-                }
-                var hitPanel = hit.collider.transform.gameObject.GetComponent<PresetClickableTextPanel>();
-                if (hitPanel != null)
-                {
-                    if (lastHit != null && lastHit != hitPanel)
-                    {
-                        lastHit.SetHighlighted(false);
-                    }
-                    hitPanel.SetHighlighted(true);
-                    //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-                    if (triggerClick)
-                    {
-                        hitPanel.Click();
-                    }
-                    lastHit = hitPanel;
-                }
-                else if (lastHit != null)
-                {
-                    // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
                     lastHit.SetHighlighted(false);
-                    lastHit = null;
                 }
+                hitPanel.SetHighlighted(true);
+                //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                //if (triggerClick)
+                //{
+                //    hitPanel.Click();
+                //}
+                lastHit = hitPanel;
+            }
+            else if (lastHit != null)
+            {
+                // if we hit something this frame but it was not a clickablepanel and we hit a clickablepanel last frame.
+                lastHit.SetHighlighted(false);
+                lastHit = null;
             }
             else if (lastHit != null)
             {
@@ -90,12 +82,6 @@ namespace CellexalVR.Interaction
             }
 
         }
-        private void OnTriggerClick()
-        {
-            Raycast(true);
-        }
-
-
 
         private void SetLaserActivated(bool active)
         {

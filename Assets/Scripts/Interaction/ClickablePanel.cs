@@ -19,7 +19,7 @@ namespace CellexalVR.Interaction
         protected Material keyHighlightMaterial;
         protected Material keyPressedMaterial;
         private bool isPressed;
-        private KeyboardHandler keyboardHandler;
+        protected KeyboardHandler keyboardHandler;
 
         private void OnValidate()
         {

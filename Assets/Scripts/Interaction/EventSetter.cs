@@ -14,7 +14,7 @@ namespace CellexalVR.Interaction
     {
         public ReferenceManager referenceManager;
 
-        private PushBack pushBack;
+        //private PushBack pushBack;
 
         private void OnValidate()
         {
@@ -26,7 +26,7 @@ namespace CellexalVR.Interaction
 
         private void Start()
         {
-            pushBack = GetComponentInParent<PushBack>();
+            //pushBack = GetComponentInParent<PushBack>();
         }
 
         public void LeftMenuLeftClickEvent()
@@ -73,23 +73,23 @@ namespace CellexalVR.Interaction
             }
         }
 
-        public void RightMenuUpHoldEvent()
-        {
-            if (referenceManager.rightLaser.enabled &&
-                referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
-            {
-                pushBack.Push();
-            }
-        }
+        //public void RightMenuUpHoldEvent()
+        //{
+        //    if (referenceManager.rightLaser.enabled &&
+        //        referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
+        //    {
+        //        pushBack.Move();
+        //    }
+        //}
 
-        public void RightMenuDownHoldEvent()
-        {
-            if (referenceManager.rightLaser.enabled &&
-                referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
-            {
-                pushBack.Pull();
-            }
-        }
+        //public void RightMenuDownHoldEvent()
+        //{
+        //    if (referenceManager.rightLaser.enabled &&
+        //        referenceManager.controllerModelSwitcher.ActualModel != ControllerModelSwitcher.Model.Menu)
+        //    {
+        //        pushBack.Pull();
+        //    }
+        //}
 
         public void RightMenuDownClickEvent()
         {

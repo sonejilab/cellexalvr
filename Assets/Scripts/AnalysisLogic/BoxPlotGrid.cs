@@ -1,5 +1,4 @@
 ﻿using CellexalVR.AnalysisObjects;
-using CellexalVR.DesktopUI;
 using CellexalVR.General;
 using CellexalVR.Interaction;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.AnalysisLogic
 {
-    public class BoxPlotGrid : MonoBehaviour
+    public class BoxPlotGrid : CellexalRaycastable
     {
         public ReferenceManager referenceManager;
 
@@ -25,9 +24,7 @@ namespace CellexalVR.AnalysisLogic
         private float rowInc; // initialised in Awake()
         private float colInc = 0.16f;
         private Vector3 boxPlotStartPos;
-        private int layerMask;
         private Selection selection;
-        private BoxPlot hoveredBoxplot;
 
         private void OnValidate()
         {
@@ -41,43 +38,8 @@ namespace CellexalVR.AnalysisLogic
         {
             rowInc = 0.8f / plotsPerRow;
             boxPlotStartPos = boxPlotPrefab.transform.localPosition;
-            layerMask = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
-            layerMask += 1 << LayerMask.NameToLayer("MenuLayer");
-            CellexalEvents.RightTriggerPressed.AddListener(OnTriggerDown);
         }
 
-        private void Update()
-        {
-            foreach (var boxPlot in boxPlots)
-            {
-                boxPlot.SetInfoTextActive(false);
-            }
-            Raycast();
-        }
-
-        private void Raycast()
-        {
-            var raycastingSource = referenceManager.rightLaser.transform;
-            Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out var hit, 100f, layerMask);
-            if (hit.collider && (/*hit.collider.gameObject == gameObject ||*/ hit.collider.gameObject.GetComponent<BoxPlot>()))
-            {
-                BoxPlot hitBoxPlot = hit.collider.gameObject.GetComponent<BoxPlot>();
-                hitBoxPlot.SetInfoTextActive(true);
-                hoveredBoxplot = hitBoxPlot;
-            }
-            else
-            {
-                hoveredBoxplot = null;
-            }
-        }
-
-        private void OnTriggerDown()
-        {
-            if (hoveredBoxplot)
-            {
-                referenceManager.cellManager.ColorByIndex(hoveredBoxplot.facsNameString);
-            }
-        }
 
         /// <summary>
         /// Helper method to lay out the box plots in a grid
@@ -92,7 +54,7 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// Generates new box plots from a given selection.
         /// </summary>
-        /// <param name="selection">A list of graphpoints to use for the boxplots.</param>
+        /// <param name="selection">A list of graphpoints to use for the boxplots. Or <c>null</c> for all cells in the current dataset.</param>
         public void GenerateBoxPlots(Selection selection)
         {
             this.selection = selection;
@@ -108,9 +70,19 @@ namespace CellexalVR.AnalysisLogic
                 List<float> values = new List<float>();
                 string facs = facsNames[i];
                 string lowerFacs = facs.ToLower();
-                foreach (Graph.GraphPoint graphPoint in selection)
+                if (selection is not null)
                 {
-                    values.Add(referenceManager.cellManager.GetCell(graphPoint.Label).Facs[lowerFacs]);
+                    foreach (Graph.GraphPoint graphPoint in selection)
+                    {
+                        values.Add(referenceManager.cellManager.GetCell(graphPoint.Label).Facs[lowerFacs]);
+                    }
+                }
+                else
+                {
+                    foreach (Cell cell in referenceManager.cellManager.GetCells())
+                    {
+                        values.Add(cell.Facs[lowerFacs]);
+                    }
                 }
 
                 values.Sort();
@@ -158,8 +130,10 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public void ClearBoxPlots()
         {
+            OffsetGrab grabScript = gameObject.GetComponent<OffsetGrab>();
             for (int i = 0; i < boxPlots.Count; ++i)
             {
+                grabScript.colliders.Remove(boxPlots[i].GetComponent<Collider>());
                 Destroy(boxPlots[i].gameObject);
             }
             boxPlots.Clear();

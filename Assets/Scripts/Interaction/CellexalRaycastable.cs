@@ -8,12 +8,6 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class CellexalRaycastable : MonoBehaviour
     {
-        public enum ClickType { None, RightTrigger, LeftTrigger, AnyTrigger }
-
-        /// <summary>
-        /// Defines how this raycastable can be activated.
-        /// </summary>
-        public ClickType activatedBy = ClickType.RightTrigger;
         public UnityEvent OnActivate;
 
         /// <summary>

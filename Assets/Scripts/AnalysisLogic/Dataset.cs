@@ -39,7 +39,7 @@ namespace CellexalVR.AnalysisLogic
         /// <summary>
         /// This dataset's legend.
         /// </summary>
-        public LegendManager legend = new LegendManager();
+        public LegendManager legend;
 
         public void HighlightGene(string genename)
         {

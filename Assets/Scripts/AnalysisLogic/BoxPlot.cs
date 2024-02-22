@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using CellexalVR.General;
+using CellexalVR.Interaction;
 using TMPro;
 using UnityEngine;
 
 namespace CellexalVR.AnalysisLogic
 {
-    public class BoxPlot : MonoBehaviour
+    public class BoxPlot : CellexalRaycastable
     {
         public GameObject box;
         public GameObject medianLine;
@@ -46,6 +47,8 @@ namespace CellexalVR.AnalysisLogic
             facsNameString = facsName;
             gameObject.name = "BoxPlot " + facsName;
             SetInfoText();
+            base.OnActivate.RemoveAllListeners();
+            base.OnActivate.AddListener(() => ReferenceManager.instance.cellManager.ColorByIndex(facsNameString));
         }
 
         public void ResizeComponents(float globalMinValue, float globalMaxValue)
@@ -101,6 +104,16 @@ namespace CellexalVR.AnalysisLogic
             infoTexts[2].text = median.ToString("F6");
             infoTexts[3].text = percentile5th.ToString("F6");
             infoTexts[4].text = minValue.ToString("F6");
+        }
+
+        public override void OnRaycastEnter()
+        {
+            SetInfoTextActive(true);
+        }
+
+        public override void OnRaycastExit()
+        {
+            SetInfoTextActive(false);
         }
     }
 }

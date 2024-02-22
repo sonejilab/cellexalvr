@@ -1055,6 +1055,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1e3b6bb3d9864742adf5cd33639e8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 264571046675638411}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Facs.ChangeBoxPlotSortingButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 8401103788897081046}
   infoMenu: {fileID: 0}
@@ -1171,6 +1187,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ef02af403310d84c99d5b96bdf2ac91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
   box: {fileID: 6722665420808681734}
   medianLine: {fileID: 122187065029235726}
   verticalWhiskerLine: {fileID: 1103895345789515744}
@@ -1830,6 +1849,7 @@ GameObject:
   - component: {fileID: 5024878581437370402}
   - component: {fileID: 3906288648874085283}
   - component: {fileID: 3484525964782160238}
+  - component: {fileID: 7293027110305070925}
   m_Layer: 17
   m_Name: BoxPlotGrid
   m_TagString: BoxPlotGrid
@@ -1868,6 +1888,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299fcf12d371e7d4bbaa88a38d381ed6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
   referenceManager: {fileID: 0}
   boxPlotPrefab: {fileID: 1739565778}
 --- !u!54 &5024878581437370402
@@ -2017,6 +2040,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doScale: 0
+--- !u!65 &7293027110305070925
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4139014048862207375}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 0.04009985}
+  m_Center: {x: 0, y: 0, z: 0.02497771}
 --- !u!1 &4139014050126606828
 GameObject:
   m_ObjectHideFlags: 0
@@ -2310,6 +2346,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1e3b6bb3d9864742adf5cd33639e8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2143733962713861568}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Facs.ChangeBoxPlotSortingButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 8401103788897081046}
   infoMenu: {fileID: 0}
@@ -2449,6 +2501,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 570071c427b352f459a8724db3ee4fa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2906415807121854418}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.CellexalSimpleButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 8401103788897081046}
   infoMenu: {fileID: 0}
@@ -2464,21 +2532,6 @@ MonoBehaviour:
   storedState: 0
   controllerInside: 0
   description: 'Recolor all graphs '
-  OnClick:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1291220773678922841}
-        m_TargetAssemblyTypeName: CellexalVR.AnalysisLogic.BoxPlotGrid, Assembly-CSharp
-        m_MethodName: RecolorSelection
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &5718707360114136451
 GameObject:
   m_ObjectHideFlags: 0
@@ -3387,6 +3440,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1e3b6bb3d9864742adf5cd33639e8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7351616292813644654}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Facs.ChangeBoxPlotSortingButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 8401103788897081046}
   infoMenu: {fileID: 0}

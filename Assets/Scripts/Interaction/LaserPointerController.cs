@@ -85,13 +85,13 @@ namespace CellexalVR.Interaction
         //    leftLaser.interactionLayers = LayerMask.NameToLayer("Nothing");
         //}
 
-        private void Update()
-        {
-            frame++;
-            if (frame < 5) return;
-            frame = 0;
-            Frame5Update();
-        }
+        //private void Update()
+        //{
+        //    frame++;
+        //    if (frame < 5) return;
+        //    frame = 0;
+        //    Frame5Update();
+        //}
 
         // Call every 5th frame.
         private void Frame5Update()
