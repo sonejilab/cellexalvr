@@ -24,18 +24,19 @@ namespace CellexalVR.AnalysisLogic
         [HideInInspector] public string facsNameString;
 
 
-        //private void OnValidate()
-        //{
-        //    if (gameObject.scene.IsValid() && gameObject.activeSelf)
-        //    {
-        //        infoTexts = new TextMeshPro[5];
-        //        infoTexts[0] = gameObject.transform.Find("InfoTexts/Texts/UpperWhiskerText").GetComponent<TextMeshPro>();
-        //        infoTexts[1] = gameObject.transform.Find("InfoTexts/Texts/95thPercentileText").GetComponent<TextMeshPro>();
-        //        infoTexts[2] = gameObject.transform.Find("InfoTexts/Texts/MedianText").GetComponent<TextMeshPro>();
-        //        infoTexts[3] = gameObject.transform.Find("InfoTexts/Texts/5thPercentileText").GetComponent<TextMeshPro>();
-        //        infoTexts[4] = gameObject.transform.Find("InfoTexts/Texts/LowerWhiskerText").GetComponent<TextMeshPro>();
-        //    }
-        //}
+        private void OnValidate()
+        {
+            if (gameObject.scene.IsValid() && gameObject.activeSelf)
+            {
+                canBePushedAndPulled = false;
+                //infoTexts = new TextMeshPro[5];
+                //infoTexts[0] = gameObject.transform.Find("InfoTexts/Texts/UpperWhiskerText").GetComponent<TextMeshPro>();
+                //infoTexts[1] = gameObject.transform.Find("InfoTexts/Texts/95thPercentileText").GetComponent<TextMeshPro>();
+                //infoTexts[2] = gameObject.transform.Find("InfoTexts/Texts/MedianText").GetComponent<TextMeshPro>();
+                //infoTexts[3] = gameObject.transform.Find("InfoTexts/Texts/5thPercentileText").GetComponent<TextMeshPro>();
+                //infoTexts[4] = gameObject.transform.Find("InfoTexts/Texts/LowerWhiskerText").GetComponent<TextMeshPro>();
+            }
+        }
 
         public void InitBoxPlot(string facsName, float median, float percentile5th, float percentile95th, float minValue, float maxValue)
         {

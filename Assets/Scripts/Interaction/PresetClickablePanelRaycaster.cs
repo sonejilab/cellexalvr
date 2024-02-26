@@ -20,6 +20,7 @@ namespace CellexalVR.Interaction
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                canBePushedAndPulled = false;
             }
         }
 

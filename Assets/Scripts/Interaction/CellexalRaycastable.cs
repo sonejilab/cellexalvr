@@ -9,6 +9,7 @@ namespace CellexalVR.Interaction
     public class CellexalRaycastable : MonoBehaviour
     {
         public UnityEvent OnActivate;
+        public bool canBePushedAndPulled = true;
 
         /// <summary>
         /// Called by <see cref="CellexalRaycast.Update"/> every frame that a raycast hit this target.

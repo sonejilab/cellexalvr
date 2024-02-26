@@ -8370,6 +8370,7 @@ MonoBehaviour:
     m_Bits: 8448
   rayInteractor: {fileID: 1795436768}
   interactorLineVisual: {fileID: 1795436766}
+  lastRaycastableHit: {fileID: 0}
 --- !u!1 &8166409087035089334
 GameObject:
   m_ObjectHideFlags: 0
@@ -8750,6 +8751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fa7e7cbc3d57fe4fa4c4fca9351fc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellexalRaycast: {fileID: 1878803506475090295}
   actionAsset: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
   touchPadPos: {fileID: -3834433346304978039, guid: c348712bda248c246b8c49b3db54643f,
@@ -8757,9 +8759,6 @@ MonoBehaviour:
   touchPadClick: {fileID: -2088886845482169715, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
   distanceMultiplier: 0.1
-  scaleMultiplier: 0.4
-  maxScale: 0
-  minScale: 0
   referenceManager: {fileID: 0}
 --- !u!114 &1878803506475090295
 MonoBehaviour:
@@ -8779,6 +8778,7 @@ MonoBehaviour:
     m_Bits: 208128
   rayInteractor: {fileID: 1554578205}
   interactorLineVisual: {fileID: 1554578203}
+  lastRaycastableHit: {fileID: 0}
 --- !u!1 &8166409087826872791
 GameObject:
   m_ObjectHideFlags: 0

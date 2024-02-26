@@ -27,6 +27,7 @@ namespace CellexalVR.Interaction
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
                 keyboardHandler = GetComponentInParent<KeyboardHandler>();
+                canBePushedAndPulled = false;
             }
         }
 

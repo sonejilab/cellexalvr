@@ -22,7 +22,7 @@ namespace CellexalVR.AnalysisLogic
         {
             CellexalLog.Log("Started reading network files");
             CellexalEvents.ScriptRunning.Invoke();
-            string networkDirectory = path; //CellexalUser.UserSpecificFolder + @"\Resources\Networks";
+            string networkDirectory = path;
             if (!Directory.Exists(networkDirectory))
             {
                 print(string.Format(

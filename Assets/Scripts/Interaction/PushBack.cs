@@ -11,18 +11,23 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class PushBack : MonoBehaviour
     {
-        //// Open XR 
-        //public SteamVR_TrackedObject rightController;;
         public CellexalRaycast cellexalRaycast;
-        [SerializeField] private InputActionAsset actionAsset;
         [SerializeField] private InputActionReference touchPadPos;
         [SerializeField] private InputActionReference touchPadClick;
 
         public float distanceMultiplier = 0.1f;
         public ReferenceManager referenceManager;
 
+        private bool performMove;
+
+        /// <summary>
+        /// The Unity InputSystem invokes different actions depending on which VR hardware is used.
+        /// Vive-like controllers with a touchpad invokes <see cref="touchPadClick"/> when clicked (which is when we want to call <see cref="Move(GameObject, Vector3)"/>, but controllers with joysticks never invoke this action.
+        /// Joystick controllers instead invoke only <see cref="touchPadPos"/> (which the Vive-like touchpads also invoke, but when touched, not clicked).
+        /// The user must set which control scheme to use in the settings menu and this property will add listeners to the correct actions.
+        /// </summary>
         private bool _requireToggleToClick;
-        public bool RequireToggleToClick
+        private bool RequireToggleToClick
         {
             get { return _requireToggleToClick; }
             set
@@ -34,13 +39,17 @@ namespace CellexalVR.Interaction
                 _requireToggleToClick = value;
                 if (value)
                 {
-                    touchPadClick.action.performed += OnTouchPadClick;
-                    touchPadPos.action.performed -= OnTouchPadClick;
+                    touchPadClick.action.started += OnTouchPadPress;
+                    touchPadClick.action.canceled += OnTouchPadRelease;
+                    touchPadPos.action.started -= OnTouchPadPress;
+                    touchPadPos.action.canceled -= OnTouchPadRelease;
                 }
                 else
                 {
-                    touchPadClick.action.performed -= OnTouchPadClick;
-                    touchPadPos.action.performed += OnTouchPadClick;
+                    touchPadClick.action.started -= OnTouchPadPress;
+                    touchPadClick.action.canceled -= OnTouchPadRelease;
+                    touchPadPos.action.started += OnTouchPadPress;
+                    touchPadPos.action.canceled += OnTouchPadRelease;
                 }
             }
         }
@@ -50,6 +59,7 @@ namespace CellexalVR.Interaction
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                cellexalRaycast = gameObject.GetComponent<CellexalRaycast>();
             }
         }
 
@@ -67,9 +77,37 @@ namespace CellexalVR.Interaction
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
         }
 
-        private void OnTouchPadClick(InputAction.CallbackContext context)
+        private void Update()
         {
-            if (cellexalRaycast.lastRaycastableHit is null)
+            if (performMove)
+            {
+                OnTouchPadHold();
+            }
+        }
+
+        /// <summary>
+        /// Called when the touchpad/joystick is actuated.
+        /// </summary>
+        private void OnTouchPadPress(InputAction.CallbackContext context)
+        {
+            performMove = true;
+        }
+
+        /// <summary>
+        /// Called when the touchpad/joystick is no longer actuated.
+        /// </summary>
+        private void OnTouchPadRelease(InputAction.CallbackContext context)
+        {
+            performMove = false;
+        }
+
+        /// <summary>
+        /// Called every frame that the touchpad/joystick is actuated, performs the push/pull actions.
+        /// </summary>
+        private void OnTouchPadHold()
+        {
+            if (cellexalRaycast.lastRaycastableHit is null ||
+                !cellexalRaycast.lastRaycastableHit.canBePushedAndPulled)
             {
                 return;
             }
@@ -83,24 +121,27 @@ namespace CellexalVR.Interaction
                 }
             }
 
-            float dist = Vector3.Distance(gameObjectToMove.transform.position, cellexalRaycast.transform.position);
-            if (dist < 0.5f)
-            {
-                return;
-            }
-
             var position = gameObjectToMove.transform.position;
             Vector3 dir = position - cellexalRaycast.transform.position;
 
             Vector2 pos = touchPadPos.action.ReadValue<Vector2>();
 
+            float dist = dir.sqrMagnitude;
             if (pos.y > 0.5f)
             {
-                dir = -dir.normalized;
+                if (dist > 100f)
+                {
+                    return;
+                }
+                dir = dir.normalized;
             }
             else if (pos.y < -0.5f)
             {
-                dir = dir.normalized;
+                if (dist < 0.5f)
+                {
+                    return;
+                }
+                dir = -dir.normalized;
             }
 
             position += dir * distanceMultiplier;
@@ -108,7 +149,7 @@ namespace CellexalVR.Interaction
         }
 
         /// <summary>
-        /// Pushes an object further from the user.
+        /// Moves an object further from the user or closer to the user.
         /// </summary>
         public void Move(GameObject gameObjectToMove, Vector3 position)
         {

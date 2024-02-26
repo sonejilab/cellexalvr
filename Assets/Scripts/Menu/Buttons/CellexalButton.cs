@@ -59,6 +59,8 @@ namespace CellexalVR.Menu.Buttons
                 {
                     UnityEditor.Events.UnityEventTools.AddPersistentListener(OnActivate, Click);
                 }
+
+                canBePushedAndPulled = false;
             }
         }
 

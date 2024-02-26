@@ -1,4 +1,5 @@
 ﻿using CellexalVR.General;
+using CellexalVR.Menu.Buttons;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -32,6 +33,13 @@ namespace CellexalVR.Interaction
         [HideInInspector]
         public CellexalRaycastable lastRaycastableHit = null;
 
+        private ControllerModelSwitcher controllerModelSwitcher;
+
+        private void Start()
+        {
+            controllerModelSwitcher = ReferenceManager.instance.controllerModelSwitcher;
+        }
+
         private void OnEnable()
         {
             if (activatedBy == ClickType.RightTrigger)
@@ -55,6 +63,14 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
+            // make sure we are using a laser-pointer compatible model
+            bool correctModel = controllerModelSwitcher.ActualModel is
+                                ControllerModelSwitcher.Model.Normal or
+                                ControllerModelSwitcher.Model.Menu or
+                                ControllerModelSwitcher.Model.Keyboard or
+                                ControllerModelSwitcher.Model.TwoLasers or
+                                ControllerModelSwitcher.Model.WebBrowser;
+
             bool hit = Physics.Raycast(transform.position, transform.forward, out RaycastHit raycastInfo, 100f, layerMask, QueryTriggerInteraction.Collide);
             if (hit)
             {
@@ -62,6 +78,17 @@ namespace CellexalVR.Interaction
                 CellexalRaycastable raycastable = raycastInfo.collider.transform.GetComponent<CellexalRaycastable>();
                 if (raycastable is not null)
                 {
+                    // only do something with the raycast if we have the correct model that allows raycasting, or if we hit the menu
+                    if (!(correctModel || raycastable is CellexalButton))
+                    {
+                        if (lastRaycastableHit is not null)
+                        {
+                            lastRaycastableHit.OnRaycastExit();
+                            lastRaycastableHit = null;
+                            OnRaycastStop();
+                        }
+                        return;
+                    }
                     // we hit a CellexalRaycastable
                     if (lastRaycastableHit != raycastable)
                     {

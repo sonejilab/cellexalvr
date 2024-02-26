@@ -170,9 +170,9 @@ namespace CellexalVR.AnalysisLogic
 
             // generate the files containing the network information
             Selection selection = ReferenceManager.instance.selectionManager.GetLastSelection();
-            string outputFilePath = Path.Combine(CellexalUser.UserSpecificFolder, "Resources", "Networks" + selectionNr);
+            string outputFilePath = Path.Combine(CellexalUser.UserSpecificFolder, "Resources", "Networks_" + selection.id);
             networkMethod = CellexalConfig.Config.NetworkAlgorithm;
-            string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash() + " " +
+            string args = selection.savedSelectionDirectory.MakeDoubleBackslash() + " " +
                           selection.savedSelectionFilePath.MakeDoubleBackslash() + " " +
                           outputFilePath.MakeDoubleBackslash() + " " +
                           networkMethod;
