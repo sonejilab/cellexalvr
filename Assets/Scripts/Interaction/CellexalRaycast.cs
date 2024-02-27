@@ -126,6 +126,9 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Called on the first frame that this raycaster hit a raycastable.
+        /// </summary>
         private void OnRaycastStart()
         {
             rayInteractor.enabled = true;
@@ -133,6 +136,9 @@ namespace CellexalVR.Interaction
             interactorLineVisual.reticle.SetActive(true);
         }
 
+        /// <summary>
+        /// Called on the first frame that this raycaster no longer hits a raycastable.
+        /// </summary>
         private void OnRaycastStop()
         {
             rayInteractor.enabled = false;

@@ -172,7 +172,7 @@ namespace CellexalVR.AnalysisLogic
             Selection selection = ReferenceManager.instance.selectionManager.GetLastSelection();
             string outputFilePath = Path.Combine(CellexalUser.UserSpecificFolder, "Resources", "Networks_" + selection.id);
             networkMethod = CellexalConfig.Config.NetworkAlgorithm;
-            string args = selection.savedSelectionDirectory.MakeDoubleBackslash() + " " +
+            string args = CellexalUser.UserSpecificFolder.MakeDoubleBackslash() + " " +
                           selection.savedSelectionFilePath.MakeDoubleBackslash() + " " +
                           outputFilePath.MakeDoubleBackslash() + " " +
                           networkMethod;

@@ -10,26 +10,18 @@ namespace CellexalVR.Menu.Buttons
     /// <summary>
     /// Represents the tab buttons on top of a tab.
     /// </summary>
-    public class TabButton : MonoBehaviour
+    public class TabButton : CellexalRaycastable
     {
         public ReferenceManager referenceManager;
         public Tab tab;
         public MenuWithTabs Menu;
 
-        // Open XR
-        //protected SteamVR_TrackedObject rightController;
-        //protected SteamVR_Controller.Device device;
-        private ActionBasedController rightController;
         private InputDevice device;
         [SerializeField] protected bool controllerInside = false;
         private MeshRenderer meshRenderer;
         private Color standardColor = Color.grey;
         private Color highlightColor = Color.blue;
-        private readonly string laserCollider = "[VRTK][AUTOGEN][RightControllerScriptAlias][StraightPointerRenderer_Tracer]";
         private bool highlight;
-        private int frameCount;
-        private bool laserInside;
-        private Transform raycastingSource;
 
         private void OnValidate()
         {
@@ -43,102 +35,27 @@ namespace CellexalVR.Menu.Buttons
         {
             meshRenderer = GetComponent<MeshRenderer>();
             meshRenderer.material.color = standardColor;
-            if (!CrossSceneInformation.Spectator)
-            {
-                rightController = referenceManager.rightController;
-            }
-            this.tag = "Menu Controller Collider";
-
-            CellexalEvents.RightTriggerClick.AddListener(OnTriggerClick);
+            OnActivate.AddListener(OnClick);
         }
 
-        protected virtual void Update()
+        public override void OnRaycastEnter()
         {
-            if (!CrossSceneInformation.Normal) return;
-
-            //if (controllerInside && device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
-            if (!tab.Active && highlight && !controllerInside)
-            {
-                highlight = false;
-                SetHighlighted(highlight);
-            }
-            if (highlight && meshRenderer.material.color != highlightColor)
-            {
-                SetHighlighted(highlight);
-            }
-            CheckForHit();
+            SetHighlighted(true);
         }
 
-        private void OnTriggerClick()
+        public override void OnRaycastExit()
         {
-            if (controllerInside)
-            {
-                Menu.TurnOffAllTabs();
-                tab.SetTabActive(true);
-                highlight = true;
-                SetHighlighted(highlight);
-                controllerInside = false;
-            }
+            SetHighlighted(false);
         }
 
-        /// <summary>
-        /// Button sometimes stays active even though ontriggerexit should have been called.
-        /// To deactivate button again check every 10th frame if laser pointer collider is colliding.
-        /// </summary>
-        private void CheckForHit()
+        private void OnClick()
         {
-            if (tab.Active) return;
-
-            if (frameCount % 10 == 0)
-            {
-                laserInside = false;
-                RaycastHit hit;
-                raycastingSource = referenceManager.laserPointerController.origin;
-                Physics.Raycast(raycastingSource.position, raycastingSource.TransformDirection(Vector3.forward), out hit, 10);
-                // Open XR
-                //if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.IsTracerVisible())
-                if (hit.collider && hit.collider.transform == transform && referenceManager.rightLaser.enabled)
-                {
-                    laserInside = true;
-                    frameCount = 0;
-                    controllerInside = laserInside;
-                    SetHighlighted(laserInside);
-                    return;
-                }
-                if (!(hit.collider || hit.transform == transform))
-                {
-                    laserInside = false;
-                    controllerInside = laserInside;
-                    SetHighlighted(laserInside);
-                }
-                controllerInside = laserInside;
-                SetHighlighted(laserInside);
-                frameCount = 0;
-            }
+            Menu.TurnOffAllTabs();
+            tab.SetTabActive(true);
+            highlight = true;
+            SetHighlighted(highlight);
+            controllerInside = false;
         }
-
-        //protected void OnTriggerEnter(Collider other)
-        //{
-        //    if (other.gameObject.name == laserCollider)
-        //    {
-        //        highlight = true;
-        //        controllerInside = true;
-        //        SetHighlighted(highlight);
-        //    }
-        //}
-
-        //protected void OnTriggerExit(Collider other)
-        //{
-        //    if (other.gameObject.name == laserCollider)
-        //    {
-        //        controllerInside = false;
-        //        if (!tab.Active)
-        //        {
-        //            highlight = false;
-        //            SetHighlighted(highlight);
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Changes the color of the button to either its highlighted color or standard color.

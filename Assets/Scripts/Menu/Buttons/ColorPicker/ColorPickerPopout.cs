@@ -1,10 +1,11 @@
-﻿using CellexalVR.Menu.SubMenus;
-using CellexalVR.General;
+﻿using CellexalVR.General;
+using CellexalVR.Interaction;
+using CellexalVR.Menu.SubMenus;
 using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.ColorPicker
 {
-    public class ColorPickerPopout : MonoBehaviour
+    public class ColorPickerPopout : CellexalRaycastable
     {
         public ReferenceManager referenceManager;
         public CellexalButton finalizeChoiceButton;
@@ -25,7 +26,6 @@ namespace CellexalVR.Menu.Buttons.ColorPicker
         private float sat;
         private float val;
         private ColorPickerButton buttonToUpdate;
-        private GameObject rightController;
         private bool triggerPressed = false;
         private bool stickToSatValBox = false;
         private bool stickToHueBox = false;
@@ -49,7 +49,6 @@ namespace CellexalVR.Menu.Buttons.ColorPicker
 
         private void Start()
         {
-            rightController = referenceManager.rightController.gameObject.gameObject;
             satvalMarkerRenderer = satvalMarker.GetComponent<SpriteRenderer>();
             satvalBoxShader = satvalBox.GetComponent<Renderer>().material;
             hueMarkerRenderer = hueMarker.GetComponent<SpriteRenderer>();
@@ -77,64 +76,45 @@ namespace CellexalVR.Menu.Buttons.ColorPicker
             triggerPressed = false;
         }
 
-        private void Update()
+        public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
         {
-            Raycast();
-        }
-
-        public void Raycast()
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(rightController.transform.position, rightController.transform.forward, out hit, 25f))
+            // the raycast hit in local coordinates
+            Vector3 hitCoord = transform.InverseTransformPoint(hitInfo.point);
+            if (!stickToHueBox && (stickToSatValBox || CoordInsideBox(hitCoord, satValBoxLowerLeft, satValBoxUpperRight)))
             {
-                if (hit.collider.gameObject != gameObject)
+                // hit sat/val box
+                if (triggerPressed)
                 {
-                    return;
+                    hitCoord = Clamp(hitCoord, satValBoxLowerLeft, satValBoxUpperRight);
+                    stickToSatValBox = true;
+                    satvalMarker.transform.localPosition = new Vector3(hitCoord.x, 1.1f, hitCoord.z);
+                    sat = (hitCoord.x - satValBoxLowerLeft.x) / (satValBoxUpperRight.x - satValBoxLowerLeft.x);
+                    val = (hitCoord.z - satValBoxLowerLeft.z) / (satValBoxUpperRight.z - satValBoxLowerLeft.z);
+                    UpdateColor();
                 }
-                referenceManager.controllerModelSwitcher.SwitchToModel(CellexalVR.Interaction.ControllerModelSwitcher.Model.Menu);
-
-                // the raycast hit in local coordinates
-                Vector3 hitCoord = transform.InverseTransformPoint(hit.point);
-                if (!stickToHueBox && (stickToSatValBox || CoordInsideBox(hitCoord, satValBoxLowerLeft, satValBoxUpperRight)))
+                else
                 {
-                    // hit sat/val box
-                    if (triggerPressed)
-                    {
-                        hitCoord = Clamp(hitCoord, satValBoxLowerLeft, satValBoxUpperRight);
-                        stickToSatValBox = true;
-                        satvalMarker.transform.localPosition = new Vector3(hitCoord.x, 1.1f, hitCoord.z);
-                        sat = (hitCoord.x - satValBoxLowerLeft.x) / (satValBoxUpperRight.x - satValBoxLowerLeft.x);
-                        val = (hitCoord.z - satValBoxLowerLeft.z) / (satValBoxUpperRight.z - satValBoxLowerLeft.z);
-                        UpdateColor();
-                    }
-                    else
-                    {
-                        stickToSatValBox = false;
-                    }
-                    SetSatValBoxMarkerSprite(triggerPressed);
+                    stickToSatValBox = false;
                 }
-                else if (stickToHueBox || CoordInsideBox(hitCoord, huesliderBoxLowerLeft, huesliderBoxUpperRight))
-                {
-                    // hit hue slider
-                    if (triggerPressed)
-                    {
-                        hitCoord = Clamp(hitCoord, huesliderBoxLowerLeft, huesliderBoxUpperRight);
-                        stickToHueBox = true;
-                        hueMarker.transform.localPosition = new Vector3(0.2f, 0.8f, hitCoord.z);
-                        hue = 1 - (hitCoord.z - huesliderBoxLowerLeft.z) / (huesliderBoxUpperRight.z - huesliderBoxLowerLeft.z);
-                        satvalBoxShader.SetFloat("_Hue", hue);
-                        UpdateColor();
-                    }
-                    else
-                    {
-                        stickToHueBox = false;
-                    }
-                    SetHueMarkerSprite(triggerPressed);
-                }
+                SetSatValBoxMarkerSprite(triggerPressed);
             }
-            else
+            else if (stickToHueBox || CoordInsideBox(hitCoord, huesliderBoxLowerLeft, huesliderBoxUpperRight))
             {
-                referenceManager.controllerModelSwitcher.SwitchToDesiredModel();
+                // hit hue slider
+                if (triggerPressed)
+                {
+                    hitCoord = Clamp(hitCoord, huesliderBoxLowerLeft, huesliderBoxUpperRight);
+                    stickToHueBox = true;
+                    hueMarker.transform.localPosition = new Vector3(0.2f, 0.8f, hitCoord.z);
+                    hue = 1 - (hitCoord.z - huesliderBoxLowerLeft.z) / (huesliderBoxUpperRight.z - huesliderBoxLowerLeft.z);
+                    satvalBoxShader.SetFloat("_Hue", hue);
+                    UpdateColor();
+                }
+                else
+                {
+                    stickToHueBox = false;
+                }
+                SetHueMarkerSprite(triggerPressed);
             }
         }
 
