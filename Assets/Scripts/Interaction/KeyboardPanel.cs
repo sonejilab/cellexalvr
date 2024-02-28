@@ -9,9 +9,7 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class KeyboardPanel : ClickablePanel
     {
-        public KeyboardHandler handler;
-
-
+        
         public enum Type
         {
             /// <summary>

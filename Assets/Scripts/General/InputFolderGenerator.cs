@@ -75,7 +75,7 @@ namespace CellexalVR.General
             if (CrossSceneInformation.Tutorial)
             {
                 referenceManager.tutorialManager.gameObject.SetActive(true);
-                dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
+                dataDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Data");
                 directories.AddRange(Directory.GetDirectories(dataDirectory, "Mouse_HSPC"));
             }
             else
@@ -88,7 +88,7 @@ namespace CellexalVR.General
                         yield return null;
                 }
                 directories.AddRange(ScarfManager.instance.datasets);
-                dataDirectory = Directory.GetCurrentDirectory() + "\\Data";
+                dataDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Data");
                 directories.AddRange(Directory.GetDirectories(dataDirectory));
             }
 

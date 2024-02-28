@@ -28,9 +28,9 @@ namespace CellexalVR.DesktopUI
         /// </summary>
         private void ReadConfig()
         {
-            configDir = Directory.GetCurrentDirectory() + @"\Config";
-            configPath = configDir + @"\default_config.xml";
-            sampleConfigPath = Application.streamingAssetsPath + @"\sample_config.xml";
+            configDir = Path.Combine(Directory.GetCurrentDirectory(), "Config");
+            configPath = Path.Combine(configDir, "default_config.xml");
+            sampleConfigPath = Path.Combine(Application.streamingAssetsPath, "sample_config.xml");
             if (!Directory.Exists("Config"))
             {
                 Directory.CreateDirectory("Config");
@@ -88,8 +88,8 @@ namespace CellexalVR.DesktopUI
                     if (hasChanged)
                     {
                         CellexalConfig.Config.RscriptexePath = path;
-                        string configDir = Directory.GetCurrentDirectory() + @"\Config";
-                        string configPath = configDir + @"\default_config.xml";
+                        string configDir = Path.Combine(Directory.GetCurrentDirectory(), "Config");
+                        string configPath = Path.Combine(configDir, "default_config.xml");
                         if (!Directory.Exists("Config"))
                         {
                             Directory.CreateDirectory("Config");
@@ -124,13 +124,13 @@ namespace CellexalVR.DesktopUI
         }
 
 
-    public void Quit()
-    {
+        public void Quit()
+        {
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
+        }
     }
-}
 }

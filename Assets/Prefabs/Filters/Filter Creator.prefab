@@ -1509,7 +1509,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04a35fb6cfc566543a083060e2cba7bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filterManager: {fileID: 0}
 --- !u!1 &4577465598368498588
 GameObject:
   m_ObjectHideFlags: 0
@@ -7416,6 +7415,7 @@ GameObject:
   - component: {fileID: 6121179787684068233}
   - component: {fileID: 7040932814210096272}
   - component: {fileID: 6662680716348870185}
+  - component: {fileID: 5624646182327650219}
   m_Layer: 0
   m_Name: Filter Block Board
   m_TagString: Untagged
@@ -7597,6 +7597,22 @@ MonoBehaviour:
   scaleGrab: {fileID: 0}
   actionAsset: {fileID: 0}
   action: {fileID: 0}
+--- !u!114 &5624646182327650219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6121179787684068246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fbc49eed31a4d94d9dc5ba56fdb475f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 1
 --- !u!1 &6121179787730103988
 GameObject:
   m_ObjectHideFlags: 0

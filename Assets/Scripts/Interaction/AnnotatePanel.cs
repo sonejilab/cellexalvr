@@ -17,10 +17,10 @@ namespace CellexalVR.Interaction
         public override void Click()
         {
             base.Click();
-            if (!keyboardHandler.Text().Equals(string.Empty))
+            if (!handler.Text().Equals(string.Empty))
             {
-                keyboardHandler.OnAnnotate.Invoke(keyboardHandler.Text());
-                keyboardHandler.Clear(true);
+                handler.OnAnnotate.Invoke(handler.Text());
+                handler.Clear(true);
             }
 
         }

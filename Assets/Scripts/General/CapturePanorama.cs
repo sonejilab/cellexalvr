@@ -58,8 +58,8 @@ namespace CellexalVR.General
 
             int sqr = 8192;
 
-            Texture2D texture2D = new Texture2D(sqr, sqr/4, TextureFormat.RGB24, false);
-            texture2D.ReadPixels(new Rect(0, 0, sqr, sqr/4), 0, 0);
+            Texture2D texture2D = new Texture2D(sqr, sqr / 4, TextureFormat.RGB24, false);
+            texture2D.ReadPixels(new Rect(0, 0, sqr, sqr / 4), 0, 0);
             RenderTexture.active = null; //can help avoid errors 
             //virtuCamera.camera.targetTexture = null;
             // consider ... Destroy(tempRT);
@@ -76,7 +76,7 @@ namespace CellexalVR.General
 
         private string OurTempSquareImageLocation()
         {
-            string r = Directory.GetCurrentDirectory() + "/p.png";
+            string r = Path.Combine(Directory.GetCurrentDirectory(), "p.png");
             return r;
         }
     }

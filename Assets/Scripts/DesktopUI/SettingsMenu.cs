@@ -692,7 +692,7 @@ namespace CellexalVR.DesktopUI
 
             if (datasetSpecificProfileToggle.isOn)
             {
-                CellexalConfig.Config.ConfigDir = "Data\\" + CellexalUser.DatasetName;
+                CellexalConfig.Config.ConfigDir = Path.Combine("Data", CellexalUser.DatasetName);
             }
             else
             {

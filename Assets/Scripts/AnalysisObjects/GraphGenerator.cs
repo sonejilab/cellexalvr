@@ -1137,8 +1137,7 @@ namespace CellexalVR.AnalysisObjects
             graphManager.attributeSubGraphs.Add(subGraph);
             if (g.hasVelocityInfo)
             {
-                referenceManager.velocitySubMenu.CreateButton(CellexalUser.DatasetFullPath + @"\" +
-                                                              g.GraphName + ".mds", subGraphName);
+                referenceManager.velocitySubMenu.CreateButton(Path.Combine(CellexalUser.DatasetFullPath, g.GraphName + ".mds"), subGraphName);
                 subGraph.hasVelocityInfo = true;
             }
         }

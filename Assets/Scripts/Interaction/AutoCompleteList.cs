@@ -79,7 +79,7 @@ namespace CellexalVR.Interaction
                 results = ScarfManager.instance.geneNames;
                 //results = ScarfManager.scarfObject.feature_names.ToArray();
             }
-            else if (File.Exists($"Data/{CellexalUser.DatasetName}/database.sqlite"))
+            else if (File.Exists(Path.Combine("Data", CellexalUser.DatasetName, "database.sqlite")))
             {
                 SQLiter.SQLite database = referenceManager.database;
                 //yield return new WaitForSeconds(2);

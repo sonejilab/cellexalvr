@@ -19,14 +19,17 @@ namespace CellexalVR.Interaction
         protected Material keyHighlightMaterial;
         protected Material keyPressedMaterial;
         private bool isPressed;
-        protected KeyboardHandler keyboardHandler;
+        public KeyboardHandler handler;
 
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
-                keyboardHandler = GetComponentInParent<KeyboardHandler>();
+                if (gameObject.activeInHierarchy)
+                {
+                    handler = GetComponentInParent<KeyboardHandler>();
+                }
                 canBePushedAndPulled = false;
             }
         }
@@ -75,7 +78,7 @@ namespace CellexalVR.Interaction
         /// </summary>
         public virtual void Click()
         {
-            keyboardHandler.Pulse();
+            handler.Pulse();
         }
 
         public override void OnRaycastEnter()
@@ -86,12 +89,12 @@ namespace CellexalVR.Interaction
         public override void OnRaycastExit()
         {
             SetHighlighted(false);
-            keyboardHandler.UpdateLaserCoords(new Vector2(-1f, -1f));
+            handler.UpdateLaserCoords(new Vector2(-1f, -1f));
         }
 
         public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
         {
-            keyboardHandler.UpdateLaserCoords(keyboardHandler.ToUv2Coord(hitInfo.point));
+            handler.UpdateLaserCoords(handler.ToUv2Coord(hitInfo.point));
         }
 
         /// <summary>

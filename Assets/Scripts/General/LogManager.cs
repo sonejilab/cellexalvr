@@ -190,7 +190,7 @@ namespace CellexalVR.General
             CellexalEvents.UsernameChanged.AddListener(CellexalLog.UsernameChanged);
             //CellexalEvents.GraphsLoaded.AddListener(CellexalLog.InitNewLog);
 
-            string outputDirectory = Directory.GetCurrentDirectory() + "\\Output";
+            string outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Output");
 
             CellexalLog.consoleManager = referenceManager.consoleManager;
             if (!Directory.Exists(outputDirectory))

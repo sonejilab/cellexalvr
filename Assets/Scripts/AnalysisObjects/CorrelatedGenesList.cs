@@ -96,20 +96,24 @@ namespace CellexalVR.AnalysisObjects
 
         private IEnumerator CalculateCorrelatedGenesCoroutine(string nodeName, Extensions.Definitions.Measurement type)
         {
-            string outputFile = (CellexalUser.UserSpecificFolder + @"\Resources\" + nodeName + ".correlated.txt").MakeDoubleBackslash();
+            string outputFile = Path.Combine(CellexalUser.UserSpecificFolder, "Resources", nodeName + ".correlated.txt");
             string facsTypeArg = (type == Extensions.Definitions.Measurement.FACS) ? "TRUE" : "FALSE";
-            string args = CellexalUser.UserSpecificFolder + " " + nodeName + " " + outputFile + " " + facsTypeArg;
-            string rScriptFilePath = (Application.streamingAssetsPath + @"\R\get_correlated_genes.R").FixFilePath();
+            string args = CellexalUser.UserSpecificFolder + " " + nodeName + " " + outputFile.MakeDoubleBackslash() + " " + facsTypeArg;
+            string rScriptFilePath = Path.Combine(Application.streamingAssetsPath, "R", "get_correlated_genes.R");
 
             // First wait until other processes are finished before trying to start this one.
-            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                    !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            string mainserverPidPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid");
+            string mainserverInputPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R");
+            string mainserverInputLockPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock");
+
+            bool rServerReady = File.Exists(mainserverPidPath)
+                                && !File.Exists(mainserverInputPath)
+                                && !File.Exists(mainserverInputLockPath);
             while (!rServerReady || !RScriptRunner.serverIdle)
             {
-                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                rServerReady = File.Exists(mainserverPidPath)
+                               && !File.Exists(mainserverInputPath)
+                               && !File.Exists(mainserverInputLockPath);
                 yield return null;
             }
             CellexalLog.Log("Calculating correlated genes with R script " + rScriptFilePath + " and arguments: " + args);
@@ -119,7 +123,7 @@ namespace CellexalVR.AnalysisObjects
             Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
             // Wait for this process to finish.
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            while (t.IsAlive || File.Exists(mainserverInputPath))
             {
                 yield return null;
             }

@@ -908,7 +908,7 @@ namespace SQLiter
             string query = "select cname, value " +
                            "FROM datavalues " +
                            "INNER JOIN cells ON (datavalues.cell_id = cells.id) " +
-                           "WHERE (ene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
+                           "WHERE (gene_id = (select id from genes where upper(gname) = upper(\"" + geneName + "\"))";
 
             Thread t = new Thread(() => QueryThread(query));
             t.Start();

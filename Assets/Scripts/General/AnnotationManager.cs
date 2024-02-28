@@ -198,49 +198,50 @@ namespace CellexalVR.General
             reading = true;
             if (filePath != "")
             {
-                string savedSelectionsPath = CellexalUser.UserSpecificFolder + @"\SavedSelections\";
+                string savedSelectionsPath = Path.Combine(CellexalUser.UserSpecificFolder, "SavedSelections");
                 if (!Directory.Exists(savedSelectionsPath))
                 {
                     Directory.CreateDirectory(savedSelectionsPath);
                 }
 
-                filePath = savedSelectionsPath + filePath + ".txt";
+                filePath = Path.Combine(savedSelectionsPath, filePath + ".txt");
             }
             else
             {
-                string annotationDirectory = CellexalUser.UserSpecificFolder + @"\AnnotatedSelections";
+                string annotationDirectory = Path.Combine(CellexalUser.UserSpecificFolder, "AnnotatedSelections");
                 if (!Directory.Exists(annotationDirectory))
                 {
                     CellexalLog.Log("Creating directory " + annotationDirectory.FixFilePath());
                     Directory.CreateDirectory(annotationDirectory);
                 }
 
-                filePath = annotationDirectory + "\\annotated_selection" + annotationCtr + ".txt";
+                filePath = Path.Combine(annotationDirectory, "annotated_selection" + annotationCtr + ".txt");
                 while (File.Exists(filePath))
                 {
                     annotationCtr++;
-                    filePath = annotationDirectory + "\\annotated_selection" + annotationCtr + ".txt";
+                    filePath = Path.Combine(annotationDirectory, "annotated_selection" + annotationCtr + ".txt");
                 }
+            }
 
-                using (StreamWriter file = new StreamWriter(filePath, true))
+            using (StreamWriter file = new StreamWriter(filePath, true))
+            {
+                CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
+                CellexalLog.Log("\tSelection consists of  " + selectionManager.GetCurrentSelectionSize() +
+                                " points");
+                if (selectionManager.selectionHistory != null)
+                    CellexalLog.Log("\tThere are " + selectionManager.selectionHistory.Count +
+                                    " entries in the history");
+                foreach (KeyValuePair<string, List<string>> kvp in annotatedPoints)
                 {
-                    CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
-                    CellexalLog.Log("\tSelection consists of  " + selectionManager.GetCurrentSelectionSize() +
-                                    " points");
-                    if (selectionManager.selectionHistory != null)
-                        CellexalLog.Log("\tThere are " + selectionManager.selectionHistory.Count +
-                                        " entries in the history");
-                    foreach (KeyValuePair<string, List<string>> kvp in annotatedPoints)
+                    foreach (string s in kvp.Value)
                     {
-                        foreach (string s in kvp.Value)
-                        {
-                            file.Write(s);
-                            file.Write("\t");
-                            file.Write(kvp.Key);
-                            file.WriteLine();
-                        }
+                        file.Write(s);
+                        file.Write("\t");
+                        file.Write(kvp.Key);
+                        file.WriteLine();
                     }
                 }
+
 
                 annotationCtr++;
             }
@@ -305,7 +306,7 @@ namespace CellexalVR.General
             }
             string path = CellexalUser.DatasetFullPath;
             StartCoroutine(referenceManager.inputReader.attributeReader.ReadAttributeFilesCoroutine(path));
-            
+
         }
     }
 }

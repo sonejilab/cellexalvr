@@ -12,6 +12,7 @@ using CellexalVR.Spatial;
 using CellexalVR.Tools;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -639,7 +640,7 @@ namespace CellexalVR.Multiuser
             }
         }
 
-        [PunRPC] 
+        [PunRPC]
         public void RecieveMessageToggleAnnotationFile(string path, bool toggle)
         {
             referenceManager.annotationManager.ToggleAnnotationFile(path, toggle);
@@ -1609,7 +1610,7 @@ namespace CellexalVR.Multiuser
             //}
             if (activate)
             {
-                referenceManager.velocityGenerator.ReadVelocityFile(CellexalUser.DatasetFullPath + @"\" + graphName + ".mds", subGraphName);
+                referenceManager.velocityGenerator.ReadVelocityFile(Path.Combine(CellexalUser.DatasetFullPath, graphName + ".mds"), subGraphName);
             }
             else
             {

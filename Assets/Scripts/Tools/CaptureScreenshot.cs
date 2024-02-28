@@ -81,14 +81,14 @@ namespace CellexalVR.Tools
                 CellexalLog.Log("Created directory " + screenshotImageDirectory);
             }
 
-            screenshotImageDirectory += "\\Screenshots";
+            screenshotImageDirectory = Path.Combine(screenshotImageDirectory, "Screenshots");
             if (!Directory.Exists(screenshotImageDirectory))
             {
                 Directory.CreateDirectory(screenshotImageDirectory);
                 CellexalLog.Log("Created directory " + screenshotImageDirectory);
             }
 
-            string screenshotImageFilePath = screenshotImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+            string screenshotImageFilePath = Path.Combine(screenshotImageDirectory, name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png");
             byte[] image = snapTex.EncodeToPNG();
             File.WriteAllBytes(screenshotImageFilePath, image);
 
@@ -154,16 +154,20 @@ namespace CellexalVR.Tools
         private IEnumerator LogScreenshot(string screenshotImageFilePath)
         {
             string args = screenshotImageFilePath;
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\screenshot_report.R";
+            string rScriptFilePath = Path.Combine(Application.streamingAssetsPath, "R", "screenshot_report.R");
 
-            bool rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                                !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+            string mainserverPidPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid");
+            string mainserverInputPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R");
+            string mainserverInputLockPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock");
+
+            bool rServerReady = File.Exists(mainserverPidPath)
+                                && !File.Exists(mainserverInputPath)
+                                && !File.Exists(mainserverInputLockPath);
             while (!rServerReady || !RScriptRunner.serverIdle)
             {
-                rServerReady = File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.pid") &&
-                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R") &&
-                               !File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
+                rServerReady = File.Exists(mainserverPidPath)
+                               && !File.Exists(mainserverInputPath)
+                               && !File.Exists(mainserverInputLockPath);
                 yield return null;
             }
 
@@ -173,7 +177,7 @@ namespace CellexalVR.Tools
             CellexalLog.Log("Running R function " + rScriptFilePath + " with the arguments: " + args);
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            while (t.IsAlive || File.Exists(mainserverInputPath))
             {
                 yield return null;
             }

@@ -187,14 +187,14 @@ namespace CellexalVR.AnalysisLogic
             string mainserverInputPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R");
             string mainserverInputLockPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock");
 
-            bool rServerReady = File.Exists(mainserverPidPath) &&
-                                !File.Exists(mainserverInputPath) &&
-                                !File.Exists(mainserverInputLockPath);
+            bool rServerReady = File.Exists(mainserverPidPath)
+                                && !File.Exists(mainserverInputPath)
+                                && !File.Exists(mainserverInputLockPath);
             while (!rServerReady || !RScriptRunner.serverIdle)
             {
-                rServerReady = File.Exists(mainserverPidPath) &&
-                               !File.Exists(mainserverInputPath) &&
-                               !File.Exists(mainserverInputLockPath);
+                rServerReady = File.Exists(mainserverPidPath)
+                               && !File.Exists(mainserverInputPath)
+                               && !File.Exists(mainserverInputLockPath);
                 yield return null;
             }
 
@@ -204,7 +204,7 @@ namespace CellexalVR.AnalysisLogic
             t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
             t.Start();
 
-            while (t.IsAlive || File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R"))
+            while (t.IsAlive || File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R")))
             {
                 yield return null;
             }
@@ -254,7 +254,6 @@ namespace CellexalVR.AnalysisLogic
             handler.AddNetwork(network);
             network.Handler = handler;
             network.gameObject.name = "NetworkCenter_Group" + /*handler.name + */ group;
-            network.selectionNr = selectionNr;
             network.Group = group;
             networkList.RemoveAll(item => item == null);
             if (!networkList.Contains(handler)) networkList.Add(handler);

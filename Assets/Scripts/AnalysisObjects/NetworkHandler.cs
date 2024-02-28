@@ -30,6 +30,7 @@ namespace CellexalVR.AnalysisObjects
         //public string NetworkHandlerName { get; internal set; }
 
         public List<NetworkCenter> networks = new List<NetworkCenter>();
+        public Selection selection;
 
         private MultiuserMessageSender multiuserMessageSender;
         private MeshRenderer meshRenderer;

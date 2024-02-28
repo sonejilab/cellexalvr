@@ -402,14 +402,14 @@ namespace CellexalVR.Menu.SubMenus
             HidePreviewObjects();
             // create the necessary folders
             CellexalLog.Log("Started creating flyby");
-            string flybyDir = CellexalUser.UserSpecificFolder + "/Flyby";
+            string flybyDir = Path.Combine(CellexalUser.UserSpecificFolder, "Flyby");
             if (Directory.Exists(flybyDir))
             {
                 Directory.CreateDirectory(flybyDir);
                 CellexalLog.Log("Created directory " + flybyDir);
             }
 
-            string outputDir = flybyDir + "/Flyby_temp";
+            string outputDir = Path.Combine(flybyDir, "Flyby_temp");
             Directory.CreateDirectory(outputDir);
             Light headsetLight = referenceManager.headset.GetComponentInChildren<Light>();
             if (headsetLight != null)
@@ -460,7 +460,7 @@ namespace CellexalVR.Menu.SubMenus
                     // write the frame to a the disk for ffmpeg
                     string fileName = "frame_" + fileId.ToString("D6") + ".jpg";
 
-                    FileStream fileStream = File.Create(outputDir + "/" + fileName);
+                    FileStream fileStream = File.Create(Path.Combine(outputDir, fileName));
                     fileStream.Write(frameData, 0, frameData.Length);
                     fileStream.Flush();
                     fileStream.Close();
@@ -469,7 +469,7 @@ namespace CellexalVR.Menu.SubMenus
                 }
             }
             string time = System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-            string outputPath = flybyDir + "/flyby_" + time;
+            string outputPath = Path.Combine(flybyDir, "flyby_" + time);
             while (File.Exists(outputPath))
             {
                 // this will likely never happen
@@ -481,7 +481,7 @@ namespace CellexalVR.Menu.SubMenus
             using (Process ffmpegProcess = new Process())
             {
                 ProcessStartInfo startInfo = ffmpegProcess.StartInfo;
-                startInfo.FileName = Application.streamingAssetsPath + "/ffmpeg/ffmpeg.exe";
+                startInfo.FileName = Path.Combine(Application.streamingAssetsPath, "ffmpeg", "ffmpeg.exe");
                 startInfo.Arguments = "-framerate 24 -start_number 0 -i " + outputDir + "/frame_%06d.jpg -frames:v " + fileId + " " + outputPath;
                 startInfo.UseShellExecute = false;
                 startInfo.CreateNoWindow = true;

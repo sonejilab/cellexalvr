@@ -205,7 +205,7 @@ namespace CellexalVR.AnalysisLogic
         public IEnumerator ReadBigFolder(string path)
         {
             string workingDirectory = Directory.GetCurrentDirectory();
-            string fullPath = workingDirectory + "\\Data\\" + path;
+            string fullPath = Path.Combine(workingDirectory, "Data", path);
             string[] files = Directory.GetFiles(fullPath, "*.mds");
             PointCloudGenerator.instance.mdsFileCount = files.Length;
             // string mdsFile = files[0];

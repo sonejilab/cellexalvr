@@ -150,7 +150,7 @@ namespace CellexalVR.DesktopUI
             if (paths.Length == 1)
             {
                 string path = paths[0];
-                string spath = (path + "\\run_scarf_server.bat").Replace('\\', '/');
+                string spath = Path.Combine(path, "run_scarf_server.bat").Replace('\\', '/');
                 if (File.Exists(spath))
                 {
                     bool hasChanged = path != CellexalConfig.Config.ScarfscriptPath;
@@ -170,8 +170,8 @@ namespace CellexalVR.DesktopUI
 
         private void SaveToConfig()
         {
-            string configDir = Directory.GetCurrentDirectory() + @"\Config";
-            string configPath = configDir + @"\default_config.xml";
+            string configDir = Path.Combine(Directory.GetCurrentDirectory(), "Config");
+            string configPath = Path.Combine(configDir, "default_config.xml");
             if (!Directory.Exists("Config"))
             {
                 Directory.CreateDirectory("Config");

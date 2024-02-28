@@ -38,7 +38,7 @@ namespace CellexalVR.General
         /// <summary>
         /// Path to a folder unique to the current user and the currently loaded dataset.
         /// </summary>
-        public static string UserSpecificFolder = workingDirectory + @"\Output\" + username;
+        public static string UserSpecificFolder = Path.Combine(workingDirectory, "Output", username);
 
         /// <summary>
         /// The user's name. This is edited through the escape menu.
@@ -91,20 +91,20 @@ namespace CellexalVR.General
         /// </summary>
         private static void UpdateUserSpecificFolder(string username, string dataFolder)
         {
-            if (Username == "" || DatasetName == "")
+            if (username is null || dataFolder is null || username == "" || DatasetName == "")
             {
                 return;
             }
 
             // make sure all the folders exist
-            string userFolder = workingDirectory + @"\Output\" + username;
+            string userFolder = Path.Combine(workingDirectory, "Output", username);
             if (!Directory.Exists(userFolder))
             {
                 CellexalLog.Log("Created directory " + userFolder);
                 Directory.CreateDirectory(userFolder);
             }
 
-            UserSpecificFolder = userFolder + @"\" + dataFolder;
+            UserSpecificFolder = Path.Combine(userFolder, dataFolder);
             if (!Directory.Exists(UserSpecificFolder))
             {
                 CellexalLog.Log("Created directory " + UserSpecificFolder);

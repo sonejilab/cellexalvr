@@ -99,7 +99,7 @@ namespace CellexalVR.AnalysisLogic
             Thread t = new Thread(() => { res = StartServer(); });
             t.Start();
 
-            StartCoroutine(SetZarrLocCoroutine($"{Directory.GetCurrentDirectory()}\\Data"));
+            StartCoroutine(SetZarrLocCoroutine(Path.Combine(Directory.GetCurrentDirectory(), "Data")));
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace CellexalVR.AnalysisLogic
             string result = string.Empty;
             try
             {
-                string path = $"{CellexalConfig.Config.ScarfscriptPath}\\run_scarf_server.bat";
+                string path = Path.Combine(CellexalConfig.Config.ScarfscriptPath, "run_scarf_server.bat");
 
                 var info = new ProcessStartInfo
                 {

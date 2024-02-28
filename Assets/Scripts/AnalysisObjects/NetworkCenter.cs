@@ -34,7 +34,6 @@ namespace CellexalVR.AnalysisObjects
         public BoxCollider ringCollider;
         public NetworkHandler Handler { get; set; }
         public ReferenceManager referenceManager;
-        public int selectionNr;
         public SaveNetworkAsImageButton saveImageButton;
         public GameObject movingOutlineCircle;
 
@@ -1019,13 +1018,13 @@ namespace CellexalVR.AnalysisObjects
                 CellexalLog.Log("Created directory " + directoryPath);
             }
 
-            directoryPath += "\\Networks";
+            directoryPath = Path.Combine(directoryPath, "Networks");
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
                 CellexalLog.Log("Created directory " + directoryPath);
             }
-            string filePath = directoryPath + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt";
+            string filePath = Path.Combine(directoryPath, name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt");
             var stream = File.Create(filePath);
             var streamWriter = new StreamWriter(stream);
 
@@ -1146,14 +1145,14 @@ namespace CellexalVR.AnalysisObjects
                 CellexalLog.Log("Created directory " + networkImageDirectory);
             }
 
-            networkImageDirectory += "\\Networks";
+            networkImageDirectory = Path.Combine(networkImageDirectory, "Networks");
             if (!Directory.Exists(networkImageDirectory))
             {
                 Directory.CreateDirectory(networkImageDirectory);
                 CellexalLog.Log("Created directory " + networkImageDirectory);
             }
 
-            string networkImageFilePath = networkImageDirectory + "\\" + name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+            string networkImageFilePath = Path.Combine(networkImageDirectory, name + "_" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png");
             bitmap.Save(networkImageFilePath, ImageFormat.Png);
             CellexalLog.Log("Saved " + name + " as an image at " + networkImageFilePath);
             StartCoroutine(referenceManager.reportManager.LogNetwork(networkImageFilePath, this));

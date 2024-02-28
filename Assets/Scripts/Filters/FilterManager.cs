@@ -99,13 +99,15 @@ namespace CellexalVR.Filters
             currentFilter.Expression.GetFacs(ref itemsInFilter);
             currentFilter.Expression.GetAttributes(ref itemsInFilter);
             string fileName = string.Join("_", itemsInFilter);
+            string filterPath = Path.Combine(CellexalUser.UserSpecificFolder, fileName + ".fil");
 
-            while (File.Exists(CellexalUser.UserSpecificFolder + "\\" + fileName))
+            while (File.Exists(filterPath))
             {
                 fileName += "_2";
+                filterPath = Path.Combine(CellexalUser.UserSpecificFolder, fileName + ".fil");
             }
 
-            string filterPath = CellexalUser.UserSpecificFolder + "\\" + fileName + ".fil";
+            currentFilterPath = filterPath;
             FileStream fileStream = new FileStream(filterPath, FileMode.Create, FileAccess.Write, FileShare.None);
 
             using (StreamWriter streamWriter = new StreamWriter(fileStream))

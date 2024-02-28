@@ -364,12 +364,19 @@ namespace CellexalVR.DesktopUI
                 string folder;
                 if (folders[command] == "%CURRENT_LOADED_DATA%")
                 {
-                    folder = CellexalUser.DatasetFullPath + @"\";
+                    folder = CellexalUser.DatasetFullPath;
                 }
                 else
                 {
-                    folder = Directory.GetCurrentDirectory() + @"\" + folders[command] + @"\";
+                    folder = Path.Combine(Directory.GetCurrentDirectory(), folders[command]);
                 }
+
+                // Directory.GetDirectories() requires the path argument to end in directory separator character, typically \ or /
+                if (folder[^1] != Path.DirectorySeparatorChar)
+                {
+                    folder += Path.DirectorySeparatorChar;
+                }
+
                 string[] foundFolders = Directory.GetDirectories(folder, currentText + "*", SearchOption.TopDirectoryOnly);
                 string[] foundFiles = Directory.GetFiles(folder, currentText + "*", SearchOption.TopDirectoryOnly);
                 // put everything in one list

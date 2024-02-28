@@ -105,7 +105,7 @@ namespace CellexalVR.Menu.SubMenus
 
             annotationButtonPos = new Vector3(-.39f, .77f, -.20f);
             prevAnnotationButtons.Clear();
-            string path = CellexalUser.UserSpecificFolder + "\\AnnotatedSelections\\";
+            string path = Path.Combine(CellexalUser.UserSpecificFolder, "AnnotatedSelections");
             if (!Directory.Exists(path)) return;
             string[] files = Directory.GetFiles(path, "*.txt");
             int i = 0;
@@ -145,7 +145,7 @@ namespace CellexalVR.Menu.SubMenus
 
             return null;
         }
-        
+
         public SelectionFromPreviousButton FindSelectionButton(string path)
         {
             foreach (SelectionFromPreviousButton button in prevSelectionButtons)

@@ -53,7 +53,7 @@ namespace CellexalVR.AnalysisLogic
         {
             string[] words = heatmapName.Split(Path.DirectorySeparatorChar);
             string heatmapNameLastPart = words[words.Length - 1];
-            string directory = (CellexalUser.UserSpecificFolder + "/Heatmap/" + heatmapNameLastPart).FixFilePath();
+            string directory = Path.Combine(CellexalUser.UserSpecificFolder, "Heatmap", heatmapNameLastPart);
             CellexalLog.Log("Loading old heatmap from file " + directory);
             Heatmap heatmap = Instantiate(heatmapPrefab).GetComponent<Heatmap>();
             heatmap.selection = referenceManager.inputReader.ReadSelectionFile(fromSelectionFile, false);
@@ -429,7 +429,7 @@ namespace CellexalVR.AnalysisLogic
                         CellexalError.SpawnError("Failed to create heatmap",
                             "R script did not return gene list file " + filepath);
                         if (!(referenceManager.networkGenerator.GeneratingNetworks &&
-                              File.Exists(CellexalUser.UserSpecificFolder + "\\mainServer.input.R")))
+                              File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R"))))
                         {
                             referenceManager.floor.StopPulse();
                         }
@@ -638,13 +638,13 @@ namespace CellexalVR.AnalysisLogic
                 cellsPosition[heatmap.cells[i].Label] = i;
             }
 
-            string heatmapDirectory = Directory.GetCurrentDirectory() + @"\Output\Images";
+            string heatmapDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Images");
             if (!Directory.Exists(heatmapDirectory))
             {
                 Directory.CreateDirectory(heatmapDirectory);
             }
 
-            string heatmapFilePath = heatmapDirectory + "\\heatmap_temp";
+            string heatmapFilePath = Path.Combine(heatmapDirectory, "heatmap_temp");
             Thread thread;
             //if (ScarfManager.scarfObject != null)
             //{

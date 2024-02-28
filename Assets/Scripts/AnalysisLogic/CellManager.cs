@@ -492,9 +492,9 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            CellexalLog.Log("Overwriting file: " + CellexalUser.UserSpecificFolder +
-                            "\\gene_expr_diff.txt with new results");
-            StreamWriter stream = new StreamWriter(CellexalUser.UserSpecificFolder + "\\gene_expr_diff.txt", false);
+            string filePath = Path.Combine(CellexalUser.UserSpecificFolder, "gene_expr_diff.txt");
+            CellexalLog.Log($"Overwriting file: {filePath} with new results");
+            StreamWriter stream = new StreamWriter(filePath, false);
             foreach (Pair<string, float> p in results)
             {
                 stream.Write(p.First + "\t\t " + p.Second + "\n");

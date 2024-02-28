@@ -85,13 +85,13 @@ namespace CellexalVR.AnalysisLogic
         public void DumpSelectionToTextFile(List<Graph.GraphPoint> selection, string first_marker,
                                             string second_marker, string third_marker)
         {
-            this.filePath = CellexalUser.UserSpecificFolder + "\\" + first_marker + "_" + second_marker + "_" + third_marker + ".txt";
+            this.filePath = Path.Combine(CellexalUser.UserSpecificFolder, $"{first_marker}_{second_marker}_{third_marker}.txt");
             HashSet<string> previousLines = new HashSet<string>();
             using (StreamWriter file = new StreamWriter(filePath))
             {
                 CellexalLog.Log("Dumping selection data to " + CellexalLog.FixFilePath(filePath));
                 CellexalLog.Log("\tSelection consists of  " + selection.Count + " points");
-                string header = "CellID\t" + first_marker + "\t" + second_marker + "\t" + third_marker;
+                string header = $"CellID\t{first_marker}\t{second_marker}\t{third_marker}";
                 file.WriteLine(header);
                 for (int i = 0; i < selection.Count; i++)
                 {
@@ -100,8 +100,7 @@ namespace CellexalVR.AnalysisLogic
                     // Add returns true if it was actually added,
                     // false if it was already there
                     // Duplicate lines (coordinates) causes trouble when creating the meshes...
-                    string currentLine = cell.FacsValue[first_marker.ToLower()] + "\t" + cell.FacsValue[second_marker.ToLower()]
-                                            + "\t" + cell.FacsValue[third_marker.ToLower()];
+                    string currentLine = $"{cell.FacsValue[first_marker.ToLower()]}\t{cell.FacsValue[second_marker.ToLower()]}\t{cell.FacsValue[third_marker.ToLower()]}";
                     if (previousLines.Add(currentLine))
                     {
                         file.Write(label);

@@ -729,14 +729,18 @@ namespace CellexalVR.AnalysisLogic
             string rScriptFilePath = Path.Combine(Application.streamingAssetsPath, "R", "update_grouping.R");
 
             // Wait for server to start up and not be busy
-            bool rServerReady = File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid")) &&
-                                !File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R")) &&
-                                !File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock"));
+            string mainserverPidPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid");
+            string mainserverInputPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R");
+            string mainserverInputLockPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock");
+
+            bool rServerReady = File.Exists(mainserverPidPath) &&
+                                !File.Exists(mainserverInputPath) &&
+                                !File.Exists(mainserverInputLockPath);
             while (!rServerReady || !RScriptRunner.serverIdle)
             {
-                rServerReady = File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid")) &&
-                               !File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R")) &&
-                               !File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock"));
+                rServerReady = File.Exists(mainserverPidPath) &&
+                               !File.Exists(mainserverInputPath) &&
+                               !File.Exists(mainserverInputLockPath);
                 yield return null;
             }
 

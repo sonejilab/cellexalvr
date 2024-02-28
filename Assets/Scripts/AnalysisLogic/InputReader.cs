@@ -133,7 +133,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="path">path to the file</param>
         private void ReadFileH5(string path, Dictionary<string, string> h5config)
         {
-            bool confExists = Directory.EnumerateFiles("Data\\" + path, "*.conf").Any();
+            bool confExists = Directory.EnumerateFiles(Path.Combine("Data", path), "*.conf").Any();
             if (!confExists)
             {
                 if (h5config == null)
@@ -143,7 +143,7 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            string fullPath = Directory.GetCurrentDirectory() + "\\Data\\" + path;
+            string fullPath = Path.Combine(Directory.GetCurrentDirectory(), "Data", path);
             GameObject go = new GameObject(path);
             H5Reader h5Reader = go.AddComponent<H5Reader>();
             h5readers.Add(path, h5Reader);
@@ -167,13 +167,13 @@ namespace CellexalVR.AnalysisLogic
         {
             currentPath = path;
             string workingDirectory = Directory.GetCurrentDirectory();
-            string fullPath = workingDirectory + "\\Data\\" + path;
-            if (Directory.Exists(workingDirectory + "\\Output"))
+            string fullPath = Path.Combine(workingDirectory, "Data", path);
+            if (Directory.Exists(Path.Combine(workingDirectory, "Output")))
             {
-                if (File.Exists(workingDirectory + "\\Output\\r_log.txt"))
+                if (File.Exists(Path.Combine(workingDirectory, "Output", "r_log.txt")))
                 {
                     CellexalLog.Log("Deleting old r log file");
-                    File.Delete(workingDirectory + "\\Output\\r_log.txt");
+                    File.Delete(Path.Combine(workingDirectory, "Output", "r_log.txt"));
                 }
             }
 
@@ -193,7 +193,7 @@ namespace CellexalVR.AnalysisLogic
             if (!debug)
             {
                 // clear the network folder
-                string networkDirectory = (CellexalUser.UserSpecificFolder + "\\Resources\\Networks").FixFilePath();
+                string networkDirectory = Path.Combine(CellexalUser.UserSpecificFolder, "Resources", "Networks");
                 if (!Directory.Exists(networkDirectory))
                 {
                     CellexalLog.Log("Creating directory " + CellexalLog.FixFilePath(networkDirectory));
@@ -208,15 +208,15 @@ namespace CellexalVR.AnalysisLogic
                     File.Delete(f);
                 }
             }
-            string databasePath = fullPath + "\\database.sqlite";
+            string databasePath = Path.Combine(fullPath, "database.sqlite");
             if (File.Exists(databasePath))
             {
-                database.InitDatabase(fullPath + "\\database.sqlite");
+                database.InitDatabase(databasePath);
             }
             Dataset.instance.database = database;
             string[] mdsFiles = Directory.GetFiles(fullPath,
                 CrossSceneInformation.Tutorial ? "DDRTree.mds" : "*.mds");
-            bool scarfFile = File.Exists(fullPath + "\\.zgroup");
+            bool scarfFile = File.Exists(Path.Combine(fullPath, ".zgroup"));
             if (mdsFiles.Length == 0 && !scarfFile)
             {
                 CellexalError.SpawnError("Empty dataset",
@@ -235,7 +235,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 yield return StartCoroutine(mdsReader.ReadBigFolder(path));
             }
-            else if (File.Exists(fullPath + "\\.zgroup"))
+            else if (File.Exists(Path.Combine(fullPath, ".zgroup")))
             {
                 ScarfManager.instance.InitServer();
                 yield return StartCoroutine(ScarfManager.instance.LoadPreprocessedDataCouroutine(path, "RNA_UMAP"));
@@ -250,7 +250,7 @@ namespace CellexalVR.AnalysisLogic
                 StartCoroutine(referenceManager.inputReader.StartServer("main", fromPreviousSession));
                 attributeReader = gameObject.AddComponent<AttributeReader>();
                 attributeReader.referenceManager = referenceManager;
-                string attributeFilePath = Path.Join(fullPath, "a.meta.cell");
+                string attributeFilePath = Path.Combine(fullPath, "a.meta.cell");
                 if (File.Exists(attributeFilePath))
                 {
                     attributeReader.ReadCondensedAttributeFile(attributeFilePath);
@@ -304,8 +304,8 @@ namespace CellexalVR.AnalysisLogic
         {
             Process currentProcess = Process.GetCurrentProcess();
             int pid = currentProcess.Id;
-            string rScriptFilePath = Application.streamingAssetsPath + @"\R\start_server.R";
-            string serverName = CellexalUser.UserSpecificFolder + "\\" + serverType + "Server";
+            string rScriptFilePath = Path.Combine(Application.streamingAssetsPath, "R", "start_server.R");
+            string serverName = Path.Combine(CellexalUser.UserSpecificFolder, serverType + "Server");
             string dataSourceFolder;
             if (!fromPreviousSession.Equals(string.Empty))
             {
@@ -349,9 +349,9 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public void QuitServer()
         {
-            File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.pid");
-            File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.lock");
-            File.Delete(CellexalUser.UserSpecificFolder + "\\mainServer.input.R");
+            File.Delete(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid"));
+            File.Delete(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock"));
+            File.Delete(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R"));
 
             if (h5readers != null)
             {
@@ -378,7 +378,7 @@ namespace CellexalVR.AnalysisLogic
             System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
 
-            string fullPath = path + "\\index.facs";
+            string fullPath = Path.Combine(path, "index.facs");
 
             if (!File.Exists(fullPath))
             {
@@ -462,7 +462,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="path"></param>
         public void ReadNumericalData(string path)
         {
-            string fullPath = path + "\\numerical.csv";
+            string fullPath = Path.Combine(path, "numerical.csv");
             if (!File.Exists(fullPath))
                 return;
             using (StreamReader sr = new StreamReader(fullPath))
@@ -555,7 +555,7 @@ namespace CellexalVR.AnalysisLogic
         public void LoadPreviousGroupings()
         {
             string dataFolder = CellexalUser.UserSpecificFolder;
-            string groupingsInfoFile = dataFolder + "\\groupings_info.txt";
+            string groupingsInfoFile = Path.Combine(dataFolder, "groupings_info.txt");
             CellexalLog.Log("Started reading the previous groupings files");
             if (!File.Exists(groupingsInfoFile))
             {

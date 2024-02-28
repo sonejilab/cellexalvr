@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Collections;
 using CellexalVR.Extensions;
+using System.IO;
 #if UNITY_EDITOR
 using System.Reflection;
 
@@ -48,7 +49,7 @@ namespace CellexalVR.Interaction
         [HideInInspector] public List<Material> materials;
 
         private bool displayingPlaceHolder = true;
-        protected string prefabFolderPath = "Assets/Prefabs/Keyboards";
+        protected string prefabFolderPath = Path.Combine("Assets", "Prefabs", "Keyboards");
         protected string prefabPath;
 
         // vector used by the shader to display pulse when a panel is clicked and an animation where the laser is.
@@ -579,13 +580,13 @@ namespace CellexalVR.Interaction
         /// <returns>True if the keyboard was successfully built, false otherwise.</returns>
         public virtual bool BuildKeyboard(KeyboardHandler prefab)
         {
-            string keyboardMeshesBaseFolder = prefabFolderPath + "/KeyboardMeshes";
+            string keyboardMeshesBaseFolder = Path.Combine(prefabFolderPath, "KeyboardMeshes");
             if (!UnityEditor.AssetDatabase.IsValidFolder(keyboardMeshesBaseFolder))
             {
                 UnityEditor.AssetDatabase.CreateFolder(prefabFolderPath, "KeyboardMeshes");
             }
 
-            string keyboardMeshesFolder = keyboardMeshesBaseFolder + "/" + prefab.name;
+            string keyboardMeshesFolder = Path.Combine(keyboardMeshesBaseFolder, prefab.name);
             if (!UnityEditor.AssetDatabase.IsValidFolder(keyboardMeshesFolder))
             {
                 UnityEditor.AssetDatabase.CreateFolder(keyboardMeshesBaseFolder, prefab.name);
@@ -660,7 +661,7 @@ namespace CellexalVR.Interaction
                     panel.CenterUV = (smallUV + largeUV) / 2f;
                     //print("panel " + item.name + " smalluv (" + smallUV.x + ", " + smallUV.y + ") largeuv (" + largeUV.x + ", " + largeUV.y + ") keyangle " + keyAngleDegrees);
                     Mesh mesh = CreateNineSlicedQuad(smallUV, largeUV, item.size, radiansPerUnit, size);
-                    string assetName = keyboardMeshesFolder + "/KeyboardMesh_" + item.name + ".mesh";
+                    string assetName = Path.Combine(keyboardMeshesFolder, "KeyboardMesh_" + item.name + ".mesh");
                     assetName = UnityEditor.AssetDatabase.GenerateUniqueAssetPath(assetName);
                     UnityEditor.AssetDatabase.CreateAsset(mesh, assetName);
                     panel.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);

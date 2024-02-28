@@ -73,8 +73,8 @@ namespace CellexalVR.Spatial
             {
                 idToModelDictionary[int.Parse(model.gameObject.name)] = model.GetComponent<SpatialReferenceModelPart>();
             }
-            
-            string filePath = "Assets/StreamingAssets/structure_info.csv";
+
+            string filePath = Path.Combine(Application.streamingAssetsPath, "structure_info.csv");
             using (StreamReader sr = new StreamReader(filePath))
             {
                 string header = sr.ReadLine();
@@ -181,7 +181,7 @@ namespace CellexalVR.Spatial
             UpdateButtonPositions();
         }
 
-       
+
         /// <summary>
         /// Spawns a glass brain part.
         /// </summary>

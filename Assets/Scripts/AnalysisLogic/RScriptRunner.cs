@@ -35,8 +35,8 @@ namespace CellexalVR.AnalysisLogic
                 if (hasChanged)
                 {
                     CellexalConfig.Config.RscriptexePath = path;
-                    string configDir = Directory.GetCurrentDirectory() + @"\Config";
-                    string configPath = configDir + @"\default_config.xml";
+                    string configDir = Path.Combine(Directory.GetCurrentDirectory(), "Config");
+                    string configPath = Path.Combine(configDir, "default_config.xml");
                     if (!Directory.Exists("Config"))
                     {
                         Directory.CreateDirectory("Config");
@@ -98,7 +98,7 @@ namespace CellexalVR.AnalysisLogic
                     if (!String.IsNullOrEmpty(e.Data))
                     {
                         using (StreamWriter stderrorWriter =
-                                new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
+                                new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), "Output", "r_log.txt"), true))
                         {
                             stderrorWriter.WriteLine("\n STDERROR: " + e.Data);
                         }
@@ -112,7 +112,7 @@ namespace CellexalVR.AnalysisLogic
                         if (writeOut)
                         {
                             using (StreamWriter stdoutWriter =
-                                    new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\r_log.txt", true))
+                                    new StreamWriter(Path.Combine(Directory.GetCurrentDirectory(), "Output", "r_log.txt"), true))
                             {
                                 stdoutWriter.WriteLine("\n STDOUT: " + e.Data);
                             }
@@ -159,7 +159,7 @@ namespace CellexalVR.AnalysisLogic
         {
             //new StreamWriter(Directory.GetCurrentDirectory() + "\\Output\\gene_log.txt", true))
             using (StreamWriter geneWriter =
-                new StreamWriter(CellexalUser.UserSpecificFolder + @"\gene_expr.txt", false))
+                new StreamWriter(Path.Combine(CellexalUser.UserSpecificFolder, "gene_expr.txt"), false))
             {
 
                 geneWriter.WriteLine(e.Data);
@@ -219,8 +219,8 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="isFile">If the s argument instead is a filePath the function copies that entire file to input.R</param>
         public static void WriteToServer(string s)
         {
-            string inputFilePath = CellexalUser.UserSpecificFolder + "\\server";
-            File.WriteAllText(inputFilePath + ".input.R", s);
+            string inputFilePath = Path.Combine(CellexalUser.UserSpecificFolder + "server.input.R");
+            File.WriteAllText(inputFilePath, s);
             //if (!File.Exists(inputFilePath + ".input.lock"))
             //{
             //    using (FileStream fs = File.Create(inputFilePath + ".input.lock"))
@@ -240,12 +240,12 @@ namespace CellexalVR.AnalysisLogic
         {
             serverIdle = false;
             string result = null;
-            string inputFilePath = CellexalUser.UserSpecificFolder + "\\mainServer";
-            if (!File.Exists(inputFilePath + ".input.lock"))
+            string inputFilePath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock");
+            if (!File.Exists(inputFilePath))
             {
                 try
                 {
-                    using (FileStream fs = File.Create(inputFilePath + ".input.lock"))
+                    using (FileStream fs = File.Create(inputFilePath))
                     {
                         result = RunFromCmd(path, args, true);
                     }
@@ -254,9 +254,9 @@ namespace CellexalVR.AnalysisLogic
                 {
                     CellexalLog.Log(e.Source, e.Message, e.StackTrace);
                     // Command Failed. Removing lock file on input.R 
-                    File.Delete(inputFilePath + ".input.lock");
+                    File.Delete(inputFilePath);
                 }
-                File.Delete(inputFilePath + ".input.lock");
+                File.Delete(inputFilePath);
             }
             serverIdle = true;
             return result;

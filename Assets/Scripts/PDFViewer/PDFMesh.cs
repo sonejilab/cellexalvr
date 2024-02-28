@@ -91,7 +91,7 @@ namespace CellexalVR.PDFViewer
         public void ReadPDF(string path)
         {
 
-            string folder = $"{CellexalUser.UserSpecificFolder}\\PDFImages";
+            string folder = Path.Combine(CellexalUser.UserSpecificFolder, "PDFImages");
             if (Directory.Exists(folder))
             {
                 // pdf conversion already done, no need to continue.
@@ -158,7 +158,7 @@ namespace CellexalVR.PDFViewer
             int height = 0;
             for (int i = startPage; i < startPage + nrOfPages; i++)
             {
-                string path = $"{CellexalUser.UserSpecificFolder}\\PDFImages\\page{i}.jpeg";
+                string path = Path.Combine(CellexalUser.UserSpecificFolder, "PDFImages", $"page{i}.jpeg");
                 byte[] imageByteArray = File.ReadAllBytes(path);
                 Texture2D imageTexture = new Texture2D(2, 2);
                 imageTexture.LoadImage(imageByteArray);

@@ -16,7 +16,7 @@ namespace CellexalVR.AnalysisLogic
     public class GraphLoader : MonoBehaviour
     {
         public ReferenceManager _referenceManager;
-        private readonly char[] separators = new char[] {' ', '\t'};
+        private readonly char[] separators = new char[] { ' ', '\t' };
         private PythonInterpreter _pythonInterpreter;
 
         private void OnValidate()
@@ -33,7 +33,7 @@ namespace CellexalVR.AnalysisLogic
                 GameObject.Find("PythonInterpreter").GetComponent<PythonInterpreter>();
         }
 
-        [ConsoleCommand("graphLoader", aliases: new string[] {"loadgraph", "lg"})]
+        [ConsoleCommand("graphLoader", aliases: new string[] { "loadgraph", "lg" })]
         public void LoadGraph(string coordFile, string graphName)
         {
             if (!File.Exists(coordFile)) return;
@@ -46,7 +46,7 @@ namespace CellexalVR.AnalysisLogic
             coordFile = coordFile.FixFilePath();
             Stopwatch totalTime = new Stopwatch();
             totalTime.Start();
-            string path = Directory.GetCurrentDirectory() + "\\";
+            string path = Directory.GetCurrentDirectory() + Path.DirectorySeparatorChar;
             string[] mdsFiles = Directory.GetFiles(path, "coordFile.txt");
             StartCoroutine(_referenceManager.inputReader.mdsReader.ReadMDSFiles(path, mdsFiles));
             //const float maximumDeltaTime = 0.05f; // 20 fps

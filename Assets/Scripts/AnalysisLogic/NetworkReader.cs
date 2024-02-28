@@ -137,6 +137,7 @@ namespace CellexalVR.AnalysisLogic
 
                     var skeleton = graph.convexHull;
                     networkHandler = skeleton.GetComponent<NetworkHandler>();
+                    networkHandler.selection = selection;
                     if (skeleton == null)
                     {
                         CellexalError.SpawnError("Error when generating networks",
