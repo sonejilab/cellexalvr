@@ -7,7 +7,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 namespace CellexalVR.AnalysisLogic
 {
-    public class BoxPlotGrid : CellexalRaycastable
+    public class BoxPlotGrid : EnvironmentTab
     {
         public ReferenceManager referenceManager;
 
@@ -25,6 +25,10 @@ namespace CellexalVR.AnalysisLogic
         private float colInc = 0.16f;
         private Vector3 boxPlotStartPos;
         private Selection selection;
+        private int group = -1;
+
+        private float globalMinValue = float.MaxValue;
+        private float globalMaxValue = float.MinValue;
 
         private void OnValidate()
         {
@@ -60,9 +64,6 @@ namespace CellexalVR.AnalysisLogic
             this.selection = selection;
             string[] facsNames = referenceManager.cellManager.Facs;
 
-            float globalMinValue = float.MaxValue;
-            float globalMaxValue = float.MinValue;
-
             OffsetGrab grabScript = gameObject.GetComponent<OffsetGrab>();
 
             for (int i = 0; i < facsNames.Length; ++i)
@@ -88,7 +89,7 @@ namespace CellexalVR.AnalysisLogic
                 values.Sort();
 
                 int middleIndex = values.Count / 2;
-                BoxPlot newBoxPlot = Instantiate(boxPlotPrefab);
+                BoxPlot newBoxPlot = Instantiate(boxPlotPrefab, contentParent.transform);
                 boxPlots.Add(newBoxPlot);
                 currentBoxPlotsOrder.Add(newBoxPlot);
                 grabScript.colliders.Add(newBoxPlot.GetComponent<Collider>());
@@ -125,6 +126,54 @@ namespace CellexalVR.AnalysisLogic
             grabScript.interactionManager.RegisterInteractable(grabScript.GetComponent<IXRInteractable>());
         }
 
+
+        public void GenerateBoxPlot(List<float> values, string facs)
+        {
+            values.Sort();
+
+            int middleIndex = values.Count / 2;
+            BoxPlot newBoxPlot = Instantiate(boxPlotPrefab, contentParent.transform);
+            boxPlots.Add(newBoxPlot);
+            currentBoxPlotsOrder.Add(newBoxPlot);
+
+            float median = values.Count % 2 == 0 ? (values[middleIndex - 1] + values[middleIndex]) / 2f : values[middleIndex];
+            float percentile5th = values[(int)(values.Count * 0.05f)];
+            float percentile95th = values[(int)(values.Count * 0.95f)];
+            float minValue = values[0];
+            float maxValue = values[^1];
+
+            newBoxPlot.InitBoxPlot(facs, median, percentile5th, percentile95th, minValue, maxValue);
+
+            if (values[0] < globalMinValue)
+            {
+                globalMinValue = values[0];
+            }
+            if (values[^1] > globalMaxValue)
+            {
+                globalMaxValue = values[^1];
+            }
+
+            newBoxPlot.gameObject.SetActive(true);
+            newBoxPlot.transform.localPosition = BoxPlotLocalPosition(boxPlots.Count - 1);
+            newBoxPlot.transform.localRotation = Quaternion.identity;
+            newBoxPlot.ResizeComponents(globalMinValue, globalMaxValue);
+
+        }
+
+        public void SetSelection(Selection selection, int group = -1)
+        {
+            this.selection = selection;
+            this.group = group;
+        }
+
+        public void ResizeAllBoxPlots()
+        {
+            foreach (BoxPlot boxPlot in boxPlots)
+            {
+                boxPlot.ResizeComponents(globalMinValue, globalMaxValue);
+            }
+        }
+
         /// <summary>
         /// Removes all boxp lots, does not remove the background or parent gameobject. <see cref="GenerateBoxPlots(List{Graph.GraphPoint})"/> can be called to populate this <see cref="BoxPlotGrid"/> again.
         /// </summary>
@@ -138,6 +187,9 @@ namespace CellexalVR.AnalysisLogic
             }
             boxPlots.Clear();
             currentBoxPlotsOrder.Clear();
+
+            globalMinValue = float.MaxValue;
+            globalMaxValue = float.MinValue;
         }
 
         /// <summary>
@@ -187,12 +239,27 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
-        /// <summary>
-        /// Recolors all graphs to the selection that was used to generate the box plots.
-        /// </summary>
-        public void RecolorSelection()
+        public void HighlightSelection()
         {
-            ReferenceManager.instance.graphManager.ColorAllGraphsBySelection(selection);
+            if (group != -1)
+            {
+                foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+                {
+                    graph.HighlightSelectionGroup(selection, group);
+                }
+            }
+        }
+
+        public void ClearHighlight()
+        {
+            if (group != -1)
+            {
+                foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
+                {
+                    graph.ResetHighlight();
+                }
+            }
+
         }
     }
 }

@@ -55,6 +55,10 @@ namespace CellexalVR.Menu.Buttons
             if (gameObject.scene.IsValid())
             {
                 referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();
+                if (OnActivate is null)
+                {
+                    OnActivate = new UnityEngine.Events.UnityEvent();
+                }
                 if (!CellexalEvents.IsPersistentListenerAlreadyAdded(OnActivate, Click))
                 {
                     UnityEditor.Events.UnityEventTools.AddPersistentListener(OnActivate, Click);
@@ -77,12 +81,14 @@ namespace CellexalVR.Menu.Buttons
 
         public override void OnRaycastEnter()
         {
+            base.OnRaycastEnter();
             controllerInside = true;
             SetHighlighted(true);
         }
 
         public override void OnRaycastExit()
         {
+            base.OnRaycastExit();
             controllerInside = false;
             SetHighlighted(false);
             if (descriptionText.text == Description)
@@ -231,9 +237,8 @@ namespace CellexalVR.Menu.Buttons
     {
         public string[] buttonTypeOptions = new string[] { "Mesh", "Sprite" };
 
-        public override void OnInspectorGUI()
+        public virtual int DrawMeshOrSpriteFields()
         {
-            serializedObject.Update();
             var buttonScript = target as CellexalButton;
             buttonScript.popupChoice = EditorGUILayout.Popup("Button Type", buttonScript.popupChoice, buttonTypeOptions, EditorStyles.popup);
             if (buttonScript.popupChoice == 0)
@@ -251,7 +256,13 @@ namespace CellexalVR.Menu.Buttons
                 buttonScript.highlightedTexture = (UnityEngine.Sprite)EditorGUILayout.ObjectField("Highlighted texture", buttonScript.highlightedTexture, typeof(UnityEngine.Sprite), true);
                 buttonScript.deactivatedTexture = (UnityEngine.Sprite)EditorGUILayout.ObjectField("Deactivated texture", buttonScript.deactivatedTexture, typeof(UnityEngine.Sprite), true);
             }
-            //EditorUtility.SetDirty(buttonScript);
+            return buttonScript.popupChoice;
+        }
+
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            DrawMeshOrSpriteFields();
             base.OnInspectorGUI();
 
             serializedObject.ApplyModifiedProperties();

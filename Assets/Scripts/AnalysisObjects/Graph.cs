@@ -59,6 +59,7 @@ namespace CellexalVR.AnalysisObjects
         private Coroutine runningColoringCoroutine;
         private Coroutine waitingColoringCoroutine;
         private NativeArray<Color32> emptyColorArray;
+        private JobHandle handle;
 
         public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
@@ -157,6 +158,7 @@ namespace CellexalVR.AnalysisObjects
             nbrOfExpressionColors = CellexalConfig.Config.GraphNumberOfExpressionColors;
             startPosition = transform.position;
             emptyColorArray = new NativeArray<Color32>(0, Allocator.Persistent);
+            handle = new JobHandle();
         }
 
         private void OnApplicationQuit()
@@ -1162,7 +1164,6 @@ namespace CellexalVR.AnalysisObjects
                 yield break;
             }
 
-            JobHandle handle;
             if (highlight)
             {
                 HighlightMaskMultiJob job = new HighlightMaskMultiJob
@@ -1170,7 +1171,7 @@ namespace CellexalVR.AnalysisObjects
                     maskTextureData = mask,
                     destTextureData = rawTextureData,
                 };
-                handle = job.Schedule(rawTextureData.Length, 10000);
+                handle = job.Schedule(rawTextureData.Length, 10000, handle);
             }
             else
             {
@@ -1178,7 +1179,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     destTextureData = rawTextureData
                 };
-                handle = job.Schedule(rawTextureData.Length, 10000);
+                handle = job.Schedule(rawTextureData.Length, 10000, handle);
             }
             yield return new WaitUntil(() => handle.IsCompleted);
             handle.Complete();
@@ -1230,13 +1231,12 @@ namespace CellexalVR.AnalysisObjects
                 yield break;
             }
 
-            JobHandle handle;
             ColorByMaskJob job = new ColorByMaskJob
             {
                 maskTextureData = mask,
                 destTextureData = rawTextureData,
             };
-            handle = job.Schedule(rawTextureData.Length, 10000);
+            handle = job.Schedule(rawTextureData.Length, 10000, handle);
 
             yield return new WaitUntil(() => handle.IsCompleted);
             handle.Complete();

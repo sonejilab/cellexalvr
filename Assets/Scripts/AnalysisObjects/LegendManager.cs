@@ -3,15 +3,21 @@ using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.SceneObjects;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
+using System;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace CellexalVR.AnalysisObjects
 {
     /// <summary>
     /// Represents a manager that handles a set of legends.
     /// </summary>
-    public class LegendManager : MonoBehaviour
+    public class LegendManager : EnvironmentMenuWithTabs
     {
         public GameObject backgroundPlane;
         public GroupingLegend attributeLegend;
@@ -21,6 +27,11 @@ namespace CellexalVR.AnalysisObjects
         [HideInInspector] public bool legendActive;
         [HideInInspector] public Legend desiredLegend;
         public Legend currentLegend;
+
+        [SerializeField]
+        [HideInInspector]
+        private EnvironmentTab[] _everyTab;
+        public Dictionary<Legend, EnvironmentTab> legends = new Dictionary<Legend, EnvironmentTab>();
 
         public enum Legend
         {
@@ -43,6 +54,20 @@ namespace CellexalVR.AnalysisObjects
         private bool attached;
         private ReferenceManager referenceManager;
         private Transform legendTransform;
+
+        private void OnValidate()
+        {
+            int numberOfLegendEnums = Enum.GetNames(typeof(Legend)).Length;
+            if (gameObject.scene.IsValid() && (_everyTab is null || _everyTab.Length != numberOfLegendEnums))
+            {
+                _everyTab = new EnvironmentTab[numberOfLegendEnums];
+            }
+            string[] enumNames = Enum.GetNames(typeof(Legend));
+            for (int i = 0; i < enumNames.Length; ++i)
+            {
+                legends[Enum.Parse<Legend>(enumNames[i])] = _everyTab[i];
+            }
+        }
 
         private void Start()
         {
@@ -208,18 +233,7 @@ namespace CellexalVR.AnalysisObjects
                 CellexalEvents.LegendAttached.Invoke();
             }
 
-            switch (legendToActivate)
-            {
-                case Legend.AttributeLegend:
-                    attributeLegend.gameObject.SetActive(true);
-                    break;
-                case Legend.GeneExpressionLegend:
-                    geneExpressionHistogram.gameObject.SetActive(true);
-                    break;
-                case Legend.SelectionLegend:
-                    selectionLegend.gameObject.SetActive(true);
-                    break;
-            }
+            SwitchToTab(legends[legendToActivate]);
 
             desiredLegend = legendToActivate;
             currentLegend = desiredLegend;
@@ -251,4 +265,50 @@ namespace CellexalVR.AnalysisObjects
                 geneExpressionHistogram.HistogramMaxPos - geneExpressionHistogram.HistogramMinPos);
         }
     }
+
+
+#if UNITY_EDITOR
+
+    [CustomEditor(typeof(LegendManager))]
+    public class LegendManagerEditor : Editor
+    {
+        private bool tabsExpanded = true;
+        private LegendManager instance;
+        private SerializedProperty _everyTabProperty;
+
+        void OnEnable()
+        {
+            instance = (LegendManager)target;
+            _everyTabProperty = serializedObject.FindProperty("_everyTab");
+        }
+
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            tabsExpanded = EditorGUILayout.Foldout(tabsExpanded, "Tabs");
+            EditorGUI.indentLevel++;
+            if (tabsExpanded)
+            {
+                string[] enumNames = Enum.GetNames(typeof(LegendManager.Legend));
+                for (int i = 0; i < enumNames.Length; ++i)
+                {
+                    string name = enumNames[i];
+                    if (name == "None")
+                    {
+                        continue;
+                    }
+                    EditorGUILayout.BeginHorizontal();
+                    EditorGUILayout.LabelField(name);
+                    EditorGUILayout.PropertyField(_everyTabProperty.GetArrayElementAtIndex(i), GUIContent.none);
+                    //instance.legends[Enum.Parse<LegendManager.Legend>(name)] = (EnvironmentTab)_everyTabProperty.GetArrayElementAtIndex(i).objectReferenceValue;
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
+            EditorGUI.indentLevel--;
+            DrawPropertiesExcluding(serializedObject, "tabs");
+            serializedObject.ApplyModifiedProperties();
+
+        }
+    }
+#endif
 }

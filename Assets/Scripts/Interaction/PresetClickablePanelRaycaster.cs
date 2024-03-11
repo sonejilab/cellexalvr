@@ -30,16 +30,6 @@ namespace CellexalVR.Interaction
             panelLayerMask = 1 << LayerMask.NameToLayer("SelectableLayer");
         }
 
-        public override void OnRaycastEnter()
-        {
-
-        }
-
-        public override void OnRaycastExit()
-        {
-
-        }
-
         public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
         {
             // if we hit something this frame.

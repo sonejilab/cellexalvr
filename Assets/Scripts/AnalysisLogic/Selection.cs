@@ -83,6 +83,7 @@ namespace CellexalVR.AnalysisLogic
         public Selection()
         {
             this.groups = new List<int>();
+            this.colors = new List<Color>();
             this.groupSizes = new Dictionary<int, int>();
             do
             {
@@ -98,6 +99,7 @@ namespace CellexalVR.AnalysisLogic
         public Selection(IEnumerable<Graph.GraphPoint> points)
         {
             this.groups = new List<int>();
+            this.colors = new List<Color>();
             this.groupSizes = new Dictionary<int, int>();
             do
             {
@@ -109,6 +111,7 @@ namespace CellexalVR.AnalysisLogic
         public Selection(string selectionFilePath)
         {
             this.groups = new List<int>();
+            this.colors = new List<Color>();
             this.groupSizes = new Dictionary<int, int>();
             parentSelectionDirectory = Path.Combine(CellexalUser.UserSpecificFolder, "Selections");
             bool pathIsDirectory = File.GetAttributes(selectionFilePath) == FileAttributes.Directory;
@@ -278,6 +281,12 @@ namespace CellexalVR.AnalysisLogic
             for (int i = 0; i < groups.Count; ++i)
             {
                 reverseGroupIndices[groups[i]] = i;
+            }
+
+            colors.Clear();
+            for (int i = 0; i < groups.Count; ++i)
+            {
+                colors.Add(CellexalConfig.Config.SelectionToolColors[groups[i]]);
             }
 
             size = _points.Count;

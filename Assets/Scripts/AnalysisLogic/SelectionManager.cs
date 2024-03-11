@@ -744,8 +744,8 @@ namespace CellexalVR.AnalysisLogic
                 yield return null;
             }
 
+            CellexalLog.Log($"Updating R Object grouping script: {rScriptFilePath} {args}");
             Thread t = new Thread(() => RScriptRunner.RunRScript(rScriptFilePath, args));
-            CellexalLog.Log("Updating R Object grouping at " + CellexalUser.UserSpecificFolder);
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
             t.Start();

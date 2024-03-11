@@ -219,7 +219,7 @@ namespace CellexalVR.AnalysisLogic
         /// <param name="isFile">If the s argument instead is a filePath the function copies that entire file to input.R</param>
         public static void WriteToServer(string s)
         {
-            string inputFilePath = Path.Combine(CellexalUser.UserSpecificFolder + "server.input.R");
+            string inputFilePath = Path.Combine(CellexalUser.UserSpecificFolder, "server.input.R");
             File.WriteAllText(inputFilePath, s);
             //if (!File.Exists(inputFilePath + ".input.lock"))
             //{
@@ -238,6 +238,24 @@ namespace CellexalVR.AnalysisLogic
         /// <returns>The result from the R process.</returns>
         public static string RunRScript(string path, string args = "")
         {
+
+            string mainserverPidPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid");
+            string mainserverInputPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R");
+            string mainserverInputLockPath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock");
+
+            bool rServerReady = File.Exists(mainserverPidPath) &&
+                                !File.Exists(mainserverInputPath) &&
+                                !File.Exists(mainserverInputLockPath);
+
+            while (!rServerReady || !RScriptRunner.serverIdle)
+            {
+                rServerReady = File.Exists(mainserverPidPath) &&
+                                !File.Exists(mainserverInputPath) &&
+                                !File.Exists(mainserverInputLockPath);
+
+                System.Threading.Thread.Sleep(50);
+            }
+
             serverIdle = false;
             string result = null;
             string inputFilePath = Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock");

@@ -13,7 +13,7 @@ namespace CellexalVR.AnalysisObjects
     /// <summary>
     /// Represents a gene expression histogram that is showed beside a graph.
     /// </summary>
-    public class GeneExpressionHistogram : MonoBehaviour
+    public class GeneExpressionHistogram : EnvironmentTab
     {
         public ReferenceManager referenceManager;
         public GameObject histogramParent;

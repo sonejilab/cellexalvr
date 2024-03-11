@@ -531,6 +531,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 195ae3b89d045d94b975afbd26e461fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 602444942}
+        m_TargetAssemblyTypeName: CellexalVR.Filters.AttributeFilterButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1374850735}
   infoMenu: {fileID: 0}
@@ -1061,6 +1077,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 195ae3b89d045d94b975afbd26e461fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1245275575}
+        m_TargetAssemblyTypeName: CellexalVR.Filters.AttributeFilterButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 534507858}
   infoMenu: {fileID: 0}
@@ -11687,6 +11719,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d41537691c706954bb14e56e72f54c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114369212021795454}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.General.VideoButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 0}
   infoMenu: {fileID: 0}
@@ -32502,14 +32550,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fb8546f1fe177541ac9c2e76adfb0c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
-  annotationTextPrefab: {fileID: 1705337094365442, guid: 93a73264c7efedb43828e00f096623b9,
-    type: 3}
-  selectionConfirmed: 0
-  heatmapGrabbed: 0
-  fileCreationCtr: 0
-  hapticIntensity: 2000
-  groupCount: 0
 --- !u!114 &1971523611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43072,6 +43112,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9126194208733003453}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -43242,6 +43299,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bedbe896a3077004cbb7aeba537ba933, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4228073422507838713}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.ChangeLegendPageButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
@@ -43312,6 +43386,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3202f71421c3ec46927356d203880a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tabButton: {fileID: 0}
+  parentMenu: {fileID: 0}
   referenceManager: {fileID: 0}
   entryPrefab: {fileID: 6449228307922028540}
   extraColumn: {fileID: 525472589}
@@ -43719,6 +43795,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3019931363314353157}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -44010,6 +44103,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bedbe896a3077004cbb7aeba537ba933, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5451096632849606686}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.ChangeLegendPageButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
@@ -44136,6 +44246,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bedbe896a3077004cbb7aeba537ba933, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1246384729730549551}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.ChangeLegendPageButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
@@ -44811,6 +44938,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8283694998000401341}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -44937,6 +45081,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 525885385864952332}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -45235,6 +45396,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bedbe896a3077004cbb7aeba537ba933, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5568744574694324281}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.ChangeLegendPageButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
@@ -45362,6 +45540,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8851137039780643443}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -46295,6 +46490,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 951db12386af6f041b31b3433a9ff3c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tabButton: {fileID: 0}
+  parentMenu: {fileID: 0}
   referenceManager: {fileID: 0}
   histogramParent: {fileID: 3888593995693795418}
   geneNameLabel: {fileID: 8701665522711666602}
@@ -46720,6 +46917,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3202f71421c3ec46927356d203880a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tabButton: {fileID: 0}
+  parentMenu: {fileID: 0}
   referenceManager: {fileID: 0}
   entryPrefab: {fileID: 6588133194713944554}
   extraColumn: {fileID: 196824000}
@@ -47471,6 +47670,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ccdcdbd74002442be25def4eb19cd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
@@ -47485,6 +47688,8 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 0}
+  parentTab: {fileID: 0}
   legendToActivate: 3
 --- !u!1 &4105516101530460192
 GameObject:
@@ -49066,6 +49271,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4968401205127892334}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -49276,6 +49498,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3848120114250695241}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -49485,6 +49724,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ccdcdbd74002442be25def4eb19cd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
@@ -49499,6 +49742,8 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 0}
+  parentTab: {fileID: 0}
   legendToActivate: 2
 --- !u!1 &5393430555025206418
 GameObject:
@@ -49777,6 +50022,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1408954077556386780}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -50717,6 +50979,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81990eb96f841354f8c01f16f3ce20d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tabs:
+  - {fileID: 7886611384669554522}
+  - {fileID: 4889248537707476020}
+  - {fileID: 1748032380410687359}
   backgroundPlane: {fileID: 2666472234044694917}
   attributeLegend: {fileID: 7886611384669554522}
   selectionLegend: {fileID: 4889248537707476020}
@@ -50725,6 +50991,11 @@ MonoBehaviour:
   legendActive: 0
   desiredLegend: 0
   currentLegend: 0
+  _everyTab:
+  - {fileID: 0}
+  - {fileID: 7886611384669554522}
+  - {fileID: 1748032380410687359}
+  - {fileID: 4889248537707476020}
 --- !u!65 &4458698554056688488
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -50750,6 +51021,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 635a420635f73294c9e3eca6600500d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 1
   savedGeneExpressionHistogramHitX: -1
 --- !u!54 &6486204470640247154
 Rigidbody:
@@ -51486,6 +51761,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a48cfda4c1dea8b4e8c54079e8d8b1f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4925007650008193157}
+        m_TargetAssemblyTypeName: ChangeHistogramThresholdButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -51785,6 +52076,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ccdcdbd74002442be25def4eb19cd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
@@ -51799,6 +52094,8 @@ MonoBehaviour:
   buttonActivated: 1
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 0}
+  parentTab: {fileID: 0}
   legendToActivate: 1
 --- !u!1 &6948004008537764338
 GameObject:
@@ -51994,6 +52291,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4084940874629832128}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -52293,6 +52607,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b329174c6ee6d46be37523dfe62783, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1350127969}
+        m_TargetAssemblyTypeName: DetachLegendButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1593668531}
   infoMenu: {fileID: 0}
@@ -54243,6 +54573,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a48cfda4c1dea8b4e8c54079e8d8b1f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4457172649900407697}
+        m_TargetAssemblyTypeName: ChangeHistogramThresholdButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -54708,6 +55054,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fadd2dd06af4b3439533023d2d1a105, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8741370197448297502}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.HistogramTabButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
@@ -54834,6 +55197,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b552f12c94ae7b498600cc9a3635486, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 493142717502425105}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.SwitchLegendYAxisModeButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  canBePushedAndPulled: 0
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}

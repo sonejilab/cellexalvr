@@ -40,11 +40,13 @@ namespace CellexalVR.Menu.Buttons
 
         public override void OnRaycastEnter()
         {
+            base.OnRaycastEnter();
             SetHighlighted(true);
         }
 
         public override void OnRaycastExit()
         {
+            base.OnRaycastExit();
             SetHighlighted(false);
         }
 

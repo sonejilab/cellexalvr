@@ -109,11 +109,13 @@ namespace CellexalVR.AnalysisLogic
 
         public override void OnRaycastEnter()
         {
+            base.OnRaycastEnter();
             SetInfoTextActive(true);
         }
 
         public override void OnRaycastExit()
         {
+            base.OnRaycastExit();
             SetInfoTextActive(false);
         }
     }

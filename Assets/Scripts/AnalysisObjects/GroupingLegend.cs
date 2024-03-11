@@ -10,7 +10,7 @@ namespace CellexalVR.AnalysisObjects
     /// <summary>
     /// Represents a legend that contains <see cref="GroupingLegendEntry"/>.
     /// </summary>
-    public class GroupingLegend : MonoBehaviour
+    public class GroupingLegend : EnvironmentTab
     {
         public ReferenceManager referenceManager;
         public GameObject entryPrefab;

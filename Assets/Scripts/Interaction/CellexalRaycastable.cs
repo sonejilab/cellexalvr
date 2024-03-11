@@ -9,6 +9,8 @@ namespace CellexalVR.Interaction
     public class CellexalRaycastable : MonoBehaviour
     {
         public UnityEvent OnActivate;
+        public UnityEvent RaycastEnter;
+        public UnityEvent RaycastExit;
         public bool canBePushedAndPulled = true;
 
         /// <summary>
@@ -21,12 +23,18 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// Called on the first frame that this <see cref="CellexalRaycastable"/> is hit by a <see cref="CellexalRaycast"/>.
         /// </summary>
-        public virtual void OnRaycastEnter() { }
+        public virtual void OnRaycastEnter()
+        {
+            RaycastEnter.Invoke();
+        }
 
         /// <summary>
         /// Called on the first frame that this <see cref="CellexalRaycastable"/> is not hit by a <see cref="CellexalRaycast"/> anymore.
         /// </summary>
-        public virtual void OnRaycastExit() { }
+        public virtual void OnRaycastExit()
+        {
+            RaycastExit.Invoke();
+        }
 
     }
 }

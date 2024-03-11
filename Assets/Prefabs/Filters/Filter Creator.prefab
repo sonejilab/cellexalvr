@@ -9755,7 +9755,7 @@ PrefabInstance:
     - target: {fileID: 6587675766997543852, guid: 71b50dbf20156be4699c015ac9015b80,
         type: 3}
       propertyPath: m_margin.x
-      value: 0.25
+      value: 0.026713774
       objectReference: {fileID: 0}
     - target: {fileID: 6587675766997543852, guid: 71b50dbf20156be4699c015ac9015b80,
         type: 3}
@@ -9765,7 +9765,7 @@ PrefabInstance:
     - target: {fileID: 6587675766997543852, guid: 71b50dbf20156be4699c015ac9015b80,
         type: 3}
       propertyPath: m_margin.z
-      value: 0.25
+      value: 0.02671377
       objectReference: {fileID: 0}
     - target: {fileID: 6587675766997543852, guid: 71b50dbf20156be4699c015ac9015b80,
         type: 3}

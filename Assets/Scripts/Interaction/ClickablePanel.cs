@@ -83,11 +83,13 @@ namespace CellexalVR.Interaction
 
         public override void OnRaycastEnter()
         {
+            base.OnRaycastEnter();
             SetHighlighted(true);
         }
 
         public override void OnRaycastExit()
         {
+            base.OnRaycastExit();
             SetHighlighted(false);
             handler.UpdateLaserCoords(new Vector2(-1f, -1f));
         }
