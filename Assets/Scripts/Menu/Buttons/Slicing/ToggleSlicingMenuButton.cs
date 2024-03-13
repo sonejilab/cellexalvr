@@ -9,12 +9,12 @@ namespace CellexalVR.Menu.Buttons.Slicing
 
         public SlicingMenu slicingMenu;
 
-        private bool active;
+        private bool menuActive;
 
         public override void Click()
         {
-            slicingMenu.ToggleMenu(!active);
-            active = !active;
+            slicingMenu.ToggleMenu(!menuActive);
+            menuActive = !menuActive;
         }
 
     }

@@ -344,7 +344,8 @@ namespace CellexalVR.Interaction
             if (DesiredModel != Model.TwoLasers)
             {
                 laserPointerController.ToggleLaser(false);
-                leftLaser.enabled = false;
+                referenceManager.rightRaycast.OverrideRaycast = CellexalRaycast.Override.None;
+                referenceManager.leftRaycast.OverrideRaycast = CellexalRaycast.Override.None;
             }
             if (DesiredModel != Model.DrawTool)
             {
@@ -363,7 +364,6 @@ namespace CellexalVR.Interaction
                     break;
                 case Model.Keyboard:
                     keyboard.SetKeyboardVisible(true);
-                    laserPointerController.ToggleLaser(true);
                     break;
                 //case Model.WebBrowser:
                 //    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
@@ -371,7 +371,8 @@ namespace CellexalVR.Interaction
                 //    break;
                 case Model.TwoLasers:
                     laserPointerController.ToggleLaser(true);
-                    leftLaser.enabled = true;
+                    referenceManager.rightRaycast.OverrideRaycast = CellexalRaycast.Override.AlwaysOn;
+                    referenceManager.leftRaycast.OverrideRaycast = CellexalRaycast.Override.AlwaysOn;
                     break;
                 case Model.DrawTool:
                     drawTool.SetActive(true);

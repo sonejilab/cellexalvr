@@ -270,14 +270,15 @@ namespace CellexalVR.AnalysisObjects
 #if UNITY_EDITOR
 
     [CustomEditor(typeof(LegendManager))]
-    public class LegendManagerEditor : Editor
+    public class LegendManagerEditor : EnvironmentMenuWithTabsEditor
     {
         private bool tabsExpanded = true;
         private LegendManager instance;
         private SerializedProperty _everyTabProperty;
 
-        void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             instance = (LegendManager)target;
             _everyTabProperty = serializedObject.FindProperty("_everyTab");
         }
@@ -305,7 +306,7 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
             EditorGUI.indentLevel--;
-            DrawPropertiesExcluding(serializedObject, "tabs");
+            base.OnInspectorGUI();
             serializedObject.ApplyModifiedProperties();
 
         }

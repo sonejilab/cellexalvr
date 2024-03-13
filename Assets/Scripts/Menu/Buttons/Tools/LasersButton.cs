@@ -22,8 +22,5 @@ namespace CellexalVR.Menu.Buttons.Tools
         {
             get { return ControllerModelSwitcher.Model.TwoLasers; }
         }
-
-
-
     }
 }

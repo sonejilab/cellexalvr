@@ -1,4 +1,5 @@
-﻿using CellexalVR.General;
+﻿using CellexalVR.DesktopUI;
+using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -17,6 +18,47 @@ namespace CellexalVR.Interaction
         /// Defines how this raycastable can be activated.
         /// </summary>
         public ClickType activatedBy = ClickType.RightTrigger;
+
+        public enum Override { None, AlwaysOn, AlwaysOff }
+
+        private Override _overrideRaycast;
+        public Override OverrideRaycast
+        {
+            get { return _overrideRaycast; }
+            set
+            {
+                Override previousValue = _overrideRaycast;
+                _overrideRaycast = value;
+
+                if (value == Override.AlwaysOn)
+                {
+                    OnRaycastStart();
+                }
+                else if (value == Override.AlwaysOff)
+                {
+                    OnRaycastStop();
+                }
+                else
+                {
+                    if (previousValue == Override.AlwaysOn && lastRaycastableHit is null)
+                    {
+                        OnRaycastStop();
+                    }
+                    else if (previousValue == Override.AlwaysOff && lastRaycastableHit is not null)
+                    {
+                        OnRaycastStart();
+                    }
+                }
+
+
+            }
+        }
+
+        [ConsoleCommand("rightRaycast", aliases: "so")]
+        public void SetOverride(int i)
+        {
+            OverrideRaycast = (Override)i;
+        }
 
         /* 
         raycast mask should be:
@@ -79,7 +121,7 @@ namespace CellexalVR.Interaction
                 if (raycastable is not null)
                 {
                     // only do something with the raycast if we have the correct model that allows raycasting, or if we hit the menu
-                    if (!(correctModel || raycastable is CellexalButton))
+                    if (!(correctModel || raycastable is CellexalButton || OverrideRaycast == Override.AlwaysOn))
                     {
                         if (lastRaycastableHit is not null)
                         {
@@ -89,25 +131,35 @@ namespace CellexalVR.Interaction
                         }
                         return;
                     }
-                    // we hit a CellexalRaycastable
-                    if (lastRaycastableHit != raycastable)
+                    // never call OnRaycastHit() et.c. unless we hit a CellexalButton
+                    if (OverrideRaycast != Override.AlwaysOff || raycastable is not CellexalButton)
                     {
-                        if (lastRaycastableHit is not null)
+                        // we hit a CellexalRaycastable
+                        if (lastRaycastableHit != raycastable)
                         {
-                            // we hit a different CellexalRaycastable than last frame, call OnRaycastExit
-                            lastRaycastableHit.OnRaycastExit();
+                            if (lastRaycastableHit is not null)
+                            {
+                                // we hit a different CellexalRaycastable than last frame, call OnRaycastExit
+                                lastRaycastableHit.OnRaycastExit();
+                            }
+                            else
+                            {
+                                // we hit something new, and did not hit anything last frame, call OnRaycastStart
+                                OnRaycastStart();
+                            }
+                            if (raycastable.active)
+                            {
+                                // we hit something new, call OnRaycastEnter
+                                raycastable.OnRaycastEnter();
+                            }
                         }
-                        else
+                        if (raycastable.active)
                         {
-                            // we hit something new, and did not hit anything last frame, call OnRaycastStart
-                            OnRaycastStart();
+                            // call OnRaycastHit and update lastRaycastableHit for the next frame
+                            raycastable.OnRaycastHit(raycastInfo, this);
+                            lastRaycastableHit = raycastable;
                         }
-                        // we hit something new, call OnRaycastEnter
-                        raycastable.OnRaycastEnter();
                     }
-                    // call OnRaycastHit and update lastRaycastableHit for the next frame
-                    raycastable.OnRaycastHit(raycastInfo, this);
-                    lastRaycastableHit = raycastable;
                 }
                 else if (lastRaycastableHit is not null)
                 {
@@ -131,6 +183,11 @@ namespace CellexalVR.Interaction
         /// </summary>
         private void OnRaycastStart()
         {
+            if (OverrideRaycast == Override.AlwaysOff)
+            {
+                return;
+            }
+
             rayInteractor.enabled = true;
             interactorLineVisual.enabled = true;
             interactorLineVisual.reticle.SetActive(true);
@@ -141,6 +198,11 @@ namespace CellexalVR.Interaction
         /// </summary>
         private void OnRaycastStop()
         {
+            if (OverrideRaycast == Override.AlwaysOn)
+            {
+                return;
+            }
+
             rayInteractor.enabled = false;
             interactorLineVisual.enabled = false;
             interactorLineVisual.reticle.SetActive(false);

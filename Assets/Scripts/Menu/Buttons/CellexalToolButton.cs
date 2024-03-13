@@ -130,11 +130,11 @@ namespace CellexalVR.Menu.Buttons
 
             if (controllerModelSwitcher.ActualModel != ControllerModel)
             {
-                if (buttonActivated)
+                if (active)
                 {
                     spriteRenderer.sprite = standardTexture;
                 }
-                if (!buttonActivated)
+                if (!active)
                 {
                     spriteRenderer.sprite = deactivatedTexture;
                 }

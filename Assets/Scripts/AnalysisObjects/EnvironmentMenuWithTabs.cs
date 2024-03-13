@@ -1,14 +1,17 @@
 ﻿using CellexalVR.Interaction;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
+#endif
 using System.Collections;
 
 namespace CellexalVR.AnalysisObjects
 {
     public class EnvironmentMenuWithTabs : CellexalRaycastable
     {
+        [HideInInspector]
         public List<EnvironmentTab> tabs;
         public EnvironmentTab tabPrefab;
         public EnvironmentTabScrollButton tabScrollButton1;
@@ -79,15 +82,18 @@ namespace CellexalVR.AnalysisObjects
                 tabButtonPositions[i] = tabButtonBoundsCenter - tabButtonBoundsSize / 2f + tabButtonPositionIncrement * i + margin + tabButtonSize / 2f;
             }
 
-            if (tabScrollPositions is null)
+            if (tabScrollButton1 is not null && tabScrollButton2 is not null)
             {
-                tabScrollPositions = new Vector3[2];
+                if (tabScrollPositions is null)
+                {
+                    tabScrollPositions = new Vector3[2];
+                }
+                tabScrollPositions[0] = tabButtonPositions[0] - tabButtonPositionIncrement;
+                tabScrollPositions[1] = tabButtonPositions[maxNumberOfTabButtons - 1] + tabButtonPositionIncrement;
+                bool scrollButtonsNeeded = tabs.Count > maxNumberOfTabButtons || overrideShowScrollButtons;
+                tabScrollButton1.gameObject.SetActive(scrollButtonsNeeded);
+                tabScrollButton2.gameObject.SetActive(scrollButtonsNeeded);
             }
-            tabScrollPositions[0] = tabButtonPositions[0] - tabButtonPositionIncrement;
-            tabScrollPositions[1] = tabButtonPositions[maxNumberOfTabButtons - 1] + tabButtonPositionIncrement;
-            bool scrollButtonsNeeded = tabs.Count > maxNumberOfTabButtons || overrideShowScrollButtons;
-            tabScrollButton1.gameObject.SetActive(scrollButtonsNeeded);
-            tabScrollButton2.gameObject.SetActive(scrollButtonsNeeded);
         }
 
         private bool IsTabButtonInVisibleIndex(int index)
@@ -104,6 +110,7 @@ namespace CellexalVR.AnalysisObjects
                 bool isTabButtonVisible = IsTabButtonInVisibleIndex(i);
                 tabs[i].tabButton.gameObject.SetActive(isTabButtonVisible);
                 tabs[i].tabButton.transform.localPosition = tabButtonPositions[i] - offset;
+                tabs[i].tabButton.transform.localScale = tabButtonSize;
             }
 
         }
@@ -217,7 +224,7 @@ namespace CellexalVR.AnalysisObjects
     {
         BoxBoundsHandle tabButtonBoundsHandle;
 
-        public void OnEnable()
+        protected virtual void OnEnable()
         {
             tabButtonBoundsHandle = new BoxBoundsHandle();
         }
@@ -248,8 +255,11 @@ namespace CellexalVR.AnalysisObjects
             else
             {
                 // move prefabs tab button to the first available position
-                inspected.tabPrefab.tabButton.transform.localPosition = inspected.tabButtonPositions[0];
-                inspected.tabPrefab.tabButton.transform.localScale = inspected.tabButtonSize;
+                if (inspected.tabPrefab is not null)
+                {
+                    inspected.tabPrefab.tabButton.transform.localPosition = inspected.tabButtonPositions[0];
+                    inspected.tabPrefab.tabButton.transform.localScale = inspected.tabButtonSize;
+                }
                 // show a preview of where the other tab buttons will end up
                 int maxNumberOfVisibleTabButtons = serializedObject.FindProperty("maxNumberOfTabButtons").intValue;
                 for (int i = 0; i < maxNumberOfVisibleTabButtons; ++i)
@@ -269,6 +279,7 @@ namespace CellexalVR.AnalysisObjects
                     inspected.tabScrollButton2.transform.localPosition = inspected.tabScrollPositions[1];
                 }
             }
+            inspected.MoveTabButtons();
 
             serializedObject.ApplyModifiedProperties();
         }

@@ -121,6 +121,8 @@ MonoBehaviour:
   rightLaser: {fileID: 0}
   leftLaser: {fileID: 0}
   laserPointerController: {fileID: 0}
+  rightRaycast: {fileID: 0}
+  leftRaycast: {fileID: 0}
   selectionToolCollider: {fileID: 0}
   deleteTool: {fileID: 0}
   minimizeTool: {fileID: 0}

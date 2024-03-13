@@ -40,7 +40,8 @@ namespace CellexalVR.General
         public XRRayInteractor rightLaser;
         public XRRayInteractor leftLaser;
         public LaserPointerController laserPointerController;
-
+        public CellexalRaycast rightRaycast;
+        public CellexalRaycast leftRaycast;
         #endregion
 
         #region Tools
@@ -195,6 +196,8 @@ namespace CellexalVR.General
             laserPointerController = rightController.GetComponent<LaserPointerController>();
             rightLaser = laserPointerController.rightLaser;
             leftLaser = laserPointerController.leftLaser;
+            rightRaycast = rightController.GetComponent<CellexalRaycast>();
+            leftRaycast = leftController.GetComponent<CellexalRaycast>();
 
             selectionToolCollider = rightController.GetComponentInChildren<SelectionToolCollider>(true);
             deleteTool = rightController.GetComponentInChildren<RemovalController>(true).gameObject;

@@ -1,5 +1,6 @@
 ﻿using Assets.Scripts.AnalysisLogic;
 using CellexalVR.AnalysisLogic;
+using CellexalVR.General;
 using UnityEngine;
 
 namespace CellexalVR.Menu.Buttons.Facs
@@ -8,6 +9,12 @@ namespace CellexalVR.Menu.Buttons.Facs
     {
         protected override string Description => "Create Boxplots from selection";
         public GameObject boxPlotPrefab;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            CellexalEvents.GraphsLoaded.AddListener(() => SetButtonActivated(ReferenceManager.instance.cellManager.Facs is not null));
+        }
 
         public override void Click()
         {

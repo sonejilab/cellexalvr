@@ -190,12 +190,6 @@ namespace CellexalVR.AnalysisLogic
 
                 yield return StartCoroutine(referenceManager.graphGenerator.SliceClusteringLOD(nrOfLODGroups));
 
-                if (nrOfLODGroups > 1)
-                {
-                    combGraph.gameObject.AddComponent<LODGroup>();
-                    referenceManager.graphGenerator.UpdateLODGroups(combGraph, nrOfLODGroups);
-                }
-
                 // Add axes in bottom corner of graph and scale points differently
                 combGraph.SetInfoText();
                 referenceManager.graphGenerator.AddAxes(combGraph, axes);

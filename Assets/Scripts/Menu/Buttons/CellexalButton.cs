@@ -46,10 +46,10 @@ namespace CellexalVR.Menu.Buttons
         protected SpriteRenderer spriteRenderer;
         protected MeshRenderer meshRenderer;
         [HideInInspector]
-        public bool buttonActivated = true;
         public bool storedState;
         public bool controllerInside = false;
 
+#if UNITY_EDITOR
         private void OnValidate()
         {
             if (gameObject.scene.IsValid())
@@ -67,6 +67,7 @@ namespace CellexalVR.Menu.Buttons
                 canBePushedAndPulled = false;
             }
         }
+#endif
 
         protected virtual void Awake()
         {
@@ -136,12 +137,12 @@ namespace CellexalVR.Menu.Buttons
                 }
             }
 
-            buttonActivated = activate;
+            active = activate;
         }
 
         public void StoreState()
         {
-            storedState = buttonActivated;
+            storedState = active;
         }
 
         /// <summary>
@@ -173,7 +174,7 @@ namespace CellexalVR.Menu.Buttons
             }
 
             controllerInside = false;
-            if (buttonActivated)
+            if (active)
             {
                 SetHighlighted(false);
             }

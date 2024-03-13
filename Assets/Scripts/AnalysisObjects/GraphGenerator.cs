@@ -367,6 +367,13 @@ namespace CellexalVR.AnalysisObjects
                 yield return StartCoroutine(MakeMeshesCoroutine(clusters, graphPointMaterial, lodGroup: lodGroup));
             }
 
+            if (nrOfLODGroups > 1)
+            {
+                newGraph.gameObject.AddComponent<LODGroup>();
+                UpdateLODGroups(newGraph, nrOfLODGroups);
+            }
+
+
         }
 
         /// <summary>
@@ -1253,7 +1260,7 @@ namespace CellexalVR.AnalysisObjects
                 }
             }
 
-            LOD[] lods = new LOD[2];
+            LOD[] lods = new LOD[nrOfLODGroups];
             for (int i = 0; i < nrOfLODGroups; i++)
             {
                 Renderer[] renderers;
@@ -1272,18 +1279,15 @@ namespace CellexalVR.AnalysisObjects
                 }
                 else
                 {
-                    lods[i] = new LOD(0.25f, renderers);
+                    // screen heigth is calculated differently in the editor and in the build, these numbers are just eye-balled
+#if UNITY_EDITOR
+                    lods[i] = new LOD(1f / ((i + 1f) * 4f), renderers);
+#else 
+                    lods[i] = new LOD(1f / ((i + 1f) * 64f), renderers);
+#endif
                 }
             }
 
-            // GameObject g = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            // g.transform.parent = newGraph.transform;
-            // g.transform.localPosition = Vector3.zero;
-            // g.layer = LayerMask.NameToLayer("GraphLayer");
-            // Renderer[] lastRenderers = new Renderer[1];
-            // lastRenderers[0] = g.GetComponent<Renderer>();
-            // lastRenderers[0].material = graphPointMaterialPrefab;
-            // lods[2] = new LOD(1.0f / 7, lastRenderers);
             lodGroup.fadeMode = LODFadeMode.CrossFade;
             lodGroup.animateCrossFading = true;
             lodGroup.SetLODs(lods);

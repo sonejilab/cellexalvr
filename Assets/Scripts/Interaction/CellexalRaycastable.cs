@@ -12,6 +12,7 @@ namespace CellexalVR.Interaction
         public UnityEvent RaycastEnter;
         public UnityEvent RaycastExit;
         public bool canBePushedAndPulled = true;
+        public bool active = true;
 
         /// <summary>
         /// Called by <see cref="CellexalRaycast.Update"/> every frame that a raycast hit this target.
