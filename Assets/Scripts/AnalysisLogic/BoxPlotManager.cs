@@ -84,6 +84,9 @@ namespace Assets.Scripts.AnalysisLogic
             SwitchToTab(tabs[0]);
         }
 
+        /// <summary>
+        /// Recolours all graphs based on the selection used for this set of box plots.
+        /// </summary>
         public void RecolourSelection()
         {
             ReferenceManager.instance.graphManager.ColorAllGraphsBySelection(selection);

@@ -110,6 +110,10 @@ namespace CellexalVR.Menu.Buttons
             infoMenu.GetComponent<VideoButton>().StartVideo();
         }
 
+        /// <summary>
+        /// Activates or deactivates this button. Changes the sprite and makes the button not able to invoke <see cref="Click"/> until it is activated again.
+        /// </summary>
+        /// <param name="activate">True to activate this button, false to deactivate.</param>
         public virtual void SetButtonActivated(bool activate)
         {
             if (!activate)
@@ -188,6 +192,10 @@ namespace CellexalVR.Menu.Buttons
             }
         }
 
+        /// <summary>
+        /// Highlights or unhighlights this button.
+        /// </summary>
+        /// <param name="highlight">True to highlight, false to unhighlight.</param>
         public virtual void SetHighlighted(bool highlight)
         {
             if (highlight)

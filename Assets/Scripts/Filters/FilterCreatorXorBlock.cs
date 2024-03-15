@@ -5,6 +5,9 @@ using CellexalVR.AnalysisLogic;
 namespace CellexalVR.Filters
 {
 
+    /// <summary>
+    /// Represents an exclusive or (xor) block when creating a filter in VR. Contains two input ports and one output port.
+    /// </summary>
     public class FilterCreatorXorBlock : FilterCreatorBlock
     {
         public FilterCreatorBlockPort input1;

@@ -117,6 +117,9 @@ namespace CellexalVR.Tools
             }
         }
 
+        /// <summary>
+        /// Reset the highlight of the removal controller.
+        /// </summary>
         public void ResetHighlight()
         {
             GetComponent<MeshRenderer>().material = inactiveMat;

@@ -53,7 +53,10 @@ namespace CellexalVR.AnalysisLogic
             CreateMarkerGraph();
         }
 
-        public void CreateMarkerGraph(bool selection = false)
+        /// <summary>
+        /// Creates a new graph from the three currently selected markers.
+        /// </summary>
+        public void CreateMarkerGraph()
         {
             Selection lastSelection = referenceManager.selectionManager.GetLastSelection();
             if (lastSelection is not null)

@@ -49,6 +49,9 @@ namespace CellexalVR.Tools
             audioSource = GetComponent<AudioSource>();
         }
 
+        /// <summary>
+        /// Takes a screenshot of what is currently on the rendertexture.
+        /// </summary>
         public void Capture()
         {
             StartCoroutine(CaptureCoroutine());
@@ -100,6 +103,11 @@ namespace CellexalVR.Tools
             Destroy(quad);
         }
 
+        /// <summary>
+        /// Toggles a layer to render on the rendertexture.
+        /// </summary>
+        /// <param name="layerName">The name of the layer to toggle.</param>
+        /// <param name="toggle">True to toggle the layer on, false to toggle off.</param>
         public void ToggleLayerToCapture(string layerName, bool toggle)
         {
             if (toggle && !layersToRender.Contains(layerName))
@@ -114,6 +122,10 @@ namespace CellexalVR.Tools
             snapShotCamera.cullingMask = LayerMask.GetMask(layersToRender.ToArray());
         }
 
+        /// <summary>
+        /// Toggles rendering the skybox on the rendertexture.
+        /// </summary>
+        /// <param name="toggle">True to toggle the skybox on, false to toggle off.</param>
         public void ToggleBackground(bool toggle)
         {
             if (toggle)
@@ -128,6 +140,10 @@ namespace CellexalVR.Tools
             }
         }
 
+        /// <summary>
+        /// Toggles all layers to render on the rendertexture.
+        /// </summary>
+        /// <param name="toggle">True to toggle the layers on, false to toggle off.</param>
         public void ToggleAllLayers(bool toggle)
         {
             foreach (ScreenshotLayerToggleButton button in layerButtons)
@@ -136,6 +152,10 @@ namespace CellexalVR.Tools
             }
         }
 
+        /// <summary>
+        /// Toggles this gameobject on or off. Repositions it in front of the user when toggled on.
+        /// </summary>
+        /// <param name="toggle">True for toggling in, false for toggling off.</param>
         public void Toggle(bool toggle)
         {
             gameObject.SetActive(toggle);

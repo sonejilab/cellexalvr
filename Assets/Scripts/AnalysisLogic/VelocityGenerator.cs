@@ -54,6 +54,10 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Get the paths to all .mds files that contains velocity information.
+        /// </summary>
+        /// <returns>An array of file paths to .mds files that contain velocity information.</returns>
         public string[] VelocityFiles()
         {
             return referenceManager.graphManager.velocityFiles.ToArray();

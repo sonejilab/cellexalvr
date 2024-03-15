@@ -287,6 +287,10 @@ namespace CellexalVR.AnalysisLogic
             StartCoroutine(mdsReader.ReadMDSFiles(path, new string[] { file }, GraphGenerator.GraphType.FACS, false));
         }
 
+        /// <summary>
+        /// Reads all saved filter files.
+        /// </summary>
+        /// <param name="path">The directory to look for filter files in.</param>
         public void ReadFilterFiles(string path)
         {
             string[] files = Directory.GetFiles(path, "*.fil");

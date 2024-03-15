@@ -37,15 +37,12 @@ namespace CellexalVR.Menu.Buttons
             OpenMenu();
         }
 
+        /// <summary>
+        /// Opens the sub menu.
+        /// </summary>
         public void OpenMenu()
         {
-            //DeactivateButtonsRecursive(buttonsToDeactivate);
             textMeshToDarken.GetComponent<MeshRenderer>().enabled = false;
-            //SetMenuActivated(true);
-            //if (menu.GetComponent<VelocitySubMenu>() != null)
-            //{
-            //    menu.GetComponent<VelocitySubMenu>().Active = true;
-            //}
             var tabs = menu.GetComponentsInChildren<Tab>();
             if (tabs.Length > 0)
             {

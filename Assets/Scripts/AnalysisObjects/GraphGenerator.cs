@@ -348,6 +348,11 @@ namespace CellexalVR.AnalysisObjects
             lodGroup.transform.localRotation = Quaternion.identity;
         }
 
+        /// <summary>
+        /// Coroutine. Divides the graph into clusters and creates one mesh for each cluster per LOD group.
+        /// </summary>
+        /// <param name="lodGroups">The number of LOD groups to create.</param>
+        /// <param name="points">Optional. The points to cluster, or null for all graph points in the currently creating graph.</param>
         public IEnumerator SliceClusteringLOD(int lodGroups, Dictionary<string, Graph.GraphPoint> points = null,
             GraphSlice slice = null)
         {
@@ -895,6 +900,7 @@ namespace CellexalVR.AnalysisObjects
             isCreating = false;
         }
 
+        // helper functions to print vector2/3/4s with more precision
         public static string V2S(Vector2 v)
         {
             return "(" + v.x + ", " + v.y + ")";
@@ -1239,6 +1245,12 @@ namespace CellexalVR.AnalysisObjects
         }
 
 
+        /// <summary>
+        /// Updates the <see cref="LODGroup"/> components list of renderers.
+        /// </summary>
+        /// <param name="graph">The graph to update <see cref="LODGroup"/> for.</param>
+        /// <param name="nrOfLODGroups">The numnber of LOD groups.</param>
+        /// <param name="slice">Use if updating a <see cref="GraphSlice"/> instead of a <see cref="Graph"/>.</param>
         public void UpdateLODGroups(Graph graph = null, int nrOfLODGroups = 1, GraphSlice slice = null)
         {
             LODGroup lodGroup;

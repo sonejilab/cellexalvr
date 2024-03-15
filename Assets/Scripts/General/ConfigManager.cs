@@ -10,6 +10,9 @@ namespace CellexalVR.General
     /// </summary>
     public static class CellexalConfig
     {
+        /// <summary>
+        /// The currently loaded and active config.
+        /// </summary>
         public static Config Config { get; set; }
 
         public static Dictionary<string, Config> savedConfigs { get; set; }

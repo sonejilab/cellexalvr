@@ -908,6 +908,11 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Shows or hides all arcs that go from this <see cref="NetworkCenter"/> to another <see cref="NetworkCenter"/>.
+        /// </summary>
+        /// <param name="toggleToState">True if arcs should be visible, false if they should be invisible.</param>
+        /// <param name="otherCenter">The other <see cref="NetworkCenter"/> that arcs connect to.</param>
         public void SetArcsVisible(bool toggleToState, NetworkCenter otherCenter)
         {
             foreach (Arc arc in arcs.Where(x => x.center2 == otherCenter))
@@ -1221,7 +1226,11 @@ namespace CellexalVR.AnalysisObjects
             //int nodeHit = Array.FindIndex(nodes, s => s.Equals(geneName, StringComparison.InvariantCultureIgnoreCase));
         }
 
-
+        /// <summary>
+        /// Highlights or resets highlighting of a node in this <see cref="NetworkCenter"/>.
+        /// </summary>
+        /// <param name="name">The name of the node to highlight.</param>
+        /// <param name="highlight">True if the node should be highlighted, false to reset highlighting.</param>
         public void HighlightNode(string name, bool highlight)
         {
             foreach (var node in nodes)

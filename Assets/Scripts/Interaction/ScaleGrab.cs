@@ -44,6 +44,9 @@ namespace CellexalVR.Interaction
             interactor.attachTransform.localScale = interactorScale;
         }
 
+        /// <summary>
+        /// Sets up the required initial positions.
+        /// </summary>
         public void InitialisePositions()
         {
             a = firstInteractor.transform.position;

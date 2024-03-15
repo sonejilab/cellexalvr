@@ -4,6 +4,9 @@ using UnityEngine;
 namespace CellexalVR.Filters
 {
 
+    /// <summary>
+    /// Represents a facs block when creating a filter in VR. Contains a name field, operator field, a value field and an output port.
+    /// </summary>
     public class FilterCreatorFacsBlock : FilterCreatorBlock
     {
         public GameObject block;

@@ -99,6 +99,10 @@ namespace CellexalVR.DesktopUI
             selectionToolCollider = referenceManager.selectionToolCollider;
             settingsMenu = referenceManager.settingsMenu;
         }
+
+        /// <summary>
+        /// Finalizes the color selection. Should be called when the user is done selection a color to set the internal value.
+        /// </summary>
         public virtual void FinalizeChoice()
         {
             // set the internal value

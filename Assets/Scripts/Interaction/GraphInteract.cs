@@ -28,6 +28,9 @@ namespace CellexalVR.Interaction
             CellexalEvents.GraphsLoaded.AddListener(RegisterColliders);
         }
 
+        /// <summary>
+        /// Overwrites the current list of colliders, to keep the list synced with colliders created at runtime.
+        /// </summary>
         public void RegisterColliders()
         {
             enabled = false;

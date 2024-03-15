@@ -39,6 +39,11 @@ namespace CellexalVR.Menu.SubMenus
             base.Start();
         }
 
+        /// <summary>
+        /// Creates a new button that loads velocity information when clicked.
+        /// </summary>
+        /// <param name="filePath">The file path to the .mds file that contains the velocity information.</param>
+        /// <param name="subGraphName">Optional. If the graph the button is for is a subgraph.</param>
         public void CreateButton(string filePath, string subGraphName = "")
         {
             GameObject newButton = Instantiate(velocityDataPrefab, this.transform);

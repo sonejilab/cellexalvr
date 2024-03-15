@@ -143,6 +143,10 @@ namespace CellexalVR.Filters
             UpdateCullingFilter();
         }
 
+        /// <summary>
+        /// Adds a selection group to the current filter.
+        /// </summary>
+        /// <param name="group">The group to add.</param>
         public void AddSelectionGroupToFilter(int group)
         {
             if (currentFilter.Expression == null)

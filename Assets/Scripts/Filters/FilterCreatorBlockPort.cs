@@ -7,11 +7,11 @@ using UnityEngine;
 
 namespace CellexalVR.Filters
 {
+    /// <summary>
+    /// Represents a input or ouput port on a <see cref="FilterCreatorBlock"/>. Two ports can be connected to connect an output to an input on two different <see cref="FilterCreatorBlock"/>.
+    /// </summary>
     public class FilterCreatorBlockPort : MonoBehaviour
     {
-        /// <summary>
-        /// Represents a input or ouput port on a <see cref="FilterCreatorBlock"/>. Two ports can be connected to connect an output to an input on two different <see cref="FilterCreatorBlock"/>.
-        /// </summary>
         public ReferenceManager referenceManager;
         public FilterManager filterManager;
         public bool IsInput;
@@ -23,9 +23,9 @@ namespace CellexalVR.Filters
         // Open XR 
         //private SteamVR_Controller.Device device;
         private UnityEngine.XR.InputDevice device;
-		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         // Open XR 
-		//private SteamVR_Controller.Device device;
+        //private SteamVR_Controller.Device device;
         private MeshRenderer meshRenderer;
 
         private void Start()

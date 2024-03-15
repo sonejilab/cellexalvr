@@ -181,6 +181,10 @@ namespace CellexalVR.Menu.Buttons.ColorPicker
             finalizeChoiceButton.meshStandardColor = newColor;
         }
 
+        /// <summary>
+        /// Activates the color picker.
+        /// </summary>
+        /// <param name="openingButton">The button that caused the color picker to open.</param>
         public void Open(ColorPickerButton openingButton)
         {
             if (buttonToUpdate)
@@ -212,6 +216,9 @@ namespace CellexalVR.Menu.Buttons.ColorPicker
             gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Sets the internal value. Should be called when the user is done picking a color.
+        /// </summary>
         public void FinalizeChoice()
         {
             buttonToUpdate.highlightGameObject.SetActive(false);

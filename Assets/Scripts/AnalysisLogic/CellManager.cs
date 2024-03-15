@@ -169,6 +169,10 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Highlights an attribute in all graphs.
+        /// </summary>
+        /// <param name="attribute">The attribute to highlight</param>
         public void HighlightAttribute(string attribute)
         {
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
@@ -177,6 +181,11 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Highlights a group from a selection in all graphs.
+        /// </summary>
+        /// <param name="selection">The selection to color by.</param>
+        /// <param name="group">The group to color by.</param>
         public void HighlightGroup(Selection selection, int group)
         {
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)
@@ -185,6 +194,9 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Resets any highlighting in all graphs.
+        /// </summary>
         public void ResetHighlight()
         {
             foreach (Graph graph in ReferenceManager.instance.graphManager.Graphs)

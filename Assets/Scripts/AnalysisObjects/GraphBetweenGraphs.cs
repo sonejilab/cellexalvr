@@ -611,6 +611,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Removes all <see cref="LineBetweenTwoPoints"/> that are connected to this graph.
+        /// </summary>
         public void RemoveLines()
         {
             foreach (LineBetweenTwoPoints line in lines)

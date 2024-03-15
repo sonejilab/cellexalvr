@@ -423,6 +423,10 @@ namespace CellexalVR.Interaction
 
         }
 
+        /// <summary>
+        /// Switches the current selection tool mesh.
+        /// </summary>
+        /// <param name="dir">True to go 1 index forward in the list of meshes, false to go 1 index backwards.</param>
         public void SwitchSelectionToolMesh(bool dir)
         {
             if (ActualModel == Model.SelectionTool)

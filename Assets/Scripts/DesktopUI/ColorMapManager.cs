@@ -8,6 +8,10 @@ namespace CellexalVR.DesktopUI
     {
         public TMPro.TMP_InputField nrGroupsInput;
 
+        /// <summary>
+        /// A pre-defined list of colors taken from matplotlibs color map tab20.
+        /// https://matplotlib.org/stable/gallery/color/colormap_reference.html
+        /// </summary>
         public static List<Color> tab20 = new List<Color>
         {
             new Color(0.12157f, 0.46666f, 0.70588f, 1.0f),
@@ -69,6 +73,10 @@ namespace CellexalVR.DesktopUI
             settingsMenu.referenceManager.graphGenerator.CreateShaderColors();
         }
 
+        /// <summary>
+        /// Generates random colors to use as selection colors.
+        /// </summary>
+        /// <param name="n">Optional, the numbers of colors to generate. If left out, the number in the desktop UI field will be used.</param>
         public void GenerateRandomColors(int n = -1)
         {
             if (n == -1)
@@ -86,6 +94,10 @@ namespace CellexalVR.DesktopUI
             settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRandomColors(n);
         }
 
+        /// <summary>
+        /// Generates random colors to use as selection colors.
+        /// </summary>
+        /// <param name="n">The number of colors to generate.</param>
         public void DoGenerateRandomColors(int n)
         {
             if (n > 254)
@@ -109,6 +121,10 @@ namespace CellexalVR.DesktopUI
             settingsMenu.UpdateSelectionToolColors();
         }
 
+        /// <summary>
+        /// Generates a rainbow pattern of colors to use as selection colors.
+        /// </summary>
+        /// <param name="n">Optional, the numbers of colors to generate. If left out, the number in the desktop UI field will be used.</param>
         public void GenerateRainbowColors(int n = -1)
         {
             if (n == -1)
@@ -126,6 +142,10 @@ namespace CellexalVR.DesktopUI
             settingsMenu.referenceManager.multiuserMessageSender.SendMessageGenerateRainbowColors(n);
         }
 
+        /// <summary>
+        /// Generates a rainbow pattern of colors to use as selection colors.
+        /// </summary>
+        /// <param name="n">The number of colors to generate.</param>
         public void DoGenerateRainbowColors(int n)
         {
             if (n > 254)
@@ -148,6 +168,10 @@ namespace CellexalVR.DesktopUI
             settingsMenu.UpdateSelectionToolColors();
         }
 
+        /// <summary>
+        /// Sets the heatmaps' expression colors.
+        /// The colors to use are set through the desktop UI.
+        /// </summary>
         public void SetHeatmapColormap()
         {
             settingsMenu.unsavedChanges = true;
@@ -180,6 +204,10 @@ namespace CellexalVR.DesktopUI
             settingsMenu.heatmapLowExpression.Color = CellexalConfig.Config.HeatmapLowExpressionColor;
         }
 
+        /// <summary>
+        /// Sets the graphs' gene expression colors to some pre-defined color sets.
+        /// The colors to use are set through the desktop UI.
+        /// </summary>
         public void SetGraphColormap()
         {
             settingsMenu.unsavedChanges = true;

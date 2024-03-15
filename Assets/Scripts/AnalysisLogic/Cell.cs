@@ -103,7 +103,7 @@ namespace CellexalVR.AnalysisLogic
         {
             foreach (Graph.GraphPoint g in GraphPoints)
             {
-                g.ColorGeneExpression(i, false);
+                g.ColorGeneExpression(i);
             }
         }
 

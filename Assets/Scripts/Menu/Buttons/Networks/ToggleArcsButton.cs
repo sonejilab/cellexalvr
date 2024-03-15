@@ -64,6 +64,11 @@ namespace CellexalVR.Menu.Buttons.Networks
         }
 
 
+        /// <summary>
+        /// Connects this button (and the network it represents) with the previously clicked button (and network).
+        /// </summary>
+        /// <param name="other">The other button representing the first network that was clicked.</param>
+        /// <returns>True if a connection was possible, false if not.</returns>
         public bool ConnectTo(ToggleArcsButton other)
         {
             if (other.network == network || connectedButtons.Contains(other)) return false;
@@ -100,6 +105,13 @@ namespace CellexalVR.Menu.Buttons.Networks
             return true;
         }
 
+        /// <summary>
+        /// Adds a wire that goes between two buttons.
+        /// </summary>
+        /// <param name="button1">The button at one end of the wire.</param>
+        /// <param name="button2">The button at the other end of the wire.</param>
+        /// <param name="parentTransform">The parent transform to assign the wire.</param>
+        /// <returns></returns>
         private GameObject AddWire(ToggleArcsButton button1, ToggleArcsButton button2, Transform parentTransform)
         {
             GameObject newWire = Instantiate(arcsSubMenu.wirePrefab);
@@ -143,6 +155,10 @@ namespace CellexalVR.Menu.Buttons.Networks
             this.network = network;
         }
 
+        /// <summary>
+        /// Highlights or unhighlights this button.
+        /// </summary>
+        /// <param name="highlight">True to hightlight, false to reset highlighting.</param>
         public override void SetHighlighted(bool highlight)
         {
             if (cellsHighlighted == highlight) return;

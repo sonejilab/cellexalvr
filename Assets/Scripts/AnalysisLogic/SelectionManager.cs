@@ -203,6 +203,10 @@ namespace CellexalVR.AnalysisLogic
             return null;
         }
 
+        /// <summary>
+        /// Removes a graph point from the current selection.
+        /// </summary>
+        /// <param name="graphPoint">The graph point to remove.</param>
         public void RemoveGraphpointFromSelection(Graph.GraphPoint graphPoint)
         {
 
@@ -210,6 +214,11 @@ namespace CellexalVR.AnalysisLogic
             RemoveGraphpointFromSelection(graphPoint.parent.GraphName, graphPoint.Label);
         }
 
+        /// <summary>
+        /// Removes a graph point from the current selection, given the graph's and graph point's labels.
+        /// </summary>
+        /// <param name="graphName">The label of graph that contains the graph point.</param>
+        /// <param name="graphpointLabel">The graph point's label.</param>
         public void RemoveGraphpointFromSelection(string graphName, string graphpointLabel)
         {
             Graph parentGraph = graphManager.FindGraph(graphName);
@@ -375,12 +384,12 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Adds a collection of graph points to the current selection.
+        /// </summary>
+        /// <param name="points">The graph points to add.</param>
+        /// <param name="group">The group to assign the graph points.</param>
         public void AddGraphPointsToSelection(IEnumerable<Graph.GraphPoint> points, int group)
-        {
-            AddGraphPointsToSelection(points, group, CellexalConfig.Config.SelectionToolColors[group]);
-        }
-
-        private void AddGraphPointsToSelection(IEnumerable<Graph.GraphPoint> points, int newGroup, Color color)
         {
             if (points.Count() == 0)
             {
@@ -394,11 +403,11 @@ namespace CellexalVR.AnalysisLogic
                 {
                     pointsInOtherGraph.Clear();
                     pointsInOtherGraph.AddRange(points.Select((p) => graph.FindGraphPoint(p.Label)));
-                    graph.ColorGraphPointsSelectionColor(pointsInOtherGraph, newGroup, true);
+                    graph.ColorGraphPointsSelectionColor(pointsInOtherGraph, group, true);
                 }
                 else
                 {
-                    graph.ColorGraphPointsSelectionColor(points, newGroup, true);
+                    graph.ColorGraphPointsSelectionColor(points, group, true);
                 }
             }
 
@@ -425,10 +434,10 @@ namespace CellexalVR.AnalysisLogic
             foreach (Graph.GraphPoint point in points)
             {
                 int oldGroup = point.Group;
-                point.Group = newGroup;
+                point.Group = group;
                 bool newNode = !point.unconfirmedInSelection;
                 point.unconfirmedInSelection = true;
-                selectionHistory.Add(new HistoryListInfo(point, newGroup, oldGroup, newNode));
+                selectionHistory.Add(new HistoryListInfo(point, group, oldGroup, newNode));
                 groupChanges[point.Group]++;
                 if (!newNode)
                 {
@@ -661,6 +670,9 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Confirms the current selection, ending the selection process and saving the selection to disk.
+        /// </summary>
         public void ConfirmSelection()
         {
             foreach (Graph graph in graphManager.Graphs)
@@ -703,6 +715,10 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.CommandFinished.Invoke(true);
         }
 
+        /// <summary>
+        /// Adds a new selection, that was not created through selecting and using <see cref="ConfirmSelection"/>.
+        /// </summary>
+        /// <param name="selection">The selection to add.</param>
         public void AddSelection(Selection selection)
         {
             selections.Add(selection);
@@ -710,6 +726,10 @@ namespace CellexalVR.AnalysisLogic
         }
 
 
+        /// <summary>
+        /// Updates the R objects groupings.
+        /// </summary>
+        /// <param name="selection">The selection to update the R object with.</param>
         public void UpdateRObjectGrouping(Selection selection)
         {
             StartCoroutine(UpdateRObjectGroupingCoroutine(selection));
@@ -871,6 +891,12 @@ namespace CellexalVR.AnalysisLogic
             loadedSelections.Dequeue().UnloadSelection();
         }
 
+        /// <summary>
+        /// Checks if the first selection that was made this session has group masks for a given graph.
+        /// This does <b>not</b> check if those group masks are correct, only if <i>some</i> group masks exists for a given graph.
+        /// If no group masks seem to exist, this function calls <see cref="Selection.SaveGroupMasksToDisk(Graph)"/> for each graph that seems to be missing group masks.
+        /// </summary>
+        /// <param name="graph"></param>
         public void AssertGroupMasksExist(Graph graph)
         {
             if (selections.Count == 0)

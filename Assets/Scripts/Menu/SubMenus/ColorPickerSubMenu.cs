@@ -81,6 +81,11 @@ namespace CellexalVR.Menu.SubMenus
             networksNegativeLowButton.SetColor(CellexalConfig.Config.NetworkLineColorNegativeLow);
         }
 
+        /// <summary>
+        /// Adds a new selection color button. Does not add it to the <see cref="CellexalConfig.Config"/>.
+        /// </summary>
+        /// <param name="col">The color to initially give the button.</param>
+        /// <param name="index">The index the button should be placed at.</param>
         public void AddSelectionColorButton(Color col, int index)
         {
             if (index >= buttons.Count)

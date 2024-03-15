@@ -417,38 +417,66 @@ namespace CellexalVR.AnalysisObjects
                 Position -= parent.scaledOffset;
             }
 
+            /// <summary>
+            /// Sets this graph point's texture coordinates.
+            /// </summary>
+            /// <param name="newPos">The new texture coordinates.</param>
             public void SetTextureCoord(Vector2Int newPos)
             {
                 textureCoord = newPos;
             }
 
-            public void ColorGeneExpression(int i, bool outline)
+            /// <summary>
+            /// Colors this graph point according to a gene expression.
+            /// </summary>
+            /// <param name="i">A value between 0 and the number of available gene expression colors.</param>
+            public void ColorGeneExpression(int i)
             {
-                parent.ColorGraphPointGeneExpression(this, i, outline);
+                parent.ColorGraphPointGeneExpression(this, i);
             }
 
+            /// <summary>
+            /// Colors this graph point according to a selection color.
+            /// </summary>
+            /// <param name="i">A value between 0 and the number of avaliable selection colors.</param>
+            /// <param name="outline">True if this graph point should be given an outline, false if not.</param>
             public void ColorSelectionColor(int i, bool outline)
             {
                 parent.ColorGraphPointSelectionColor(this, i, outline);
                 Group = i;
             }
 
+            /// <summary>
+            /// Highlights this graph point with an outline, or removes highlighting from this graph point.
+            /// </summary>
+            /// <param name="active">True if the highlightin, false if removing highlighting.</param>
             public void HighlightGraphPoint(bool active)
             {
                 parent.HighlightGraphPoint(this, active);
             }
 
+            /// <summary>
+            /// Resets this graph point's color to the default color.
+            /// </summary>
             public void ResetColor()
             {
                 parent.ResetGraphPointColor(this);
                 Group = -1;
             }
 
+            /// <summary>
+            /// Get the color of this graph point.
+            /// </summary>
+            /// <returns>The color that this graph point is currently shown as.</returns>
             public Color GetColor()
             {
                 return parent.GetGraphPointColor(this);
             }
 
+            /// <summary>
+            /// Sets the group for this graph point, this does not change it's color.
+            /// </summary>
+            /// <param name="group">The new group to assign.</param>
             private void SetGroup(int group)
             {
                 this.group = group;
@@ -1045,11 +1073,17 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Moves this graph back to its original location.
+        /// </summary>
         public void ResetPosition()
         {
             transform.position = startPosition;
         }
 
+        /// <summary>
+        /// Resets this graph's scale and rotation back to its original values.
+        /// </summary>
         public void ResetSizeAndRotation()
         {
             transform.localScale = Vector3.one;
@@ -1274,10 +1308,14 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
-
-        public Color GetGraphPointColor(GraphPoint gp)
+        /// <summary>
+        /// Gets the color of a graph point.
+        /// </summary>
+        /// <param name="point">The graph point.</param>
+        /// <returns>The color from <see cref="GraphGenerator.graphPointColors"/> that the <paramref name="point"/> is currently using.</returns>
+        public Color GetGraphPointColor(GraphPoint point)
         {
-            int group = (int)(255 * texture.GetPixel(gp.textureCoord.x, gp.textureCoord.y).r);
+            int group = (int)(255 * texture.GetPixel(point.textureCoord.x, point.textureCoord.y).r);
             return graphGenerator.graphPointColors.GetPixel(group, 0);
         }
 
@@ -1313,7 +1351,7 @@ namespace CellexalVR.AnalysisObjects
         /// </summary>
         /// <param name="graphPoint">The graphpoint to recolor.</param>
         /// <param name="color">The graphpoint's new color.</param>
-        public void ColorGraphPointGeneExpression(GraphPoint graphPoint, int i, bool outline)
+        public void ColorGraphPointGeneExpression(GraphPoint graphPoint, int i)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             //byte greenChannel = (byte)(outline || i > 27 ? 27 : 0);

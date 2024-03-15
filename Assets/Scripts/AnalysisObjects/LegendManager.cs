@@ -239,6 +239,9 @@ namespace CellexalVR.AnalysisObjects
             currentLegend = desiredLegend;
         }
 
+        /// <summary>
+        /// Clears all legends.
+        /// </summary>
         public void ClearLegends()
         {
             geneExpressionHistogram.ClearLegend();
@@ -247,8 +250,9 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Projects and converts a world space coordinate to a position on the legend plane.
+        /// Projects and converts a world space coordinate to a local position on the legend plane.
         /// </summary>
+        /// <param name="worldPos">The world coordinate to convert.</param>
         /// <returns>A <see cref="Vector3"/> in the range [0,1]</returns>
         public Vector3 WorldToRelativePos(Vector3 worldPos)
         {
@@ -257,6 +261,11 @@ namespace CellexalVR.AnalysisObjects
             return (localPos - minPos).InverseScale(maxPos - minPos);
         }
 
+        /// <summary>
+        /// PRojects and converts a workd
+        /// </summary>
+        /// <param name="worldPos"></param>
+        /// <returns></returns>
         public Vector3 WorldToRelativeHistogramPos(Vector3 worldPos)
         {
             Vector3 localPos = transform.InverseTransformPoint(worldPos);

@@ -126,7 +126,11 @@ namespace CellexalVR.AnalysisLogic
             grabScript.interactionManager.RegisterInteractable(grabScript.GetComponent<IXRInteractable>());
         }
 
-
+        /// <summary>
+        /// Creates a new box plot from the given values.
+        /// </summary>
+        /// <param name="values">A list of values to create the box plot from.</param>
+        /// <param name="facs">The label to put over the box plot.</param>
         public void GenerateBoxPlot(List<float> values, string facs)
         {
             values.Sort();
@@ -160,12 +164,20 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
+        /// <summary>
+        /// Sets the selection that this collection of boxplots represents.
+        /// </summary>
+        /// <param name="selection">The selection that is used to create the box plots.</param>
+        /// <param name="group">Optional. One of the selection's groups, from <see cref="Selection.groups"/>, if the boxplots corresponds to only one group of the selection.</param>
         public void SetSelection(Selection selection, int group = -1)
         {
             this.selection = selection;
             this.group = group;
         }
 
+        /// <summary>
+        /// Resizes all boxplots depending on the global minimum and maximum values in them. Should be called once all boxplots have been generated with <see cref="GenerateBoxPlot"/>.
+        /// </summary>
         public void ResizeAllBoxPlots()
         {
             foreach (BoxPlot boxPlot in boxPlots)
@@ -175,7 +187,7 @@ namespace CellexalVR.AnalysisLogic
         }
 
         /// <summary>
-        /// Removes all boxp lots, does not remove the background or parent gameobject. <see cref="GenerateBoxPlots(List{Graph.GraphPoint})"/> can be called to populate this <see cref="BoxPlotGrid"/> again.
+        /// Removes all box lots, does not remove the background or parent gameobject. <see cref="GenerateBoxPlots(List{Graph.GraphPoint})"/> can be called to populate this <see cref="BoxPlotGrid"/> again.
         /// </summary>
         public void ClearBoxPlots()
         {
@@ -239,6 +251,9 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Highlights this the group in all graphs that this grid of boxplots was made from.
+        /// </summary>
         public void HighlightSelection()
         {
             if (group != -1)
@@ -250,6 +265,9 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Clears the group highlighting from <see cref="HighlightSelection"/>.
+        /// </summary>
         public void ClearHighlight()
         {
             if (group != -1)

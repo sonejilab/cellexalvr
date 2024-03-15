@@ -108,6 +108,10 @@ namespace CellexalVR.AnalysisLogic
             SetPoints(points);
         }
 
+        /// <summary>
+        /// Creates a new selection from a previous selection that was saved to the disk.
+        /// </summary>
+        /// <param name="selectionFilePath">The path to the saved selection.</param>
         public Selection(string selectionFilePath)
         {
             this.groups = new List<int>();
@@ -478,6 +482,9 @@ namespace CellexalVR.AnalysisLogic
             fileStream.Close();
         }
 
+        /// <summary>
+        /// Attempts to load group masks that have been saved with <see cref="SaveGroupMasksToDisk(Graph)"/>.
+        /// </summary>
         public void LoadGroupMasksFromDisk()
         {
             groupMasks = new Dictionary<(Graph graph, int group), Texture2D>();
@@ -538,6 +545,9 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Unloads this selection, freeing some memory.
+        /// </summary>
         public void UnloadSelection()
         {
             pointsLoaded = false;
@@ -545,6 +555,9 @@ namespace CellexalVR.AnalysisLogic
             _points = null;
         }
 
+        /// <summary>
+        /// Saves this selection to the disk.
+        /// </summary>
         public void SaveSelectionToDisk()
         {
             SaveSelectionTextFileToDisk();

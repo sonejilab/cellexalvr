@@ -96,11 +96,19 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Helper function to know if a tab button is currently in one of the visible indices.
+        /// </summary>
+        /// <param name="index">The tab button's index.</param>
+        /// <returns>True if the index is visible, false otherwise.</returns>
         private bool IsTabButtonInVisibleIndex(int index)
         {
             return index >= visibleTabButtonIndex && index < visibleTabButtonIndex + maxNumberOfTabButtons;
         }
 
+        /// <summary>
+        /// Moves all tab button gameobjects to their correct positions. This function moves all tab buttons, visible and hidden, and sets the disables the hidden ones with <see cref="GameObject.SetActive(bool)"/>.
+        /// </summary>
         public void MoveTabButtons()
         {
             actualVisibleTabButtonIndex = visibleTabButtonIndex;
@@ -115,6 +123,10 @@ namespace CellexalVR.AnalysisObjects
 
         }
 
+        /// <summary>
+        /// Adds a new tab to this menu, using the <see cref="tabPrefab"/>.
+        /// </summary>
+        /// <returns>The instantiated <see cref="EnvironmentTab"/></returns>
         public EnvironmentTab AddTab()
         {
             EnvironmentTab newTab = Instantiate(tabPrefab);
@@ -126,12 +138,21 @@ namespace CellexalVR.AnalysisObjects
             return newTab;
         }
 
+        /// <summary>
+        /// Switches to the specified tab by disabling the content of all others, and enabling the content of the specified tab.
+        /// </summary>
+        /// <param name="tab">The tab to enable.</param>
         public void SwitchToTab(EnvironmentTab tab)
         {
             TurnOffAllTabs();
             tab.SetTabActive(true);
         }
 
+        /// <summary>
+        /// Scrolls the tab buttons.
+        /// </summary>
+        /// <param name="direction">The number of tab buttons to scroll, positive numbers will scroll towards higher indices, negative numbers scroll towards lower indices.</param>
+        /// <exception cref="System.ArgumentException">Thrown if <paramref name="direction"/> is 0.</exception>
         public void ScrollTabs(int direction)
         {
             if (direction == 0)
@@ -209,6 +230,9 @@ namespace CellexalVR.AnalysisObjects
             tabButtonScrollingCoroutine = null;
         }
 
+        /// <summary>
+        /// Dsiables the content gameobject on all tabs.
+        /// </summary>
         public void TurnOffAllTabs()
         {
             foreach (EnvironmentTab tab in tabs)

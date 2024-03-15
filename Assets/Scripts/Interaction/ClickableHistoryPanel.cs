@@ -34,7 +34,12 @@ namespace CellexalVR.Interaction
             parentKeyboard = gameObject.GetComponentInParent<KeyboardHandler>();
         }
 
-
+        /// <summary>
+        /// Sets the text and type of this history panel.
+        /// </summary>
+        /// <param name="entryName">The name of the entry.</param>
+        /// <param name="type">The type of entry.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="type"/> is not valid.</exception>
         public void SetText(string entryName, Definitions.HistoryEvent type)
         {
             if (!textMesh)

@@ -412,17 +412,29 @@ namespace CellexalVR.Interaction
             SetSelectionToolEnabled(true);
         }
 
+        /// <summary>
+        /// Checks if any of the selection tool colliders are active.
+        /// </summary>
+        /// <returns>True if any of the colliders are active, false if not.</returns>
         public bool IsSelectionToolEnabled()
         {
             return GetComponentsInChildren<Collider>().Any(x => x.enabled);
         }
 
+        /// <summary>
+        /// Gets the current color of the selection tool.
+        /// </summary>
+        /// <returns>The current color.</returns>
         public Color GetCurrentColor()
         {
             if (currentColorIndex > Colors.Length) return Color.white;
             return Colors[currentColorIndex];
         }
 
+        /// <summary>
+        /// Gets which collider is currently chosen, does not imply that the selection tool is active.
+        /// </summary>
+        /// <returns>The chosen collider.</returns>
         public Collider GetCurrentCollider()
         {
             return selectionToolColliders[currentMeshIndex];

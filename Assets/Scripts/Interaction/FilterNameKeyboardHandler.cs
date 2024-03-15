@@ -57,6 +57,9 @@ namespace CellexalVR.Interaction
             }
         }
 
+        /// <summary>
+        /// Updates the current filter based on the blocks in the filter creator.
+        /// </summary>
         public void UpdateFilterFromFilterCreator()
         {
             referenceManager.filterManager.UpdateFilterFromFilterCreator();

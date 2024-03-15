@@ -147,6 +147,9 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        /// <summary>
+        /// Initialises the interactive elements in the heatmap and sets some necessary references.
+        /// </summary>
         public void Init()
         {
             referenceManager = GameObject.Find("InputReader").GetComponent<ReferenceManager>();

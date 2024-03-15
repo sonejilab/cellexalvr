@@ -162,6 +162,10 @@ namespace CellexalVR.Menu.SubMenus
             referenceManager.cellManager.ColorByAttributeExpression(GetExpression());
         }
 
+        /// <summary>
+        /// Coroutine. Selects all attributes in the menu that are in the currently open tab (category).
+        /// </summary>
+        /// <param name="toggle">True for coloring according to all attributes, false to reset colors of all graphs.</param>
         public IEnumerator SelectAllAttributesCoroutine(bool toggle)
         {
             if (PointCloudGenerator.instance.pointCount > 0)

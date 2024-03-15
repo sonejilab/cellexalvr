@@ -13,6 +13,10 @@ using UnityEngine;
 
 namespace CellexalVR.Filters
 {
+
+    /// <summary>
+    /// Manages our current filter and the filter creator.
+    /// </summary>
     public class FilterManager : MonoBehaviour
     {
         public ReferenceManager referenceManager;

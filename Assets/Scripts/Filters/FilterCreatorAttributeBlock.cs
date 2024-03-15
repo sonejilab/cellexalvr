@@ -4,7 +4,7 @@ using UnityEngine;
 namespace CellexalVR.Filters
 {
     /// <summary>
-    /// The gene block that is used when creating a filter in VR. Contains a gene name field, operator field, value field and an ouput port.
+    /// Represents an attribute block when creating a filter in VR. Contains a name field, yes/no field and one output port.
     /// </summary>
     public class FilterCreatorAttributeBlock : FilterCreatorBlock
     {

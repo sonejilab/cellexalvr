@@ -38,6 +38,15 @@ namespace CellexalVR.AnalysisLogic
             }
         }
 
+        /// <summary>
+        /// Sets the values of this boxplot so it can be resized with <see cref="ResizeComponents(float, float)"/> later.
+        /// </summary>
+        /// <param name="facsName">The name of the facs that this boxplot represents.</param>
+        /// <param name="median">The median value.</param>
+        /// <param name="percentile5th">The 5th percentage value.</param>
+        /// <param name="percentile95th">The 95th percentage value.</param>
+        /// <param name="minValue">The minimum extreme value.</param>
+        /// <param name="maxValue">The maximum extreme value.</param>
         public void InitBoxPlot(string facsName, float median, float percentile5th, float percentile95th, float minValue, float maxValue)
         {
             this.median = median;
@@ -52,6 +61,11 @@ namespace CellexalVR.AnalysisLogic
             base.OnActivate.AddListener(() => ReferenceManager.instance.cellManager.ColorByIndex(facsNameString));
         }
 
+        /// <summary>
+        /// Resizes this boxplot based on the global min and max value of all boxplots in the grid.
+        /// </summary>
+        /// <param name="globalMinValue">The global minimum extreme value.</param>
+        /// <param name="globalMaxValue">The global maximum extreme value.</param>
         public void ResizeComponents(float globalMinValue, float globalMaxValue)
         {
             Vector3 plotHalfSize = new Vector3(0.05f, 0.05f, 0f);
@@ -93,12 +107,19 @@ namespace CellexalVR.AnalysisLogic
 
         }
 
+        /// <summary>
+        /// Activates or deactivates the info text box.
+        /// </summary>
+        /// <param name="active">True if the info box should be activated, false if it should be deactivated.</param>
         public void SetInfoTextActive(bool active)
         {
             textParent.SetActive(active);
         }
 
-        public void SetInfoText()
+        /// <summary>
+        /// Sets the info texts according to the values from <see cref="InitBoxPlot(string, float, float, float, float, float)"/>.
+        /// </summary>
+        private void SetInfoText()
         {
             infoTexts[0].text = maxValue.ToString("F6");
             infoTexts[1].text = percentile95th.ToString("F6");

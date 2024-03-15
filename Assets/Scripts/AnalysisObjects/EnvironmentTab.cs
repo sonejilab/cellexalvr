@@ -14,6 +14,10 @@ namespace CellexalVR.AnalysisObjects
             parentMenu = GetComponentInParent<EnvironmentMenuWithTabs>();
         }
 
+        /// <summary>
+        /// Enables or disables the content gameobject of this tab.
+        /// </summary>
+        /// <param name="active">True if the tab should be enabled, false if it should be disabled.</param>
         public void SetTabActive(bool active)
         {
             contentParent.SetActive(active);

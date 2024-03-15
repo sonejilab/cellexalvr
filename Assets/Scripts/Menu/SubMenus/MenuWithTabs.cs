@@ -64,6 +64,10 @@ namespace CellexalVR.Menu.SubMenus
             base.Start();
         }
 
+        /// <summary>
+        /// Creates a number of tabs with buttons from a list of strings.
+        /// </summary>
+        /// <param name="categoriesAndNames">An array of strings, category and name should be separated with a @, e.g. <code>category_1@name_1</code></param>
         public virtual void CreateButtons(string[] categoriesAndNames)
         {
             DestroyTabs();
@@ -295,6 +299,10 @@ namespace CellexalVR.Menu.SubMenus
             }
         }
 
+        /// <summary>
+        /// Changes the current tab some number of tabs in a gived direction.
+        /// </summary>
+        /// <param name="dir">The number of tabs to move, negative numbers will move backwards.</param>
         public void ChangePage(int dir)
         {
             currentPage += dir;
