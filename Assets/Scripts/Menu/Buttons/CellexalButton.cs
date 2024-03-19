@@ -21,7 +21,7 @@ namespace CellexalVR.Menu.Buttons
         // all buttons must override this variable's get property
         /// <summary>
         /// A string that briefly explains what this button does.
-        /// </summary>
+        /// </summary>§
         abstract protected string Description
         {
             get;

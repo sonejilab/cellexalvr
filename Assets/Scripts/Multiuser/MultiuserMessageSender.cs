@@ -31,7 +31,7 @@ namespace CellexalVR.Multiuser
         public bool avatarMenuActive;
         public bool multiplayer;
 
-        private MultiuserMessageReciever coordinator;
+        private MultiuserMessageReceiver coordinator;
         private List<GameObject> players = new List<GameObject>();
         private Queue<LabelsToSendLater> labelsToAddQueue = new Queue<LabelsToSendLater>();
         private Queue<LabelsToSendLater> labelsToRemoveQueue = new Queue<LabelsToSendLater>();
@@ -135,8 +135,8 @@ namespace CellexalVR.Multiuser
 
 
                     coordinator = PhotonNetwork
-                        .Instantiate("MultiuserMessageReciever", Vector3.zero, Quaternion.identity, 0)
-                        .GetComponent<MultiuserMessageReciever>();
+                        .Instantiate("MultiuserMessageReceiver", Vector3.zero, Quaternion.identity, 0)
+                        .GetComponent<MultiuserMessageReceiver>();
                     // if (PhotonNetwork.isMasterClient)
                     // {
                     // }
@@ -144,8 +144,8 @@ namespace CellexalVR.Multiuser
                     // if (!PhotonNetwork.isMasterClient)
                     // {
                     //     coordinator = PhotonNetwork
-                    //         .Instantiate("MultiuserMessageReciever", Vector3.zero, Quaternion.identity, 0)
-                    //         .GetComponent<MultiuserMessageReciever>();
+                    //         .Instantiate("MultiuserMessageReceiver", Vector3.zero, Quaternion.identity, 0)
+                    //         .GetComponent<MultiuserMessageReceiver>();
                     // }
                 }
                 else
@@ -160,8 +160,8 @@ namespace CellexalVR.Multiuser
         {
             if (coordinator == null && multiplayer)
             {
-                coordinator = GameObject.Find("MultiuserMessageReciever(Clone)")
-                    .GetComponent<MultiuserMessageReciever>();
+                coordinator = GameObject.Find("MultiuserMessageReceiver(Clone)")
+                    .GetComponent<MultiuserMessageReceiver>();
             }
         }
 
@@ -178,7 +178,7 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to read folder " + path);
 
-            coordinator.photonView.RPC("RecieveMessageReadFolder", PhotonTargets.Others, path);
+            coordinator.photonView.RPC("ReceiveMessageReadFolder", PhotonTargets.Others, path);
         }
 
         public void SendMessageReadH5Config(string path, Dictionary<string, string> h5config)
@@ -186,20 +186,20 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients of h5 config");
 
-            coordinator.photonView.RPC("RecieveMessageH5Config", PhotonTargets.Others, path, h5config);
+            coordinator.photonView.RPC("ReceiveMessageH5Config", PhotonTargets.Others, path, h5config);
         }
 
         public void SendMessageSynchConfig(byte[] data)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to synch relevant parts of config");
-            coordinator.photonView.RPC("RecieveMessageSynchConfig", PhotonTargets.Others, data);
+            coordinator.photonView.RPC("ReceiveMessageSynchConfig", PhotonTargets.Others, data);
         }
 
         public void SendMessageLoadingMenu(bool delete)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageLoadingMenu", PhotonTargets.Others, delete);
+            coordinator.photonView.RPC("ReceiveMessageLoadingMenu", PhotonTargets.Others, delete);
         }
 
         #endregion
@@ -209,19 +209,19 @@ namespace CellexalVR.Multiuser
         public void SendMessageEnableColliders(string n)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageEnableColliders", PhotonTargets.Others, n);
+            coordinator.photonView.RPC("ReceiveMessageEnableColliders", PhotonTargets.Others, n);
         }
 
         public void SendMessageDisableColliders(string n)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageDisableColliders", PhotonTargets.Others, n);
+            coordinator.photonView.RPC("ReceiveMessageDisableColliders", PhotonTargets.Others, n);
         }
 
         public void SendMessageToggleLaser(bool active)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleLaser", PhotonTargets.Others,
+            coordinator.photonView.RPC("ReceiveMessageToggleLaser", PhotonTargets.Others,
                 active, coordinator.photonView.ownerId, players[0].gameObject.name);
         }
 
@@ -229,7 +229,7 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             Vector3 originPosition = origin.position;
-            coordinator.photonView.RPC("RecieveMessageMoveLaser", PhotonTargets.Others,
+            coordinator.photonView.RPC("ReceiveMessageMoveLaser", PhotonTargets.Others,
                 originPosition.x, originPosition.y, originPosition.z,
                 hit.x, hit.y, hit.z, coordinator.photonView.ownerId, players[0].gameObject.name);
         }
@@ -237,14 +237,14 @@ namespace CellexalVR.Multiuser
         public void SendMessageUpdateSliderValue(SliderController.sliderType type, float value)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageUpdateSliderValue", PhotonTargets.Others, type.ToString(),
+            coordinator.photonView.RPC("ReceiveMessageUpdateSliderValue", PhotonTargets.Others, type.ToString(),
                 value);
         }
 
         public void SendMessageShowPDFPages()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageShowPDFPages", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageShowPDFPages", PhotonTargets.Others);
         }
 
         #endregion
@@ -254,20 +254,20 @@ namespace CellexalVR.Multiuser
         public void SendMessageToggleLegend()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleLegend", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageToggleLegend", PhotonTargets.Others);
         }
 
         public void SendMessageMoveLegend(Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMoveLegend", PhotonTargets.Others,
+            coordinator.photonView.RPC("ReceiveMessageMoveLegend", PhotonTargets.Others,
                 pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
         public void SendMessageLegendUngrabbed(Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageLegendUngrabbed", PhotonTargets.Others,
+            coordinator.photonView.RPC("ReceiveMessageLegendUngrabbed", PhotonTargets.Others,
                 pos.x, pos.y, pos.z,
                 rot.x, rot.y, rot.z, rot.w,
                 vel.x, vel.y, vel.z,
@@ -277,63 +277,63 @@ namespace CellexalVR.Multiuser
         public void SendMessageChangeLegend(string legendName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageChangeLegend",
+            coordinator.photonView.RPC("ReceiveMessageChangeLegend",
                 PhotonTargets.Others, legendName);
         }
 
         public void SendMessageAttributeLegendChangePage(bool dir)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageAttributeLegendChangePage",
+            coordinator.photonView.RPC("ReceiveMessageAttributeLegendChangePage",
                 PhotonTargets.Others, dir);
         }
 
         public void SendMessageSelectionLegendChangePage(bool dir)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSelectionLegendChangePage",
+            coordinator.photonView.RPC("ReceiveMessageSelectionLegendChangePage",
                 PhotonTargets.Others, dir);
         }
 
         public void SendMessageChangeTab(int index)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageChangeTab",
+            coordinator.photonView.RPC("ReceiveMessageChangeTab",
                 PhotonTargets.Others, index);
         }
 
         public void SendMessageDeactivateSelectedArea()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageDeactivateSelectedArea",
+            coordinator.photonView.RPC("ReceiveMessageDeactivateSelectedArea",
                 PhotonTargets.Others);
         }
 
         public void SendMessageMoveSelectedArea(int hitIndex, int savedGeneExpressionHistogramHitX)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMoveSelectedArea",
+            coordinator.photonView.RPC("ReceiveMessageMoveSelectedArea",
                 PhotonTargets.Others, hitIndex, savedGeneExpressionHistogramHitX);
         }
 
         public void SendMessageMoveHighlightArea(int minX, int maxX)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMoveHighlightArea",
+            coordinator.photonView.RPC("ReceiveMessageMoveHighlightArea",
                 PhotonTargets.Others, minX, maxX);
         }
 
         public void SendMessageSwitchMode(string mode)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSwitchMode",
+            coordinator.photonView.RPC("ReceiveMessageSwitchMode",
                 PhotonTargets.Others, mode);
         }
 
         public void SendMessageChangeThreshold(int increment)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageChangeThreshold",
+            coordinator.photonView.RPC("ReceiveMessageChangeThreshold",
                 PhotonTargets.Others, increment);
         }
 
@@ -346,69 +346,69 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to color graphs by " + geneName);
             Debug.Log("Informing clients to color graphs by " + geneName);
-            coordinator.photonView.RPC("RecieveMessageColorGraphsByGene", PhotonTargets.Others, geneName);
+            coordinator.photonView.RPC("ReceiveMessageColorGraphsByGene", PhotonTargets.Others, geneName);
         }
 
         public void SendMessageColoringMethodChanged(int newMode)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to change coloring mode to " + newMode);
-            coordinator.photonView.RPC("RecieveMessageColoringMethodChanged", PhotonTargets.Others, newMode);
+            coordinator.photonView.RPC("ReceiveMessageColoringMethodChanged", PhotonTargets.Others, newMode);
         }
 
         //public void SendMessageColorGraphByPreviousExpression(string geneName)
         //{
         //    if (!multiplayer) return;
         //    CellexalLog.Log("Informing clients to color graphs by previous gene " + geneName);
-        //    coordinator.photonView.RPC("RecieveMessageColorGraphsByPreviousExpression", PhotonTargets.Others, geneName);
+        //    coordinator.photonView.RPC("ReceiveMessageColorGraphsByPreviousExpression", PhotonTargets.Others, geneName);
         //}
 
         public void SendMessageColorByAttribute(string attributeType, bool colored, int colIndex)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
-            coordinator.photonView.RPC("RecieveMessageColorByAttribute", PhotonTargets.Others, attributeType, colored, colIndex);
+            coordinator.photonView.RPC("ReceiveMessageColorByAttribute", PhotonTargets.Others, attributeType, colored, colIndex);
         }
 
         public void SendMessageColorByAttributePointCloud(string attributeType, bool colored)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to color graphs by attribute " + attributeType);
-            coordinator.photonView.RPC("RecieveMessageColorByAttributePointCloud", PhotonTargets.Others, attributeType, colored);
+            coordinator.photonView.RPC("ReceiveMessageColorByAttributePointCloud", PhotonTargets.Others, attributeType, colored);
         }
         public void SendMessageToggleAllAttributesPointCloud(bool colored)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to color graphs by attribute " + colored);
-            coordinator.photonView.RPC("RecieveMessageToggleAllAttributesPointCloud", PhotonTargets.Others, colored);
+            coordinator.photonView.RPC("ReceiveMessageToggleAllAttributesPointCloud", PhotonTargets.Others, colored);
         }
 
         public void SendMessageColorByIndex(string indexName)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to color graphs by index " + indexName);
-            coordinator.photonView.RPC("RecieveMessageColorByIndex", PhotonTargets.Others, indexName);
+            coordinator.photonView.RPC("ReceiveMessageColorByIndex", PhotonTargets.Others, indexName);
         }
 
         public void SendMessageRecolorSelectionPoints()
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to recolor color graphs by current selection");
-            coordinator.photonView.RPC("RecieveMessageRecolorSelectionPoints", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageRecolorSelectionPoints", PhotonTargets.Others);
         }
 
         public void SendMessageToggleTransparency(bool toggle)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to clear expression colours");
-            coordinator.photonView.RPC("RecieveMessageToggleTransparency", PhotonTargets.Others, toggle);
+            coordinator.photonView.RPC("ReceiveMessageToggleTransparency", PhotonTargets.Others, toggle);
         }
 
         public void SendMessageGenerateRandomColors(int n)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to generate random colours");
-            coordinator.photonView.RPC("RecieveMessageGenerateRandomColors",
+            coordinator.photonView.RPC("ReceiveMessageGenerateRandomColors",
                 PhotonTargets.Others, n);
         }
 
@@ -416,7 +416,7 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to generate rainbow colours");
-            coordinator.photonView.RPC("RecieveMessageGenerateRainbowColors",
+            coordinator.photonView.RPC("ReceiveMessageGenerateRainbowColors",
                 PhotonTargets.Others, n);
         }
 
@@ -424,7 +424,7 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to highlight " + group + " cells");
-            coordinator.photonView.RPC(methodName: "RecieveMessageHighlightCells", target: PhotonTargets.Others,
+            coordinator.photonView.RPC(methodName: "ReceiveMessageHighlightCells", target: PhotonTargets.Others,
                 group, highlight);
         }
 
@@ -435,56 +435,56 @@ namespace CellexalVR.Multiuser
         public void SendMessageActivateKeyboard(bool activate)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageActivateKeyboard", PhotonTargets.Others, activate);
+            coordinator.photonView.RPC("ReceiveMessageActivateKeyboard", PhotonTargets.Others, activate);
         }
 
         public void SendMessageKeyClicked(string value)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients that " + value + " was clicked");
-            coordinator.photonView.RPC("RecieveMessageKeyClicked", PhotonTargets.Others, value);
+            coordinator.photonView.RPC("ReceiveMessageKeyClicked", PhotonTargets.Others, value);
         }
 
         public void SendMessageBackspaceKeyClicked()
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients that backspace was clicked");
-            coordinator.photonView.RPC("RecieveMessageKBackspaceKeyClicked", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageKBackspaceKeyClicked", PhotonTargets.Others);
         }
 
         public void SendMessageClearKeyClicked()
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients that clear was clicked");
-            coordinator.photonView.RPC("RecieveMessageClearKeyClicked", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageClearKeyClicked", PhotonTargets.Others);
         }
 
         public void SendMessageSearchLockToggled(int index)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to toggle lock number " + index);
-            coordinator.photonView.RPC("RecieveMessageSearchLockToggled", PhotonTargets.Others, index);
+            coordinator.photonView.RPC("ReceiveMessageSearchLockToggled", PhotonTargets.Others, index);
         }
 
         public void SendMessageAddAnnotation(string annotation, int index, string gpLabel)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to add annotation: " + annotation);
-            coordinator.photonView.RPC("RecieveMessageAddAnnotation", PhotonTargets.Others, annotation, index, gpLabel);
+            coordinator.photonView.RPC("ReceiveMessageAddAnnotation", PhotonTargets.Others, annotation, index, gpLabel);
         }
 
         public void SendMessageExportAnnotations()
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to export annotations");
-            coordinator.photonView.RPC("RecieveMessageExportAnnotations", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageExportAnnotations", PhotonTargets.Others);
         }
 
         public void SendMessageClearExpressionColours()
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to clear expression colours");
-            coordinator.photonView.RPC("RecieveMessageClearExpressionColours", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageClearExpressionColours", PhotonTargets.Others);
         }
 
 
@@ -492,13 +492,13 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to calculate genes correlated to " + geneName);
-            coordinator.photonView.RPC("RecieveMessageCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
+            coordinator.photonView.RPC("ReceiveMessageCalculateCorrelatedGenes", PhotonTargets.Others, geneName);
         }
 
         public void SendMessageHandleHistoryPanelClick(string panelName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHandleHistoryPanelClick", PhotonTargets.Others, panelName);
+            coordinator.photonView.RPC("ReceiveMessageHandleHistoryPanelClick", PhotonTargets.Others, panelName);
             ClickableHistoryPanel panel = referenceManager.sessionHistoryList.GetPanel(panelName);
             if (!panel)
             {
@@ -516,7 +516,7 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to confirm selection");
-            coordinator.photonView.RPC("RecieveMessageConfirmSelection", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageConfirmSelection", PhotonTargets.Others);
         }
 
         public void SendMessageSelectedAdd(string graphName, string label, int newGroup, Color color)
@@ -551,7 +551,7 @@ namespace CellexalVR.Multiuser
         public void SendMessageSelectedAddMany(string graphName, string[] labels, int newGroup, Color color)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageAddSelectMany", PhotonTargets.Others, graphName, labels, newGroup,
+            coordinator.photonView.RPC("ReceiveMessageAddSelectMany", PhotonTargets.Others, graphName, labels, newGroup,
                 color.r, color.g, color.b);
         }
 
@@ -588,21 +588,21 @@ namespace CellexalVR.Multiuser
         public void SendMessageSelectedRemoveMany(string graphName, string[] labels)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSelectedRemoveMany", PhotonTargets.Others, graphName, labels);
+            coordinator.photonView.RPC("ReceiveMessageSelectedRemoveMany", PhotonTargets.Others, graphName, labels);
         }
 
 
         public void SendMessageSelectedAddPointCloud(int[] indices, int[] groups)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageAddSelectPointCloud", PhotonTargets.Others, indices, groups);
+            coordinator.photonView.RPC("ReceiveMessageAddSelectPointCloud", PhotonTargets.Others, indices, groups);
         }
 
         public void SendMessageCubeColoured(string graphName, string label, int newGroup, Color color)
         {
             if (!multiplayer) return;
             //Debug.Log("Informing clients to colour selected cube");
-            coordinator.photonView.RPC("RecieveMessageCubeColoured", PhotonTargets.Others, graphName, label, newGroup,
+            coordinator.photonView.RPC("ReceiveMessageCubeColoured", PhotonTargets.Others, graphName, label, newGroup,
                 color.r, color.g, color.b);
         }
 
@@ -610,48 +610,48 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             //Debug.Log("Informing clients to undo last color");
-            coordinator.photonView.RPC("RecieveMessageGoBackOneColor", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageGoBackOneColor", PhotonTargets.Others);
         }
 
         public void SendMessageGoBackSteps(int k)
         {
             if (!multiplayer) return;
             //Debug.Log("Informing clients to undo last color");
-            coordinator.photonView.RPC("RecieveMessageGoBackSteps", PhotonTargets.Others, k);
+            coordinator.photonView.RPC("ReceiveMessageGoBackSteps", PhotonTargets.Others, k);
         }
 
         public void SendMessageCancelSelection()
         {
             if (!multiplayer) return;
             //Debug.Log("Informing clients to undo last color");
-            coordinator.photonView.RPC("RecieveMessageCancelSelection", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageCancelSelection", PhotonTargets.Others);
         }
 
         public void SendMessageRedoOneColor()
         {
             if (!multiplayer) return;
             //Debug.Log("Informing clients to undo last color");
-            coordinator.photonView.RPC("RecieveMessageRedoOneColor", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageRedoOneColor", PhotonTargets.Others);
         }
 
         public void SendMessageRedoSteps(int k)
         {
             if (!multiplayer) return;
             //Debug.Log("Informing clients to undo last color");
-            coordinator.photonView.RPC("RecieveMessageRedoSteps", PhotonTargets.Others, k);
+            coordinator.photonView.RPC("ReceiveMessageRedoSteps", PhotonTargets.Others, k);
         }
 
         public void SendMessageRemoveCells()
         {
             if (!multiplayer) return;
             //Debug.Log("Informing clients to remove selected cells");
-            coordinator.photonView.RPC("RecieveMessageRemoveCells", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageRemoveCells", PhotonTargets.Others);
         }
 
         public void SendMessageToggleAnnotationFile(string path, bool toggle)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleAnnotationFile", PhotonTargets.Others, path, toggle);
+            coordinator.photonView.RPC("ReceiveMessageToggleAnnotationFile", PhotonTargets.Others, path, toggle);
         }
 
         #endregion
@@ -662,7 +662,7 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to draw line with " + xcoords.Length);
-            coordinator.photonView.RPC("RecieveMessageDrawLine", PhotonTargets.Others, r, g, b, xcoords, ycoords,
+            coordinator.photonView.RPC("ReceiveMessageDrawLine", PhotonTargets.Others, r, g, b, xcoords, ycoords,
                 zcoords);
         }
 
@@ -670,21 +670,21 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to clear all lines");
-            coordinator.photonView.RPC("RecieveMessageClearAllLines", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageClearAllLines", PhotonTargets.Others);
         }
 
         public void SendMessageClearLastLine()
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to clear last line");
-            coordinator.photonView.RPC("RecieveMessageClearLastLine", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageClearLastLine", PhotonTargets.Others);
         }
 
         public void SendMessageClearAllLinesWithColor(Color color)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to clear all lines with color: " + color);
-            coordinator.photonView.RPC("RecieveMessageClearLinesWithColor", PhotonTargets.Others, color.r, color.g,
+            coordinator.photonView.RPC("ReceiveMessageClearLinesWithColor", PhotonTargets.Others, color.r, color.g,
                 color.b);
         }
 
@@ -695,7 +695,7 @@ namespace CellexalVR.Multiuser
         public void SendMessageMoveGraph(string moveGraphName, Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMoveGraph", PhotonTargets.Others, moveGraphName, pos.x, pos.y,
+            coordinator.photonView.RPC("ReceiveMessageMoveGraph", PhotonTargets.Others, moveGraphName, pos.x, pos.y,
                 pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
@@ -703,7 +703,7 @@ namespace CellexalVR.Multiuser
             Vector3 angVel)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageGraphUngrabbed", PhotonTargets.Others, moveGraphName,
+            coordinator.photonView.RPC("ReceiveMessageGraphUngrabbed", PhotonTargets.Others, moveGraphName,
                 pos.x, pos.y, pos.z,
                 rot.x, rot.y, rot.z, rot.w,
                 vel.x, vel.y, vel.z,
@@ -713,105 +713,105 @@ namespace CellexalVR.Multiuser
         public void SendMessageToggleGrabbable(string name, bool b)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleGrabbable", PhotonTargets.Others, name, b);
+            coordinator.photonView.RPC("ReceiveMessageToggleGrabbable", PhotonTargets.Others, name, b);
         }
 
         public void SendMessageResetGraphColor()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageResetGraph", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageResetGraph", PhotonTargets.Others);
         }
 
         public void SendMessageResetGraphPosition()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageResetGraphPosition", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageResetGraphPosition", PhotonTargets.Others);
         }
 
         public void SendMessageDrawLinesBetweenGps(bool toggle = false)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageDrawLinesBetweenGps", PhotonTargets.Others, toggle);
+            coordinator.photonView.RPC("ReceiveMessageDrawLinesBetweenGps", PhotonTargets.Others, toggle);
         }
 
         public void SendMessageBundleAllLines()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageBundleAllLines", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageBundleAllLines", PhotonTargets.Others);
         }
 
         public void SendMessageClearLinesBetweenGps()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageClearLinesBetweenGps", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageClearLinesBetweenGps", PhotonTargets.Others);
         }
 
         public void SendMessageAddMarker(string indexName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageAddMarker", PhotonTargets.Others, indexName);
+            coordinator.photonView.RPC("ReceiveMessageAddMarker", PhotonTargets.Others, indexName);
         }
 
         public void SendMessageCreateMarkerGraph()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageCreateMarkerGraph", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageCreateMarkerGraph", PhotonTargets.Others);
         }
 
         public void SendMessageCreateAttributeGraph()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageCreateAttributeGraph", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageCreateAttributeGraph", PhotonTargets.Others);
         }
 
         public void SendMessageActivateSlices()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageActivateSlices", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageActivateSlices", PhotonTargets.Others);
         }
 
         public void SendMessageSpatialGraphGrabbed(string sliceName, string graphName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSpatialGraphGrabbed", PhotonTargets.Others, sliceName, graphName);
+            coordinator.photonView.RPC("ReceiveMessageSpatialGraphGrabbed", PhotonTargets.Others, sliceName, graphName);
         }
 
         public void SendMessageSpatialGraphUnGrabbed(string sliceName, string graphName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSpatialGraphUnGrabbed", PhotonTargets.Others, sliceName,
+            coordinator.photonView.RPC("ReceiveMessageSpatialGraphUnGrabbed", PhotonTargets.Others, sliceName,
                 graphName);
         }
 
         public void SendMessageHighlightCluster(bool highlight, string graphName, int id)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHighlightCluster", PhotonTargets.Others,
+            coordinator.photonView.RPC("ReceiveMessageHighlightCluster", PhotonTargets.Others,
                 highlight, graphName, id);
         }
 
         public void SendMessageToggleBundle(string graphName, int id)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleBundle", PhotonTargets.Others,
+            coordinator.photonView.RPC("ReceiveMessageToggleBundle", PhotonTargets.Others,
                 graphName, id);
         }
 
         public void SendMessageToggleAxes()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleAxes", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageToggleAxes", PhotonTargets.Others);
         }
 
         public void SendMessageToggleInfoPanels()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleInfoPanels", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageToggleInfoPanels", PhotonTargets.Others);
         }
         public void SendMessageSpreadPoints(int pcID, bool spread)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSpreadPoints", PhotonTargets.Others, pcID, spread);
+            coordinator.photonView.RPC("ReceiveMessageSpreadPoints", PhotonTargets.Others, pcID, spread);
         }
 
         #endregion
@@ -821,7 +821,7 @@ namespace CellexalVR.Multiuser
         public void SendMessageMoveHeatmap(string moveHeatmapName, Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y,
+            coordinator.photonView.RPC("ReceiveMessageMoveHeatmap", PhotonTargets.Others, moveHeatmapName, pos.x, pos.y,
                 pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
@@ -829,14 +829,14 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to create heatmap");
-            coordinator.photonView.RPC("RecieveMessageCreateHeatmap", PhotonTargets.Others, hmName);
+            coordinator.photonView.RPC("ReceiveMessageCreateHeatmap", PhotonTargets.Others, hmName);
         }
 
         public void SendMessageHandleBoxSelection(string heatmapName, int hitx, int hity, int selectionStartX,
             int selectionStartY)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHandleBoxSelection", PhotonTargets.Others, heatmapName, hitx,
+            coordinator.photonView.RPC("ReceiveMessageHandleBoxSelection", PhotonTargets.Others, heatmapName, hitx,
                 hity, selectionStartX, selectionStartY);
         }
 
@@ -844,14 +844,14 @@ namespace CellexalVR.Multiuser
             int selectionStartY)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageConfirmSelection", PhotonTargets.Others, heatmapName, hitx, hity,
+            coordinator.photonView.RPC("ReceiveMessageConfirmSelection", PhotonTargets.Others, heatmapName, hitx, hity,
                 selectionStartX, selectionStartY);
         }
 
         public void SendMessageHandleMovingSelection(string heatmapName, int hitx, int hity)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHandleMovingSelection", PhotonTargets.Others, heatmapName, hitx,
+            coordinator.photonView.RPC("ReceiveMessageHandleMovingSelection", PhotonTargets.Others, heatmapName, hitx,
                 hity);
         }
 
@@ -859,32 +859,32 @@ namespace CellexalVR.Multiuser
             int selectedGroupRight, int selectedGeneTop, int selectedGeneBottom)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMoveSelection", PhotonTargets.Others, heatmapName, hitx, hity,
+            coordinator.photonView.RPC("ReceiveMessageMoveSelection", PhotonTargets.Others, heatmapName, hitx, hity,
                 selectedGroupLeft, selectedGroupRight, selectedGeneTop, selectedGeneBottom);
         }
 
         public void SendMessageHandleHitHeatmap(string heatmapName, int hitx, int hity)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHandleHitHeatmap", PhotonTargets.Others, heatmapName, hitx, hity);
+            coordinator.photonView.RPC("ReceiveMessageHandleHitHeatmap", PhotonTargets.Others, heatmapName, hitx, hity);
         }
 
         public void SendMessageResetHeatmapHighlight(string heatmapName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageResetHeatmapHighlight", PhotonTargets.Others, heatmapName);
+            coordinator.photonView.RPC("ReceiveMessageResetHeatmapHighlight", PhotonTargets.Others, heatmapName);
         }
 
         public void SendMessageResetSelecting(string heatmapName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageResetSelecting", PhotonTargets.Others, heatmapName);
+            coordinator.photonView.RPC("ReceiveMessageResetSelecting", PhotonTargets.Others, heatmapName);
         }
 
         public void SendMessageHandlePressDown(string heatmapName, int hitx, int hity)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHandlePressDown", PhotonTargets.Others, heatmapName, hitx, hity);
+            coordinator.photonView.RPC("ReceiveMessageHandlePressDown", PhotonTargets.Others, heatmapName, hitx, hity);
         }
 
         public void SendMessageCreateNewHeatmapFromSelection(string heatmapName, int selectedGroupLeft,
@@ -892,7 +892,7 @@ namespace CellexalVR.Multiuser
             int selectedGeneBottom, float selectedBoxWidth, float selectedBoxHeight)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageCreateNewHeatmapFromSelection", PhotonTargets.Others, heatmapName,
+            coordinator.photonView.RPC("ReceiveMessageCreateNewHeatmapFromSelection", PhotonTargets.Others, heatmapName,
                 selectedGroupLeft, selectedGroupRight,
                 selectedGeneTop, selectedGeneBottom, selectedBoxWidth, selectedBoxHeight);
         }
@@ -900,37 +900,37 @@ namespace CellexalVR.Multiuser
         public void SendMessageReorderByAttribute(string heatmapName, bool order)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageReorderByAttribute", PhotonTargets.Others, heatmapName, order);
+            coordinator.photonView.RPC("ReceiveMessageReorderByAttribute", PhotonTargets.Others, heatmapName, order);
         }
 
         public void SendMessageHandleHitGenesList(string heatmapName, int hity)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHandleHitGenesList", PhotonTargets.Others, heatmapName, hity);
+            coordinator.photonView.RPC("ReceiveMessageHandleHitGenesList", PhotonTargets.Others, heatmapName, hity);
         }
 
         public void SendMessageHandleHitGroupingBar(string heatmapName, int hitx)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHandleHitGroupingBar", PhotonTargets.Others, heatmapName, hitx);
+            coordinator.photonView.RPC("ReceiveMessageHandleHitGroupingBar", PhotonTargets.Others, heatmapName, hitx);
         }
 
         public void SendMessageHandleHitAttributeBar(string heatmapName, int hitx)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHandleHitAttributeBar", PhotonTargets.Others, heatmapName, hitx);
+            coordinator.photonView.RPC("ReceiveMessageHandleHitAttributeBar", PhotonTargets.Others, heatmapName, hitx);
         }
 
         public void SendMessageResetInfoTexts(string heatmapName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageResetInfoTexts", PhotonTargets.Others, heatmapName);
+            coordinator.photonView.RPC("ReceiveMessageResetInfoTexts", PhotonTargets.Others, heatmapName);
         }
 
         public void SendMessageCumulativeRecolorFromSelection(string heatmapName, int groupLeft, int groupRight, int selectedTop, int selectedBottom)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageCumulativeRecolorFromSelection", PhotonTargets.Others, heatmapName, groupLeft, groupRight, selectedTop, selectedBottom);
+            coordinator.photonView.RPC("ReceiveMessageCumulativeRecolorFromSelection", PhotonTargets.Others, heatmapName, groupLeft, groupRight, selectedTop, selectedBottom);
         }
 
         #endregion
@@ -941,13 +941,13 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to generate networks");
-            coordinator.photonView.RPC("RecieveMessageGenerateNetworks", PhotonTargets.Others, layoutSeed);
+            coordinator.photonView.RPC("ReceiveMessageGenerateNetworks", PhotonTargets.Others, layoutSeed);
         }
 
         public void SendMessageMoveNetwork(string moveNetworkName, Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y,
+            coordinator.photonView.RPC("ReceiveMessageMoveNetwork", PhotonTargets.Others, moveNetworkName, pos.x, pos.y,
                 pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
@@ -955,7 +955,7 @@ namespace CellexalVR.Multiuser
             Vector3 angVel)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageNetworkUngrabbed", PhotonTargets.Others, networkName,
+            coordinator.photonView.RPC("ReceiveMessageNetworkUngrabbed", PhotonTargets.Others, networkName,
                 pos.x, pos.y, pos.z,
                 rot.x, rot.y, rot.z, rot.w,
                 vel.x, vel.y, vel.z,
@@ -967,7 +967,7 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to enalarge network " + networkName + " in handler + " +
                             networkHandlerName);
-            coordinator.photonView.RPC("RecieveMessageEnlargeNetwork", PhotonTargets.Others, networkHandlerName,
+            coordinator.photonView.RPC("ReceiveMessageEnlargeNetwork", PhotonTargets.Others, networkHandlerName,
                 networkName);
         }
 
@@ -977,7 +977,7 @@ namespace CellexalVR.Multiuser
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to bring back network " + networkName + " in handler " +
                             networkHandlerName);
-            coordinator.photonView.RPC("RecieveMessageBringBackNetwork", PhotonTargets.Others, networkHandlerName,
+            coordinator.photonView.RPC("ReceiveMessageBringBackNetwork", PhotonTargets.Others, networkHandlerName,
                 networkName);
         }
 
@@ -985,7 +985,7 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to switch network layout: " + layout);
-            coordinator.photonView.RPC("RecieveMessageSwitchNetworkLayout", PhotonTargets.Others, layout,
+            coordinator.photonView.RPC("ReceiveMessageSwitchNetworkLayout", PhotonTargets.Others, layout,
                 networkHandlerName, networkName);
         }
 
@@ -993,7 +993,7 @@ namespace CellexalVR.Multiuser
             Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMoveNetworkCenter", PhotonTargets.Others, networkHandlerName,
+            coordinator.photonView.RPC("ReceiveMessageMoveNetworkCenter", PhotonTargets.Others, networkHandlerName,
                 networkCenterName, pos.x, pos.y, pos.z, rot.x, rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
@@ -1001,7 +1001,7 @@ namespace CellexalVR.Multiuser
             Vector3 pos, Quaternion rot, Vector3 vel, Vector3 angVel)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageNetworkCenterUngrabbed", PhotonTargets.Others, networkHandlerName,
+            coordinator.photonView.RPC("ReceiveMessageNetworkCenterUngrabbed", PhotonTargets.Others, networkHandlerName,
                 networkCenterName,
                 pos.x, pos.y, pos.z,
                 rot.x, rot.y, rot.z, rot.w,
@@ -1012,41 +1012,41 @@ namespace CellexalVR.Multiuser
         public void SendMessageHighlightNetworkNode(string handlerName, string centerName, string geneName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageHighlightNetworkNode", PhotonTargets.Others, handlerName,
+            coordinator.photonView.RPC("ReceiveMessageHighlightNetworkNode", PhotonTargets.Others, handlerName,
                 centerName, geneName);
         }
 
         public void SendMessageUnhighlightNetworkNode(string handlerName, string centerName, string geneName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageUnhighlightNetworkNode", PhotonTargets.Others, handlerName,
+            coordinator.photonView.RPC("ReceiveMessageUnhighlightNetworkNode", PhotonTargets.Others, handlerName,
                 centerName, geneName);
         }
 
         // public void SendMessageSetArcsVisible(bool toggleToState, string networkName)
         // {
         //     if (!multiplayer) return;
-        //     coordinator.photonView.RPC("RecieveMessageSetArcsVisible", PhotonTargets.Others, toggleToState,
+        //     coordinator.photonView.RPC("ReceiveMessageSetArcsVisible", PhotonTargets.Others, toggleToState,
         //         networkName);
         // }
 
         public void SendMessageSetCombinedArcsVisible(bool toggleToState, string networkName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSetCombinedArcsVisible", PhotonTargets.Others, toggleToState,
+            coordinator.photonView.RPC("ReceiveMessageSetCombinedArcsVisible", PhotonTargets.Others, toggleToState,
                 networkName);
         }
 
         public void SendMessageToggleAllArcs(bool toggleToState)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleAllArcs", PhotonTargets.Others, toggleToState);
+            coordinator.photonView.RPC("ReceiveMessageToggleAllArcs", PhotonTargets.Others, toggleToState);
         }
 
         public void SendMessageNetworkArcButtonClicked(string buttonName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageNetworkArcButtonClicked", PhotonTargets.Others, buttonName);
+            coordinator.photonView.RPC("ReceiveMessageNetworkArcButtonClicked", PhotonTargets.Others, buttonName);
         }
 
         #endregion
@@ -1056,37 +1056,37 @@ namespace CellexalVR.Multiuser
         public void SendMessageMinimizeGraph(string graphName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMinimizeGraph", PhotonTargets.Others, graphName);
+            coordinator.photonView.RPC("ReceiveMessageMinimizeGraph", PhotonTargets.Others, graphName);
         }
 
         public void SendMessageShowGraph(string graphName, string jailName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageShowGraph", PhotonTargets.Others, graphName, jailName);
+            coordinator.photonView.RPC("ReceiveMessageShowGraph", PhotonTargets.Others, graphName, jailName);
         }
 
         public void SendMessageMinimizeNetwork(string networkName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMinimizeNetwork", PhotonTargets.Others, networkName);
+            coordinator.photonView.RPC("ReceiveMessageMinimizeNetwork", PhotonTargets.Others, networkName);
         }
 
         public void SendMessageMinimizeHeatmap(string heatmapName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMinimizeHeatmap", PhotonTargets.Others, heatmapName);
+            coordinator.photonView.RPC("ReceiveMessageMinimizeHeatmap", PhotonTargets.Others, heatmapName);
         }
 
         public void SendMessageShowNetwork(string networkName, string jailName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageShowNetwork", PhotonTargets.Others, networkName, jailName);
+            coordinator.photonView.RPC("ReceiveMessageShowNetwork", PhotonTargets.Others, networkName, jailName);
         }
 
         public void SendMessageShowHeatmap(string heatmapName, string jailName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageShowHeatmap", PhotonTargets.Others, heatmapName, jailName);
+            coordinator.photonView.RPC("ReceiveMessageShowHeatmap", PhotonTargets.Others, heatmapName, jailName);
         }
 
         #endregion
@@ -1096,7 +1096,7 @@ namespace CellexalVR.Multiuser
         public void SendMessageDeleteObject(string objName, string objTag)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageDeleteObject", PhotonTargets.Others, objName, objTag);
+            coordinator.photonView.RPC("ReceiveMessageDeleteObject", PhotonTargets.Others, objName, objTag);
         }
 
         #endregion
@@ -1106,74 +1106,74 @@ namespace CellexalVR.Multiuser
         public void SendMessageStartVelocity()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageStartVelocity", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageStartVelocity", PhotonTargets.Others);
         }
 
         public void SendMessageStopVelocity()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageStopVelocity", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageStopVelocity", PhotonTargets.Others);
         }
 
         public void SendMessageToggleGraphPoints()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleGraphPoints", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageToggleGraphPoints", PhotonTargets.Others);
         }
 
         public void SendMessageConstantSynchedMode()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageConstantSynchedMode", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageConstantSynchedMode", PhotonTargets.Others);
         }
 
         public void SendMessageGraphPointColorsMode()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageGraphPointColorsMode", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageGraphPointColorsMode", PhotonTargets.Others);
         }
 
         public void SendMessageChangeParticleMode()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageChangeParticleMode", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageChangeParticleMode", PhotonTargets.Others);
         }
 
         public void SendMessageChangeFrequency(float amount)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageChangeFrequency", PhotonTargets.Others, amount);
+            coordinator.photonView.RPC("ReceiveMessageChangeFrequency", PhotonTargets.Others, amount);
         }
 
         public void SendMessageChangeThreshold(float amount)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageChangeThreshold", PhotonTargets.Others, amount);
+            coordinator.photonView.RPC("ReceiveMessageChangeThreshold", PhotonTargets.Others, amount);
         }
 
         public void SendMessageChangeSpeed(float amount)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageChangeSpeed", PhotonTargets.Others, amount);
+            coordinator.photonView.RPC("ReceiveMessageChangeSpeed", PhotonTargets.Others, amount);
         }
 
         public void SendMessageReadVelocityFile(string filePath, string subGraphName, bool activate)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageReadVelocityFile", PhotonTargets.Others, filePath, subGraphName,
+            coordinator.photonView.RPC("ReceiveMessageReadVelocityFile", PhotonTargets.Others, filePath, subGraphName,
                 activate);
         }
 
         public void SendMessageToggleAverageVelocity()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageToggleAverageVelocity", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageToggleAverageVelocity", PhotonTargets.Others);
         }
 
         public void SendMessageChangeAverageVelocityResolution(int value)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageChangeAverageVelocityResolution", PhotonTargets.Others, value);
+            coordinator.photonView.RPC("ReceiveMessageChangeAverageVelocityResolution", PhotonTargets.Others, value);
         }
 
 
@@ -1185,28 +1185,28 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to set filter to " + filter);
-            coordinator.photonView.RPC("RecieveMessageSetFilter", PhotonTargets.Others, filter);
+            coordinator.photonView.RPC("ReceiveMessageSetFilter", PhotonTargets.Others, filter);
         }
 
         public void SendMessageResetFilter()
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to reset filter");
-            coordinator.photonView.RPC("RecieveMessageResetFilter", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageResetFilter", PhotonTargets.Others);
         }
 
         public void SendMessageRemoveCullingCube()
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to remove culling cube");
-            coordinator.photonView.RPC("RecieveMessageRemoveCullingCube", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageRemoveCullingCube", PhotonTargets.Others);
         }
 
         public void SendMessageAddCullingCube()
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to add culling cube");
-            coordinator.photonView.RPC("RecieveMessageAddCullingCube", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageAddCullingCube", PhotonTargets.Others);
         }
 
         #endregion
@@ -1216,7 +1216,7 @@ namespace CellexalVR.Multiuser
         public void SendMessageMoveBrowser(Vector3 pos, Quaternion rot, Vector3 scale)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageMoveBrowser", PhotonTargets.Others, pos.x, pos.y, pos.z, rot.x,
+            coordinator.photonView.RPC("ReceiveMessageMoveBrowser", PhotonTargets.Others, pos.x, pos.y, pos.z, rot.x,
                 rot.y, rot.z, rot.w, scale.x, scale.y, scale.z);
         }
 
@@ -1224,20 +1224,20 @@ namespace CellexalVR.Multiuser
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients to toggle web browser");
-            coordinator.photonView.RPC("RecieveMessageActivateBrowser", PhotonTargets.Others, activate);
+            coordinator.photonView.RPC("ReceiveMessageActivateBrowser", PhotonTargets.Others, activate);
         }
 
         public void SendMessageBrowserKeyClicked(string value)
         {
             if (!multiplayer) return;
             CellexalLog.Log("Informing clients that " + value + " was clicked");
-            coordinator.photonView.RPC("RecieveMessageBrowserKeyClicked", PhotonTargets.Others, value);
+            coordinator.photonView.RPC("ReceiveMessageBrowserKeyClicked", PhotonTargets.Others, value);
         }
 
         public void SendMessageBrowserEnter()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageBrowserEnter", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageBrowserEnter", PhotonTargets.Others);
         }
 
         #endregion
@@ -1247,13 +1247,13 @@ namespace CellexalVR.Multiuser
         public void SendMessageScroll(int dir)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageScroll", PhotonTargets.Others, dir);
+            coordinator.photonView.RPC("ReceiveMessageScroll", PhotonTargets.Others, dir);
         }
 
         public void SendMessageScrollStack(int dir, int group)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageScrollStack", PhotonTargets.Others, dir, group);
+            coordinator.photonView.RPC("ReceiveMessageScrollStack", PhotonTargets.Others, dir, group);
         }
 
         #endregion
@@ -1263,49 +1263,49 @@ namespace CellexalVR.Multiuser
         public void SendMessageSliceGraphAutomatic(int pcID, int axis, int nrOfSlices)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSliceGraphAutomatic", PhotonTargets.Others, pcID, axis, nrOfSlices);
+            coordinator.photonView.RPC("ReceiveMessageSliceGraphAutomatic", PhotonTargets.Others, pcID, axis, nrOfSlices);
         }
 
         public void SendMessageSliceGraphManual(int pcID, Vector3 planeNormal, Vector3 planePos)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSliceGraphManual", PhotonTargets.Others, pcID, planeNormal, planePos);
+            coordinator.photonView.RPC("ReceiveMessageSliceGraphManual", PhotonTargets.Others, pcID, planeNormal, planePos);
         }
 
         public void SendMessageSliceGraphFromSelection(int pcID)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSliceGraphFromSelection", PhotonTargets.Others, pcID);
+            coordinator.photonView.RPC("ReceiveMessageSliceGraphFromSelection", PhotonTargets.Others, pcID);
         }
 
         public void SendMessageSpawnModel(string modelName)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSpawnModel", PhotonTargets.Others, modelName);
+            coordinator.photonView.RPC("ReceiveMessageSpawnModel", PhotonTargets.Others, modelName);
         }
 
         public void SendMessageReferenceOrganToggle(bool toggle, int pcID)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageReferenceOrganToggle", PhotonTargets.Others, pcID, toggle);
+            coordinator.photonView.RPC("ReceiveMessageReferenceOrganToggle", PhotonTargets.Others, pcID, toggle);
         }
 
         public void SendMessageUpdateCullingBox(int pcID, Vector3 pos1, Vector3 pos2)
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageUpdateCullingBox", PhotonTargets.Others, pcID, pos1, pos2);
+            coordinator.photonView.RPC("ReceiveMessageUpdateCullingBox", PhotonTargets.Others, pcID, pos1, pos2);
         }
 
         public void SendMessageSpreadMeshes()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageSpreadMeshes", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageSpreadMeshes", PhotonTargets.Others);
         }
 
         public void SendMessageGenerateMeshes()
         {
             if (!multiplayer) return;
-            coordinator.photonView.RPC("RecieveMessageGenerateMeshes", PhotonTargets.Others);
+            coordinator.photonView.RPC("ReceiveMessageGenerateMeshes", PhotonTargets.Others);
         }
 
         #endregion
@@ -1361,8 +1361,8 @@ namespace CellexalVR.Multiuser
         private IEnumerator FindClientCoordinator()
         {
             yield return new WaitForSeconds(2f);
-            if ((coordinator = GameObject.Find("MultiuserMessageReciever(Clone)")
-                .GetComponent<MultiuserMessageReciever>()) == null)
+            if ((coordinator = GameObject.Find("MultiuserMessageReceiver(Clone)")
+                .GetComponent<MultiuserMessageReceiver>()) == null)
             {
                 StartCoroutine(FindClientCoordinator());
             }
@@ -1375,7 +1375,7 @@ namespace CellexalVR.Multiuser
         private IEnumerator FindServerCoordinator()
         {
             yield return new WaitForSeconds(2f);
-            coordinator = GameObject.Find("MultiuserMessageReciever(Clone)")?.GetComponent<MultiuserMessageReciever>();
+            coordinator = GameObject.Find("MultiuserMessageReceiver(Clone)")?.GetComponent<MultiuserMessageReceiver>();
             if (!coordinator)
             {
                 StartCoroutine(FindServerCoordinator());

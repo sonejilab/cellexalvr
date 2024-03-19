@@ -64,7 +64,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         /// H5reader
         /// </summary>
         /// <param name="path">filename in the Data folder</param>
-        public void SetConf(string path, Dictionary<string, string> recievedConfig)
+        public void SetConf(string path, Dictionary<string, string> receivedConfig)
         {
             projections = new List<string>();
             velocities = new List<string>();
@@ -83,9 +83,9 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     filePath = s;
             }
 
-            if (recievedConfig != null)
+            if (receivedConfig != null)
             {
-                conf = recievedConfig;
+                conf = receivedConfig;
                 foreach (KeyValuePair<string, string> kvp in conf)
                 {
                     if (kvp.Key == "sparse")

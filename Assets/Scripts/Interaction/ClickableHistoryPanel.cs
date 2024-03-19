@@ -89,7 +89,7 @@ namespace CellexalVR.Interaction
         }
 
         /// <summary>
-        /// Do actions depending on type of button. Public method so it can be called from multi user message reciever.
+        /// Do actions depending on type of button. Public method so it can be called from multi user message receiver.
         /// </summary>
         public void HandleClick()
         {
