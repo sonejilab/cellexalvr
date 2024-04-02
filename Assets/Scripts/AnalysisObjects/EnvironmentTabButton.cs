@@ -15,13 +15,15 @@ namespace CellexalVR.AnalysisObjects
 
         // Drawn in EnvironmentTabButtonEditor.DrawMeshOrSpriteFields()
         [HideInInspector]
-        public Color meshActivatedColor;
+        public Color meshTabActivatedColor;
         [HideInInspector]
-        public Color meshActivatedHighlightedColor;
+        public Color meshTabActivatedHighlightedColor;
         [HideInInspector]
-        public Sprite meshActivatedTexture;
+        public Sprite tabActivatedTexture;
         [HideInInspector]
-        public Sprite meshActivatedHighlightedTexture;
+        public Sprite tabActivatedHighlightedTexture;
+
+        private bool tabActivated;
 
         protected override string Description => parentTab.name;
 
@@ -33,6 +35,61 @@ namespace CellexalVR.AnalysisObjects
         private void OnValidate()
         {
             parentMenu = GetComponentInParent<EnvironmentMenuWithTabs>(true);
+        }
+
+        public void SetTabActivated(bool activated)
+        {
+            tabActivated = activated;
+            SetButtonActivated(active);
+        }
+
+        public override void SetButtonActivated(bool activate)
+        {
+            if (!tabActivated || !activate)
+            {
+                base.SetButtonActivated(activate);
+            }
+            else
+            {
+                if (spriteRenderer != null)
+                {
+                    spriteRenderer.sprite = tabActivatedTexture;
+                }
+                else if (meshRenderer != null)
+                {
+                    meshRenderer.material.color = meshTabActivatedColor;
+                }
+            }
+        }
+
+        public override void SetHighlighted(bool highlight)
+        {
+            if (!tabActivated)
+            {
+                base.SetHighlighted(highlight);
+            }
+            else if (highlight)
+            {
+                if (spriteRenderer != null)
+                {
+                    spriteRenderer.sprite = tabActivatedHighlightedTexture;
+                }
+                else if (meshRenderer != null)
+                {
+                    meshRenderer.material.color = meshTabActivatedHighlightedColor;
+                }
+            }
+            else
+            {
+                if (spriteRenderer != null)
+                {
+                    spriteRenderer.sprite = tabActivatedTexture;
+                }
+                else if (meshRenderer != null)
+                {
+                    meshRenderer.material.color = meshTabActivatedColor;
+                }
+            }
         }
     }
 
@@ -47,13 +104,13 @@ namespace CellexalVR.AnalysisObjects
             int popupChoice = base.DrawMeshOrSpriteFields();
             if (popupChoice == 0)
             {
-                buttonScript.meshActivatedColor = EditorGUILayout.ColorField("Activated Color", buttonScript.meshActivatedColor);
-                buttonScript.meshActivatedHighlightedColor = EditorGUILayout.ColorField("Activated And Highlighted Color", buttonScript.meshActivatedHighlightedColor);
+                buttonScript.meshTabActivatedColor = EditorGUILayout.ColorField("Activated Color", buttonScript.meshTabActivatedColor);
+                buttonScript.meshTabActivatedHighlightedColor = EditorGUILayout.ColorField("Activated And Highlighted Color", buttonScript.meshTabActivatedHighlightedColor);
             }
             else
             {
-                buttonScript.meshActivatedTexture = (UnityEngine.Sprite)EditorGUILayout.ObjectField("Activated texture", buttonScript.meshActivatedTexture, typeof(UnityEngine.Sprite), true);
-                buttonScript.meshActivatedHighlightedTexture = (UnityEngine.Sprite)EditorGUILayout.ObjectField("Activated And Highlighted texture", buttonScript.meshActivatedHighlightedTexture, typeof(UnityEngine.Sprite), true);
+                buttonScript.tabActivatedTexture = (UnityEngine.Sprite)EditorGUILayout.ObjectField("Activated texture", buttonScript.tabActivatedTexture, typeof(UnityEngine.Sprite), true);
+                buttonScript.tabActivatedHighlightedTexture = (UnityEngine.Sprite)EditorGUILayout.ObjectField("Activated And Highlighted texture", buttonScript.tabActivatedHighlightedTexture, typeof(UnityEngine.Sprite), true);
             }
             return popupChoice;
         }

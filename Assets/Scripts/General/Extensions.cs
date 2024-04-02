@@ -225,8 +225,6 @@ namespace CellexalVR.Extensions
         {
             switch (legend)
             {
-                case CellexalVR.AnalysisObjects.LegendManager.Legend.None:
-                    return "none";
                 case CellexalVR.AnalysisObjects.LegendManager.Legend.AttributeLegend:
                     return "attribute legend";
                 case CellexalVR.AnalysisObjects.LegendManager.Legend.SelectionLegend:

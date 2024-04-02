@@ -1,5 +1,6 @@
 ﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
+using CellexalVR.Menu.Buttons.Legends;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -78,7 +79,7 @@ namespace CellexalVR.AnalysisObjects
 
         private List<HistogramData> tabData = new List<HistogramData>(10);
         private int currentTab = 0;
-        public List<GameObject> tabButtons = new List<GameObject>(10);
+        public List<HistogramTabButton> tabButtons = new List<HistogramTabButton>(10);
 
         /// <summary>
         /// Holds all data needed to recreate a histogram.
@@ -218,7 +219,7 @@ namespace CellexalVR.AnalysisObjects
             {
                 tabButton.GetComponentInChildren<TextMeshPro>().text = "";
             }
-            tabButtons[currentTab].GetComponent<CellexalVR.Menu.Buttons.CellexalButton>().meshStandardColor = Color.black;
+            tabButtons[currentTab].meshStandardColor = Color.black;
 
             geneNameLabel.text = "";
             DeactivateHighlightArea();
@@ -292,6 +293,7 @@ namespace CellexalVR.AnalysisObjects
                 if (tabData.Count < 10 && next != null)
                 {
                     tabData.Add(next);
+                    tabButtons[tabData.Count - 1].geneName = next.name;
                     tabButtons[tabData.Count - 1].GetComponentInChildren<TextMeshPro>().text = next.name;
                 }
             }
@@ -435,8 +437,8 @@ namespace CellexalVR.AnalysisObjects
             HistogramData data = tabData[index];
             if (data != null)
             {
-                tabButtons[currentTab].GetComponent<CellexalVR.Menu.Buttons.CellexalButton>().meshStandardColor = Color.black;
-                tabButtons[index].GetComponent<CellexalVR.Menu.Buttons.CellexalButton>().meshStandardColor = new Color(0.1411f, 0.6588f, 0.6385f);
+                tabButtons[currentTab].SetTabActivated(false);
+                tabButtons[index].SetTabActivated(true);
                 currentTab = index;
                 TallestBarsToSkip = data.tallestBarsToSkip;
                 DesiredYAxisMode = data.yAxisMode;

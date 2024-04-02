@@ -21,7 +21,7 @@ namespace CellexalVR.AnalysisObjects
         public void SetTabActive(bool active)
         {
             contentParent.SetActive(active);
-            tabButton.SetHighlighted(active);
+            tabButton.SetTabActivated(active);
         }
     }
 }

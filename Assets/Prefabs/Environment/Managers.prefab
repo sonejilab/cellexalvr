@@ -43158,8 +43158,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -43167,7 +43167,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 3
+  geneName: 
 --- !u!1 &655420843844970931
 GameObject:
   m_ObjectHideFlags: 0
@@ -43857,8 +43864,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -43866,7 +43873,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 5
+  geneName: 
 --- !u!1 &1553802688608098402
 GameObject:
   m_ObjectHideFlags: 0
@@ -45015,8 +45029,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -45024,7 +45038,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 1
+  geneName: 
 --- !u!1 &2340056834771382242
 GameObject:
   m_ObjectHideFlags: 0
@@ -45164,8 +45185,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -45173,7 +45194,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 4
+  geneName: 
 --- !u!1 &2352493482525858247
 GameObject:
   m_ObjectHideFlags: 0
@@ -45635,8 +45663,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -45644,7 +45672,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 9
+  geneName: 
 --- !u!1 &2666472234044694917
 GameObject:
   m_ObjectHideFlags: 0
@@ -46590,16 +46625,16 @@ MonoBehaviour:
     type: 3}
   filterTextLabel: {fileID: 1084133575}
   tabButtons:
-  - {fileID: 5049566920627611248}
-  - {fileID: 2237207642659005577}
-  - {fileID: 6985654748737620325}
-  - {fileID: 646007371477847935}
-  - {fileID: 2340056834771382242}
-  - {fileID: 1539897812752679521}
-  - {fileID: 8789173742627949887}
-  - {fileID: 5580959240718196717}
-  - {fileID: 4842450963142909925}
-  - {fileID: 2460636202234242887}
+  - {fileID: 3848120114250695241}
+  - {fileID: 8283694998000401341}
+  - {fileID: 4084940874629832128}
+  - {fileID: 9126194208733003453}
+  - {fileID: 525885385864952332}
+  - {fileID: 3019931363314353157}
+  - {fileID: 8741370197448297502}
+  - {fileID: 1408954077556386780}
+  - {fileID: 4968401205127892334}
+  - {fileID: 8851137039780643443}
 --- !u!1 &3107337909608391470
 GameObject:
   m_ObjectHideFlags: 0
@@ -46970,7 +47005,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3236793401190231940}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -47674,7 +47709,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4053854561963760396}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.08057182, y: 0.30983695, z: 0}
+  m_LocalPosition: {x: -0.08057182, y: 0.30983734, z: 0}
   m_LocalScale: {x: 0.126, y: 0.04, z: 0.001}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -47759,20 +47794,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2794521754710707653}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.ChangeLegendButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
   meshHighlightColor: {r: 0.4190548, g: 0.60228896, b: 0.6886792, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
@@ -47783,11 +47831,11 @@ MonoBehaviour:
   controllerInside: 0
   parentMenu: {fileID: 6597785723052797626}
   parentTab: {fileID: 0}
-  meshActivatedColor: {r: 0, g: 0, b: 0, a: 0}
-  meshActivatedHighlightedColor: {r: 0, g: 0, b: 0, a: 0}
-  meshActivatedTexture: {fileID: 0}
-  meshActivatedHighlightedTexture: {fileID: 0}
-  legendToActivate: 3
+  meshTabActivatedColor: {r: 0.055980783, g: 0.45434868, b: 0.6981132, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.94729495, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
+  legendToActivate: 2
 --- !u!1 &4105516101530460192
 GameObject:
   m_ObjectHideFlags: 0
@@ -49437,8 +49485,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -49446,7 +49494,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 8
+  geneName: 
 --- !u!1 &4996395845569388412
 GameObject:
   m_ObjectHideFlags: 0
@@ -49670,8 +49725,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -49679,7 +49734,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 0
+  geneName: 
 --- !u!1 &5280300726718170424
 GameObject:
   m_ObjectHideFlags: 0
@@ -49791,7 +49853,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5393195961606028971}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.05272819, y: 0.30983695, z: 0}
+  m_LocalPosition: {x: 0.05272819, y: 0.30983734, z: 0}
   m_LocalScale: {x: 0.126, y: 0.04, z: 0.001}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -49876,20 +49938,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3631713650604451437}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.ChangeLegendButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
   meshHighlightColor: {r: 0.4190548, g: 0.60228896, b: 0.6886792, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
@@ -49900,11 +49975,11 @@ MonoBehaviour:
   controllerInside: 0
   parentMenu: {fileID: 6597785723052797626}
   parentTab: {fileID: 0}
-  meshActivatedColor: {r: 0, g: 0, b: 0, a: 0}
-  meshActivatedHighlightedColor: {r: 0, g: 0, b: 0, a: 0}
-  meshActivatedTexture: {fileID: 0}
-  meshActivatedHighlightedTexture: {fileID: 0}
-  legendToActivate: 2
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
+  legendToActivate: 1
 --- !u!1 &5393430555025206418
 GameObject:
   m_ObjectHideFlags: 0
@@ -50210,8 +50285,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -50219,7 +50294,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 7
+  geneName: 
 --- !u!1 &5602394306098949266
 GameObject:
   m_ObjectHideFlags: 0
@@ -51121,7 +51203,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6486204470640247153}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -51166,15 +51248,15 @@ MonoBehaviour:
   tabScrollTime: 0.5
   tabButtonSize: {x: 0.126, y: 0.04, z: 0.001}
   tabButtonPositionIncrement: {x: 0.1333, y: 0, z: 0}
-  tabButtonBoundsCenter: {x: -0.080571815, y: 0.30983695, z: 0}
+  tabButtonBoundsCenter: {x: -0.080571815, y: 0.30983734, z: 0}
   tabButtonBoundsSize: {x: 0.4083909, y: 0.051168025, z: 0}
   tabButtonPositions:
-  - {x: -0.21387184, y: 0.30983695, z: 0}
-  - {x: -0.08057182, y: 0.30983695, z: 0}
-  - {x: 0.05272819, y: 0.30983695, z: 0}
-  - {x: 0.1860282, y: 0.30983695, z: 0}
-  - {x: 0.3193282, y: 0.30983695, z: 0}
-  - {x: 0.4526282, y: 0.30983695, z: 0}
+  - {x: -0.21387184, y: 0.30983734, z: 0}
+  - {x: -0.08057182, y: 0.30983734, z: 0}
+  - {x: 0.05272819, y: 0.30983734, z: 0}
+  - {x: 0.1860282, y: 0.30983734, z: 0}
+  - {x: 0.3193282, y: 0.30983734, z: 0}
+  - {x: 0.4526282, y: 0.30983734, z: 0}
   tabScrollPositions: []
   maxNumberOfTabButtons: 3
   backgroundPlane: {fileID: 2666472234044694917}
@@ -51186,7 +51268,6 @@ MonoBehaviour:
   desiredLegend: 0
   currentLegend: 0
   _everyTab:
-  - {fileID: 0}
   - {fileID: 7886611384669554522}
   - {fileID: 1748032380410687359}
   - {fileID: 4889248537707476020}
@@ -52200,7 +52281,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6940349351873583056}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.21387184, y: 0.30983695, z: 0}
+  m_LocalPosition: {x: -0.21387184, y: 0.30983734, z: 0}
   m_LocalScale: {x: 0.126, y: 0.04, z: 0.001}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -52285,20 +52366,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5985727369307755975}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Legends.ChangeLegendButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 1225616577345113668}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
   meshHighlightColor: {r: 0.4190548, g: 0.60228896, b: 0.6886792, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
@@ -52309,11 +52403,11 @@ MonoBehaviour:
   controllerInside: 0
   parentMenu: {fileID: 6597785723052797626}
   parentTab: {fileID: 0}
-  meshActivatedColor: {r: 0, g: 0, b: 0, a: 0}
-  meshActivatedHighlightedColor: {r: 0, g: 0, b: 0, a: 0}
-  meshActivatedTexture: {fileID: 0}
-  meshActivatedHighlightedTexture: {fileID: 0}
-  legendToActivate: 1
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
+  legendToActivate: 0
 --- !u!1 &6948004008537764338
 GameObject:
   m_ObjectHideFlags: 0
@@ -52536,8 +52630,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -52545,7 +52639,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 2
+  geneName: 
 --- !u!1 &6993349753769428805
 GameObject:
   m_ObjectHideFlags: 0
@@ -55393,8 +55494,8 @@ MonoBehaviour:
   descriptionText: {fileID: 7556289061081842996}
   infoMenu: {fileID: 0}
   activeOutline: {fileID: 0}
-  meshStandardColor: {r: 0, g: 0, b: 0, a: 1}
-  meshHighlightColor: {r: 0.2672659, g: 0.55824095, b: 0.735849, a: 1}
+  meshStandardColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+  meshHighlightColor: {r: 0.41960785, g: 0.6039216, b: 0.6901961, a: 1}
   meshDeactivatedColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   standardTexture: {fileID: 0}
   highlightedTexture: {fileID: 0}
@@ -55402,7 +55503,14 @@ MonoBehaviour:
   popupChoice: 0
   storedState: 0
   controllerInside: 0
+  parentMenu: {fileID: 6597785723052797626}
+  parentTab: {fileID: 0}
+  meshTabActivatedColor: {r: 0.05490196, g: 0.45490196, b: 0.69803923, a: 1}
+  meshTabActivatedHighlightedColor: {r: 0, g: 0.9490196, b: 1, a: 1}
+  tabActivatedTexture: {fileID: 0}
+  tabActivatedHighlightedTexture: {fileID: 0}
   index: 6
+  geneName: 
 --- !u!1 &8812023281354343544
 GameObject:
   m_ObjectHideFlags: 0

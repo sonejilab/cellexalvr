@@ -61,6 +61,27 @@ namespace CellexalVR.AnalysisObjects
         private NativeArray<Color32> emptyColorArray;
         private JobHandle handle;
 
+        #region Graph point shader magic numbers
+        private static class ShaderValuesRedChannel
+        {
+            public static byte GeneExpressionZeroExpression = 254;
+            public static byte DefaultColor = 255;
+        }
+        private static class ShaderValuesGreenChannel
+        {
+            public static byte None = 0;
+            public static byte Shiny = 4;
+            public static byte Transparent = 190;
+        }
+        private static class ShaderValuesBlueChannel
+        {
+            public static byte None = 0;
+            public static byte DisableCulling = 4;
+            public static byte PulsingTransparent = 38;
+
+        }
+        #endregion
+
         public Vector3 minCoordValues = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
         public Vector3 maxCoordValues = new Vector3(float.MinValue, float.MinValue, float.MinValue);
         public List<GameObject> topExprCircles = new List<GameObject>();
@@ -250,20 +271,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 MakePointUnCullable(gpPair.Value, toggle);
             }
-        }
-
-        /// <summary>
-        /// Sets the green channel of the point so transparency will be activated in the shader.
-        /// </summary>
-        /// <param name="toggle"></param>
-        public void MakeAllPointsTransparent(bool toggle)
-        {
-            foreach (KeyValuePair<string, GraphPoint> gpPair in points)
-            {
-                MakePointTransparent(gpPair.Value, toggle);
-            }
-
-            isTransparent = toggle;
         }
 
         /// <summary>
@@ -1231,7 +1238,8 @@ namespace CellexalVR.AnalysisObjects
             {
                 Color32 currentColor = destTextureData[index];
                 byte rawMaskDataR = maskTextureData[index].r;
-                destTextureData[index] = new Color32(currentColor.r, (byte)(rawMaskDataR == 0 ? 190 : 38), currentColor.b, currentColor.a);
+                byte greenChannel = rawMaskDataR == 0 ? ShaderValuesGreenChannel.Transparent : ShaderValuesGreenChannel.Shiny;
+                destTextureData[index] = new Color32(currentColor.r, greenChannel, currentColor.b, currentColor.a);
             }
         }
 
@@ -1245,6 +1253,29 @@ namespace CellexalVR.AnalysisObjects
                 destTextureData[index] = new Color32(currentColor.r, 0, currentColor.b, currentColor.a);
             }
 
+        }
+
+        protected struct SetChannelsJob : IJobParallelFor
+        {
+            public NativeArray<Color32> destTextureData;
+            public bool setRedChannel;
+            public byte redChannel;
+            public bool setGreenChannel;
+            public byte greenChannel;
+            public bool setBlueChannel;
+            public byte blueChannel;
+
+
+
+            public void Execute(int index)
+            {
+                Color32 currentColor = destTextureData[index];
+                destTextureData[index] = new Color32(setRedChannel ? redChannel : currentColor.r,
+                                                     setGreenChannel ? greenChannel : currentColor.g,
+                                                     setBlueChannel ? blueChannel : currentColor.b,
+                                                     255);
+
+            }
         }
 
         private IEnumerator ColorByMask(NativeArray<Color32> mask)
@@ -1385,8 +1416,8 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="outline">True if the graph point should get an outline as well, false otherwise.</param>
         public void ColorGraphPointSelectionColor(GraphPoint graphPoint, int i, bool outline)
         {
-            byte greenChannel = (byte)(outline ? 4 : 0);
-            byte blueChannel = (byte)(outline ? 38 : 0);
+            byte greenChannel = outline ? ShaderValuesGreenChannel.Shiny : ShaderValuesGreenChannel.None;
+            byte blueChannel = outline ? ShaderValuesBlueChannel.PulsingTransparent : ShaderValuesBlueChannel.None;
             byte redChannel;
             if (i == -1)
             {
@@ -1414,8 +1445,8 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="outline">True if the graph point should get an outline as well, false otherwise.</param>
         public void ColorGraphPointsSelectionColor(IEnumerable<GraphPoint> points, int i, bool outline)
         {
-            byte greenChannel = (byte)(outline ? 4 : 0);
-            byte blueChannel = (byte)(outline ? 38 : 0);
+            byte greenChannel = outline ? ShaderValuesGreenChannel.Shiny : ShaderValuesGreenChannel.None;
+            byte blueChannel = outline ? ShaderValuesBlueChannel.PulsingTransparent : ShaderValuesBlueChannel.None;
             byte redChannel;
             if (i == -1)
             {
@@ -1436,22 +1467,51 @@ namespace CellexalVR.AnalysisObjects
             textureChanged = true;
         }
 
+        /// <summary>
+        /// Sets the green channel of the point so transparency will be activated in the shader.
+        /// </summary>
+        /// <param name="toggle">True to make points transparent, false to make points opaque.</param>
+        public void MakeAllPointsTransparent(bool toggle)
+        {
+            //foreach (KeyValuePair<string, GraphPoint> gpPair in points)
+            //{
+            //    MakePointTransparent(gpPair.Value, toggle);
+            //}
+
+            NativeArray<Color32> textreRawData = texture.GetRawTextureData<Color32>();
+
+            SetChannelsJob job = new SetChannelsJob()
+            {
+                destTextureData = textreRawData,
+                setRedChannel = false,
+                setGreenChannel = true,
+                setBlueChannel = false,
+                redChannel = 0,
+                greenChannel = toggle ? ShaderValuesGreenChannel.Transparent : ShaderValuesGreenChannel.None,
+                blueChannel = 0
+            };
+
+            JobHandle handle = job.Schedule(textreRawData.Length, 10000);
+            handle.Complete();
+
+            textureChanged = true;
+            isTransparent = toggle;
+        }
 
         /// <summary>
         /// Sets the green channel of the point so transparency will be activated in the shader.
         /// </summary>
-        /// <param name="toggle"></param>
         private void MakePointTransparent(GraphPoint graphPoint, bool active)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             byte greenChannel;
-            if (tex.g == 190 && tex.r != 254)
+            if (tex.g == ShaderValuesGreenChannel.Transparent && tex.r != ShaderValuesRedChannel.GeneExpressionZeroExpression)
             {
-                greenChannel = (byte)(active ? 190 : 0);
+                greenChannel = active ? ShaderValuesGreenChannel.Transparent : ShaderValuesGreenChannel.None;
             }
             else
             {
-                greenChannel = (byte)(active ? 190 : tex.g);
+                greenChannel = active ? ShaderValuesGreenChannel.Transparent : tex.g;
             }
 
             Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
@@ -1465,11 +1525,10 @@ namespace CellexalVR.AnalysisObjects
         /// Sets blue channel of point so culling will be deactivated in the shader. 
         /// This means that inside the culling cube the poins will still be visible. 
         /// </summary>
-        /// <param name="toggle"></param>
         public void MakePointUnCullable(GraphPoint graphPoint, bool culling)
         {
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
-            byte blueChannel = (byte)(culling ? 4 : 0);
+            byte blueChannel = culling ? ShaderValuesBlueChannel.DisableCulling : ShaderValuesBlueChannel.None;
             Color32 finalColor = new Color32(tex.r, tex.g, blueChannel, 255);
             texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
                 new Color32[] { finalColor });
@@ -1483,13 +1542,13 @@ namespace CellexalVR.AnalysisObjects
             Color32 tex = texture.GetPixel(graphPoint.textureCoord.x, graphPoint.textureCoord.y);
             // for thicker outline 0.1 < g < 0.2 ( 0.1 < (38 / 255) < 0.2 )
             byte greenChannel;
-            if (!isTransparent && tex.r != 254)
+            if (!isTransparent && tex.r != ShaderValuesRedChannel.GeneExpressionZeroExpression)
             {
-                greenChannel = (byte)(active ? 38 : 0);
+                greenChannel = active ? ShaderValuesGreenChannel.Shiny : ShaderValuesGreenChannel.None;
             }
             else
             {
-                greenChannel = (byte)(active ? 38 : 190);
+                greenChannel = active ? ShaderValuesGreenChannel.Shiny : ShaderValuesGreenChannel.Transparent;
             }
 
             Color32 finalColor = new Color32(tex.r, greenChannel, tex.b, 255);
@@ -1508,12 +1567,12 @@ namespace CellexalVR.AnalysisObjects
             if (isTransparent)
             {
                 texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
-                    new Color32[] { new Color32(254, 0, 0, 255) });
+                    new Color32[] { new Color32(ShaderValuesRedChannel.GeneExpressionZeroExpression, ShaderValuesGreenChannel.None, ShaderValuesBlueChannel.None, 255) });
             }
             else
             {
                 texture.SetPixels32(graphPoint.textureCoord.x, graphPoint.textureCoord.y, 1, 1,
-                    new Color32[] { new Color32(255, 0, 0, 255) });
+                    new Color32[] { new Color32(ShaderValuesRedChannel.DefaultColor, ShaderValuesGreenChannel.None, ShaderValuesBlueChannel.None, 255) });
             }
 
             textureChanged = true;
@@ -1546,7 +1605,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     Color32 tex = texture.GetPixel(i, j);
                     texture.SetPixels32(i, j, 1, 1,
-                        new Color32[] { new Color32(254, 190, tex.b, 255) });
+                        new Color32[] { new Color32(ShaderValuesRedChannel.GeneExpressionZeroExpression, ShaderValuesGreenChannel.Transparent, tex.b, 255) });
                 }
             }
 
@@ -1554,12 +1613,12 @@ namespace CellexalVR.AnalysisObjects
             Color32[][] colorValues = new Color32[nbrOfExpressionColors][];
             for (byte i = 0; i < nbrOfExpressionColors - 3; ++i)
             {
-                colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
+                colorValues[i] = new Color32[] { new Color32(i, ShaderValuesGreenChannel.None, ShaderValuesBlueChannel.None, 1) };
             }
 
             for (byte i = (byte)(nbrOfExpressionColors - 3); i < nbrOfExpressionColors; ++i)
             {
-                colorValues[i] = new Color32[] { new Color32(i, 0, 0, 1) };
+                colorValues[i] = new Color32[] { new Color32(i, ShaderValuesGreenChannel.None, ShaderValuesBlueChannel.None, 1) };
             }
 
             int topExpressedThreshold = (int)(nbrOfExpressionColors - nbrOfExpressionColors / 10f);
@@ -1593,7 +1652,7 @@ namespace CellexalVR.AnalysisObjects
                     }
 
                     Color32 tex = texture.GetPixel(pos.x, pos.y);
-                    Color32 finalCol = new Color32(colorValues[expressionColorIndex][0].r, 0, tex.b, 1);
+                    Color32 finalCol = new Color32(colorValues[expressionColorIndex][0].r, ShaderValuesGreenChannel.None, tex.b, 1);
                     texture.SetPixels32(pos.x, pos.y, 1, 1, new Color32[] { finalCol });
                 }
             }
@@ -1643,7 +1702,7 @@ namespace CellexalVR.AnalysisObjects
                 {
                     byte rawMaskDataR = maskRawData[i].r;
                     Color32 currentColor = destRawData[i];
-                    destRawData[i] = new Color32(rawMaskDataR == 0 ? currentColor.r : (byte)255, currentColor.g, currentColor.b, currentColor.a);
+                    destRawData[i] = new Color32(rawMaskDataR == 0 ? currentColor.r : ShaderValuesRedChannel.DefaultColor, currentColor.g, currentColor.b, currentColor.a);
                 }
 
             }
@@ -1671,11 +1730,11 @@ namespace CellexalVR.AnalysisObjects
                     int rawTextureDataIndex = graphPoint.textureCoord.y * graph.textureWidth + graphPoint.textureCoord.x;
                     if (attributesHasSet.Contains(ReferenceManager.instance.cellManager.GetCell(graphPoint.Label)))
                     {
-                        destData[rawTextureDataIndex] = new Color32(attributeRedChannel, 0, 0, 255);
+                        destData[rawTextureDataIndex] = new Color32(attributeRedChannel, ShaderValuesGreenChannel.None, ShaderValuesBlueChannel.None, 255);
                     }
                     else
                     {
-                        destData[rawTextureDataIndex] = new Color32(0, 0, 0, 255);
+                        destData[rawTextureDataIndex] = new Color32(0, ShaderValuesGreenChannel.None, ShaderValuesBlueChannel.None, 255);
                     }
                 }
                 destTexture.Apply();

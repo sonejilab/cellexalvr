@@ -112,7 +112,7 @@ namespace CellexalVR.AnalysisObjects
 
             GameObject newEntryGameObject = Instantiate(entryPrefab);
             newEntryGameObject.SetActive(true);
-            newEntryGameObject.transform.parent = transform;
+            newEntryGameObject.transform.parent = contentParent.transform;
             newEntryGameObject.transform.localPosition = startPos + posInc * entries[addEntryToPageIndex].Count;
             newEntryGameObject.transform.localRotation = Quaternion.identity;
             GroupingLegendEntry newEntry = newEntryGameObject.GetComponent<GroupingLegendEntry>();

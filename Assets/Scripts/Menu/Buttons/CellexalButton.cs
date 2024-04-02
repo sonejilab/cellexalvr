@@ -272,9 +272,8 @@ namespace CellexalVR.Menu.Buttons
         {
             serializedObject.Update();
             DrawMeshOrSpriteFields();
-            base.OnInspectorGUI();
-
             serializedObject.ApplyModifiedProperties();
+            base.OnInspectorGUI();
         }
 
     }

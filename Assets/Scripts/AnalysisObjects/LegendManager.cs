@@ -35,7 +35,6 @@ namespace CellexalVR.AnalysisObjects
 
         public enum Legend
         {
-            None,
             AttributeLegend,
             GeneExpressionLegend,
             SelectionLegend
@@ -56,6 +55,11 @@ namespace CellexalVR.AnalysisObjects
         private Transform legendTransform;
 
         private void OnValidate()
+        {
+            SetLegendReferences();
+        }
+
+        private void SetLegendReferences()
         {
             int numberOfLegendEnums = Enum.GetNames(typeof(Legend)).Length;
             if (gameObject.scene.IsValid() && (_everyTab is null || _everyTab.Length != numberOfLegendEnums))
@@ -82,6 +86,7 @@ namespace CellexalVR.AnalysisObjects
             CellexalEvents.GraphsReset.AddListener(ClearLegends);
             CellexalEvents.GraphsUnloaded.AddListener(ClearLegends);
             Dataset.instance.legend = this;
+            SetLegendReferences();
         }
 
         private void Update()
@@ -191,17 +196,18 @@ namespace CellexalVR.AnalysisObjects
         }
 
         /// <summary>
-        /// Deactivates all legends. Sets the gameobject to inactive.
+        /// Deactivates all legends and hides the legend.
         /// </summary>
         public void DeactivateLegend()
         {
+            legendActive = false;
             legendInsideCube = false;
             backgroundPlane.SetActive(false);
             gameObject.GetComponent<Collider>().enabled = false;
-            legendActive = false;
-            foreach (Transform child in transform)
+            transform.position = new Vector3(0f, -100f, 0f);
+            foreach (EnvironmentTab tab in tabs)
             {
-                child.gameObject.SetActive(false);
+                tab.SetTabActive(false);
             }
         }
 
@@ -223,7 +229,6 @@ namespace CellexalVR.AnalysisObjects
         /// <param name="legendToActivate">The legend to activate</param>
         public void ActivateLegend(Legend legendToActivate)
         {
-            DeactivateLegend();
             backgroundPlane.SetActive(true);
             gameObject.GetComponent<Collider>().enabled = true;
             legendActive = true;
@@ -303,20 +308,15 @@ namespace CellexalVR.AnalysisObjects
                 for (int i = 0; i < enumNames.Length; ++i)
                 {
                     string name = enumNames[i];
-                    if (name == "None")
-                    {
-                        continue;
-                    }
                     EditorGUILayout.BeginHorizontal();
                     EditorGUILayout.LabelField(name);
                     EditorGUILayout.PropertyField(_everyTabProperty.GetArrayElementAtIndex(i), GUIContent.none);
-                    //instance.legends[Enum.Parse<LegendManager.Legend>(name)] = (EnvironmentTab)_everyTabProperty.GetArrayElementAtIndex(i).objectReferenceValue;
                     EditorGUILayout.EndHorizontal();
                 }
             }
             EditorGUI.indentLevel--;
-            base.OnInspectorGUI();
             serializedObject.ApplyModifiedProperties();
+            base.OnInspectorGUI();
 
         }
     }
