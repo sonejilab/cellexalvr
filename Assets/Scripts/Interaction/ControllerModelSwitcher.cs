@@ -46,7 +46,6 @@ namespace CellexalVR.Interaction
         private KeyboardSwitch keyboard;
         private GameObject webBrowser;
         private MeshFilter rightControllerBodyMeshFilter;
-        private LaserPointerController laserPointerController;
         private XRRayInteractor rightLaser;
         private XRRayInteractor leftLaser;
         private Dictionary<Color, Material> staticMaterialsCache;
@@ -69,7 +68,6 @@ namespace CellexalVR.Interaction
             deleteTool = referenceManager.deleteTool;
             minimizeTool = referenceManager.minimizeTool.gameObject;
             DesiredModel = Model.Normal;
-            laserPointerController = referenceManager.laserPointerController;
             rightLaser = referenceManager.rightLaser;
             leftLaser = referenceManager.leftLaser;
             staticMaterialsCache = new Dictionary<Color, Material>();
@@ -289,20 +287,6 @@ namespace CellexalVR.Interaction
                 case Model.DeleteTool:
                     break;
 
-                case Model.Keyboard:
-                    laserPointerController.origin.localRotation = Quaternion.identity;
-                    break;
-
-                //case Model.WebBrowser:
-                //    webBrowser.GetComponent<WebManager>().SetBrowserActive(true);
-                //    laserPointerController.ToggleLaser(true);
-                //    laserPointerController.origin.localRotation = Quaternion.identity;
-                //    break;
-
-                case Model.TwoLasers:
-                    laserPointerController.ToggleLaser(true);
-                    laserPointerController.origin.localRotation = Quaternion.identity;
-                    break;
 
                 case Model.Menu:
                     drawTool.SetActive(false);
@@ -310,7 +294,6 @@ namespace CellexalVR.Interaction
                     minimizeTool.SetActive(false);
                     minimizeTool.SetActive(false);
                     selectionToolCollider.SetSelectionToolEnabled(false);
-                    laserPointerController.ToggleLaser(true);
                     break;
 
                 case Model.SelectionTool:
@@ -343,7 +326,6 @@ namespace CellexalVR.Interaction
             }
             if (DesiredModel != Model.TwoLasers)
             {
-                laserPointerController.ToggleLaser(false);
                 referenceManager.rightRaycast.OverrideRaycast = CellexalRaycast.Override.None;
                 referenceManager.leftRaycast.OverrideRaycast = CellexalRaycast.Override.None;
             }
@@ -370,7 +352,6 @@ namespace CellexalVR.Interaction
                 //    laserPointerController.ToggleLaser(true);
                 //    break;
                 case Model.TwoLasers:
-                    laserPointerController.ToggleLaser(true);
                     referenceManager.rightRaycast.OverrideRaycast = CellexalRaycast.Override.AlwaysOn;
                     referenceManager.leftRaycast.OverrideRaycast = CellexalRaycast.Override.AlwaysOn;
                     break;
@@ -392,7 +373,6 @@ namespace CellexalVR.Interaction
             deleteTool.SetActive(false);
             minimizeTool.SetActive(false);
             DesiredModel = Model.Normal;
-            laserPointerController.ToggleLaser(false);
             keyboard.SetKeyboardVisible(false);
             drawTool.SetActive(false);
             //webBrowser.GetComponent<WebManager>().SetVisible(false);

@@ -8428,7 +8428,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8166409087810030242}
   - component: {fileID: 8166409087810030254}
-  - component: {fileID: 8166409087810030255}
   - component: {fileID: 2061756884}
   - component: {fileID: 2061756883}
   - component: {fileID: 270391569}
@@ -8630,24 +8629,6 @@ MonoBehaviour:
     m_Reference: {fileID: 875253871413052681, guid: c348712bda248c246b8c49b3db54643f,
       type: 3}
   m_ButtonPressPoint: 0.5
---- !u!114 &8166409087810030255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8166409087810030245}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04689f385d9600d419d0b99bc0c9006d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rayEndPoint: {fileID: 8166409087826872791}
-  referenceManager: {fileID: 0}
-  rightLaser: {fileID: 1554578205}
-  leftLaser: {fileID: 1795436768}
-  origin: {fileID: 8166409087810030242}
-  alwaysActive: 0
 --- !u!65 &2061756884
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8752,8 +8733,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellexalRaycast: {fileID: 1878803506475090295}
-  actionAsset: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f,
-    type: 3}
   touchPadPos: {fileID: -3834433346304978039, guid: c348712bda248c246b8c49b3db54643f,
     type: 3}
   touchPadClick: {fileID: -2088886845482169715, guid: c348712bda248c246b8c49b3db54643f,

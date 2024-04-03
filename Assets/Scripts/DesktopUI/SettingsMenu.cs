@@ -658,7 +658,6 @@ namespace CellexalVR.DesktopUI
                     profileDropdown.SetValueWithoutNotify(profileDropdown.options.Count - 1);
                 }
             }
-            print(profileDropdown.value);
             CellexalConfig.savedConfigs[profileName] = new Config(CellexalConfig.Config);
             string configPath = referenceManager.configManager.ProfileNameToConfigPath(profileName);
             referenceManager.configManager.SaveConfigFile(configPath);

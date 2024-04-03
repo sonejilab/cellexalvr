@@ -170,10 +170,18 @@ namespace CellexalVR.AnalysisObjects
 
             int nbrOfSelectionColors = CellexalConfig.Config.SelectionToolColors.Length;
 
+            if (nbrOfExpressionColors > 128)
+            {
+                nbrOfExpressionColors = 128;
+                CellexalLog.Log($"ERROR: Can not have more than 128 expression colors, reducing to 128.");
+                CellexalConfig.Config.GraphNumberOfExpressionColors = nbrOfExpressionColors;
+            }
+
             if (nbrOfExpressionColors + nbrOfSelectionColors > 254)
             {
                 nbrOfSelectionColors = 254 - nbrOfExpressionColors;
-                CellexalLog.Log(string.Format("ERROR: Can not have more than 254 total expression and selection colors. Reducing selection colors to {0}. Change NumberOfExpressionColors and SelectionToolColors in the settings menu or config.xml.", nbrOfExpressionColors));
+                CellexalLog.Log($"ERROR: Can not have more than 254 total expression and selection colors. Reducing selection colors to {nbrOfSelectionColors}. Change NumberOfExpressionColors and SelectionToolColors in the settings menu or config.xml.");
+                CellexalConfig.Config.SelectionToolColors = CellexalConfig.Config.SelectionToolColors[..nbrOfSelectionColors];
             }
             else if (nbrOfExpressionColors < 3)
             {
@@ -374,7 +382,6 @@ namespace CellexalVR.AnalysisObjects
 
             if (nrOfLODGroups > 1)
             {
-                newGraph.gameObject.AddComponent<LODGroup>();
                 UpdateLODGroups(newGraph, nrOfLODGroups);
             }
 
@@ -1220,12 +1227,7 @@ namespace CellexalVR.AnalysisObjects
 
                 //TODO
                 //nrOfLODGroups = CellexalConfig.Config.GraphPointQuality == "Standard" ? 2 : 1;
-                StartCoroutine(SliceClusteringLOD(nrOfLODGroups));
-
-                while (isCreating)
-                {
-                    yield return null;
-                }
+                yield return StartCoroutine(SliceClusteringLOD(nrOfLODGroups));
 
                 foreach (KeyValuePair<string, Graph.GraphPoint> point in newGraph.points)
                 {
