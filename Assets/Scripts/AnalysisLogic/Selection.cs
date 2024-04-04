@@ -35,6 +35,7 @@ namespace CellexalVR.AnalysisLogic
         public static string parentSelectionDirectory;
         public string savedSelectionDirectory;
         public string savedSelectionFilePath;
+        public string savedSelectionMetaPath;
 
         public readonly int id;
         public int size;
@@ -46,6 +47,11 @@ namespace CellexalVR.AnalysisLogic
         public Dictionary<Graph, Texture2D> allGroupsCombinedMask = new();
 
         /// <summary>
+        /// The amount that the red channel in the group masks is offset by from zero. Should be equal too <see cref="CellexalConfig.Config.GraphNumberOfExpressionColors"/>.
+        /// </summary>
+        private int groupMaskColorOffset;
+
+        /// <summary>
         /// Array to go from a group number to an index in <see cref="groups"/>.
         /// </summary>
         private int[] reverseGroupIndices;
@@ -53,7 +59,7 @@ namespace CellexalVR.AnalysisLogic
         private List<Graph.GraphPoint> _points;
         /// <summary>
         /// The points that this selection includes, in the order they were selected.
-        /// Do not modify the contents of this list directly without calling <see cref="SetPoints(IEnumerable{Graph.GraphPoint}, bool)"/> afterwards.
+        /// Do not modify the contents of this list directly without calling <see cref="SetPoints(IEnumerable{Graph.GraphPoint}, bool, bool)"/> afterwards.
         /// </summary>
         public List<Graph.GraphPoint> Points
         {
@@ -328,6 +334,7 @@ namespace CellexalVR.AnalysisLogic
             parentSelectionDirectory = Path.Combine(CellexalUser.UserSpecificFolder, "Selections");
             savedSelectionDirectory = Path.Combine(parentSelectionDirectory, "Selection_" + id);
             savedSelectionFilePath = Path.Combine(savedSelectionDirectory, "selection.txt");
+            savedSelectionMetaPath = Path.Combine(savedSelectionDirectory, "selection.meta.txt");
             if (!Directory.Exists(parentSelectionDirectory))
             {
                 Directory.CreateDirectory(parentSelectionDirectory);
@@ -442,35 +449,29 @@ namespace CellexalVR.AnalysisLogic
                 numPointsAdded++;
             }
 
+            if (File.Exists(savedSelectionMetaPath))
+            {
+                string metaText = File.ReadAllText(savedSelectionMetaPath);
+
+            }
+
+            bool metaFileReadSuccessfully = ReadMetaFileFromDisk();
+
             SetPoints(readPoints, saveToDisk: false);
 
-            string currentDir = Path.GetDirectoryName(filePath);
-            if (currentDir != savedSelectionDirectory)
+            if (!metaFileReadSuccessfully)
             {
-                File.Copy(filePath, savedSelectionFilePath);
-                if (GroupMaskFilesExist(currentDir))
-                {
-                    foreach (string mask in Directory.GetFiles(currentDir, "*.png"))
-                    {
-                        File.Copy(mask, savedSelectionDirectory);
-                    }
-                    LoadGroupMasksFromDisk();
-                }
-                else
-                {
-                    SaveGroupMasksToDisk();
-                }
+                groupMaskColorOffset = CellexalConfig.Config.GraphNumberOfExpressionColors;
+                SaveMetaFileToDisk();
+            }
+
+            if (GroupMaskFilesExist(savedSelectionDirectory))
+            {
+                LoadGroupMasksFromDisk();
             }
             else
             {
-                if (GroupMaskFilesExist(currentDir))
-                {
-                    LoadGroupMasksFromDisk();
-                }
-                else
-                {
-                    SaveGroupMasksToDisk();
-                }
+                SaveGroupMasksToDisk();
             }
 
             TextureHandler.instance?.AddPointsToSelection(indices);
@@ -480,6 +481,40 @@ namespace CellexalVR.AnalysisLogic
             CellexalEvents.SelectedFromFile.Invoke();
             streamReader.Close();
             fileStream.Close();
+        }
+
+        /// <summary>
+        /// Attempts to read the saved meta file.
+        /// </summary>
+        /// <returns>Returns true if reading the file succeded, false otherwise.</returns>
+        private bool ReadMetaFileFromDisk()
+        {
+            if (!File.Exists(savedSelectionMetaPath))
+            {
+                CellexalLog.Log($"ERROR: Could not find meta file to read at {savedSelectionMetaPath}");
+                return false;
+            }
+            string[] metaText = File.ReadAllLines(savedSelectionMetaPath);
+            // expected:
+            // GraphNumberOfExpressionColors=[int]
+            // TODO: turn this below into a helper function if/when more lines are added to the meta file
+            if (metaText[0][..30] != "GraphNumberOfExpressionColors=")
+            {
+                CellexalLog.Log($"ERROR: Unexpected key encountered when reading selection meta file. Expected GraphNumberOfExpressionColors, found {metaText[0][..30]}");
+                return false;
+            }
+
+            if (int.TryParse(metaText[0][30..], out int graphNumberOfExpressionColors))
+            {
+                groupMaskColorOffset = graphNumberOfExpressionColors;
+            }
+            else
+            {
+                CellexalLog.Log($"ERROR: Unexpected value encountered when reading selection meta file. Expected integer, found {metaText[0][30..]}");
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -543,6 +578,69 @@ namespace CellexalVR.AnalysisLogic
             {
                 tex.Apply();
             }
+
+            if (groupMaskColorOffset != CellexalConfig.Config.GraphNumberOfExpressionColors)
+            {
+                UpdateGroupMasks();
+            }
+        }
+
+        /// <summary>
+        /// Updates all group masks to match the current required offset.
+        /// </summary>
+        public void UpdateGroupMasks()
+        {
+            int redChannelDiff = CellexalConfig.Config.GraphNumberOfExpressionColors - groupMaskColorOffset;
+            JobHandle[] handles = new JobHandle[groupMasks.Count + allGroupsCombinedMask.Count];
+            int handleIndex = 0;
+
+            foreach (Texture2D tex in allGroupsCombinedMask.Values)
+            {
+                NativeArray<Color32> mask = tex.GetRawTextureData<Color32>();
+                int[] incrementBy = new int[] { redChannelDiff, 0, 0, 0 };
+                handles[handleIndex] = new UpdateGroupMaskJob() { mask = mask, incrementBy = incrementBy }.Schedule(mask.Length, 10000);
+                handleIndex++;
+            }
+
+            foreach (Texture2D tex in groupMasks.Values)
+            {
+                NativeArray<Color32> mask = tex.GetRawTextureData<Color32>();
+                int[] incrementBy = new int[] { redChannelDiff, 0, 0, 0 };
+                handles[handleIndex] = new UpdateGroupMaskJob() { mask = mask, incrementBy = incrementBy }.Schedule(mask.Length, 10000);
+                handleIndex++;
+            }
+
+            foreach (JobHandle handle in handles)
+            {
+                handle.Complete();
+            }
+
+            foreach (Texture2D tex in allGroupsCombinedMask.Values)
+            {
+                tex.Apply();
+            }
+
+            foreach (Texture2D tex in groupMasks.Values)
+            {
+                tex.Apply();
+            }
+
+        }
+
+        [BurstCompile]
+        private struct UpdateGroupMaskJob : IJobParallelFor
+        {
+            public NativeArray<Color32> mask;
+            public int[] incrementBy;
+
+            public void Execute(int index)
+            {
+                Color32 currentColor = mask[index];
+                mask[index] = new Color32((byte)(currentColor.r + incrementBy[0]),
+                                          (byte)(currentColor.g + incrementBy[1]),
+                                          (byte)(currentColor.b + incrementBy[2]),
+                                          (byte)(currentColor.a + incrementBy[3]));
+            }
         }
 
         /// <summary>
@@ -562,10 +660,18 @@ namespace CellexalVR.AnalysisLogic
         {
             SaveSelectionTextFileToDisk();
             SaveGroupMasksToDisk();
+            SaveMetaFileToDisk();
+        }
+
+        private void SaveMetaFileToDisk()
+        {
+            string metaString = $"groupMaskColorOffset={groupMaskColorOffset}\n";
+            File.WriteAllText(savedSelectionMetaPath, metaString);
         }
 
         /// <summary>
         /// Saves the group masks to the disk. This is automatically done by the constructor or when points are assigned with <see cref="SetPoints(IEnumerable{Graph.GraphPoint}, bool, bool)"/>.
+        /// Calling this manually afterwards will update the group masks with the graph points current groups and overwrite the previously saved masks.
         /// </summary>
         /// <param name="graphToSave">Optional. If left out, all graphs that are currently loaded will be saved, otherwise, only the graph passed in this argument is saved.</param>
         public void SaveGroupMasksToDisk(Graph graphToSave = null)
@@ -582,11 +688,13 @@ namespace CellexalVR.AnalysisLogic
             // create dictionary for texture with groups combined
             Dictionary<Graph, NativeArray<Color32>> allGroupsCombinedRawTextureData = new();
 
+            groupMaskColorOffset = CellexalConfig.Config.GraphNumberOfExpressionColors;
+
             // save color32 arrays for each color for later
             NativeArray<Color32> colors = new NativeArray<Color32>(groups.Count, Allocator.TempJob);
             for (int i = 0; i < colors.Length; ++i)
             {
-                byte redChannel = (byte)(CellexalConfig.Config.GraphNumberOfExpressionColors + groups[i]);
+                byte redChannel = (byte)(groupMaskColorOffset + groups[i]);
                 colors[i] = new Color32(redChannel, 0, 0, 255);
             }
 

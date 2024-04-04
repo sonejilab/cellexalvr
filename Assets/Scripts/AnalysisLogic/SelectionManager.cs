@@ -180,6 +180,11 @@ namespace CellexalVR.AnalysisLogic
         private void OnConfigLoaded()
         {
             groupChanges = new int[CellexalConfig.Config.SelectionToolColors.Length];
+
+            foreach (Selection selection in selections)
+            {
+                selection.UpdateGroupMasks();
+            }
         }
 
         /// <summary>
