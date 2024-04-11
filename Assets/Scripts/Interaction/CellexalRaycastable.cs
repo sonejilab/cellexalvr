@@ -8,8 +8,11 @@ namespace CellexalVR.Interaction
     /// </summary>
     public class CellexalRaycastable : MonoBehaviour
     {
+        [SerializeField]
         public UnityEvent OnActivate;
+        [SerializeField]
         public UnityEvent RaycastEnter;
+        [SerializeField]
         public UnityEvent RaycastExit;
         public bool canBePushedAndPulled = true;
         public bool active = true;

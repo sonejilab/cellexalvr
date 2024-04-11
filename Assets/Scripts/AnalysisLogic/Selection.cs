@@ -495,16 +495,26 @@ namespace CellexalVR.AnalysisLogic
                 return false;
             }
             string[] metaText = File.ReadAllLines(savedSelectionMetaPath);
+            if (metaText.Length < 1)
+            {
+                CellexalLog.Log($"ERROR: Missing lines from meta file at {savedSelectionMetaPath}");
+                return false;
+            }
             // expected:
             // GraphNumberOfExpressionColors=[int]
             // TODO: turn this below into a helper function if/when more lines are added to the meta file
-            if (metaText[0][..30] != "GraphNumberOfExpressionColors=")
+            if (metaText[0].Length < 21)
+            {
+                CellexalLog.Log($"ERROR: Unexpected line length when reading meta file at {savedSelectionMetaPath}");
+                return false;
+            }
+            if (metaText[0][..21] != "groupMaskColorOffset=")
             {
                 CellexalLog.Log($"ERROR: Unexpected key encountered when reading selection meta file. Expected GraphNumberOfExpressionColors, found {metaText[0][..30]}");
                 return false;
             }
 
-            if (int.TryParse(metaText[0][30..], out int graphNumberOfExpressionColors))
+            if (int.TryParse(metaText[0][21..], out int graphNumberOfExpressionColors))
             {
                 groupMaskColorOffset = graphNumberOfExpressionColors;
             }

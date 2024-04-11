@@ -552,8 +552,6 @@ MonoBehaviour:
   confirmQuad: {fileID: 1592904543389442}
   movingQuadX: {fileID: 1969411457497442}
   movingQuadY: {fileID: 1103328620606090}
-  selectionNr: 0
-  selectionFile: 
   enlargedGeneText: {fileID: 114284576377539384}
   highlightGeneText: {fileID: 114230615009697458}
   highlightInfoText: {fileID: 0}
@@ -562,6 +560,7 @@ MonoBehaviour:
   orderedByAttribute: 0
   buildingTexture: 0
   genes: []
+  startPosition: {x: 0, y: 0, z: 0}
 --- !u!64 &64373526009168968
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -604,6 +603,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0e5935dc8af0424abd39cd814df2a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 1
+  active: 1
 --- !u!114 &8000969561456872233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1646,11 +1656,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4498471690257498}
     m_Modifications:
-    - target: {fileID: 667768790692252445, guid: c9a49f300e68b39408ecfc7192d14a11,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     - target: {fileID: 1035747885822337744, guid: c9a49f300e68b39408ecfc7192d14a11,
         type: 3}
       propertyPath: referenceManager
@@ -1736,26 +1741,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Left Side
       objectReference: {fileID: 0}
-    - target: {fileID: 4543666022680485163, guid: c9a49f300e68b39408ecfc7192d14a11,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 4543683640378143813, guid: c9a49f300e68b39408ecfc7192d14a11,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 4543735734497240635, guid: c9a49f300e68b39408ecfc7192d14a11,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-    - target: {fileID: 4544016227021875609, guid: c9a49f300e68b39408ecfc7192d14a11,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c9a49f300e68b39408ecfc7192d14a11, type: 3}
 --- !u!4 &4755575079968828 stripped

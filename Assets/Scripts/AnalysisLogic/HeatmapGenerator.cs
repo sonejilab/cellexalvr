@@ -465,7 +465,7 @@ namespace CellexalVR.AnalysisLogic
         /// Builds a heatmap texture based on already known groupwidths and attribute widths.
         /// </summary>
         /// <param name="heatmap">The heatmap to attach the texture to.</param>
-        public void BuildTexture(Heatmap heatmap)
+        public void BuildTexture(Heatmap heatmap, bool newHeatmap = true)
         {
             if (heatmap.buildingTexture)
             {
@@ -490,7 +490,7 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            StartCoroutine(BuildTextureCoroutine(heatmap));
+            StartCoroutine(BuildTextureCoroutine(heatmap, newHeatmap));
         }
 
         /// <summary>
@@ -512,7 +512,7 @@ namespace CellexalVR.AnalysisLogic
             heatmap.genes = newGenes;
             heatmap.groupWidths = newGroupWidths;
             heatmap.UpdateAttributeWidhts();
-            StartCoroutine(BuildTextureCoroutine(heatmap));
+            StartCoroutine(BuildTextureCoroutine(heatmap, false));
         }
 
         /// <summary>

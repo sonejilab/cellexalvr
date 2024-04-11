@@ -29,7 +29,6 @@ namespace CellexalVR.Interaction
         private int selectionStartY;
         private bool selecting = false;
         private bool movingSelection = false;
-        private int layerMask;
         private int selectedGroupLeft;
         private int selectedGroupRight;
         private int selectedGeneTop;
@@ -41,8 +40,8 @@ namespace CellexalVR.Interaction
         private float selectedBoxY;
         private float selectedBoxWidth;
         private float selectedBoxHeight;
-        private Cell[] cellsToHighlight = new Cell[0];
         private int currentHighlightedGroup;
+        private bool highlightingGraphs = false;
 
         private bool triggerDown = false;
         private bool triggerUp = false;
@@ -58,7 +57,6 @@ namespace CellexalVR.Interaction
                 controllerModelSwitcher = referenceManager.controllerModelSwitcher;
             }
 
-            layerMask = 1 << LayerMask.NameToLayer("EnvironmentButtonLayer");
             graphManager = referenceManager.graphManager;
             cellManager = referenceManager.cellManager;
             multiuserMessageSender = referenceManager.multiuserMessageSender;
@@ -89,6 +87,8 @@ namespace CellexalVR.Interaction
 
         public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
         {
+            bool prevHighlightingGraphs = highlightingGraphs;
+            highlightingGraphs = false;
             if (hitInfo.collider && hitInfo.transform == transform)
             {
                 int hitx = (int)(hitInfo.textureCoord.x * heatmap.layout.bitmapWidth);
@@ -115,6 +115,7 @@ namespace CellexalVR.Interaction
                     // if we hit the grouping bar
                     multiuserMessageSender.SendMessageHandleHitGroupingBar(name, hitx);
                     HandleHitGroupingBar(hitx);
+                    highlightingGraphs = true;
                 }
 
                 else if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, heatmap.layout.heatmapX,
@@ -122,6 +123,7 @@ namespace CellexalVR.Interaction
                 {
                     multiuserMessageSender.SendMessageHandleHitAttributeBar(name, hitx);
                     HandleHitAttributeBar(hitx);
+                    highlightingGraphs = true;
                 }
 
                 else if (CoordinatesInsideRect(hitx, heatmap.layout.bitmapHeight - hity, heatmap.layout.heatmapX, heatmap.layout.heatmapY,
@@ -181,7 +183,7 @@ namespace CellexalVR.Interaction
                 {
                     // if we hit the heatmap but not any area of interest, like the borders or any space in between
                     multiuserMessageSender.SendMessageResetHeatmapHighlight(name);
-                    ResetHeatmapHighlight();
+                    ResetHeatmapHighlight(resetGraphHighlight: true);
                     //heatmap.enlargedGeneText.gameObject.SetActive(false);
                     //heatmap.enlargedGeneText.gameObject.SetActive(false);
                 }
@@ -190,7 +192,7 @@ namespace CellexalVR.Interaction
             {
                 // if we don't hit the heatmap at all
                 multiuserMessageSender.SendMessageResetHeatmapHighlight(name);
-                ResetHeatmapHighlight();
+                ResetHeatmapHighlight(resetGraphHighlight: true);
             }
 
             if (triggerUp)
@@ -198,6 +200,22 @@ namespace CellexalVR.Interaction
                 // if the raycast leaves the heatmap and the user lets go of the trigger
                 multiuserMessageSender.SendMessageResetSelecting(name);
                 ResetSelecting();
+            }
+
+            if (prevHighlightingGraphs && !highlightingGraphs)
+            {
+                // if we were highlighting graphs last frame, but not anymore
+                cellManager.ResetHighlight();
+            }
+        }
+
+        public override void OnRaycastExit()
+        {
+            base.OnRaycastExit();
+            if (highlightingGraphs)
+            {
+                cellManager.ResetHighlight();
+                highlightingGraphs = false;
             }
         }
 
@@ -362,7 +380,7 @@ namespace CellexalVR.Interaction
             heatmap.highlightInfoText.text = "";
             heatmap.enlargedGeneText.gameObject.SetActive(false);
             if (currentHighlightedGroup == group) return;
-            ResetHeatmapHighlight(false);
+            //ResetHeatmapHighlight(false);
             cellManager.HighlightGroup(heatmap.selection, group);
             currentHighlightedGroup = group;
         }
@@ -388,7 +406,7 @@ namespace CellexalVR.Interaction
             heatmap.highlightQuad.SetActive(true);
             if (attribute >= cellManager.AttributesNames.Count || attribute < 0) return;
             if (heatmap.barInfoText.text == cellManager.AttributesNames[attribute]) return;
-            ResetHeatmapHighlight(false);
+            //ResetHeatmapHighlight(false);
             //cellsToHighlight = cellManager.GetCells(cellManager.Attributes[attribute]);
             //cellManager.HighlightCells(cellsToHighlight, true, attribute);
             cellManager.HighlightAttribute(cellManager.AttributesNames[attribute]);
@@ -425,7 +443,7 @@ namespace CellexalVR.Interaction
                 heatmap.highlightQuad.transform.localPosition.y + 0.077f, 0);
             if (geneHit >= heatmap.genes.Length || geneHit < 0)
                 return geneHit;
-            ResetHeatmapHighlight(false);
+            ResetHeatmapHighlight(resetText: false);
 
             return geneHit;
         }
@@ -625,10 +643,10 @@ namespace CellexalVR.Interaction
             movingSelection = false;
         }
 
-        private void ResetHeatmapHighlight(bool resetText = true)
+        private void ResetHeatmapHighlight(bool resetText = true, bool resetGraphHighlight = false)
         {
             currentHighlightedGroup = -1;
-            cellManager.ResetHighlight();
+            if (resetGraphHighlight) cellManager.ResetHighlight();
             if (resetText) heatmap.ResetHeatmapHighlight();
         }
 
@@ -757,7 +775,7 @@ namespace CellexalVR.Interaction
                 }
                 else
                 {
-                    heatmapGenerator.BuildTexture(heatmap);
+                    heatmapGenerator.BuildTexture(heatmap, false);
                 }
             }
         }
