@@ -30,16 +30,6 @@ namespace CellexalVR.Menu.Buttons
             }
         }
 
-        private void OnValidate()
-        {
-            if (gameObject.scene.IsValid())
-            {
-                //slider.transform.localPosition = startState ? rightSide.localPosition : leftSide.localPosition;
-                //slider.transform.localPosition += new Vector3(0, 0, -0.9f);
-                // UpdateColors(startState);
-            }
-        }
-
         private void Start()
         {
             currentState = startState;

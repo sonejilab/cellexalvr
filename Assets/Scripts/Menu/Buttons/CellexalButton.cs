@@ -50,7 +50,7 @@ namespace CellexalVR.Menu.Buttons
         public bool controllerInside = false;
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             if (gameObject.scene.IsValid())
             {
@@ -91,7 +91,10 @@ namespace CellexalVR.Menu.Buttons
         {
             base.OnRaycastExit();
             controllerInside = false;
-            SetHighlighted(false);
+            if (active)
+            {
+                SetHighlighted(false);
+            }
             if (descriptionText.text == Description)
             {
                 descriptionText.text = "";
@@ -198,6 +201,11 @@ namespace CellexalVR.Menu.Buttons
         /// <param name="highlight">True to highlight, false to unhighlight.</param>
         public virtual void SetHighlighted(bool highlight)
         {
+            if (!active)
+            {
+                return;
+            }
+
             if (highlight)
             {
                 if (spriteRenderer != null)

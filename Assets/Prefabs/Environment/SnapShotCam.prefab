@@ -516,6 +516,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6281075195083545092}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -527,7 +550,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 7918121044927945916}
@@ -2004,6 +2026,7 @@ GameObject:
   - component: {fileID: 8372768910442169059}
   - component: {fileID: 1313966158}
   - component: {fileID: 1313966154}
+  - component: {fileID: 2116727599115514225}
   m_Layer: 0
   m_Name: SnapShotCam
   m_TagString: Untagged
@@ -2293,6 +2316,29 @@ MonoBehaviour:
   scaleGrab: {fileID: 0}
   actionAsset: {fileID: 0}
   action: {fileID: 0}
+--- !u!114 &2116727599115514225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418566213884489412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fbc49eed31a4d94d9dc5ba56fdb475f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 1
+  active: 1
 --- !u!1 &1435806550741468200
 GameObject:
   m_ObjectHideFlags: 0
@@ -2853,6 +2899,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8000261200813566418}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -2864,7 +2933,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 2034056976247510423}
@@ -3622,6 +3690,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4070281162980580309}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -3633,7 +3724,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 8330933217823505793}
@@ -3790,6 +3880,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2652762830040332721}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -3801,7 +3914,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 5543709909771501154}
@@ -3875,6 +3987,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6505822074241064341}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -3886,7 +4021,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 5194238559064756878}
@@ -4985,6 +5119,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5197628860523176011}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -4996,7 +5153,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 6490523520186544065}
@@ -5153,6 +5309,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5144081942762134746}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -5164,7 +5343,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 6294690538660409916}
@@ -5478,6 +5656,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e2808c98cd941ce84d947ff0209edc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4489076585503446837}
+        m_TargetAssemblyTypeName: Menu.Buttons.General.CaptureScreenshotButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -5489,7 +5690,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 21300000, guid: 82e5a59f1734e3948aecfc7b9bf0df3e, type: 3}
   deactivatedTexture: {fileID: 21300000, guid: 48bed054b1a8b49469f8e00813fed772, type: 3}
   popupChoice: 1
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
 --- !u!212 &1079559366842630258
@@ -5820,6 +6020,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3611491012881955830}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -5831,7 +6054,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 3458494442075241184}
@@ -6446,6 +6668,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4330626386410945725}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -6457,7 +6702,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 2453268602759563713}
@@ -6905,6 +7149,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb7ee510a2b04831b822ce8dde408b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActivate:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2369636970808781342}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  RaycastEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  RaycastExit:
+    m_PersistentCalls:
+      m_Calls: []
+  canBePushedAndPulled: 0
+  active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 3409087344650005074}
   infoMenu: {fileID: 0}
@@ -6916,7 +7183,6 @@ MonoBehaviour:
   highlightedTexture: {fileID: 0}
   deactivatedTexture: {fileID: 0}
   popupChoice: 0
-  buttonActivated: 1
   storedState: 0
   controllerInside: 0
   rightSide: {fileID: 4072218474454152900}

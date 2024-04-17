@@ -70,19 +70,14 @@ namespace CellexalVR.Interaction
 
         private void Update()
         {
-            if ((!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial)
-                || controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu)
+            if (!CrossSceneInformation.Normal && !CrossSceneInformation.Tutorial)
             {
                 return;
             }
 
-            bool correctModel = referenceManager.rightLaser.enabled;
-            if (correctModel)
-            {
-                triggerDown = false;
-                triggerUp = false;
-                click = false;
-            }
+            triggerDown = false;
+            triggerUp = false;
+            click = false;
         }
 
         public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
