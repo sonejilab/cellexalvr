@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using System;
+using CellexalVR.Interaction;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -239,6 +240,11 @@ namespace CellexalVR.AnalysisObjects
             }
 
             SwitchToTab(legends[legendToActivate]);
+
+            interactableObject.enabled = false;
+            interactableObject.colliders.Clear();
+            interactableObject.colliders.AddRange(gameObject.GetComponentsInChildren<Collider>(true));
+            interactableObject.enabled = true;
 
             desiredLegend = legendToActivate;
             currentLegend = desiredLegend;

@@ -117,7 +117,7 @@ namespace CellexalVR.Interaction
             if (hit)
             {
                 // we hit something
-                CellexalRaycastable raycastable = raycastInfo.collider.transform.GetComponent<CellexalRaycastable>();
+                CellexalRaycastable raycastable = raycastInfo.collider.transform.GetComponentInParent<CellexalRaycastable>();
                 if (raycastable is not null)
                 {
                     // only do something with the raycast if we have the correct model that allows raycasting, or if we hit the menu
@@ -131,8 +131,8 @@ namespace CellexalVR.Interaction
                         }
                         return;
                     }
-                    // never call OnRaycastHit() et.c. unless we hit a CellexalButton
-                    if (OverrideRaycast != Override.AlwaysOff || raycastable is not CellexalButton)
+                    // never call OnRaycastHit() et.c. if we are overriding with "always off" unless we hit a CellexalButton
+                    if (OverrideRaycast != Override.AlwaysOff || raycastable is CellexalButton)
                     {
                         // we hit a CellexalRaycastable
                         if (lastRaycastableHit != raycastable)

@@ -47427,6 +47427,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3640981474150516330}
+  - component: {fileID: 2847402541608592184}
   m_Layer: 17
   m_Name: Histogram
   m_TagString: Untagged
@@ -47467,6 +47468,19 @@ Transform:
   m_Father: {fileID: 4761824427060134037}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2847402541608592184
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3888593995693795418}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.567, y: 0.567, z: 0.002}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3975950426847475974
 GameObject:
   m_ObjectHideFlags: 0
@@ -51281,7 +51295,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5758962, y: 0.5758962, z: 0.005}
+  m_Size: {x: 0.567, y: 0.567, z: 0.001}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6486204470640247154
 Rigidbody:

@@ -1,5 +1,7 @@
 ﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.Extensions;
 using CellexalVR.General;
+using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons.Legends;
 using System;
 using System.Collections.Generic;
@@ -71,6 +73,11 @@ namespace CellexalVR.AnalysisObjects
         private List<GameObject> bars = new List<GameObject>();
         private LegendManager manager;
         private bool attached;
+
+        private int savedGeneExpressionHistogramHitX = -1;
+        private bool triggerClick = false;
+        private bool triggerUp = false;
+
 
         // local position of the center of the histogram
         private Vector3 center = new Vector3(0.0064f, -0.0129f, 0f);
@@ -186,6 +193,8 @@ namespace CellexalVR.AnalysisObjects
             HistogramMinPos = new Vector3(center.x - histogramWidth / 2f, center.y - histogramHeight / 2f, 0f);
             HistogramMaxPos = new Vector3(center.x + histogramWidth / 2f, center.y + histogramHeight / 2f, 0f);
             CellexalEvents.LegendAttached.AddListener(ActivateExtraColumn);
+            OnActivate.AddListener(OnTriggerClick);
+            CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
 
             for (int i = 0; i < 10; ++i)
             {
@@ -577,6 +586,102 @@ namespace CellexalVR.AnalysisObjects
                 System.Globalization.CultureInfo.InvariantCulture, out float value);
             referenceManager.cullingFilterManager.AddGeneFilter(geneNameLabel.text, minX, maxX,
                 value);
+        }
+
+        public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
+        {
+            var localPos = WorldToRelativeHistogramPos(hitInfo.point);
+            if (localPos.x >= 0f && localPos.x <= 1f && localPos.y >= 0f && localPos.y <= 1f)
+            {
+                HandleHitGeneExpressionHistogram(localPos);
+                //if (device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
+                if (triggerClick)
+                {
+                    // if the trigger was pressed
+                    HandleClickDownGeneExpressionHistogram(localPos);
+                    triggerClick = false;
+                }
+                // we hit the gene expression histogram, in the histogram area
+                //else if (device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+                else if (triggerUp)
+                {
+                    // if the trigger was released
+                    HandleClickUpGeneExpressionHistogram(localPos);
+                }
+            }
+            else
+            {
+                // we hit the legend but not the right area
+                DeactivateHighlightArea();
+            }
+
+            if (triggerUp)
+            {
+                // if the trigger was released
+                savedGeneExpressionHistogramHitX = -1;
+                triggerClick = false;
+                triggerUp = false;
+            }
+        }
+
+        private void OnTriggerClick()
+        {
+            triggerClick = true;
+        }
+
+        private void OnTriggerUp()
+        {
+            triggerUp = true;
+        }
+
+        private void HandleHitGeneExpressionHistogram(Vector3 hit)
+        {
+            int hitIndex = (int)(hit.x * NumberOfBars);
+            int maxX = savedGeneExpressionHistogramHitX != -1 ? savedGeneExpressionHistogramHitX : hitIndex;
+            MoveHighlightArea(hitIndex, maxX);
+            referenceManager.multiuserMessageSender.SendMessageMoveHighlightArea(hitIndex, maxX);
+            // if (savedGeneExpressionHistogramHitX != -1)
+            // {
+            //     legendManager.geneExpressionHistogram.MoveHighlightArea(hitIndex, savedGeneExpressionHistogramHitX);
+            // }
+            // else
+            // {
+            //     legendManager.geneExpressionHistogram.MoveHighlightArea(hitIndex, hitIndex);
+            // }
+        }
+
+        private void HandleClickDownGeneExpressionHistogram(Vector3 hit)
+        {
+            savedGeneExpressionHistogramHitX = (int)(hit.x * NumberOfBars);
+        }
+
+        private void HandleClickUpGeneExpressionHistogram(Vector3 hit)
+        {
+            int hitIndex = (int)(hit.x * NumberOfBars);
+            if (selectedArea.activeSelf)
+            {
+                DeactivateSelectedArea();
+                referenceManager.multiuserMessageSender.SendMessageDeactivateSelectedArea();
+            }
+            else
+            {
+                MoveSelectedArea(hitIndex, savedGeneExpressionHistogramHitX);
+                referenceManager.multiuserMessageSender.SendMessageMoveSelectedArea(hitIndex,
+                    savedGeneExpressionHistogramHitX);
+            }
+            savedGeneExpressionHistogramHitX = -1;
+        }
+
+        /// <summary>
+        /// Projects and converts a world coordinate to local coordinates
+        /// </summary>
+        /// <param name="worldPos"></param>
+        /// <returns></returns>
+        public Vector3 WorldToRelativeHistogramPos(Vector3 worldPos)
+        {
+            Vector3 localPos = transform.InverseTransformPoint(worldPos);
+            localPos.z = 0f;
+            return (localPos - HistogramMinPos).InverseScale(HistogramMaxPos - HistogramMinPos);
         }
 
     }
