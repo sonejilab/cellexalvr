@@ -75,9 +75,6 @@ namespace CellexalVR.Interaction
                 return;
             }
 
-            triggerDown = false;
-            triggerUp = false;
-            click = false;
         }
 
         public override void OnRaycastHit(RaycastHit hitInfo, CellexalRaycast raycaster)
@@ -202,16 +199,16 @@ namespace CellexalVR.Interaction
                 // if we were highlighting graphs last frame, but not anymore
                 cellManager.ResetHighlight();
             }
+
+            triggerDown = false;
+            triggerUp = false;
+            click = false;
         }
 
         public override void OnRaycastExit()
         {
             base.OnRaycastExit();
-            if (highlightingGraphs)
-            {
-                cellManager.ResetHighlight();
-                highlightingGraphs = false;
-            }
+            ResetHeatmapHighlight(resetGraphHighlight: true);
         }
 
         private void OnTriggerClick()
@@ -641,7 +638,11 @@ namespace CellexalVR.Interaction
         private void ResetHeatmapHighlight(bool resetText = true, bool resetGraphHighlight = false)
         {
             currentHighlightedGroup = -1;
-            if (resetGraphHighlight) cellManager.ResetHighlight();
+            if (resetGraphHighlight)
+            {
+                cellManager.ResetHighlight();
+                highlightingGraphs = false;
+            }
             if (resetText) heatmap.ResetHeatmapHighlight();
         }
 

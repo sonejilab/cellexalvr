@@ -607,16 +607,14 @@ namespace CellexalVR.AnalysisLogic
             foreach (Texture2D tex in allGroupsCombinedMask.Values)
             {
                 NativeArray<Color32> mask = tex.GetRawTextureData<Color32>();
-                int[] incrementBy = new int[] { redChannelDiff, 0, 0, 0 };
-                handles[handleIndex] = new UpdateGroupMaskJob() { mask = mask, incrementBy = incrementBy }.Schedule(mask.Length, 10000);
+                handles[handleIndex] = new UpdateGroupMaskJob() { mask = mask, incrementByR = redChannelDiff }.Schedule(mask.Length, 10000);
                 handleIndex++;
             }
 
             foreach (Texture2D tex in groupMasks.Values)
             {
                 NativeArray<Color32> mask = tex.GetRawTextureData<Color32>();
-                int[] incrementBy = new int[] { redChannelDiff, 0, 0, 0 };
-                handles[handleIndex] = new UpdateGroupMaskJob() { mask = mask, incrementBy = incrementBy }.Schedule(mask.Length, 10000);
+                handles[handleIndex] = new UpdateGroupMaskJob() { mask = mask, incrementByR = redChannelDiff }.Schedule(mask.Length, 10000);
                 handleIndex++;
             }
 
@@ -641,15 +639,18 @@ namespace CellexalVR.AnalysisLogic
         private struct UpdateGroupMaskJob : IJobParallelFor
         {
             public NativeArray<Color32> mask;
-            public int[] incrementBy;
+            public int incrementByR;
+            public int incrementByG;
+            public int incrementByB;
+            public int incrementByA;
 
             public void Execute(int index)
             {
                 Color32 currentColor = mask[index];
-                mask[index] = new Color32((byte)(currentColor.r + incrementBy[0]),
-                                          (byte)(currentColor.g + incrementBy[1]),
-                                          (byte)(currentColor.b + incrementBy[2]),
-                                          (byte)(currentColor.a + incrementBy[3]));
+                mask[index] = new Color32((byte)(currentColor.r + incrementByR),
+                                          (byte)(currentColor.g + incrementByG),
+                                          (byte)(currentColor.b + incrementByB),
+                                          (byte)(currentColor.a + incrementByA));
             }
         }
 

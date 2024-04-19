@@ -80,10 +80,11 @@ namespace CellexalVR.Tools
         {
             if (!gameObject.activeSelf || referenceManager.controllerModelSwitcher.ActualModel == ControllerModelSwitcher.Model.Menu) return;
             //// this happens only once when the trigger is pressed
-            //if (skipNextDraw)
-            //{
-            //    skipNextDraw = false;
-            //}
+            if (skipNextDraw)
+            {
+                skipNextDraw = false;
+                return;
+            }
             drawing = true;
             //else
             //{

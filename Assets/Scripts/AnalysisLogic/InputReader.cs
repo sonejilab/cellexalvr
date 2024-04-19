@@ -353,9 +353,20 @@ namespace CellexalVR.AnalysisLogic
         /// </summary>
         public void QuitServer()
         {
-            File.Delete(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid"));
-            File.Delete(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock"));
-            File.Delete(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R"));
+            if (File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid")))
+            {
+                File.Delete(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.pid"));
+            }
+
+            if (File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock")))
+            {
+                File.Delete(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.lock"));
+            }
+
+            if (File.Exists(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R")))
+            {
+                File.Delete(Path.Combine(CellexalUser.UserSpecificFolder, "mainServer.input.R"));
+            }
 
             if (h5readers != null)
             {

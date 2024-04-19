@@ -737,7 +737,7 @@ namespace CellexalVR.AnalysisLogic
             heatmap.layout.textureGameObjects = textureGameObjects;
             heatmap.GetComponent<Collider>().enabled = true;
 
-            foreach (var button in GetComponentsInChildren<CellexalButton>())
+            foreach (var button in heatmap.GetComponentsInChildren<CellexalButton>())
             {
                 button.SetButtonActivated(true);
             }

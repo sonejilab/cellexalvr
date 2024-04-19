@@ -32826,6 +32826,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 7323760089796658648}
   colorField: 6
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &256906937333067690
 GameObject:
@@ -33078,6 +33079,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 0}
   colorField: 9
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &356186467683459611
 GameObject:
@@ -33330,6 +33332,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 3395860509800407015}
   colorField: 3
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &575597257306055439
 GameObject:
@@ -35565,6 +35568,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 1969327226338942599}
   colorField: 12
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &1627973353335465692
 GameObject:
@@ -41456,6 +41460,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 7323760089796658648}
   colorField: 5
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &4810553289855666104
 GameObject:
@@ -42028,6 +42033,7 @@ MonoBehaviour:
   gradientColor: 2
   gradient: {fileID: 7323760089796658648}
   colorField: 4
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &4913605214843679823
 GameObject:
@@ -43525,6 +43531,7 @@ MonoBehaviour:
   gradientColor: 2
   gradient: {fileID: 3395860509800407015}
   colorField: 1
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &5497344093103612602
 GameObject:
@@ -48616,6 +48623,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 0}
   colorField: 8
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &8164096110459413738
 GameObject:
@@ -49050,6 +49058,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 0}
   colorField: 7
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &8256495865886192941
 GameObject:
@@ -50793,6 +50802,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 3179160578592437779}
   colorField: 10
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &8757358648665631407
 GameObject:
@@ -51228,6 +51238,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 3395860509800407015}
   colorField: 2
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &9023258068757456344
 GameObject:
@@ -51435,6 +51446,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 3179160578592437779}
   colorField: 11
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1 &9051181465057300923
 GameObject:
@@ -51945,6 +51957,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 1969327226338942599}
   colorField: 13
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
 --- !u!1001 &8941415971402369354
 PrefabInstance:

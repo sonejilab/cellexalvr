@@ -25,6 +25,7 @@ namespace CellexalVR.DesktopUI
         }
         public ConfigColor colorField;
         protected Color color;
+        [SerializeField, HideInInspector]
         protected Material gradientMaterial;
         /// <summary>
         /// Updates the choice of color. Setting this property does not update the internal value. Make sure to call <see cref="FinalizeChoice"/> for that.

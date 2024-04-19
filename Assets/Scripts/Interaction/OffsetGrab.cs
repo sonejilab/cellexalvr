@@ -30,7 +30,7 @@ namespace CellexalVR.Interaction
 
         protected override void OnSelectEntering(SelectEnterEventArgs args)
         {
-            if (args.interactorObject is XRRayInteractor && base.interactorsSelecting.Count == 1)
+            if ((savedInteractor is XRRayInteractor || args.interactorObject is XRRayInteractor) && base.interactorsSelecting.Count == 1 || base.interactorsSelecting.Count >= 2)
             {
                 return;
             }
@@ -48,8 +48,6 @@ namespace CellexalVR.Interaction
             base.OnSelectEntering(args);
             if (scaleGrab && base.interactorsSelecting.Count == 2)
             {
-
-
                 oldTrackposition = base.trackPosition;
                 base.trackPosition = false;
                 base.trackRotation = false;
@@ -83,6 +81,13 @@ namespace CellexalVR.Interaction
 
         protected override void OnSelectExiting(SelectExitEventArgs args)
         {
+            if (!base.interactorsSelecting.Contains(args.interactorObject))
+            {
+                // if the two interactors were colliding with this interactable, but only one was actually used for interaction, this can be called with interactors that are not selecting
+                // for example if the controller and the controller's laser pointer (which have their own separate interactor scripts) both collide with a graph, this function is also called for the laser pointer (which will not be selecting, as OnSelectEntering above ignores it)
+                return;
+            }
+
             if (scaleGrab && base.interactorsSelecting.Count == 2)
             {
                 base.trackPosition = oldTrackposition;

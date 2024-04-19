@@ -1,5 +1,6 @@
 ﻿using CellexalVR.Tools;
 using UnityEngine;
+
 namespace CellexalVR.Menu.Buttons.Drawing
 {
     /// <summary>
@@ -18,8 +19,10 @@ namespace CellexalVR.Menu.Buttons.Drawing
         private Color tintedColor;
         private DrawTool drawTool;
 
-        private void OnValidate()
+#if UNITY_EDITOR
+        protected override void OnValidate()
         {
+            base.OnValidate();
             buttonRenderer = GetComponent<SpriteRenderer>();
             buttonRenderer.color = color;
             Color oldColor = buttonRenderer.color;
@@ -28,6 +31,7 @@ namespace CellexalVR.Menu.Buttons.Drawing
             float newb = oldColor.b - oldColor.b / 2f;
             tintedColor = new Color(newr, newg, newb);
         }
+#endif
 
         private void Start()
         {

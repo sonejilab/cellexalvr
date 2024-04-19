@@ -1013,6 +1013,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 0}
   colorField: 7
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 0}
   image: {fileID: 704641824}
@@ -3422,6 +3423,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 1509829964730170}
   colorField: 13
+  gradientMaterial: {fileID: 2100000, guid: 6015b42eafaae0e4e9c1e766d2993015, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1623099691510018}
   image: {fileID: 114422182908337468}
@@ -3755,6 +3757,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 0}
   colorField: 9
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1336234161328850}
   image: {fileID: 114276039848588380}
@@ -6618,6 +6621,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 1376447754591316}
   colorField: 15
+  gradientMaterial: {fileID: 2100000, guid: 2999281919d1aa649b4b7791626fed18, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1513551313180066}
   image: {fileID: 114979255525154530}
@@ -7632,6 +7636,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 1405847619611132}
   colorField: 2
+  gradientMaterial: {fileID: 2100000, guid: f24daa8b49f1b954f9f264d43a961c70, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1995150743077416}
   image: {fileID: 114868828312627318}
@@ -7806,6 +7811,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 1509829964730170}
   colorField: 12
+  gradientMaterial: {fileID: 2100000, guid: 6015b42eafaae0e4e9c1e766d2993015, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1441024185572266}
   image: {fileID: 114114030883140224}
@@ -8554,6 +8560,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 1405847619611132}
   colorField: 3
+  gradientMaterial: {fileID: 2100000, guid: f24daa8b49f1b954f9f264d43a961c70, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1451688124640292}
   image: {fileID: 114257363169307414}
@@ -12824,7 +12831,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 777f878503192db45b9824ce59673412, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb384a416dc5a524bbef77475c91e9ba, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14201,7 +14208,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 777f878503192db45b9824ce59673412, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb384a416dc5a524bbef77475c91e9ba, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -15208,7 +15215,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 777f878503192db45b9824ce59673412, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb384a416dc5a524bbef77475c91e9ba, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -15723,7 +15730,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 777f878503192db45b9824ce59673412, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb384a416dc5a524bbef77475c91e9ba, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -17135,6 +17142,7 @@ MonoBehaviour:
   gradientColor: 2
   gradient: {fileID: 1405847619611132}
   colorField: 1
+  gradientMaterial: {fileID: 2100000, guid: f24daa8b49f1b954f9f264d43a961c70, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1035974456462892}
   image: {fileID: 114307428712925776}
@@ -18635,7 +18643,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 777f878503192db45b9824ce59673412, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb384a416dc5a524bbef77475c91e9ba, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -19629,6 +19637,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 1394612014946718}
   colorField: 5
+  gradientMaterial: {fileID: 2100000, guid: f1409634905b22e45a373787c9f5afa8, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1606289658901318}
   image: {fileID: 114602915379355656}
@@ -20483,6 +20492,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 0}
   colorField: 8
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1452093665360278}
   image: {fileID: 114961206966507678}
@@ -20552,7 +20562,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 777f878503192db45b9824ce59673412, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb384a416dc5a524bbef77475c91e9ba, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -22882,6 +22892,7 @@ MonoBehaviour:
   gradientColor: 2
   gradient: {fileID: 1394612014946718}
   colorField: 4
+  gradientMaterial: {fileID: 2100000, guid: f1409634905b22e45a373787c9f5afa8, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1904094080729872}
   image: {fileID: 114174719308985256}
@@ -25141,6 +25152,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 1329610480288930}
   colorField: 10
+  gradientMaterial: {fileID: 2100000, guid: a7aaeb081d3fba04f92aa62278850a8b, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1980123219478548}
   image: {fileID: 114580075966466740}
@@ -28499,6 +28511,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 1329610480288930}
   colorField: 11
+  gradientMaterial: {fileID: 2100000, guid: a7aaeb081d3fba04f92aa62278850a8b, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1224696129473832}
   image: {fileID: 114406685751478932}
@@ -28673,6 +28686,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 1394612014946718}
   colorField: 6
+  gradientMaterial: {fileID: 2100000, guid: f1409634905b22e45a373787c9f5afa8, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1172942280545436}
   image: {fileID: 114547038656783464}
@@ -28989,6 +29003,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 1376447754591316}
   colorField: 14
+  gradientMaterial: {fileID: 2100000, guid: 2999281919d1aa649b4b7791626fed18, type: 2}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 1293152902527084}
   image: {fileID: 114995552560145214}
@@ -40775,6 +40790,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 0}
   colorField: 16
+  gradientMaterial: {fileID: 0}
   selectionToolColorIndex: 0
   parentGroup: {fileID: 0}
   image: {fileID: 5969706282600157456}
