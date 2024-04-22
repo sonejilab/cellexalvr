@@ -202,6 +202,12 @@ namespace CellexalVR.AnalysisObjects
             }
         }
 
+        private void Update()
+        {
+            triggerClick = false;
+            triggerUp = false;
+        }
+
         /// <summary>
         /// Clears the legend of all current data.
         /// </summary>
@@ -619,8 +625,6 @@ namespace CellexalVR.AnalysisObjects
             {
                 // if the trigger was released
                 savedGeneExpressionHistogramHitX = -1;
-                triggerClick = false;
-                triggerUp = false;
             }
         }
 

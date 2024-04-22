@@ -3,6 +3,7 @@ using CellexalVR.General;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.Spatial;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 namespace CellexalVR.Interaction
 {
@@ -106,13 +107,23 @@ namespace CellexalVR.Interaction
         /// </summary>
         private void OnTouchPadHold()
         {
-            if (cellexalRaycast.lastRaycastableHit is null ||
-                !cellexalRaycast.lastRaycastableHit.canBePushedAndPulled)
+            CellexalRaycastable raycastable = cellexalRaycast.lastRaycastableHit;
+            if (raycastable is null)
             {
                 return;
             }
 
-            GameObject gameObjectToMove = cellexalRaycast.lastRaycastableHit.gameObject;
+            if (!raycastable.canBePushedAndPulled)
+            {
+                CellexalRaycastable pushableParent = raycastable.GetComponentsInParent<CellexalRaycastable>().First((r) => r.canBePushedAndPulled);
+                if (pushableParent is null)
+                {
+                    return;
+                }
+                raycastable = pushableParent;
+            }
+
+            GameObject gameObjectToMove = raycastable.gameObject;
             if (gameObjectToMove.transform.gameObject.name.Contains("Slice"))
             {
                 if (!gameObjectToMove.transform.parent.GetComponent<SpatialGraph>().slicesActive)

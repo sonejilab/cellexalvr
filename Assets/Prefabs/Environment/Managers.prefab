@@ -43424,7 +43424,7 @@ MonoBehaviour:
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   tabButton: {fileID: 2794521754710707653}
   contentParent: {fileID: 7215086714515986494}
@@ -46605,7 +46605,7 @@ MonoBehaviour:
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   tabButton: {fileID: 3631713650604451437}
   contentParent: {fileID: 7357324397473287668}
@@ -47036,7 +47036,7 @@ MonoBehaviour:
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   tabButton: {fileID: 5985727369307755975}
   contentParent: {fileID: 4299068870426828639}
