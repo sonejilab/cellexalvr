@@ -4,6 +4,7 @@ using CellexalVR.General;
 using CellexalVR.Interaction;
 using CellexalVR.Menu.Buttons.Legends;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -192,6 +193,7 @@ namespace CellexalVR.AnalysisObjects
             manager = gameObject.GetComponentInParent<LegendManager>();
             HistogramMinPos = new Vector3(center.x - histogramWidth / 2f, center.y - histogramHeight / 2f, 0f);
             HistogramMaxPos = new Vector3(center.x + histogramWidth / 2f, center.y + histogramHeight / 2f, 0f);
+            CellexalEvents.ConfigLoaded.AddListener(RecreateAllHistograms);
             CellexalEvents.LegendAttached.AddListener(ActivateExtraColumn);
             OnActivate.AddListener(OnTriggerClick);
             CellexalEvents.RightTriggerUp.AddListener(OnTriggerUp);
@@ -380,6 +382,47 @@ namespace CellexalVR.AnalysisObjects
             }
             tabData[currentTab].CalculateBarHeights(DesiredYAxisMode, TallestBarsToSkip);
             CreateHistogram(tabData[currentTab]);
+        }
+
+        /// <summary>
+        /// Recreates all histograms, Should be used after the number of expressions colors change.
+        /// </summary>
+        public void RecreateAllHistograms()
+        {
+            StartCoroutine(RecreateAllHistogramsCoroutine());
+        }
+
+        private IEnumerator RecreateAllHistogramsCoroutine()
+        {
+            for (int i = 0; i < tabData.Count; ++i)
+            {
+                if (tabData[i] is null)
+                {
+                    break;
+                }
+                string geneName = tabData[i].name;
+
+                while (Dataset.instance.database.QueryRunning)
+                    yield return null;
+
+                Dataset.instance.database.QueryGene(geneName, referenceManager.graphManager.GeneExpressionColoringMethod);
+
+                while (Dataset.instance.database.QueryRunning)
+                    yield return null;
+
+                ArrayList expressions = Dataset.instance.database._result;
+
+                int numberOfBins = CellexalConfig.Config.GraphNumberOfExpressionColors + 1;
+                int[] cellsPerBin = new int[numberOfBins];
+                foreach (SQLiter.CellExpressionPair expression in expressions)
+                {
+                    cellsPerBin[expression.Color + 1]++;
+                }
+                cellsPerBin[0] = referenceManager.cellManager.GetNumberOfCells() - expressions.Count;
+                tabData[i].heightsInt = cellsPerBin;
+                tabData[i].CalculateBarHeights(DesiredYAxisMode, TallestBarsToSkip);
+            }
+            RecreateHistogram();
         }
 
         /// <summary>
