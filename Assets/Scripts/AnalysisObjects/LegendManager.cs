@@ -84,7 +84,6 @@ namespace CellexalVR.AnalysisObjects
             interactableObject.selectExited.AddListener(OnUngrabbed);
             originalParent = legendTransform.parent;
             originalbackgroundScale = backgroundPlane.transform.localScale;
-            CellexalEvents.GraphsReset.AddListener(ClearLegends);
             CellexalEvents.GraphsUnloaded.AddListener(ClearLegends);
             Dataset.instance.legend = this;
             SetLegendReferences();

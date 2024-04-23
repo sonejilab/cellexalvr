@@ -44,6 +44,7 @@ namespace CellexalVR.AnalysisObjects
             CellexalEvents.LegendDetached.AddListener(DeActivateExtraColumn);
             CellexalEvents.GraphsColoredByGene.AddListener(ClearLegend);
             CellexalEvents.GraphsColoredByIndex.AddListener(ClearLegend);
+            CellexalEvents.GraphsReset.AddListener(ClearLegend);
         }
 
         private void ActivateExtraColumn()

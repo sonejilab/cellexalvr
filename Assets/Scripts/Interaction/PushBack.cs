@@ -115,7 +115,7 @@ namespace CellexalVR.Interaction
 
             if (!raycastable.canBePushedAndPulled)
             {
-                CellexalRaycastable pushableParent = raycastable.GetComponentsInParent<CellexalRaycastable>().First((r) => r.canBePushedAndPulled);
+                CellexalRaycastable pushableParent = raycastable.GetComponentsInParent<CellexalRaycastable>().FirstOrDefault((r) => r.canBePushedAndPulled);
                 if (pushableParent is null)
                 {
                     return;
