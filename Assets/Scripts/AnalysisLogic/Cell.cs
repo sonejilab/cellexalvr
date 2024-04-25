@@ -23,7 +23,6 @@ namespace CellexalVR.AnalysisLogic
         private GraphManager graphManager;
         private Dictionary<string, int> lastExpressions = new Dictionary<string, int>(16);
         private Dictionary<string, int[]> flashingExpressions = new Dictionary<string, int[]>();
-        private Material tempMat;
 
 
         /// <summary>
@@ -39,7 +38,6 @@ namespace CellexalVR.AnalysisLogic
             Facs = new Dictionary<string, float>();
             FacsValue = new Dictionary<string, string>();
             NumericalAttributes = new Dictionary<string, float>();
-            tempMat = null;
         }
 
         /// <summary>

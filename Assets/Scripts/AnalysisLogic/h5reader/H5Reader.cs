@@ -23,7 +23,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         private Dictionary<string, int> chromeLengths;
         private Dictionary<string, int> cellname2index;
         Dictionary<string, int> genename2index;
-        
+
         //Genenames are all saved in uppercase
         public string[] index2genename;
         public string[] index2cellname;
@@ -108,10 +108,11 @@ namespace CellexalVR.AnalysisLogic.H5reader
                         if (!velocities.Contains(vel.ToUpper()))
                             velocities.Add(vel.ToUpper());
                     }
-                    if (kvp.Key.StartsWith("attr")) { 
+                    if (kvp.Key.StartsWith("attr"))
+                    {
                         string attr = kvp.Key.Split(new[] { '_' }, 2)[1];
                         if (!attributes.Contains(attr))
-                             attributes.Add(attr);
+                            attributes.Add(attr);
                     }
                 }
 
@@ -124,7 +125,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
             }
             else
             {
-               
+
                 string[] lines = File.ReadAllLines(configFile);
 
                 foreach (string l in lines)
@@ -132,7 +133,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     if (l == "" || l.StartsWith("//"))
                         continue;
                     UnityEngine.Debug.Log(l);
-                    string[] kvp = l.Split(new char[] {' '}, 2);
+                    string[] kvp = l.Split(new char[] { ' ' }, 2);
                     if (kvp[0] == "sparse")
                     {
                         sparse = bool.Parse(kvp[1]);
@@ -494,20 +495,20 @@ namespace CellexalVR.AnalysisLogic.H5reader
             UnityEngine.Debug.Log(output);
 
             //output = output.Substring(1, output.Length - 2);
-            output = output.Replace("[","").Replace("]", "");
+            output = output.Replace("[", "").Replace("]", "");
             string[] splitted = output.Split(',');
 
-            
+
             if (geneXcell)
                 writer.WriteLine(conf["cellexpr"] + "[" + geneindex + ",:].nonzero()[0].tolist()");
             else
                 writer.WriteLine(conf["cellexpr"] + "[:," + geneindex + "].nonzero()[0].tolist()");
-                
+
             while (reader.Peek() == 0)
                 yield return null;
 
             output = reader.ReadLine();
-            
+
             UnityEngine.Debug.Log(output);
             output = output.Substring(1, output.Length - 2);
             string[] indices = output.Split(',');
@@ -534,7 +535,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     {
                         _expressionResult.Add(new CellExpressionPair(index2cellname[int.Parse(indices[i])], expr, -1));
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         UnityEngine.Debug.Log(indices[i]);
                         break;
@@ -552,7 +553,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
                 foreach (CellExpressionPair pair in _expressionResult)
                 {
-                    pair.Color = (int) ((pair.Expression - LowestExpression) / binSize);
+                    pair.Color = (int)((pair.Expression - LowestExpression) / binSize);
                 }
 
                 UnityEngine.Debug.Log(HighestExpression);
@@ -592,7 +593,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 int binsize = result.Count / CellexalConfig.Config.GraphNumberOfExpressionColors;
                 for (int j = 0; j < result.Count; ++j)
                 {
-                        result[j].Color = j;
+                    result[j].Color = j;
                 }
 
                 _expressionResult.AddRange(result);
@@ -683,7 +684,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     yield return null;
                 string[] coords = _coordResult;
                 string[] cellNames = index2cellname;
-                combGraph.axisNames = new string[] {"x", "y", "z"};
+                combGraph.axisNames = new string[] { "x", "y", "z" };
                 int count = 0;
                 for (int j = 0; j < cellNames.Length; j++)
                 {

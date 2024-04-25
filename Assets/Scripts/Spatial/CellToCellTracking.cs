@@ -1,10 +1,7 @@
 using CellexalVR.AnalysisLogic;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.VFX;
-using Unity.Entities;
 
 public class CellToCellTracking : MonoBehaviour
 {

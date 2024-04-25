@@ -299,7 +299,7 @@ namespace CellexalVR.Menu.SubMenus
             }
         }
 
-        public ToggleArcsButton FindButton(string buttonName)
+        public new ToggleArcsButton FindButton(string buttonName)
         {
             return toggleArcButtonList.FirstOrDefault(b => b.name == name);
         }

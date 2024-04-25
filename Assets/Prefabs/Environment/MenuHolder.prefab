@@ -3815,7 +3815,7 @@ BoxCollider:
   m_GameObject: {fileID: 1037846879344044}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -3826,7 +3826,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1037846879344044}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -4530,7 +4530,7 @@ BoxCollider:
   m_GameObject: {fileID: 1077894726143018}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -4541,7 +4541,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1077894726143018}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -5571,14 +5571,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114588042797792484}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.DrawToolColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -5708,14 +5721,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114062010490036950}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.ClearLinesWithColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -7485,7 +7511,7 @@ BoxCollider:
   m_GameObject: {fileID: 1194583607681680}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -7496,7 +7522,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1194583607681680}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -10292,14 +10318,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114823203126186030}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.ClearLinesWithColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -10580,14 +10619,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114352265198757302}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.ClearLinesWithColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -12033,14 +12085,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114212428469941192}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.DrawToolColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -12561,7 +12626,7 @@ BoxCollider:
   m_GameObject: {fileID: 1367659340904900}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 2.665865, y: 5.433272, z: 6.181215}
   m_Center: {x: 0.1777544, y: -0.006906205, z: 0}
@@ -12572,7 +12637,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1367659340904900}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -13381,7 +13446,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
+  - {fileID: -1007923611405979911, guid: 44f1fef9f9538ee448393c70fa398ea0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15757,7 +15822,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1468654674099856}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -15770,7 +15835,7 @@ MeshRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 25ad64bf658cfb44fbedabf6f9835526, type: 2}
+  - {fileID: -1007923611405979911, guid: 44f1fef9f9538ee448393c70fa398ea0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -16147,14 +16212,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114296145711976054}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.ClearLinesWithColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -16284,14 +16362,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114277919738670028}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.DrawToolColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -16613,7 +16704,7 @@ GameObject:
   - component: {fileID: 23574860982971620}
   - component: {fileID: 114499320586698546}
   m_Layer: 10
-  m_Name: Colouring and Toggling Text
+  m_Name: Colouring Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16701,7 +16792,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Colouring and Toggling
+  m_text: Colouring
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44f1fef9f9538ee448393c70fa398ea0, type: 2}
   m_sharedMaterial: {fileID: -1007923611405979911, guid: 44f1fef9f9538ee448393c70fa398ea0,
@@ -17335,7 +17426,7 @@ BoxCollider:
   m_GameObject: {fileID: 1506438213324654}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 2.6712766, y: 5.3796415, z: 6.181215}
   m_Center: {x: -0.2523118, y: 0.0361836, z: 0}
@@ -17346,7 +17437,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506438213324654}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -18948,14 +19039,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114664386181600516}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.DrawToolColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -19085,14 +19189,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114496497481527836}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.ClearLinesWithColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -19159,7 +19276,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1570553843201534}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -20325,7 +20442,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1642523230847302}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -20369,7 +20486,7 @@ MeshCollider:
   m_GameObject: {fileID: 1642523230847302}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
@@ -20902,7 +21019,7 @@ BoxCollider:
   m_GameObject: {fileID: 1664411751235684}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -20913,7 +21030,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1664411751235684}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -22273,7 +22390,7 @@ BoxCollider:
   m_GameObject: {fileID: 1709630371762752}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 5.5, y: 5.5, z: 200}
   m_Center: {x: 0, y: 0, z: -100}
@@ -22284,7 +22401,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1709630371762752}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -24023,7 +24140,7 @@ BoxCollider:
   m_GameObject: {fileID: 1753563337095908}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -24034,7 +24151,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1753563337095908}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -24321,7 +24438,7 @@ BoxCollider:
   m_GameObject: {fileID: 1763657639490962}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -24332,7 +24449,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763657639490962}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -24539,14 +24656,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114804545384336952}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.DrawToolColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -25944,14 +26074,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114882424507173642}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.ClearLinesWithColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -26011,7 +26154,7 @@ BoxCollider:
   m_GameObject: {fileID: 1813737089990286}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -26022,7 +26165,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1813737089990286}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -29090,7 +29233,7 @@ BoxCollider:
   m_GameObject: {fileID: 1906645897866336}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -29101,7 +29244,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1906645897866336}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -29998,7 +30141,7 @@ BoxCollider:
   m_GameObject: {fileID: 1957295862651500}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -30009,7 +30152,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1957295862651500}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -31310,14 +31453,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114533365686096528}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.Drawing.DrawToolColorButton,
+          Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 114872049569331296}
@@ -31379,7 +31535,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1985299679159460}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -32826,7 +32982,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 7323760089796658648}
   colorField: 6
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: f1409634905b22e45a373787c9f5afa8, type: 2}
   selectionToolColorIndex: 0
 --- !u!1 &256906937333067690
 GameObject:
@@ -33332,7 +33488,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 3395860509800407015}
   colorField: 3
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: f24daa8b49f1b954f9f264d43a961c70, type: 2}
   selectionToolColorIndex: 0
 --- !u!1 &575597257306055439
 GameObject:
@@ -35568,7 +35724,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 1969327226338942599}
   colorField: 12
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: 6015b42eafaae0e4e9c1e766d2993015, type: 2}
   selectionToolColorIndex: 0
 --- !u!1 &1627973353335465692
 GameObject:
@@ -35613,7 +35769,7 @@ BoxCollider:
   m_GameObject: {fileID: 1627973353335465692}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -35624,7 +35780,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1627973353335465692}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -36311,14 +36467,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8296776181033554404}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 2206070012389300874}
@@ -36382,7 +36550,7 @@ BoxCollider:
   m_GameObject: {fileID: 1898457178176652536}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -36393,7 +36561,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1898457178176652536}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -41460,7 +41628,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 7323760089796658648}
   colorField: 5
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: f1409634905b22e45a373787c9f5afa8, type: 2}
   selectionToolColorIndex: 0
 --- !u!1 &4810553289855666104
 GameObject:
@@ -42033,7 +42201,7 @@ MonoBehaviour:
   gradientColor: 2
   gradient: {fileID: 7323760089796658648}
   colorField: 4
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: f1409634905b22e45a373787c9f5afa8, type: 2}
   selectionToolColorIndex: 0
 --- !u!1 &4913605214843679823
 GameObject:
@@ -43531,7 +43699,7 @@ MonoBehaviour:
   gradientColor: 2
   gradient: {fileID: 3395860509800407015}
   colorField: 1
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: f24daa8b49f1b954f9f264d43a961c70, type: 2}
   selectionToolColorIndex: 0
 --- !u!1 &5497344093103612602
 GameObject:
@@ -43745,14 +43913,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnActivate:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2698118972450587361}
+        m_TargetAssemblyTypeName: CellexalVR.Menu.Buttons.SliderButton, Assembly-CSharp
+        m_MethodName: Click
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   RaycastEnter:
     m_PersistentCalls:
       m_Calls: []
   RaycastExit:
     m_PersistentCalls:
       m_Calls: []
-  canBePushedAndPulled: 1
+  canBePushedAndPulled: 0
   active: 1
   referenceManager: {fileID: 0}
   descriptionText: {fileID: 2206070012389300874}
@@ -44132,7 +44312,7 @@ BoxCollider:
   m_GameObject: {fileID: 5718371082369031014}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 4, y: 4, z: 6.181215}
   m_Center: {x: 0, y: 0, z: 0}
@@ -44143,7 +44323,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5718371082369031014}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -45745,7 +45925,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6186565125091963691}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.425, y: 1.1, z: 0.418}
+  m_LocalPosition: {x: -0.401, y: 1.1, z: 0.398}
   m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -45849,7 +46029,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6264557234430089693}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -50802,7 +50982,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 3179160578592437779}
   colorField: 10
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: a7aaeb081d3fba04f92aa62278850a8b, type: 2}
   selectionToolColorIndex: 0
 --- !u!1 &8757358648665631407
 GameObject:
@@ -51238,7 +51418,7 @@ MonoBehaviour:
   gradientColor: 1
   gradient: {fileID: 3395860509800407015}
   colorField: 2
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: f24daa8b49f1b954f9f264d43a961c70, type: 2}
   selectionToolColorIndex: 0
 --- !u!1 &9023258068757456344
 GameObject:
@@ -51446,7 +51626,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 3179160578592437779}
   colorField: 11
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: a7aaeb081d3fba04f92aa62278850a8b, type: 2}
   selectionToolColorIndex: 0
 --- !u!1 &9051181465057300923
 GameObject:
@@ -51957,7 +52137,7 @@ MonoBehaviour:
   gradientColor: 0
   gradient: {fileID: 1969327226338942599}
   colorField: 13
-  gradientMaterial: {fileID: 0}
+  gradientMaterial: {fileID: 2100000, guid: 6015b42eafaae0e4e9c1e766d2993015, type: 2}
   selectionToolColorIndex: 0
 --- !u!1001 &8941415971402369354
 PrefabInstance:

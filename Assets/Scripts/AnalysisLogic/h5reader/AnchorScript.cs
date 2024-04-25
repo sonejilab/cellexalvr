@@ -66,7 +66,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
                             if (line.type == "attrs")
                             {
-                                h5ReaderAnnotater.RemoveFromConfig("attr_" + expandButtonScript.parentScript.name);
+                                h5ReaderAnnotater.RemoveFromConfig("attr_" + expandButtonScript.parentScript.annotationName);
                             }
                             else
                             {

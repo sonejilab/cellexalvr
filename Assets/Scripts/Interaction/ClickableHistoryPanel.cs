@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.Extensions;
 using CellexalVR.General;
+using System;
+using System.IO;
+using System.Linq;
 using TMPro;
-using UnityEngine;
 
 namespace CellexalVR.Interaction
 {
@@ -13,8 +12,8 @@ namespace CellexalVR.Interaction
     {
         public TextMeshPro textMesh;
 
-        public Definitions.HistoryEvent Type { get; protected set; }
-        public string NameOfThing { get; protected set; } = "";
+        public Definitions.HistoryEvent Type { get; private set; }
+        public string NameOfThing { get; private set; } = "";
         public int _id;
 
         public int ID

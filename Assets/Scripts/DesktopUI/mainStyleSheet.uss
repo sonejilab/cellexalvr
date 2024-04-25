@@ -463,3 +463,9 @@
     color: rgb(255, 255, 255);
     display: flex;
 }
+
+.unity-imgui-container {
+}
+
+.unity-label {
+}

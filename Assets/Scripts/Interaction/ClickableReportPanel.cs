@@ -1,6 +1,4 @@
 ﻿using CellexalVR.General;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
@@ -14,7 +12,7 @@ namespace CellexalVR.Interaction
         /// <summary>
         /// The entire string of text that is displayed on the panel.
         /// </summary>
-        public string Text { get; protected set; }
+        public string Text { get; private set; }
 
         public SimpleWebBrowser.WebBrowser webBrowser;
 

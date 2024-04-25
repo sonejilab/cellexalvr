@@ -179,10 +179,8 @@ namespace CellexalVR.AnalysisObjects
 
 
         private float oldArrowEmitRate;
-        private bool playing = false;
         private bool emitting = false;
         private Coroutine currentEmitCoroutine;
-        private int nFramesAboveTimeThreshold = 0;
         private float greatestVelocity;
 
 

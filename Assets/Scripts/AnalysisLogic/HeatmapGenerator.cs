@@ -258,7 +258,6 @@ namespace CellexalVR.AnalysisLogic
 
             if (!ScarfManager.instance.scarfActive)
             {
-                string function = "make.cellexalvr.heatmap.list";
                 string objectPath = Path.Combine(CellexalUser.UserSpecificFolder, "cellexalObj.RData");
 
                 string topGenesNr = nrOfGenes.ToString();

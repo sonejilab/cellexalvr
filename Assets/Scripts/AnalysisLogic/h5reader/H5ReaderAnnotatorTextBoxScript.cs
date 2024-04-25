@@ -1,11 +1,9 @@
-﻿using System.Collections;
+﻿using CellexalVR.General;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using CellexalVR.General;
+using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
-using CellexalVR.Interaction;
 
 namespace CellexalVR.AnalysisLogic.H5reader
 {
@@ -13,11 +11,11 @@ namespace CellexalVR.AnalysisLogic.H5reader
     {
         public ReferenceManager referenceManager;
         // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.Interaction.Toolkit.ActionBasedController rightController;
         // Open XR 
-		//private SteamVR_Controller.Device device;
-		private UnityEngine.XR.InputDevice device;
+        //private SteamVR_Controller.Device device;
+        private UnityEngine.XR.InputDevice device;
         private bool controllerInside;
         public Dictionary<string, H5ReaderAnnotatorTextBoxScript> subkeys = new Dictionary<string, H5ReaderAnnotatorTextBoxScript>();
         public H5ReaderAnnotatorTextBoxScript parentScript;
@@ -33,7 +31,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
         public H5readerAnnotater annotater;
 
 
-        public string name;
+        public string annotationName;
         public bool isTop;
         public bool isBottom = false;
         private Color hoverColor = Color.white;
@@ -67,7 +65,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                     GameObject go = Instantiate(textBoxPrefab);
                     H5ReaderAnnotatorTextBoxScript script = go.GetComponent<H5ReaderAnnotatorTextBoxScript>();
                     script.isTop = false;
-                    script.name = parentKey;
+                    script.annotationName = parentKey;
                     subkeys.Add(parentKey, script);
                     script.parentScript = this;
                 }
@@ -77,29 +75,29 @@ namespace CellexalVR.AnalysisLogic.H5reader
             {
                 GameObject go = Instantiate(textBoxPrefab);
                 H5ReaderAnnotatorTextBoxScript script = go.GetComponent<H5ReaderAnnotatorTextBoxScript>();
-                script.name = name;
+                script.annotationName = name;
                 subkeys.Add(name, script);
                 script.isTop = false;
                 script.isBottom = true;
                 script.parentScript = this;
-                if(!isTop)
+                if (!isTop)
                     go.SetActive(false);
             }
         }
 
         public char GetDataType()
-        { 
-            char dtype = name[name.Length - 1];
+        {
+            char dtype = annotationName[annotationName.Length - 1];
             return dtype;
         }
 
         public string GetPath()
         {
-            string path = name.Substring(0, name.LastIndexOf(":"));
+            string path = annotationName.Substring(0, annotationName.LastIndexOf(":"));
             H5ReaderAnnotatorTextBoxScript p = parentScript;
             while (p.isTop == false)
             {
-                path = p.name + "/" + path;
+                path = p.annotationName + "/" + path;
                 p = p.parentScript;
             }
             return path;
@@ -121,7 +119,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
 
         public void FillContent(RectTransform content, int depth = 0)
         {
-            gameObject.name = name;
+            gameObject.name = annotationName;
             transform.SetParent(content);
 
             rect.localPosition = Vector3.zero;
@@ -140,7 +138,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
                 text += "--";
             }
             text += "> ";
-            tmp.text = text + name;
+            tmp.text = text + annotationName;
 
             foreach (H5ReaderAnnotatorTextBoxScript k in subkeys.Values)
             {
@@ -159,8 +157,8 @@ namespace CellexalVR.AnalysisLogic.H5reader
             expandButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 0, 10f);
             expandButtonRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, -10, 10f);
             expandButtonBoxCollider.size = new Vector3(expandButtonRect.rect.size.x, expandButtonRect.rect.size.y, 5);
-            
-            
+
+
 
             float temp = 0f;
             foreach (H5ReaderAnnotatorTextBoxScript k in subkeys.Values)

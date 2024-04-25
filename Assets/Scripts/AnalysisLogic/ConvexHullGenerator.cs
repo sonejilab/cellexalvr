@@ -2037,12 +2037,6 @@ namespace CellexalVR.AnalysisLogic
                 }
             }
 
-            void DebugPrint(string s)
-            {
-                //print(s);
-                CellexalLog.Log(s);
-            }
-
             void DebugInstantiateObjects()
             {
                 // remove old debug objects

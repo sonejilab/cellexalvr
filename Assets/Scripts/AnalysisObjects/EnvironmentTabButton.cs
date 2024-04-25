@@ -32,8 +32,9 @@ namespace CellexalVR.AnalysisObjects
             parentMenu.SwitchToTab(parentTab);
         }
 
-        private void OnValidate()
+        protected override void OnValidate()
         {
+            base.OnValidate();
             parentMenu = GetComponentInParent<EnvironmentMenuWithTabs>(true);
         }
 

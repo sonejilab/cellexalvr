@@ -1,7 +1,6 @@
 ﻿using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -18,15 +17,6 @@ namespace CellexalVR.Menu.SubMenus
         public TextMeshPro pageNrText;
         public string[] categoriesAndNames;
         public string currentCategory;
-
-        public bool Active
-        {
-            get => active;
-            set { active = value; }
-        }
-
-        //public Dictionary<CellexalButton, bool> savedButtonStates = new Dictionary<CellexalButton, bool>();
-        private bool active;
 
         protected MenuToggler menuToggler;
         [SerializeField]

@@ -7905,7 +7905,6 @@ GameObject:
   - component: {fileID: 8166409086950462977}
   - component: {fileID: 8166409086950462989}
   - component: {fileID: 8166409086950462991}
-  - component: {fileID: 8166409086950462986}
   - component: {fileID: 1638506007}
   - component: {fileID: 1638506013}
   - component: {fileID: 962020294772760300}
@@ -8217,34 +8216,6 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
---- !u!114 &8166409086950462986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8166409086950462976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c451605470975f247a264749d7737813, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  referenceManager: {fileID: 0}
-  leftControllerScript: {fileID: 8166409086950462989}
-  rightControllerScript: {fileID: 8166409087810030254}
-  viveControllerPrefab: {fileID: 5711062839640293659, guid: abd4ce70b90cf284d98bd0ea3fc10d48,
-    type: 3}
-  valveIndexControllerPrefab: {fileID: 8027361317840064787, guid: 6e31e7fc972c3b043bd77026762982a7,
-    type: 3}
-  hpReverbControllerPrefab: {fileID: 4254578490054511512, guid: 9ae26b16ff4e6b940b8b82cb720b7b1f,
-    type: 3}
-  ActualModel: 0
-  colorMode: 0
-  defaultStaticMaterial: {fileID: 2100000, guid: 282096f81f2f0d34eabef4235b1617b1,
-    type: 2}
-  animatedPulseMaterial: {fileID: 2100000, guid: 1acb6b523c0ab4841ba455c24a8c05d6,
-    type: 2}
-  toolsParent: {fileID: 0}
 --- !u!65 &1638506007
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8919,6 +8890,7 @@ GameObject:
   - component: {fileID: 639620770}
   - component: {fileID: 639620771}
   - component: {fileID: 2036454916}
+  - component: {fileID: 1265420157}
   m_Layer: 0
   m_Name: CellexalOpenXRRig
   m_TagString: Untagged
@@ -9012,6 +8984,34 @@ MonoBehaviour:
   m_CameraFloorOffsetObject: {fileID: 8166409087959463201}
   m_RequestedTrackingOriginMode: 0
   m_CameraYOffset: 1.1176
+--- !u!114 &1265420157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8166409087945416331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c451605470975f247a264749d7737813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  referenceManager: {fileID: 0}
+  leftControllerScript: {fileID: 8166409086950462989}
+  rightControllerScript: {fileID: 8166409087810030254}
+  viveControllerPrefab: {fileID: 5711062839640293659, guid: abd4ce70b90cf284d98bd0ea3fc10d48,
+    type: 3}
+  valveIndexControllerPrefab: {fileID: 8027361317840064787, guid: 6e31e7fc972c3b043bd77026762982a7,
+    type: 3}
+  hpReverbControllerPrefab: {fileID: 4254578490054511512, guid: 9ae26b16ff4e6b940b8b82cb720b7b1f,
+    type: 3}
+  ActualModel: 0
+  colorMode: 0
+  defaultStaticMaterial: {fileID: 2100000, guid: 282096f81f2f0d34eabef4235b1617b1,
+    type: 2}
+  animatedPulseMaterial: {fileID: 2100000, guid: 1acb6b523c0ab4841ba455c24a8c05d6,
+    type: 2}
+  toolsParent: {fileID: 0}
 --- !u!1 &8166409087959463201
 GameObject:
   m_ObjectHideFlags: 0

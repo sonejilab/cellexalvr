@@ -1,17 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using CellexalVR.General;
 using UnityEngine;
-using CellexalVR.General;
-using System.IO;
 using UnityEngine.UI;
-using CellexalVR.Interaction;
 
 namespace CellexalVR.AnalysisLogic.H5reader
 {
     public class ButtonPresser : MonoBehaviour
     {
         // Start is called before the first frame update
-        public BoxCollider collider;
+        public new BoxCollider collider;
         public ReferenceManager referenceManager;
         [SerializeField] private GameObject note;
         // Open XR 

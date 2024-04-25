@@ -64,7 +64,6 @@ namespace CellexalVR.Extensions
                     return "network";
                 case HistoryEvent.INVALID:
                     return "invalid";
-                    break;
                 case HistoryEvent.GENE:
                     return "gene";
                 case HistoryEvent.ATTRIBUTE:

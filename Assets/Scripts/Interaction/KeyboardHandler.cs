@@ -386,7 +386,6 @@ namespace CellexalVR.Interaction
         /// </summary>
         public void SubmitOutput(bool invoke = true)
         {
-            string temp = "";
             foreach (var o in additionalOutputs)
             {
                 o.text = output.text;

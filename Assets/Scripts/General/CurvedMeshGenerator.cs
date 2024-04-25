@@ -1,8 +1,8 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
 namespace CellexalVR.General
 {
 
@@ -39,7 +39,7 @@ namespace CellexalVR.General
 
         private bool updatingMesh;
         private float tempCurvatureXValue;
-        private MeshCollider collider;
+        private new MeshCollider collider;
 
         [SerializeField, Range(0f, 2f)] private float curvatureX = 1.03f;
 

@@ -1,14 +1,11 @@
-﻿using System;
-using CellexalVR.AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.Extensions;
 using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
 using CellexalVR.Menu.Buttons.Attributes;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.Menu.SubMenus
 {

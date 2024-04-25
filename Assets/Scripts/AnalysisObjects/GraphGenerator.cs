@@ -1,20 +1,19 @@
-﻿using System;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.DesktopUI;
+using CellexalVR.Extensions;
+using CellexalVR.General;
+using CellexalVR.Interaction;
+using CellexalVR.Spatial;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Unity.Jobs;
-using Unity.Collections;
-using UnityEngine;
-using CellexalVR.General;
-using CellexalVR.Interaction;
-using CellexalVR.AnalysisLogic;
-using CellexalVR.DesktopUI;
-using CellexalVR.Extensions;
-using CellexalVR.Spatial;
 using TMPro;
+using Unity.Collections;
+using Unity.Jobs;
+using UnityEngine;
 using UnityEngine.Rendering;
-using CellexalVR.AnalysisLogic;
 
 namespace CellexalVR.AnalysisObjects
 {

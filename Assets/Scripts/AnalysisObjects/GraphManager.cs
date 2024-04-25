@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using CellexalVR.AnalysisLogic;
+using CellexalVR.DesktopUI;
+using CellexalVR.General;
+using CellexalVR.Spatial;
+using SQLiter;
 using System;
 using System.Collections;
-using System.Linq;
-using CellexalVR.General;
-using CellexalVR.AnalysisLogic;
-using CellexalVR.DesktopUI;
-using CellexalVR.Spatial;
-using CellexalVR.AnalysisLogic;
-using SQLiter;
-using System.IO;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using UnityEngine;
 
 namespace CellexalVR.AnalysisObjects
 {

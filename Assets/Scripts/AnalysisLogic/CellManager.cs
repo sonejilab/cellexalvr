@@ -728,7 +728,7 @@ namespace CellexalVR.AnalysisLogic
             {
                 Attributes[attributeType].Add(cells[cellname]);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // could not find cell
                 // CellexalLog.Log($"Could not find cell : {cellname}"); // if many points are missing this logging them becomes very laggy...

@@ -1,14 +1,11 @@
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using CellexalVR.General;
-using CellexalVR.DesktopUI;
 using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisObjects;
+using CellexalVR.DesktopUI;
+using CellexalVR.General;
 using CellexalVR.Multiuser;
-using System.IO;
-using System.Linq;
-using CellexalVR.AnalysisLogic.H5reader;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace CellexalVR.SceneObjects
 {
@@ -29,11 +26,8 @@ namespace CellexalVR.SceneObjects
         private InputReader inputReader;
         private InputFolderGenerator inputFolderGenerator;
         private GraphManager graphManager;
-        private GameObject helperCylinder;
         private float timeEntered = 0;
         private ArrayList cellsToDestroy;
-        private bool cellsEntered = false;
-        private bool collidersDestroyed = false;
         private Vector3 startPosition;
         private Vector3 finalPosition;
         private Vector3 startScale;
@@ -110,9 +104,7 @@ namespace CellexalVR.SceneObjects
         /// </summary>
         private void ResetLoaderBooleans()
         {
-            cellsEntered = false;
             timeEntered = 0;
-            collidersDestroyed = false;
         }
 
         /// <summary>
@@ -169,7 +161,6 @@ namespace CellexalVR.SceneObjects
                     if (timeEntered == 0)
                     {
                         timeEntered = Time.time;
-                        cellsEntered = true;
                     }
                     if (!cellParent.GetComponent<CellsToLoad>().GraphsLoaded())
                     {
@@ -269,8 +260,6 @@ namespace CellexalVR.SceneObjects
                     child.gameObject.AddComponent<Rigidbody>();
                 }
             }
-
-            collidersDestroyed = true;
         }
 
         public void DestroyCells()

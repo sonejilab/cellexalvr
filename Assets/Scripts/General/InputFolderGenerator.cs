@@ -1,11 +1,11 @@
-using UnityEngine;
-using System.IO;
-using System;
-using CellexalVR.SceneObjects;
-using TMPro;
-using System.Collections.Generic;
 using CellexalVR.AnalysisLogic;
+using CellexalVR.SceneObjects;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using TMPro;
+using UnityEngine;
 
 namespace CellexalVR.General
 {
@@ -166,7 +166,6 @@ namespace CellexalVR.General
         private void GeneratePreviousSessionFolders(string filter = "")
         {
             string dataDirectory;
-            string[] directories;
             if (CrossSceneInformation.Tutorial)
             {
                 return;

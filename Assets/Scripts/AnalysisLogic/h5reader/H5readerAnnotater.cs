@@ -87,7 +87,7 @@ namespace CellexalVR.AnalysisLogic.H5reader
             GameObject go = Instantiate(textBoxPrefab);
             keys = go.GetComponent<H5ReaderAnnotatorTextBoxScript>();
             go.name = filePath;
-            keys.name = filePath;
+            keys.annotationName = filePath;
             keys.isTop = true;
             keys.annotater = this;
             string standard_output;
