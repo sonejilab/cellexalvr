@@ -193,9 +193,8 @@ namespace CellexalVR.General
 
             headset = GameObject.Find("CellexalOpenXRRig/Camera Offset/Main Camera");
             controllerMenuCollider = leftController.GetComponent<BoxCollider>();
-            laserPointerController = rightController.GetComponent<LaserPointerController>();
-            rightLaser = laserPointerController.rightLaser;
-            leftLaser = laserPointerController.leftLaser;
+            rightLaser = rightController.GetComponentInChildren<XRRayInteractor>();
+            leftLaser = leftController.GetComponentInChildren<XRRayInteractor>();
             rightRaycast = rightController.GetComponent<CellexalRaycast>();
             leftRaycast = leftController.GetComponent<CellexalRaycast>();
 
