@@ -1,14 +1,15 @@
 ﻿using CellexalVR.AnalysisObjects;
-using CellexalVR.Menu.Buttons;
-using UnityEngine;
 
-public class DetachLegendButton : CellexalButton
+namespace CellexalVR.Menu.Buttons.Legends
 {
-    protected override string Description => "Detach legend";
-
-    public override void Click()
+    public class DetachLegendButton : CellexalButton
     {
-        LegendManager legendManager = referenceManager.legendManager;
-        legendManager.DetachLegendFromCube();
+        protected override string Description => "Detach legend";
+
+        public override void Click()
+        {
+            LegendManager legendManager = referenceManager.legendManager;
+            legendManager.DetachLegendFromCube();
+        }
     }
 }

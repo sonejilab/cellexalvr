@@ -3,44 +3,48 @@ using CellexalVR.General;
 using CellexalVR.Menu.Buttons;
 using UnityEngine;
 
-public class ToggleLegendButton : CellexalButton
+namespace CellexalVR.Menu.Buttons.Legends
 {
-    protected override string Description => "Toggle the legend on/off";
-
-    private void Start()
+    public class ToggleLegendButton : CellexalButton
     {
-        TurnOff();
-        CellexalEvents.GraphsLoaded.AddListener(TurnOn);
-        CellexalEvents.ScarfObjectLoaded.AddListener(TurnOn);
-        CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
-    }
+        protected override string Description => "Toggle the legend on/off";
 
-    public override void Click()
-    {
-        LegendManager legendManager = referenceManager.legendManager;
-        GameObject mainMenu = referenceManager.mainMenu;
-        referenceManager.multiuserMessageSender.SendMessageToggleLegend();
-        if (!referenceManager.legendManager.legendActive)
+        private void Start()
         {
-            legendManager.ActivateLegend();
+            TurnOff();
+            CellexalEvents.GraphsLoaded.AddListener(TurnOn);
+            CellexalEvents.ScarfObjectLoaded.AddListener(TurnOn);
+            CellexalEvents.GraphsUnloaded.AddListener(TurnOff);
         }
-        else
+
+        public override void Click()
         {
-            legendManager.DeactivateLegend();
-            legendManager.DetachLegendFromCube();
+            LegendManager legendManager = referenceManager.legendManager;
+            GameObject mainMenu = referenceManager.mainMenu;
+            referenceManager.multiuserMessageSender.SendMessageToggleLegend();
+            if (!referenceManager.legendManager.legendActive)
+            {
+                legendManager.ActivateLegend();
+            }
+            else
+            {
+                legendManager.DeactivateLegend();
+                legendManager.DetachLegendFromCube();
+            }
+            referenceManager.multiuserMessageSender.SendMessageMoveLegend(legendManager.transform.position,
+                legendManager.transform.rotation, legendManager.transform.localScale);
         }
-        referenceManager.multiuserMessageSender.SendMessageMoveLegend(legendManager.transform.position,
-            legendManager.transform.rotation, legendManager.transform.localScale);
-    }
 
-    void TurnOn()
-    {
-        SetButtonActivated(true);
-    }
+        void TurnOn()
+        {
+            SetButtonActivated(true);
+        }
 
-    void TurnOff()
-    {
-        SetButtonActivated(false);
+        void TurnOff()
+        {
+            SetButtonActivated(false);
+        }
+
     }
 
 }

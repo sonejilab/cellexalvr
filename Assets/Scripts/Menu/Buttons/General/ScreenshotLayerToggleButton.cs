@@ -1,8 +1,4 @@
-﻿using CellexalVR.Menu.Buttons;
-using System.Linq;
-using UnityEngine;
-
-namespace Menu.Buttons.General
+﻿namespace CellexalVR.Menu.Buttons.General
 {
     public class ScreenshotLayerToggleButton : SliderButton
     {

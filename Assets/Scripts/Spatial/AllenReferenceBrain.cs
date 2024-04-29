@@ -1,16 +1,13 @@
-﻿using System;
+﻿using CellexalVR.DesktopUI;
+using CellexalVR.Interaction;
+using CellexalVR.Menu.Buttons;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using CellexalVR.DesktopUI;
-using CellexalVR.General;
-using CellexalVR.Interaction;
-using CellexalVR.Spatial;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace CellexalVR.Spatial
 {

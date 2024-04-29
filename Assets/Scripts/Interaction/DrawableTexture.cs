@@ -1,23 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DrawableTexture : MonoBehaviour
+namespace CellexalVR.Interaction
 {
-    public Texture2D texture;
-
-
-    private void Start()
+    public class DrawableTexture : MonoBehaviour
     {
-        texture = new Texture2D(1000, 1000, TextureFormat.ARGB32, false);
-        Color[] colors = new Color[texture.width * texture.height];
-        texture.SetPixels(colors);
-        texture.Apply();
-        GetComponent<MeshRenderer>().material.mainTexture = texture;
-    }
+        public Texture2D texture;
 
-    private void Update()
-    {
-        
+
+        private void Start()
+        {
+            texture = new Texture2D(1000, 1000, TextureFormat.ARGB32, false);
+            Color[] colors = new Color[texture.width * texture.height];
+            texture.SetPixels(colors);
+            texture.Apply();
+            GetComponent<MeshRenderer>().material.mainTexture = texture;
+        }
+
+        private void Update()
+        {
+
+        }
     }
 }

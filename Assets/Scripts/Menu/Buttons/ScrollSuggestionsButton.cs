@@ -1,18 +1,18 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.Menu.Buttons;
-using TMPro;
-using CellexalVR.Spatial;
+﻿using CellexalVR.Spatial;
 
-public class ScrollSuggestionsButton : CellexalButton
+namespace CellexalVR.Menu.Buttons
 {
-    public int dir;
 
-    protected override string Description => "Scroll " + (dir > 0 ? "Up" : "Down");
-
-    public override void Click()
+    public class ScrollSuggestionsButton : CellexalButton
     {
-        AllenReferenceBrain.instance.ScrollSuggestions(dir);
-    }
+        public int dir;
 
+        protected override string Description => "Scroll " + (dir > 0 ? "Up" : "Down");
+
+        public override void Click()
+        {
+            AllenReferenceBrain.instance.ScrollSuggestions(dir);
+        }
+
+    }
 }

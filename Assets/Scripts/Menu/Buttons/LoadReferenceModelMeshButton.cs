@@ -1,31 +1,31 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.Menu.Buttons;
-using TMPro;
+﻿using CellexalVR.General;
 using CellexalVR.Spatial;
-using CellexalVR.General;
+using TMPro;
 
-public class LoadReferenceModelMeshButton : CellexalButton
+namespace CellexalVR.Menu.Buttons
 {
-    public TextMeshPro nameHeader;
-    private string modelName;
-
-    public string ModelName
+    public class LoadReferenceModelMeshButton : CellexalButton
     {
-        get => modelName;
-        set
+        public TextMeshPro nameHeader;
+        private string modelName;
+
+        public string ModelName
         {
-            modelName = value;
-            nameHeader.text = value;
+            get => modelName;
+            set
+            {
+                modelName = value;
+                nameHeader.text = value;
+            }
         }
+
+        protected override string Description => $"Load {modelName} mesh from reference";
+
+        public override void Click()
+        {
+            AllenReferenceBrain.instance.SpawnModel(ModelName);
+            ReferenceManager.instance.multiuserMessageSender.SendMessageSpawnModel(modelName);
+        }
+
     }
-
-    protected override string Description => $"Load {modelName} mesh from reference";
-
-    public override void Click()
-    {
-        AllenReferenceBrain.instance.SpawnModel(ModelName);
-        ReferenceManager.instance.multiuserMessageSender.SendMessageSpawnModel(modelName);
-    }
-
 }

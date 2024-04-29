@@ -1,7 +1,6 @@
 ﻿using CellexalVR.General;
-using CellexalVR.Menu.Buttons;
 
-namespace Menu.Buttons.General
+namespace CellexalVR.Menu.Buttons.General
 {
     public class AttachCameraToHeadButton : CellexalButton
     {

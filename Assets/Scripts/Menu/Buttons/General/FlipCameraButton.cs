@@ -1,6 +1,4 @@
-﻿using CellexalVR.Menu.Buttons;
-
-namespace Menu.Buttons.General
+﻿namespace CellexalVR.Menu.Buttons.General
 {
     public class FlipCameraButton : CellexalButton
     {

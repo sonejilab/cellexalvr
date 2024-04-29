@@ -1,31 +1,31 @@
-﻿using UnityEngine;
-using System.Collections;
-using CellexalVR.Menu.Buttons;
-using TMPro;
-using CellexalVR.Spatial;
+﻿using TMPro;
+using UnityEngine;
 
-public class BrainPartButton : CellexalButton
+namespace CellexalVR.Menu.Buttons
 {
-    public TextMeshPro nameHeader;
-    public GameObject modelPart;
-
-    private string modelName;
-
-    public string ModelName
+    public class BrainPartButton : CellexalButton
     {
-        get => modelName;
-        set
+        public TextMeshPro nameHeader;
+        public GameObject modelPart;
+
+        private string modelName;
+
+        public string ModelName
         {
-            modelName = value;
-            nameHeader.text = value;
+            get => modelName;
+            set
+            {
+                modelName = value;
+                nameHeader.text = value;
+            }
         }
+
+        protected override string Description => $"Toggle {modelName} mesh from reference";
+
+        public override void Click()
+        {
+            modelPart.SetActive(!modelPart.gameObject.activeSelf);
+        }
+
     }
-
-    protected override string Description => $"Toggle {modelName} mesh from reference";
-
-    public override void Click()
-    {
-        modelPart.SetActive(!modelPart.gameObject.activeSelf);
-    }
-
 }

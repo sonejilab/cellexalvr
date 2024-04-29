@@ -1,25 +1,24 @@
-﻿using UnityEngine;
-using CellexalVR.Menu.Buttons;
-using TMPro;
-using CellexalVR.Spatial;
+﻿using CellexalVR.Spatial;
 
-public class DestroySpatialPartButton: CellexalButton
+namespace CellexalVR.Menu.Buttons
 {
-
-    private string modelName;
-
-    private void Start()
+    public class DestroySpatialPartButton : CellexalButton
     {
-        modelName = GetComponentInParent<BrainPartButton>().ModelName;
+
+        private string modelName;
+
+        private void Start()
+        {
+            modelName = GetComponentInParent<BrainPartButton>().ModelName;
+        }
+
+
+        protected override string Description => $"Destroy {modelName} mesh from reference";
+
+        public override void Click()
+        {
+            GetComponentInParent<AllenReferenceBrain>().RemovePart(modelName);
+        }
+
     }
-
-
-    protected override string Description => $"Destroy {modelName} mesh from reference";
-
-    public override void Click()
-    {
-        GetComponentInParent<AllenReferenceBrain>().RemovePart(modelName);
-    }
-
 }
-
