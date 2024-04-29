@@ -1,10 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using CellexalVR.General;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
-using CellexalVR.General;
 
-namespace Assets.Scripts.Interaction
+namespace CellexalVR.Interaction
 {
     public class TeleportManager : MonoBehaviour
     {

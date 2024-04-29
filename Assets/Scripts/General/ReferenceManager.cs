@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.Menu.SubMenus;
-using CellexalVR.AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.AnalysisLogic.H5reader;
 using CellexalVR.AnalysisObjects;
 using CellexalVR.DesktopUI;

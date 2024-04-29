@@ -1,11 +1,8 @@
-﻿using CellexalVR.Spatial;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-namespace Assets.Scripts.MeshUtils
+namespace CellexalVR.MeshUtils
 {
     public class ColliderGenerator : MonoBehaviour
     {

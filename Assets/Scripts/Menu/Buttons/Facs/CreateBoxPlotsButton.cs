@@ -1,5 +1,4 @@
-﻿using Assets.Scripts.AnalysisLogic;
-using CellexalVR.AnalysisLogic;
+﻿using CellexalVR.AnalysisLogic;
 using CellexalVR.General;
 using UnityEngine;
 

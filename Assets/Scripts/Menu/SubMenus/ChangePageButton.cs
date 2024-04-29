@@ -1,8 +1,6 @@
 ﻿using CellexalVR.Menu.Buttons;
-using CellexalVR.Menu.SubMenus;
-using System;
 
-namespace Assets.Scripts.Menu.SubMenus
+namespace CellexalVR.Menu.SubMenus
 {
 
     public class ChangePageButton : CellexalButton

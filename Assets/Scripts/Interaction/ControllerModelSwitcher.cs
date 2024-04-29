@@ -1,10 +1,8 @@
-using Assets.Scripts.General;
 using CellexalVR.General;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 

@@ -1,11 +1,9 @@
-﻿using CellexalVR.AnalysisLogic;
-using CellexalVR.AnalysisObjects;
+﻿using CellexalVR.AnalysisObjects;
 using CellexalVR.General;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.AnalysisLogic
+namespace CellexalVR.AnalysisLogic
 {
     public class BoxPlotManager : EnvironmentMenuWithTabs
     {
